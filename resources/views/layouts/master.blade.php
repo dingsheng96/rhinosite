@@ -1,46 +1,47 @@
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
+
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>{{ config('app.name') }}</title>
+    <title>{{ config('app.name') . ' | ' . $title ?? '' }}</title>
 
-  <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css?v=' . time()) }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css?v=' . time()) }}">
 
 </head>
-<body class="hold-transition sidebar-mini">
-  <div class="wrapper">
 
-      <!-- Navbar -->
-      @include('layouts.topnav')
-      <!-- /.navbar -->
+<body class="hold-transition layout-fixed {{ $body ?? '' }}">
 
-      <!-- Main Sidebar Container -->
-      @include('layouts.sidenav')
-      <!-- /. Main Sidebar Container -->
+    @auth
 
-      <!-- Content Wrapper. Contains page content -->
-      <div class="content-wrapper">
-        <div class="content">
-            @yield('content')
+    <div class="wrapper">
+        @include('layouts.topnav')
+
+        @include('layouts.sidenav')
+
+        <div class="content-wrapper">
+            <div class="content">
+                @yield('content')
+            </div>
         </div>
-      </div>
-      <!-- /.content-wrapper -->
 
-      <!-- Main Footer -->
-      @include('layouts.footer')
-      <!-- /. main footer -->
-    
-  </div>
-  <!-- ./wrapper -->
-  
-  <script src="{{ asset('js/app.js') }}"></script>
+        @include('layouts.footer')
+    </div>
+
+    @else
+
+    @yield('content')
+
+    @endauth
+
+    <script src="{{ asset('js/app.js?v=' . time()) }}"></script>
+    @stack('scripts')
 
 </body>
+
 </html>
