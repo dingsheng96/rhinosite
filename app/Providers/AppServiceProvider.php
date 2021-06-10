@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +24,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // set default string length
+        Schema::defaultStringLength(255);
+
+        // force http to https when not in local
+        $this->app['request']->server
+            ->set('HTTPS', $this->app->environment() != 'local');
     }
 }
