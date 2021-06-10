@@ -8,10 +8,11 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name') . ' | ' . $title ?? '' }}</title>
+    <title>{{ config('app.name') . ' | ' . ($title ?? '') }}</title>
 
     <link rel="stylesheet" href="{{ asset('css/app.css?v=' . time()) }}">
     <link rel="stylesheet" href="{{ asset('css/style.css?v=' . time()) }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
 </head>
 
@@ -40,6 +41,7 @@
     @endauth
 
     <script src="{{ asset('js/app.js?v=' . time()) }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     @stack('scripts')
 
 </body>

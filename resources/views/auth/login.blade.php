@@ -56,7 +56,7 @@
                         </div>
                     </div>
                     <div class="col-4">
-                        <button type="submit" class="btn btn-indigo btn-block">{{ __('labels.sign_in') }}</button>
+                        <button type="submit" class="btn btn-primary btn-block">{{ __('labels.sign_in') }}</button>
                     </div>
                 </div>
 
