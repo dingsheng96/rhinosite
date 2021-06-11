@@ -26,6 +26,9 @@
         @include('layouts.sidenav')
 
         <div class="content-wrapper">
+
+            @include('layouts.header')
+
             <div class="content">
                 @yield('content')
             </div>

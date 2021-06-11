@@ -14,6 +14,8 @@
 
             <form action="{{ route('login') }}" method="post" role="form" enctype="multipart/form-data">
 
+                @csrf
+
                 <div class="form-group">
                     <label for="email">{{ __('labels.email') }}</label>
                     <div class="input-group mb-3">
