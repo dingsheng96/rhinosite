@@ -14,10 +14,12 @@ return [
     'password_confirmation' => 'Confirm Password',
     'remember_me' => 'Remember Me',
     'sign_in' => 'Sign In',
+    'logout' => 'Log out',
     'joined_since' => 'Joined Since',
     'industry_experience' => 'Industry Experience',
     'listed_projects' => 'Listed Projects',
     'current_ads_boosting' => 'Current Ads Boosting',
     'total_ads_available' => 'Total Ads Available',
-    'current_bought_product' => 'Current Bought Product'
+    'current_bought_product' => 'Current Bought Product',
+    'view_all' => 'View All',
 ];
