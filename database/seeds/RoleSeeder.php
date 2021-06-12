@@ -16,7 +16,6 @@ class RoleSeeder extends Seeder
             Role::firstOrCreate(
                 ['name' => $data['name']],
                 [
-                    'name' => $data['name'],
                     'guard_name' => $data['guard_name'],
                     'description' => $data['description']
                 ]

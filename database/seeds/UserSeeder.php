@@ -19,7 +19,6 @@ class UserSeeder extends Seeder
             ['email' => 'superadmin@email.com'],
             [
                 'name' => 'Super Admin',
-                'email' => 'superadmin@email.com',
                 'mobile_no' => '60123456789',
                 'tel_no' => null,
                 'reg_no' => '1234567890',

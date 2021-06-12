@@ -22,4 +22,7 @@ return [
     'total_ads_available' => 'Total Ads Available',
     'current_bought_product' => 'Current Bought Product',
     'view_all' => 'View All',
+    'empty_list' => "You don't have any :list yet",
+
+    'project' => 'Project|Projects'
 ];

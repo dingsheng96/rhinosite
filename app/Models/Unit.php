@@ -3,8 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Unit extends Model
 {
-    //
+    use SoftDeletes;
+
+    protected $table = 'units';
+
+    protected $fillable = [
+        'name', 'description'
+    ];
+
+    // Relationships
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'unit_id', 'id');
+    }
 }

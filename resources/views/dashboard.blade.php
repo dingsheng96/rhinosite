@@ -63,7 +63,7 @@
             <div class="small-box bg-info">
                 <div class="inner">
                     <p>{{ __('labels.listed_projects') }}</p>
-                    <h3>150</h3>
+                    <h3>{{ $projects_count ?? 0 }}</h3>
                 </div>
                 <div class="icon">
                     <i class="fas fa-briefcase"></i>
@@ -102,8 +102,9 @@
         </div>
     </div>
 
+    {{-- LATEST 4 PROJECTS LISTING --}}
+    @if ($projects_list->count() > 0)
     <hr>
-
     <div class="row">
         <div class="col-12 my-3">
             <h5 class="font-weight-bold d-inline">{{ __('labels.listed_projects') }}</h5>
@@ -112,44 +113,25 @@
 
         <div class="col-12 my-md-3 my-0">
             <div class="card-deck">
+                @foreach ($projects_list as $project)
                 <div class="card">
                     <img src="" alt="image" class="card-img-top">
                     <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                        @foreach ($project->translations->get() as $title)
+                        <h5 class="card-title">{{ $title->value ?? '-' }}</h5>
+                        @endforeach
+                        <h4 class="card-text font-weight-bold">{{ $project->price ?? '-' }}</h4>
+                        <p class="card-text"><small class="text-muted">{{ $project->location ?? '-' }}</small></p>
                     </div>
                 </div>
-                <div class="card">
-                    <img src="" alt="image" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                </div>
-                <div class="card">
-                    <img src="" alt="image" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                </div>
-                <div class="card">
-                    <img src="" alt="image" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>
+    @endif
+
 
     <hr>
-
     <div class="row">
         <div class="col-12 my-3">
             <h5 class="font-weight-bold d-inline">{{ __('labels.current_ads_boosting') }}</h5>
