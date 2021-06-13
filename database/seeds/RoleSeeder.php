@@ -13,7 +13,7 @@ class RoleSeeder extends Seeder
     public function run()
     {
         foreach ($this->getData() as $data) {
-            Role::firstOrCreate(
+            Role::updateOrCreate(
                 ['name' => $data['name']],
                 [
                     'guard_name' => $data['guard_name'],

@@ -16,20 +16,54 @@
         </div>
 
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-                    <a href="#" class="nav-link active">
-                        <i class="nav-icon fas fa-tachometer-alt mr-2"></i>
+                    <a href="{{ route('dashboard') }}" class="nav-link {{ Nav::hasSegment('dashboard', 1, 'active') }}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>{{ __('modules.dashboard') }}</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-users mr-2"></i>
-                        <p>{{ __('Nav Item 1') }}</p>
-                    </a>
-                </li>
 
+                <li class="nav-item has-treeview {{ Nav::hasSegment(['countries'], 1, 'menu-open') }}">
+                    <a href="#" class="nav-link {{ Nav::hasSegment(['countries'], 1, 'active') }}">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            {{ trans_choice('modules.user', 2) }}
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        {{-- @canany(['country.create', 'country.read'. 'country.update', 'country.delete'])
+                        <li class="nav-item">
+                            <a href="{{ route('countries.index') }}" class="nav-link {{ Nav::hasSegment('countries', 1, 'active') }}">
+                        <i class="nav-icon fas fa-caret-right"></i>
+                        <p>{{ __('modules.countries') }}</p>
+                        </a>
+                </li>
+                @endcanany --}}
+            </ul>
+            </li>
+
+            @canany(['country.create', 'country.read'. 'country.update', 'country.delete'])
+            <li class="nav-item has-treeview {{ Nav::hasSegment(['countries'], 1, 'menu-open') }}">
+                <a href="#" class="nav-link {{ Nav::hasSegment(['countries'], 1, 'active') }}">
+                    <i class="nav-icon fas fa-cogs"></i>
+                    <p>
+                        {{ trans_choice('modules.setting', 2) }}
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    @canany(['country.create', 'country.read'. 'country.update', 'country.delete'])
+                    <li class="nav-item">
+                        <a href="{{ route('countries.index') }}" class="nav-link {{ Nav::hasSegment('countries', 1, 'active') }}">
+                            <p>{{ trans_choice('modules.submodules.country', 2) }}</p>
+                        </a>
+                    </li>
+                    @endcanany
+                </ul>
+            </li>
+            @endcanany
             </ul>
         </nav>
     </div>

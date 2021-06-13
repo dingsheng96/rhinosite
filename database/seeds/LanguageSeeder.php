@@ -13,7 +13,7 @@ class LanguageSeeder extends Seeder
     public function run()
     {
         foreach ($this->getData() as $data) {
-            Language::firstOrCreate(
+            Language::updateOrCreate(
                 ['code' => $data['code']],
                 ['name' => $data['name']]
             );

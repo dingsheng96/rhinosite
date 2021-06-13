@@ -2,13 +2,18 @@
 
 return [
 
+    'list' => ':module list',
     'edit' => 'Edit :module',
     'create' => 'Create :module',
     'view' => 'View :module',
     'import' => 'Import :module',
     'export' => 'Export :module',
+    'add' => 'Add :module',
 
     'start_session' => 'Sign in to start your session',
+    'copyright' => '&copy ' . config('app.name') . ' ' . date('Y'),
+    'terms_policy' => 'Terms & Policies',
+    'privacy_policy' => 'Privacy Policies',
     'email' => 'Email',
     'password' => 'Password',
     'password_confirmation' => 'Confirm Password',

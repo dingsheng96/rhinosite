@@ -15,13 +15,13 @@ class UserSeeder extends Seeder
     public function run()
     {
         // create super admin
-        $superadmin = User::firstOrCreate(
+        $superadmin = User::updateOrCreate(
             ['email' => 'superadmin@email.com'],
             [
                 'name' => 'Super Admin',
-                'mobile_no' => '60123456789',
+                'mobile_no' => null,
                 'tel_no' => null,
-                'reg_no' => '1234567890',
+                'reg_no' => null,
                 'password' => Hash::make('password'),
                 'status' => User::STATUS_ACTIVE,
             ]

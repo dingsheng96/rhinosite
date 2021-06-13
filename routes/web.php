@@ -23,4 +23,6 @@ Auth::routes();
 Route::middleware(['auth:web'])->group(function () {
 
     Route::get('dashboard', 'HomeController@index')->name('dashboard');
+
+    Route::resource('countries', 'CountryController');
 });

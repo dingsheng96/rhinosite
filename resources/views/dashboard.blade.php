@@ -6,97 +6,100 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div class="card-body">
+            <div class="card card-widget widget-user">
+                <div class="widget-user-header bg-info">
+                    <h3 class="widget-user-username">{{ Auth::user()->name ?? '' }}</h3>
+                    <h6 class="widget-user-desc">
+                        {{ __('labels.joined_since') . ': ' . Auth::user()->created_at->format('Y') }}
+                    </h6>
+                </div>
 
+                <div class="widget-user-image">
+                    <img src="{{ 'https://ui-avatars.com/api/?background=f6993f&color=ffffff&rounded=true&name=?' }}" alt="user" class="elevation-2 img-circle">
+                </div>
+
+                <div class="card-footer">
                     <div class="row">
-                        <div class="col-12 col-md-6">
-                            <img src="{{ 'https://ui-avatars.com/api/?background=f6993f&color=ffffff&rounded=true&name=?' }}" alt="user" class="img-size-50 img-circle">
-                            <h4 class="ml-3 d-inline">{{ Auth::user()->name ?? '-' }}</h4>
-                        </div>
-                        <div class="col-12 col-md-6 d-flex flex-column align-items-md-end align-items-center mt-3 mt-md-0">
-                            <p class="mb-0">
-                                <label class="mr-2">{{ __('labels.joined_since') . ' :' }}</label>
-                                {{ Auth::user()->created_at->format('d M Y') }}
-                            </p>
-                            <p class="mb-0">
-                                <label class="mr-2">{{ __('labels.industry_experience') . ' :' }}</label>
-                                {{ Auth::user()->created_at->format('d M Y') }}
-                            </p>
-                        </div>
-                    </div>
-
-                    <hr>
-
-                    <div class="row">
-                        <div class="col-12 col-md-6">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item border-0 px-0">
-                                    <img src="{{ 'https://ui-avatars.com/api/?background=f6993f&color=ffffff&rounded=true&name=?' }}" alt="user" class="img-size-32 img-circle">
-                                    <span class="ml-3">{{ Auth::user()->mobile_no ?? '-' }}</span>
-                                </li>
-                                <li class="list-group-item border-0 px-0">
-                                    <img src="{{ 'https://ui-avatars.com/api/?background=f6993f&color=ffffff&rounded=true&name=?' }}" alt="user" class="img-size-32 img-circle">
-                                    <span class="ml-3">{{ Auth::user()->email ?? '-' }}</span>
-                                </li>
-                                <li class="list-group-item border-0 px-0">
-                                    <img src="{{ 'https://ui-avatars.com/api/?background=f6993f&color=ffffff&rounded=true&name=?' }}" alt="user" class="img-size-32 img-circle">
-                                    <span class="ml-3">{{ Auth::user()->full_address ?? '-' }}</span>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-12 col-md-6 d-flex flex-column align-items-md-end align-items-center mt-3 mt-md-0">
+                        <div class="col-12 d-flex flex-column align-items-md-end align-items-center mt-3 mt-md-0">
                             <a role="button" href="#" class="mt-auto">
                                 <i class="fas fa-edit"></i>
                                 {{ __('labels.edit', ['module' => __('modules.profile')]) }}
                             </a>
                         </div>
                     </div>
-
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4 border-right">
+                            <div class="description-block">
+                                <h5 class="description-header"><i class="fas fa-phone"></i></h5>
+                                <span class="description-text">{{ Auth::user()->mobile_no ?? '-' }}</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 border-right">
+                            <div class="description-block">
+                                <h5 class="description-header"><i class="fas fa-envelope"></i></h5>
+                                <span class="description-text">{{ Auth::user()->email ?? '-' }}</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="description-block">
+                                <h5 class="description-header"><i class="fas fa-map-marker-alt"></i></h5>
+                                <span class="description-text">{{ Auth::user()->full_address ?? '-' }}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-3 col-12">
-            <div class="small-box bg-info">
-                <div class="inner">
-                    <p>{{ __('labels.listed_projects') }}</p>
-                    <h3>{{ $projects_count ?? 0 }}</h3>
+        <div class="col-12">
+            <div class="card-deck">
+                <div class="card small-box bg-info">
+                    <div class="card-body">
+                        <div class="inner">
+                            <p>{{ __('labels.listed_projects') }}</p>
+                            <h3>{{ $projects_count ?? 0 }}</h3>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                    </div>
                 </div>
-                <div class="icon">
-                    <i class="fas fa-briefcase"></i>
+                <div class="card small-box bg-teal">
+                    <div class="card-body">
+                        <div class="inner">
+                            <p>{{ __('labels.current_ads_boosting') }}</p>
+                            <h3>150</h3>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-12">
-            <div class="small-box bg-teal">
-                <div class="inner">
-                    <p>{{ __('labels.current_ads_boosting') }}</p>
-                    <h3>150</h3>
+                <div class="card small-box bg-purple">
+                    <div class="card-body">
+                        <div class="inner">
+                            <p>{{ __('labels.total_ads_available') }}</p>
+                            <h3>150</h3>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-images"></i>
+                        </div>
+                    </div>
                 </div>
-                <div class="icon">
-                    <i class="fas fa-rocket"></i>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-12">
-            <div class="small-box bg-purple">
-                <div class="inner">
-                    <p>{{ __('labels.total_ads_available') }}</p>
-                    <h3>150</h3>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-images"></i>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-12">
-            <div class="small-box bg-light">
-                <div class="inner">
-                    <p>{{ __('labels.current_bought_product') }}</p>
-                    <h3>150</h3>
+                <div class="card small-box bg-light">
+                    <div class="card-body">
+                        <div class="inner">
+                            <p>{{ __('labels.current_bought_product') }}</p>
+                            <h3>150</h3>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-cubes"></i>
+                        </div>
+                    </div>
+                    <a href="#" class="small-box-footer">{{ __('labels.add', ['module' => __('modules.products')]) }} <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
         </div>

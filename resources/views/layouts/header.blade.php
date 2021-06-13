@@ -8,6 +8,9 @@
                 @if(!Nav::isRoute('dashboard'))
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('modules.dashboard') }}</a></li>
+                    @if (isset($parent_title))
+                    <li class="breadcrumb-item active">{{ $parent_title ?? '-' }}</li>
+                    @endif
                     <li class="breadcrumb-item active">{{ $title ?? '-' }}</li>
                 </ol>
                 @endif
