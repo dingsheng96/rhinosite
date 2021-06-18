@@ -1,0 +1,56 @@
+{
+    "modules":{
+        "language": 100,
+        "user": 110,
+        "admin": 120,
+        "customer": 130,
+        "agent": 140,
+        "product": 150,
+        "package": 160,
+        "package_distribution": 161,
+        "carton": 170,
+        "carton_distribution": 171,
+        "role": 180,
+        "country": 190,
+        "country_state": 191,
+        "city": 192,
+        "currency": 193,
+        "system": 900
+    },
+    "actions": {
+        "index": {
+            "success": 10,
+            "fail": 11,
+            "validation": 12
+        },
+        "create": {
+            "success": 20,
+            "fail": 21,
+            "validation": 22
+        },
+        "read": {
+            "success": 30,
+            "fail": 31,
+            "validation": 32
+        },
+        "update": {
+            "success": 40,
+            "fail": 41,
+            "validation": 42
+        },
+        "delete": {
+            "success": 50,
+            "fail": 51,
+            "validation": 52
+        },
+        "authenticate": {
+            "success": 60,
+            "fail": 61,
+            "validation": 62
+        },
+        "force_update": {
+            "app": 999,
+            "label": 998
+        }
+    }
+}

@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Settings\Country;
 
+use App\Models\Settings\Currency;
+use App\Models\Settings\Country\City;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Settings\Country\CountryState;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Country extends Model

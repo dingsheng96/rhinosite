@@ -1,6 +1,14 @@
 <?php
 
 return [
+    'list' => ':module list',
+    'edit' => 'Edit :module',
+    'create' => 'Create :module',
+    'view' => 'View :module',
+    'import' => 'Import :module',
+    'export' => 'Export :module',
+    'add' => 'Add :module',
+
     'login' => 'Login',
     'dashboard' => 'Dashboard',
     'profile' => 'Profile',
@@ -13,6 +21,12 @@ return [
 
     'submodules' => [
         'country' => 'Country|Countries',
-        'role' => 'Role|Roles'
+        'role' => 'Role|Roles',
+        'currency' => 'Currency|Currencies',
+        'country_state' => 'Country State|Country States',
+        'city' => 'City|Cities',
+        'admin' => 'Admin|Admins',
+        'merchant' => 'Merchant|Merchants',
+        'end_user' => 'End User|End Users'
     ]
 ];

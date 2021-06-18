@@ -24,5 +24,20 @@ Route::middleware(['auth:web'])->group(function () {
 
     Route::get('dashboard', 'HomeController@index')->name('dashboard');
 
-    Route::resource('countries', 'CountryController');
+    Route::group(['prefix' => 'users', 'as' => 'users.', 'namespace' => 'Users'], function () {
+
+        Route::resource('admins', 'AdminController');
+    });
+
+    Route::group(['prefix' => 'settings', 'as' => 'settings.', 'namespace' => 'Settings'], function () {
+
+        Route::group(['namespace' => 'Country'], function () {
+            Route::resource('countries', 'CountryController');
+            Route::resource('countries.country-states', 'CountryStateController');
+            Route::resource('countries.country-states.cities', 'CityController');
+        });
+
+        Route::resource('currencies', 'CurrencyController');
+        Route::resource('roles', 'RoleController');
+    });
 });

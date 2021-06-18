@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Settings;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Settings\Country\Country;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Currency extends Model
@@ -39,5 +40,11 @@ class Currency extends Model
     public function products()
     {
         return $this->hasMany(Product::class, 'currency_id', 'id');
+    }
+
+    // Attributes
+    public function getNameWithCodeAttribute()
+    {
+        return $this->name . ' (' . $this->code . ')';
     }
 }

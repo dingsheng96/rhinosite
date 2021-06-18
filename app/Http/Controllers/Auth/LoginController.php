@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -22,6 +23,8 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
+
+    public $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -58,33 +61,42 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
+        activity()->useLog('web')
+            ->causedByAnonymous()
+            ->performedOn($user)
+            ->withProperties($request->all())
+            ->log(__('messages.login_success'));
+
         return redirect()->route('dashboard');
     }
 
     /**
-     * Get the post register / login redirect path.
-     *
-     * @return string
-     */
-    public function redirectPath()
-    {
-        if (method_exists($this, 'redirectTo')) {
-            return $this->redirectTo();
-        }
-
-        return property_exists($this, 'redirectTo') ? $this->redirectTo : route('dashboard');
-    }
-
-    /**
-     * The user has logged out of the application.
+     * Log the user out of the application.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return mixed
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
-    protected function loggedOut(Request $request)
+    public function logout(Request $request)
     {
+        $message = __('messages.logout_success');
+
+        activity()->useLog('web')
+            ->causedBy(Auth::user())
+            ->withProperties($request->all())
+            ->log($message);
+
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        if ($response = $this->loggedOut($request)) {
+            return $response;
+        }
+
         return $request->wantsJson()
             ? response()->json([], 204)
-            : redirect()->route('login')->withSuccess(__('messages.logout_success'));
+            : redirect()->route('login')->withSuccess($message);
     }
 }

@@ -2,13 +2,14 @@
 
 return [
 
-    'list' => ':module list',
-    'edit' => 'Edit :module',
-    'create' => 'Create :module',
-    'view' => 'View :module',
-    'import' => 'Import :module',
-    'export' => 'Export :module',
-    'add' => 'Add :module',
+    'submit' => 'Submit',
+    'cancel' => 'Cancel',
+    'view' => 'View',
+    'edit' => 'Edit',
+    'create' => 'Create',
+    'delete' => 'Delete',
+    'action' => 'Action',
+    'back' => 'Back',
 
     'start_session' => 'Sign in to start your session',
     'copyright' => '&copy ' . config('app.name') . ' ' . date('Y'),
@@ -28,6 +29,25 @@ return [
     'current_bought_product' => 'Current Bought Product',
     'view_all' => 'View All',
     'empty_list' => "You don't have any :list yet",
+    'errors_found' => 'Errors found!',
+    'dropdown_placeholder' => 'Please select :label',
+    'delete_confirm_question' => 'Are you sure?',
+    'delete_info' => 'You will not be able to revert this!',
 
-    'project' => 'Project|Projects'
+    'project' => 'Project|Projects',
+    'country_state' => 'Country State|Country States',
+    'city' => 'City|Cities',
+    'country' => 'Country|Countries',
+    'currency' => 'Currency',
+    'name' => 'Name',
+    'datetime' => 'Date/Time',
+    'dial_code' => 'Dial Code',
+    'currency' => 'Currency',
+    'code' => 'Code',
+    'upload_file' => 'Upload File|Upload Files',
+    'with_city' => 'With Cities',
+    'description' => 'Description',
+    'role' => 'Role',
+    'permissions' => 'Permissions',
+    'select_all' => 'Select All'
 ];

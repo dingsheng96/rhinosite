@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Settings\Role\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -50,6 +51,21 @@ class User extends Authenticatable
         return $this->morphOne(Address::class, 'sourceable');
     }
 
+    // Scopes
+    public function scopeAdmin($query)
+    {
+        return $query->whereHas('roles', function ($query) {
+            $query->where('name', Role::ROLE_SUPER_ADMIN);
+        });
+    }
+
+    public function scopeMerchant($query)
+    {
+        return $query->whereHas('roles', function ($query) {
+            $query->where('name', Role::ROLE_MERCHANT);
+        });
+    }
+
     // Attributes
     public function getFullAddressAttribute()
     {
@@ -67,5 +83,10 @@ class User extends Authenticatable
         }
 
         return $full_address;
+    }
+
+    public function getRoleNameAttribute()
+    {
+        return $this->getRoleNames()->first();
     }
 }

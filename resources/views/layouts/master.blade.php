@@ -12,7 +12,6 @@
 
     <link rel="stylesheet" href="{{ asset('css/app.css?v=' . time()) }}">
     <link rel="stylesheet" href="{{ asset('css/style.css?v=' . time()) }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
 </head>
 
@@ -30,6 +29,8 @@
             @include('layouts.header')
 
             <div class="content">
+                @includeWhen(Session::has('success') || Session::has('fail') ||$errors->any(), 'components.alert')
+
                 @yield('content')
             </div>
         </div>
@@ -45,6 +46,10 @@
 
     <script src="{{ asset('js/app.js?v=' . time()) }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="{{ asset('js/style.js?v=' . time()) }}"></script>
+    <script src="{{ asset('js/function.js?v=' . time()) }}"></script>
+    <script src="{{ asset('js/dropdown.js?v=' . time()) }}"></script>
+    <script src="{{ asset('js/modal.js?v=' . time()) }}"></script>
     @stack('scripts')
 
 </body>

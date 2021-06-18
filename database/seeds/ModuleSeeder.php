@@ -28,14 +28,14 @@ class ModuleSeeder extends Seeder
     public function getData()
     {
         return [
-            ['name' => 'country', 'display' => 'Countries', 'description' => 'Country Module'],
-            ['name' => 'currency', 'display' => 'Currencies', 'description' => 'Currency Module'],
-            ['name' => 'language', 'display' => 'Languages', 'description' => 'Language Module'],
-            ['name' => 'role', 'display' => 'Roles', 'description' => 'Role Module'],
-            ['name' => 'unit', 'display' => 'Units', 'description' => 'Unit Module'],
-            ['name' => 'enduser', 'display' => 'End Users', 'description' => 'End User Module'],
-            ['name' => 'merchant', 'display' => 'Merchants', 'description' => 'Merchant Module'],
-            ['name' => 'admin', 'display' => 'Admins', 'description' => 'Admin Module'],
+            ['name' => 'country', 'display' => 'Country', 'description' => 'Country Module'],
+            ['name' => 'currency', 'display' => 'Currency', 'description' => 'Currency Module'],
+            ['name' => 'language', 'display' => 'Language', 'description' => 'Language Module'],
+            ['name' => 'role', 'display' => 'Role', 'description' => 'Role Module'],
+            ['name' => 'unit', 'display' => 'Unit', 'description' => 'Unit Module'],
+            ['name' => 'enduser', 'display' => 'End User', 'description' => 'End User Module'],
+            ['name' => 'merchant', 'display' => 'Merchant', 'description' => 'Merchant Module'],
+            ['name' => 'admin', 'display' => 'Admin', 'description' => 'Admin Module'],
         ];
     }
 }
