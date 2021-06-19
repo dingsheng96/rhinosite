@@ -49,8 +49,9 @@ class CountryController extends Controller
     {
         DB::beginTransaction();
 
-        $action = Permission::ACTION_CREATE;
-        $module = strtolower(trans_choice('modules.submodules.country', 1));
+        $action     =   Permission::ACTION_CREATE;
+        $module     =   strtolower(trans_choice('modules.submodules.country', 1));
+        $message    =   Message::instance()->format($action, $module);
 
         try {
 
@@ -89,7 +90,7 @@ class CountryController extends Controller
                 ->log($e->getMessage());
 
             return redirect()->back()
-                ->with('fail', Message::instance()->format($action, $module))
+                ->with('fail', $message)
                 ->withInput();
         }
     }
@@ -131,8 +132,9 @@ class CountryController extends Controller
     {
         DB::beginTransaction();
 
-        $action = Permission::ACTION_UPDATE;
-        $module = strtolower(trans_choice('modules.submodules.country', 1));
+        $action     =   Permission::ACTION_UPDATE;
+        $module     =   strtolower(trans_choice('modules.submodules.country', 1));
+        $message    =   Message::instance()->format($action, $module);
 
         try {
 
@@ -167,7 +169,7 @@ class CountryController extends Controller
                 ->log($e->getMessage());
 
             return redirect()->back()
-                ->with('fail', Message::instance()->format($action, $module))
+                ->with('fail', $message)
                 ->withInput();
         }
     }

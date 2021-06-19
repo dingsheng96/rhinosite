@@ -27,6 +27,6 @@ return [
         'city' => 'City|Cities',
         'admin' => 'Admin|Admins',
         'merchant' => 'Merchant|Merchants',
-        'end_user' => 'End User|End Users'
+        'member' => 'Member|Members'
     ]
 ];

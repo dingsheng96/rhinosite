@@ -25,8 +25,10 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('dashboard', 'HomeController@index')->name('dashboard');
 
     Route::group(['prefix' => 'users', 'as' => 'users.', 'namespace' => 'Users'], function () {
-
         Route::resource('admins', 'AdminController');
+        Route::resource('merchants', 'MerchantController');
+        Route::resource('members', 'MemberController');
+        Route::resource('registrations', 'RegistrationController');
     });
 
     Route::group(['prefix' => 'settings', 'as' => 'settings.', 'namespace' => 'Settings'], function () {

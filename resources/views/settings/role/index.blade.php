@@ -12,7 +12,7 @@
                     <span class="card-tools">
                         <a href="#roleModal" class="btn btn-outline-primary" data-toggle="modal">
                             <i class="fas fa-plus"></i>
-                            {{ __('labels.create', ['module' => trans_choice('modules.submodules.role', 1)]) }}
+                            {{ __('labels.create') }}
                         </a>
                     </span>
                     @endcan

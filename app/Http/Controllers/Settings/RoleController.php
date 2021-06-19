@@ -48,12 +48,13 @@ class RoleController extends Controller
 
         $action = Permission::ACTION_CREATE;
         $module = strtolower(trans_choice('modules.submodules.role', 1));
+        $message = Message::instance()->format($action, $module);
 
         try {
 
             $input = $request->get('create');
 
-            Role::create([
+            $role = Role::create([
                 'name'          =>  $input['name'],
                 'description'   =>  $input['description'],
                 'guard'         =>  config('auth.default.guard')
@@ -61,8 +62,15 @@ class RoleController extends Controller
 
             DB::commit();
 
-            return redirect()->route('settings.roles.index')
-                ->withSuccess(Message::instance()->format($action, $module, 'success'));
+            $message = Message::instance()->format($action, $module, 'success');
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($role)
+                ->withProperties($request->all())
+                ->log($message);
+
+            return redirect()->route('settings.roles.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
@@ -74,7 +82,7 @@ class RoleController extends Controller
                 ->log($e->getMessage());
 
             return redirect()->back()
-                ->with('fail', Message::instance()->format($action, $module))
+                ->with('fail', $message)
                 ->withInput();
         }
     }
@@ -127,6 +135,7 @@ class RoleController extends Controller
 
         $action = Permission::ACTION_UPDATE;
         $module = strtolower(trans_choice('modules.submodules.role', 1));
+        $message = Message::instance()->format($action, $module);
 
         try {
             $role->name         =   $request->get('name');
@@ -139,8 +148,15 @@ class RoleController extends Controller
 
             DB::commit();
 
-            return redirect()->route('settings.roles.index')
-                ->withSuccess(Message::instance()->format($action, $module, 'success'));
+            $message = Message::instance()->format($action, $module, 'success');
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($role)
+                ->withProperties($request->all())
+                ->log($message);
+
+            return redirect()->route('settings.roles.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
@@ -152,7 +168,7 @@ class RoleController extends Controller
                 ->log($e->getMessage());
 
             return redirect()->back()
-                ->with('fail', Message::instance()->format($action, $module))
+                ->with('fail', $message)
                 ->withInput();
         }
     }
@@ -170,7 +186,7 @@ class RoleController extends Controller
         $status     =   'success';
         $message    =   Message::instance()->format($action, $module, 'success');
 
-        // $role->syncPermissions([]);
+        $role->syncPermissions([]);
         $role->delete();
 
         activity()->useLog('web')

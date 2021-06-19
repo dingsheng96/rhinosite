@@ -9,7 +9,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class AdminDataTable extends DataTable
+class MerchantDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -24,19 +24,19 @@ class AdminDataTable extends DataTable
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return view('components.action', [
-                    'no_action' => $this->no_action ?: $data->id == auth()->id(),
+                    'no_action' => $this->no_action ?: null,
                     'view' => [
-                        'permission' => 'admin.read',
-                        'route' => route('users.admins.show', ['admin' => $data->id])
+                        'permission' => 'merchant.read',
+                        'route' => route('users.merchants.show', ['merchant' => $data->id])
                     ],
                     'update' => [
-                        'permission' => 'admin.update',
-                        'route' => '#updateadminModal',
-                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode(['name' => $data->name, 'code' => $data->code]) . "'" . ' data-route="' . route('users.admins.update', ['admin' => $data->id]) . '"'
+                        'permission' => 'merchant.update',
+                        'route' => '#updatemerchantModal',
+                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode(['name' => $data->name, 'code' => $data->code]) . "'" . ' data-route="' . route('users.merchants.update', ['merchant' => $data->id]) . '"'
                     ],
                     'delete' => [
-                        'permission' => 'admin.delete',
-                        'route' => route('users.admins.destroy', ['admin' => $data->id])
+                        'permission' => 'merchant.delete',
+                        'route' => route('users.merchants.destroy', ['merchant' => $data->id])
                     ]
                 ])->render();
             })
@@ -60,7 +60,7 @@ class AdminDataTable extends DataTable
      */
     public function query(User $model)
     {
-        return $model->admin()->newQuery();
+        return $model->merchant()->newQuery();
     }
 
     /**
@@ -71,7 +71,7 @@ class AdminDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('admin-table')
+            ->setTableId('merchant-table')
             ->addTableClass('table-hover table-bordered table-head-fixed table-striped')
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -91,6 +91,8 @@ class AdminDataTable extends DataTable
             Column::computed('DT_RowIndex', '#'),
             Column::make('name')->title(__('labels.name')),
             Column::make('email')->title(__('labels.email')),
+            Column::make('mobile_no')->title(__('labels.mobile_no')),
+            Column::make('reg_no')->title(__('labels.reg_no')),
             Column::make('status')->title(__('labels.status')),
             Column::make('created_at')->title(__('labels.datetime')),
             Column::computed('action')
@@ -106,6 +108,6 @@ class AdminDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Admin_' . date('YmdHis');
+        return 'Merchant_' . date('YmdHis');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Status;
 use App\Models\Settings\Role\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
@@ -88,5 +89,12 @@ class User extends Authenticatable
     public function getRoleNameAttribute()
     {
         return $this->getRoleNames()->first();
+    }
+
+    public function getStatusLabelAttribute()
+    {
+        $label = Status::instance()->statusLabel($this->status);
+
+        return '<h5><span class="' . $label['class'] . '">' . $label['text'] . '</span></h5>';
     }
 }

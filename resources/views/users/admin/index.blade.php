@@ -10,9 +10,9 @@
                 <div class="card-header bg-transparent">
                     @can('admin.create')
                     <span class="card-tools">
-                        <a href="#roleModal" class="btn btn-outline-primary" data-toggle="modal">
+                        <a href="#adminModal" class="btn btn-outline-primary" data-toggle="modal">
                             <i class="fas fa-plus"></i>
-                            {{ __('labels.create', ['module' => trans_choice('modules.submodules.role', 1)]) }}
+                            {{ __('labels.create') }}
                         </a>
                     </span>
                     @endcan
@@ -25,7 +25,7 @@
     </div>
 </div>
 
-{{-- @includeWhen(Auth::user()->can('admin.create'), 'settings.role.create') --}}
+@includeWhen(Auth::user()->can('admin.create'), 'users.admin.create', compact('statuses'))
 
 @endsection
 

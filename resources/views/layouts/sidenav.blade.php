@@ -40,6 +40,27 @@
                             </a>
                         </li>
                         @endcanany
+                        @canany(['merchant.create', 'merchant.read'. 'merchant.update', 'merchant.delete'])
+                        <li class="nav-item">
+                            <a href="{{ route('users.merchants.index') }}" class="nav-link {{ Nav::hasSegment('merchants', 2, 'active') }}">
+                                <p>{{ trans_choice('modules.submodules.merchant', 1) }}</p>
+                            </a>
+                        </li>
+                        @endcanany
+                        @canany(['member.create', 'member.read'. 'member.update', 'member.delete'])
+                        <li class="nav-item">
+                            <a href="{{ route('users.members.index') }}" class="nav-link {{ Nav::hasSegment('members', 2, 'active') }}">
+                                <p>{{ trans_choice('modules.submodules.merchant', 1) }}</p>
+                            </a>
+                        </li>
+                        @endcanany
+                        @canany(['registration.create', 'registration.read'. 'registration.update', 'registration.delete'])
+                        <li class="nav-item">
+                            <a href="{{ route('users.registrations.index') }}" class="nav-link {{ Nav::hasSegment('registrations', 2, 'active') }}">
+                                <p>{{ trans_choice('modules.submodules.registrations', 1) }}</p>
+                            </a>
+                        </li>
+                        @endcanany
                     </ul>
                 </li>
 

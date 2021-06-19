@@ -46,22 +46,30 @@ class CurrencyController extends Controller
     {
         DB::beginTransaction();
 
-        $action = Permission::ACTION_CREATE;
-        $module = strtolower(trans_choice('modules.submodules.currency', 1));
+        $action     =   Permission::ACTION_CREATE;
+        $module     =   strtolower(trans_choice('modules.submodules.currency', 1));
+        $message    =   Message::instance()->format($action, $module);
 
         try {
 
             $input = $request->get('create');
 
-            Currency::create([
+            $currency = Currency::create([
                 'name' => $input['name'],
                 'code' => $input['code']
             ]);
 
             DB::commit();
 
-            return redirect()->route('settings.currencies.index')
-                ->withSuccess(Message::instance()->format($action, $module, 'success'));
+            $message = Message::instance()->format($action, $module, 'success');
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($currency)
+                ->withProperties($request->all())
+                ->log($message);
+
+            return redirect()->route('settings.currencies.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
@@ -73,7 +81,7 @@ class CurrencyController extends Controller
                 ->log($e->getMessage());
 
             return redirect()->back()
-                ->with('fail', Message::instance()->format($action, $module))
+                ->with('fail', $message)
                 ->withInput();
         }
     }
@@ -112,8 +120,9 @@ class CurrencyController extends Controller
     {
         DB::beginTransaction();
 
-        $action = Permission::ACTION_UPDATE;
-        $module = strtolower(trans_choice('modules.submodules.currency', 1));
+        $action     =   Permission::ACTION_UPDATE;
+        $module     =   strtolower(trans_choice('modules.submodules.currency', 1));
+        $message    =   Message::instance()->format($action, $module);
 
         try {
 
@@ -128,6 +137,14 @@ class CurrencyController extends Controller
 
             DB::commit();
 
+            $message = Message::instance()->format($action, $module, 'success');
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($currency)
+                ->withProperties($request->all())
+                ->log($message);
+
             return redirect()->route('settings.currencies.index')
                 ->withSuccess(Message::instance()->format($action, $module, 'success'));
         } catch (\Error | \Exception $e) {
@@ -141,7 +158,7 @@ class CurrencyController extends Controller
                 ->log($e->getMessage());
 
             return redirect()->back()
-                ->with('fail', Message::instance()->format($action, $module))
+                ->with('fail', $message)
                 ->withInput();
         }
     }
@@ -157,16 +174,18 @@ class CurrencyController extends Controller
         $action     =   Permission::ACTION_DELETE;
         $module     =   strtolower(trans_choice('modules.submodules.currency', 1));
         $status     =   'success';
-        $message    =   Message::instance()->format($action, $module, 'success');
+        $message    =   Message::instance()->format($action, $module);
 
         try {
 
             throw_if(
                 $currency->countries()->count() > 0,
-                new Exception(Message::instance()->format($action, $module)),
+                new Exception($message),
             );
 
             $currency->delete();
+
+            $message = Message::instance()->format($action, $module, 'success');
 
             activity()->useLog('web')
                 ->causedBy(Auth::user())
@@ -177,7 +196,6 @@ class CurrencyController extends Controller
             DB::rollBack();
 
             $status = 'fail';
-            $message = Message::instance()->format($action, $module);
 
             activity()->useLog('web')
                 ->causedBy(Auth::user())

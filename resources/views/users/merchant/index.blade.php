@@ -1,4 +1,4 @@
-@extends('layouts.master', ['parent_title' => trans_choice('modules.setting', 2), 'title' => trans_choice('modules.submodules.currency', 2)])
+@extends('layouts.master', ['parent_title' => trans_choice('modules.user', 2), 'title' => trans_choice('modules.submodules.merchant', 2)])
 
 @section('content')
 
@@ -8,11 +8,11 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-transparent">
-                    @can('currency.create')
+                    @can('merchant.create')
                     <span class="card-tools">
-                        <a href="#currencyModal" class="btn btn-outline-primary" data-toggle="modal">
-                            <i class="fas fa-plus"></i>
-                            {{ __('labels.create') }}
+                        <a href="" class="btn btn-outline-primary" data-toggle="modal">
+                            <i class="fas fa-clipboard"></i>
+                            {{ __('labels.registration') . '('.$registrations_count.')' }}
                         </a>
                     </span>
                     @endcan
@@ -24,9 +24,6 @@
         </div>
     </div>
 </div>
-
-@includeWhen(Auth::user()->can('currency.create'), 'settings.currency.create')
-@includeWhen(Auth::user()->can('currency.update'), 'settings.currency.edit')
 
 @endsection
 

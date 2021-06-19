@@ -50,8 +50,9 @@ class CountryStateController extends Controller
     {
         DB::beginTransaction();
 
-        $action = Permission::ACTION_CREATE;
-        $module = strtolower(trans_choice('modules.submodules.country_state', 1));
+        $action     =   Permission::ACTION_CREATE;
+        $module     =   strtolower(trans_choice('modules.submodules.country_state', 1));
+        $message    =   Message::instance()->format($action, $module);
 
         try {
 
@@ -94,7 +95,7 @@ class CountryStateController extends Controller
                 ->log($e->getMessage());
 
             return redirect()->back()
-                ->with('fail', Message::instance()->format($action, $module))
+                ->with('fail', $message)
                 ->withInput();
         }
     }
@@ -133,8 +134,9 @@ class CountryStateController extends Controller
     {
         DB::beginTransaction();
 
-        $action = Permission::ACTION_UPDATE;
-        $module = strtolower(trans_choice('modules.submodules.country_state', 1));
+        $action     =   Permission::ACTION_UPDATE;
+        $module     =   strtolower(trans_choice('modules.submodules.country_state', 1));
+        $message    =   Message::instance()->format($action, $module);
 
         try {
 
@@ -166,7 +168,7 @@ class CountryStateController extends Controller
                 ->log($e->getMessage());
 
             return redirect()->back()
-                ->with('fail', Message::instance()->format($action, $module))
+                ->with('fail', $message)
                 ->withInput();
         }
     }
@@ -192,7 +194,7 @@ class CountryStateController extends Controller
             ->log($message);
 
         return Response::instance()
-            ->withStatusCode('modules.country', 'actions.' . $action . $status)
+            ->withStatusCode('modules.country_state', 'actions.' . $action . $status)
             ->withStatus($status)
             ->withMessage($message, true)
             ->withData([

@@ -33,7 +33,7 @@ class ModuleSeeder extends Seeder
             ['name' => 'language', 'display' => 'Language', 'description' => 'Language Module'],
             ['name' => 'role', 'display' => 'Role', 'description' => 'Role Module'],
             ['name' => 'unit', 'display' => 'Unit', 'description' => 'Unit Module'],
-            ['name' => 'enduser', 'display' => 'End User', 'description' => 'End User Module'],
+            ['name' => 'member', 'display' => 'Member', 'description' => 'Member Module'],
             ['name' => 'merchant', 'display' => 'Merchant', 'description' => 'Merchant Module'],
             ['name' => 'admin', 'display' => 'Admin', 'description' => 'Admin Module'],
         ];

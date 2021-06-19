@@ -49,8 +49,9 @@ class CityController extends Controller
     {
         DB::beginTransaction();
 
-        $action = Permission::ACTION_CREATE;
-        $module = strtolower(trans_choice('modules.submodules.city', 1));
+        $action     =   Permission::ACTION_CREATE;
+        $module     =   strtolower(trans_choice('modules.submodules.city', 1));
+        $message    =   Message::instance()->format($action, $module);
 
         try {
 
@@ -88,7 +89,7 @@ class CityController extends Controller
                 ->log($e->getMessage());
 
             return redirect()->back()
-                ->with('fail', Message::instance()->format($action, $module))
+                ->with('fail', $message)
                 ->withInput();
         }
     }
@@ -148,7 +149,7 @@ class CityController extends Controller
             ->log($message);
 
         return Response::instance()
-            ->withStatusCode('modules.country', 'actions.' . $action . $status)
+            ->withStatusCode('modules.city', 'actions.' . $action . $status)
             ->withStatus($status)
             ->withMessage($message, true)
             ->withData([

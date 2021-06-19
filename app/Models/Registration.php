@@ -9,6 +9,8 @@ class Registration extends Model
 {
     use SoftDeletes;
 
+    const STATUS_PENDING = 'pending';
+
     protected $table = 'registrations';
 
     protected $fillable = [

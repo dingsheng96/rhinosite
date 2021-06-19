@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use App\Models\Settings\Role\Role;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -33,6 +35,8 @@ class RouteServiceProvider extends ServiceProvider
         //
 
         parent::boot();
+
+        $this->routeBindings();
     }
 
     /**
@@ -74,5 +78,24 @@ class RouteServiceProvider extends ServiceProvider
             ->middleware('api')
             ->namespace($this->namespace)
             ->group(base_path('routes/api.php'));
+    }
+
+    protected function routeBindings()
+    {
+        Route::bind('admin', function ($value) {
+            return User::where('id', $value)
+                ->whereHas('roles', function ($query) {
+                    $query->where('name', Role::ROLE_SUPER_ADMIN);
+                })
+                ->firstOrFail();
+        });
+
+        Route::bind('merchant', function ($value) {
+            return User::where('id', $value)
+                ->whereHas('roles', function ($query) {
+                    $query->where('name', Role::ROLE_MERCHANT);
+                })
+                ->firstOrFail();
+        });
     }
 }
