@@ -109,4 +109,14 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return $folders[$this->roles()->first()->name];
     }
+
+    public function getIsAdminAttribute()
+    {
+        return $this->role_name == Role::ROLE_SUPER_ADMIN;
+    }
+
+    public function getIsMerchantAttribute()
+    {
+        return $this->role_name == Role::ROLE_MERCHANT;
+    }
 }

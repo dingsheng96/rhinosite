@@ -24,6 +24,15 @@
                     </a>
                 </li>
 
+                @canany(['project.create', 'project.read', 'project.update', 'project.delete'])
+                <li class="nav-item">
+                    <a href="{{ route('projects.index') }}" class="nav-link {{ Nav::hasSegment('projects', 1, 'active') }}">
+                        <i class="nav-icon fas fa-briefcase"></i>
+                        <p>{{ trans_choice('modules.project', 2) }}</p>
+                    </a>
+                </li>
+                @endcanany
+
                 @canany(['admin.create', 'admin.read'. 'admin.update', 'admin.delete', 'member.create', 'member.read'. 'member.update', 'member.delete', 'merchant.create', 'merchant.read'. 'merchant.update', 'merchant.delete'])
                 <li class="nav-item has-treeview {{ Nav::hasSegment(['users'], 1, 'menu-open') }}">
                     <a href="#" class="nav-link {{ Nav::hasSegment(['users'], 1, 'active') }}">

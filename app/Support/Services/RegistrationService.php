@@ -7,6 +7,7 @@ use App\Models\Registration;
 use App\Mail\RegistrationApproved;
 use App\Mail\RegistrationRejected;
 use App\Models\Settings\Role\Role;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class RegistrationService extends BaseService
@@ -37,7 +38,7 @@ class RegistrationService extends BaseService
     public function validateRegistration(string $status)
     {
         if ($status != Registration::STATUS_PENDING) {
-            $this->model->validate_by   =   auth()->id();
+            $this->model->validate_by   =   Auth::id();
             $this->model->validated_at  =   now();
             $this->model->save();
 

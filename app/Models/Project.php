@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Helpers\Misc;
+use App\Models\Settings\Currency;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -51,20 +53,29 @@ class Project extends Model
     // Attributes
     public function getPriceAttribute()
     {
-        $currency   =   $this->currency->name;
-        $price      =   '';
-        $unit       =   $this->unit->name;
+        $currency   =   $this->currency->code;
+        $price      =   Misc::instance()->getPriceFromIntToFloat($this->unit_price);
+        $unit       =   $this->unit->display;
         $unit_value =   $this->unit_value;
 
-        return $currency . $price . ' ' . $unit_value . $unit;
+        return $currency . $price . ' / ' . $unit_value . $unit;
     }
 
     public function getLocationAttribute()
     {
-        $city           =   $this->city->name;
-        $country_state  =   $this->city->countryState->name;
-        $country        =   $this->city->country->name;
+        $city           =   $this->city->name ?? '';
+        $country_state  =   $this->city->countryState->name ?? '';
+        $country        =   $this->city->country->name ?? '';
 
         return $city . ', ' . $country_state . ', ' . $country;
+    }
+
+    public function getEnglishTitleAttribute()
+    {
+        return $this->translations()
+        ->whereHas('language', function ($query) {
+            $query->where('code', Language::CODE_EN);
+        })->first()
+        ->value;
     }
 }

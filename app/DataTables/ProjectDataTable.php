@@ -2,15 +2,15 @@
 
 namespace App\DataTables;
 
-use App\Models\User;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
+use App\Models\Settings\Role\Role;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class AdminDataTable extends DataTable
+class ProjectDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -25,43 +25,36 @@ class AdminDataTable extends DataTable
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return view('components.action', [
-                    'no_action' => $this->no_action ?: $data->id == Auth::id(),
+                    'no_action' => $this->no_action ?: ($data->name == Role::ROLE_SUPER_ADMIN),
                     'view' => [
-                        'permission' => 'admin.read',
-                        'route' => route('users.admins.show', ['admin' => $data->id])
+                        'permission' => 'role.read',
+                        'route' => route('settings.roles.show', ['role' => $data->id])
                     ],
                     'update' => [
-                        'permission' => 'admin.update',
-                        'route' => '#updateadminModal',
-                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode(['name' => $data->name, 'code' => $data->code]) . "'" . ' data-route="' . route('users.admins.update', ['admin' => $data->id]) . '"'
+                        'permission' => 'role.update',
+                        'route' => route('settings.roles.edit', ['role' => $data->id]),
                     ],
                     'delete' => [
-                        'permission' => 'admin.delete',
-                        'route' => route('users.admins.destroy', ['admin' => $data->id])
+                        'permission' => 'role.delete',
+                        'route' => route('settings.roles.destroy', ['role' => $data->id])
                     ]
                 ])->render();
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
-            ->editColumn('status', function ($data) {
-                return $data->status_label;
-            })
-            ->filterColumn('status', function ($query, $keyword) {
-                $query->where('status', strtolower($keyword));
-            })
-            ->rawColumns(['action', 'status']);
+            ->rawColumns(['action']);
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\User $model
+     * @param \App\Models\Settings\Role\Role $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(User $model)
+    public function query(Role $model)
     {
-        return $model->admin()->newQuery();
+        return $model->newQuery();
     }
 
     /**
@@ -72,7 +65,7 @@ class AdminDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('admin-table')
+            ->setTableId('role-table')
             ->addTableClass('table-hover table-bordered table-head-fixed table-striped')
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -91,8 +84,7 @@ class AdminDataTable extends DataTable
         return [
             Column::computed('DT_RowIndex', '#'),
             Column::make('name')->title(__('labels.name')),
-            Column::make('email')->title(__('labels.email')),
-            Column::make('status')->title(__('labels.status')),
+            Column::make('description')->title(__('labels.description')),
             Column::make('created_at')->title(__('labels.datetime')),
             Column::computed('action')
                 ->exportable(false)
@@ -107,6 +99,6 @@ class AdminDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Admin_' . date('YmdHis');
+        return 'Role_' . date('YmdHis');
     }
 }

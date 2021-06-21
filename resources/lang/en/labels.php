@@ -19,6 +19,8 @@ return [
     'rejected' => 'Rejected',
     'approved' => 'Approved',
     'download' => 'Download',
+    'add_new' => 'Add New :module',
+    'show_records' => 'Showing :item of :total records',
 
     'start_session' => 'Sign in to start your session',
     'copyright' => '&copy ' . config('app.name') . ' ' . date('Y'),
@@ -38,6 +40,7 @@ return [
     'no_records' => 'No records found.',
     'errors_found' => 'Errors found!',
     'dropdown_placeholder' => 'Please select :label',
+    'text_placeholder' => 'Enter :label',
     'delete_confirm_question' => 'Are you sure?',
     'delete_info' => 'You will not be able to revert this!',
     'password_format' => 'Minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter and 1 number',
@@ -71,5 +74,16 @@ return [
     'city' => 'City/Town',
     'country_state' => 'State/Province',
     'country' => 'Country',
-    'media' => 'Media'
+    'media' => 'Media',
+    'project_title' => 'Title of Project (:lang)',
+    'english' => 'English',
+    'chinese' => 'Chinese',
+    'category' => 'Category',
+    'material_used' => 'Material Used',
+    'general' => 'General',
+    'location' => 'Location',
+    'boost_ads' => 'Boost Ads',
+    'services' => 'Services',
+    'upload_thumbnail' => 'Upload Thumbnail',
+    'upload_image' => 'Upload Image|Upload Images'
 ];

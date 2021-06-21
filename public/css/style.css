@@ -74,3 +74,7 @@
 .show > .btn-outline-indigo.dropdown-toggle:focus {
     box-shadow: 0 0 0 0 rgb(93, 110, 213, 0.5);
 }
+
+.btn-rounded-corner {
+    border-radius: 30px;
+}

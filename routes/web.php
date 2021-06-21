@@ -24,6 +24,8 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
     Route::get('dashboard', 'HomeController@index')->name('dashboard');
 
+    Route::resource('projects', 'ProjectController');
+
     Route::group(['prefix' => 'users', 'as' => 'users.', 'namespace' => 'Users'], function () {
         Route::resource('admins', 'AdminController');
         Route::resource('members', 'MemberController');
