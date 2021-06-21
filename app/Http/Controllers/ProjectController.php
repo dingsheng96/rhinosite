@@ -6,6 +6,7 @@ use App\Models\Project;
 use Illuminate\Http\Request;
 use App\DataTables\ProjectDataTable;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ProjectRequest;
 use App\Models\Settings\Country\Country;
 
 class ProjectController extends Controller
@@ -45,7 +46,7 @@ class ProjectController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProjectRequest $request)
     {
         //
     }

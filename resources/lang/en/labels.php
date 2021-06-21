@@ -44,6 +44,9 @@ return [
     'delete_confirm_question' => 'Are you sure?',
     'delete_info' => 'You will not be able to revert this!',
     'password_format' => 'Minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter and 1 number',
+    'upload_file_rules' => 'Only :maxfiles :extensions files are allowed, and must be not more than :maxsize',
+    'boosts_ads_preference_text' => 'You may choose to boost this project',
+    'select_prefer_boosts_ads_days' => 'Select your preferred day to boost ads.',
 
     'project' => 'Project|Projects',
     'country_state' => 'Country State|Country States',
@@ -85,5 +88,7 @@ return [
     'boost_ads' => 'Boost Ads',
     'services' => 'Services',
     'upload_thumbnail' => 'Upload Thumbnail',
-    'upload_image' => 'Upload Image|Upload Images'
+    'upload_image' => 'Upload Image|Upload Images',
+    'ads_type' => 'Ads Type',
+    'boosts_ads_date' => 'Boosts Ads Date'
 ];

@@ -23,7 +23,7 @@ class City extends Model
 
     public function country()
     {
-        return $this->hasOneThrough(Country::class, CountryState::class, 'country_id', 'id', 'city_id', 'id');
+        return $this->hasOneThrough(Country::class, CountryState::class, 'id', 'id', 'country_state_id', 'country_id');
     }
 
     // Attributes

@@ -77,9 +77,15 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="images" class="col-form-label">{{ trans_choice('labels.upload_image', 2) }}</label>
-
-                                            @error('images')
+                                            <label for="files" class="col-form-label">{{ trans_choice('labels.upload_image', 2) }}</label>
+                                            <div class="dropzone" id="myDropzone" data-max-files="5" data-accepted-files=".jpg,.jpeg,.png">
+                                                <div class="dz-default dz-message">
+                                                    <h1><i class="fas fa-cloud-upload-alt"></i></h1>
+                                                    <h4>{{ __('Drop files here to upload') }}</h4>
+                                                    <span>{{ __('labels.upload_file_rules', ['maxsize' => '10mb', 'extensions' => 'JPG,JPEG, PNG', 'maxfiles' => '5' ]) }}</span>
+                                                </div>
+                                            </div>
+                                            @error('files')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -144,7 +150,7 @@
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
                                                     <label for="country" class="col-form-label">{{ trans_choice('labels.country', 1) }}</label>
-                                                    <select name="country" id="country" class="form-control select2 @error('country') is-invalid @enderror">
+                                                    <select name="country" id="country" class="form-control select2 @error('country') is-invalid @enderror country-state-filter">
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.country', 1))]) }} ---</option>
                                                         @foreach ($countries as $country)
                                                         <option value="{{ $country->id }}" {{ old('country') == $country->id ? 'selected' : null }}>{{ $country->name }}</option>
@@ -175,7 +181,8 @@
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
                                                     <label for="country_state" class="col-form-label">{{ trans_choice('labels.country_state', 1) }}</label>
-                                                    <select name="country_state" id="country_state" class="form-control select2 @error('country_state') is-invalid @enderror" data-selected="{{ old('country_state') }}">
+                                                    <select name="country_state" id="country_state" class="form-control select2 @error('country_state') is-invalid @enderror country-state-dropdown city-filter" data-selected="{{ old('country_state') }}"
+                                                        data-country-state-route="{{ route('data.countries.country-states', ['__REPLACE__']) }}">
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.country_state', 1))]) }} ---</option>
                                                     </select>
                                                     @error('country_state')
@@ -188,7 +195,8 @@
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
                                                     <label for="city" class="col-form-label">{{ trans_choice('labels.city', 1) }}</label>
-                                                    <select name="city" id="city" class="form-control select2 @error('city') is-invalid @enderror" data-selected="{{ old('city') }}">
+                                                    <select name="city" id="city" class="form-control select2 @error('city') is-invalid @enderror city-dropdown" data-selected="{{ old('city') }}"
+                                                        data-city-route="{{ route('data.countries.country-states.cities', ['__FIRST_REPLACE__', '__SECOND_REPLACE__']) }}">
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.city', 1))]) }} ---</option>
                                                     </select>
                                                     @error('city')
@@ -203,6 +211,43 @@
                                     </div>
 
                                     <div class="tab-pane fade" id="vert-tabs-ads" role="tabpanel" aria-labelledby="vert-tabs-ads-tab">
+                                        <div class="form-group">
+                                            <label for="boost_ads_text">{{ __('labels.boosts_ads_preference_text') }}</label>
+                                            <p id="boost_ads_text">{{ __('labels.select_prefer_boosts_ads_days') }}</p>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group">
+                                                    <label for="ads_type" class="col-form-label">{{ __('labels.ads_type') }}</label>
+                                                    <select name="ads_type" id="ads_type" class="form-control select2 @error('ads_type') is-invalid @enderror disabled-date-filter">
+                                                        <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.ads_type'))]) }} ---</option>
+                                                    </select>
+                                                    @error('ads_type')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group">
+                                                    <label for="boosts_ads_date" class="col-form-label">{{ __('labels.boosts_ads_date') }}</label>
+                                                    <div class="input-group date-picker">
+                                                        <input type="text" id="boost_ads_date" name="boosts_ads_date" class="form-control @error('boosts_ads_date') is-invalid @enderror bg-white" readonly placeholder="dd/mm/yyyy"
+                                                            data-disabled-date-route="{{ route('data.ads-boosters.available-date', ['__REPLACE__']) }}">
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text bg-white"><i class="far fa-calendar"></i></span>
+                                                        </div>
+                                                    </div>
+                                                    @error('boosts_ads_date')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 

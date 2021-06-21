@@ -52,6 +52,7 @@
     <script src="{{ asset('js/function.js?v=' . time()) }}"></script>
     <script src="{{ asset('js/dropdown.js?v=' . time()) }}"></script>
     <script src="{{ asset('js/modal.js?v=' . time()) }}"></script>
+    <script src="{{ asset('js/dropzone.js?v=' . time()) }}"></script>
     @stack('scripts')
 
 </body>

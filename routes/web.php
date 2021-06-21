@@ -46,8 +46,12 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
     });
 });
 
-Route::view('mail', 'mail.rejection');
+Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
 
-Route::group(['prefix' => 'account', 'as' => 'account.', 'namespace' => 'Users'], function () {
-    Route::get('verify', 'AccountController@redirectSetup')->name('verify');
+    Route::group(['prefix' => 'countries/{country}', 'as' => 'countries.'], function () {
+        Route::get('country-states', 'DataController@getCountryStateFromCountry')->name('country-states');
+        Route::get('country-states/{country_state}/cities', 'DataController@getCityFromCountryState')->name('country-states.cities');
+    });
+
+    Route::get('ads-boosters/{ads}/available-date', 'DateController@getAdsBoosterAvailableDate')->name('ads-boosters.available-date');
 });
