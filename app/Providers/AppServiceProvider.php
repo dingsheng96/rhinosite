@@ -9,7 +9,8 @@ use App\Models\Settings\Country\Country;
 class AppServiceProvider extends ServiceProvider
 {
     protected $custom_facades = [
-        'countryFacade' => \App\Support\Services\CountryService::class
+        'countryFacade' => \App\Support\Services\CountryService::class,
+        'registrationFacade' => \App\Support\Services\RegistrationService::class
     ];
 
     /**

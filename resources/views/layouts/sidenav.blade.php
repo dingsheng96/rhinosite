@@ -1,7 +1,7 @@
 <aside class="main-sidebar sidebar-dark-orange elevation-2">
 
-    <a href="{{ url('/') }}" class="brand-link navbar-orange">
-        <img src="#" alt="System Logo" class="brand-text" style="max-width: 24%; margin: 0 auto; display: block;">
+    <a href="{{ route('dashboard') }}" class="brand-link navbar-orange">
+        <img src="{{ asset('storage/logo.png') }}" alt="System Logo" class="brand-text d-block mx-auto my-0" style="max-width: 55%;">
     </a>
 
     <div class="sidebar">
@@ -24,6 +24,7 @@
                     </a>
                 </li>
 
+                @canany(['admin.create', 'admin.read'. 'admin.update', 'admin.delete', 'member.create', 'member.read'. 'member.update', 'member.delete', 'merchant.create', 'merchant.read'. 'merchant.update', 'merchant.delete'])
                 <li class="nav-item has-treeview {{ Nav::hasSegment(['users'], 1, 'menu-open') }}">
                     <a href="#" class="nav-link {{ Nav::hasSegment(['users'], 1, 'active') }}">
                         <i class="nav-icon fas fa-users"></i>
@@ -36,35 +37,36 @@
                         @canany(['admin.create', 'admin.read'. 'admin.update', 'admin.delete'])
                         <li class="nav-item">
                             <a href="{{ route('users.admins.index') }}" class="nav-link {{ Nav::hasSegment('admins', 2, 'active') }}">
-                                <p>{{ trans_choice('modules.submodules.admin', 1) }}</p>
-                            </a>
-                        </li>
-                        @endcanany
-                        @canany(['merchant.create', 'merchant.read'. 'merchant.update', 'merchant.delete'])
-                        <li class="nav-item">
-                            <a href="{{ route('users.merchants.index') }}" class="nav-link {{ Nav::hasSegment('merchants', 2, 'active') }}">
-                                <p>{{ trans_choice('modules.submodules.merchant', 1) }}</p>
+                                <p>{{ trans_choice('modules.submodules.admin', 2) }}</p>
                             </a>
                         </li>
                         @endcanany
                         @canany(['member.create', 'member.read'. 'member.update', 'member.delete'])
                         <li class="nav-item">
                             <a href="{{ route('users.members.index') }}" class="nav-link {{ Nav::hasSegment('members', 2, 'active') }}">
-                                <p>{{ trans_choice('modules.submodules.merchant', 1) }}</p>
+                                <p>{{ trans_choice('modules.submodules.member', 2) }}</p>
                             </a>
                         </li>
                         @endcanany
-                        @canany(['registration.create', 'registration.read'. 'registration.update', 'registration.delete'])
+                        @canany(['merchant.create', 'merchant.read'. 'merchant.update', 'merchant.delete'])
+                        <li class="nav-item">
+                            <a href="{{ route('users.merchants.index') }}" class="nav-link {{ Nav::hasSegment('merchants', 2, 'active') }}">
+                                <p>{{ trans_choice('modules.submodules.merchant', 2) }}</p>
+                            </a>
+                        </li>
+                        @endcanany
+                        @canany(['merchant.create'])
                         <li class="nav-item">
                             <a href="{{ route('users.registrations.index') }}" class="nav-link {{ Nav::hasSegment('registrations', 2, 'active') }}">
-                                <p>{{ trans_choice('modules.submodules.registrations', 1) }}</p>
+                                <p>{{ trans_choice('modules.submodules.registration', 2) }}</p>
                             </a>
                         </li>
                         @endcanany
                     </ul>
                 </li>
+                @endcanany
 
-                @canany(['country.create', 'country.read'. 'country.update', 'country.delete'])
+                @canany(['country.create', 'country.read'. 'country.update', 'country.delete', 'currency.create', 'currency.read'. 'currency.update', 'currency.delete', 'role.create', 'role.read'. 'role.update', 'role.delete'])
                 <li class="nav-item has-treeview {{ Nav::hasSegment(['settings'], 1, 'menu-open') }}">
                     <a href="#" class="nav-link {{ Nav::hasSegment(['settings'], 1, 'active') }}">
                         <i class="nav-icon fas fa-cogs"></i>

@@ -11,15 +11,12 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use SoftDeletes, HasRoles;
+    use SoftDeletes, HasRoles, Notifiable;
 
     const STATUS_ACTIVE = 'active';
     const STATUS_INACTIVE = 'inactive';
-    const STATUS_PENDING = 'pending';
-    const STATUS_APPROVED = 'approved';
-    const STATUS_REJECTED = 'rejected';
 
     protected $table = 'users';
 
@@ -42,14 +39,14 @@ class User extends Authenticatable
         return $this->belongsTo(Registration::class, 'registration_id', 'id');
     }
 
-    public function profileImage()
-    {
-        return $this->morphOne(Media::class, 'sourceable');
-    }
-
     public function address()
     {
         return $this->morphOne(Address::class, 'sourceable');
+    }
+
+    public function media()
+    {
+        return $this->morphMany(Media::class, 'sourceable');
     }
 
     // Scopes
@@ -96,5 +93,20 @@ class User extends Authenticatable
         $label = Status::instance()->statusLabel($this->status);
 
         return '<h5><span class="' . $label['class'] . '">' . $label['text'] . '</span></h5>';
+    }
+
+    public function getProfileImageAttribute()
+    {
+        $media = $this->media()->where('type', Media::TYPE_PROFILE)->first();
+    }
+
+    public function getFolderNameAttribute()
+    {
+        $folders = [
+            Role::ROLE_SUPER_ADMIN => 'admin',
+            Role::ROLE_MERCHANT => 'merchant'
+        ];
+
+        return $folders[$this->roles()->first()->name];
     }
 }

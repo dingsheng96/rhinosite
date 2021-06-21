@@ -20,15 +20,15 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::middleware(['auth:web'])->group(function () {
+Route::middleware(['auth:web', 'verified'])->group(function () {
 
     Route::get('dashboard', 'HomeController@index')->name('dashboard');
 
     Route::group(['prefix' => 'users', 'as' => 'users.', 'namespace' => 'Users'], function () {
         Route::resource('admins', 'AdminController');
-        Route::resource('merchants', 'MerchantController');
         Route::resource('members', 'MemberController');
-        Route::resource('registrations', 'RegistrationController');
+        Route::resource('merchants', 'MerchantController');
+        Route::resource('registrations', 'RegistrationController')->except(['create', 'store']);
     });
 
     Route::group(['prefix' => 'settings', 'as' => 'settings.', 'namespace' => 'Settings'], function () {
@@ -42,4 +42,10 @@ Route::middleware(['auth:web'])->group(function () {
         Route::resource('currencies', 'CurrencyController');
         Route::resource('roles', 'RoleController');
     });
+});
+
+Route::view('mail', 'mail.rejection');
+
+Route::group(['prefix' => 'account', 'as' => 'account.', 'namespace' => 'Users'], function () {
+    Route::get('verify', 'AccountController@redirectSetup')->name('verify');
 });

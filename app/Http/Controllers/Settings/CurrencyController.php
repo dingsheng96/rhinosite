@@ -145,8 +145,7 @@ class CurrencyController extends Controller
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->route('settings.currencies.index')
-                ->withSuccess(Message::instance()->format($action, $module, 'success'));
+            return redirect()->route('settings.currencies.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();

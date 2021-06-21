@@ -26,12 +26,6 @@ class BladeServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Blade::if('admin', function () {
-            return Auth::user()->role_name == Role::ROLE_SUPER_ADMIN;
-        });
-
-        Blade::if('merchant', function () {
-            return Auth::user()->role_name == Role::ROLE_MERCHANT;
-        });
+        //
     }
 }

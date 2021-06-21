@@ -15,6 +15,7 @@
         "country_state": 191,
         "city": 192,
         "currency": 193,
+        "registration": 194,
         "system": 900
     },
     "actions": {

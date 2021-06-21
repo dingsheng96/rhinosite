@@ -27,6 +27,7 @@ return [
         'city' => 'City|Cities',
         'admin' => 'Admin|Admins',
         'merchant' => 'Merchant|Merchants',
-        'member' => 'Member|Members'
+        'member' => 'Member|Members',
+        'registration' => 'Registration|Registrations'
     ]
 ];

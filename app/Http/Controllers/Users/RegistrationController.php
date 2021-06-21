@@ -2,8 +2,17 @@
 
 namespace App\Http\Controllers\Users;
 
-use App\Http\Controllers\Controller;
+use App\Helpers\Status;
+use App\Helpers\Message;
+use App\Models\Registration;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Settings\Role\Permission;
+use App\DataTables\RegistrationDataTable;
+use App\Support\Facades\RegistrationFacade;
 
 class RegistrationController extends Controller
 {
@@ -12,9 +21,10 @@ class RegistrationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, RegistrationDataTable $dataTable)
     {
-        //
+        return $dataTable->with(['request' => $request])
+            ->render('users.registration.index');
     }
 
     /**
@@ -44,9 +54,9 @@ class RegistrationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Registration $registration)
     {
-        //
+        return view('users.registration.show', compact('registration'));
     }
 
     /**
@@ -55,9 +65,11 @@ class RegistrationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Registration $registration)
     {
-        //
+        $statuses = Status::instance()->registrationStatus();
+
+        return view('users.registration.edit', compact('registration', 'statuses'));
     }
 
     /**
@@ -67,9 +79,51 @@ class RegistrationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Registration $registration)
     {
-        //
+        $request->validate([
+            'status' => [
+                'required',
+                Rule::in(collect(Status::instance()->registrationStatus())->keys()->toArray())
+            ]
+        ]);
+
+        DB::beginTransaction();
+
+        $action     =   Permission::ACTION_UPDATE;
+        $module     =   strtolower(trans_choice('modules.submodules.registration', 1));
+        $message    =   Message::instance()->format($action, $module);
+
+        try {
+
+            RegistrationFacade::setModel($registration)
+                ->validateRegistration($request->get('status'));
+
+            DB::commit();
+
+            $message = Message::instance()->format($action, $module, 'success');
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($registration)
+                ->withProperties($request->all())
+                ->log($message);
+
+            return redirect()->route('users.registrations.index')->withSuccess($message);
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($registration)
+                ->withProperties($request->all())
+                ->log($e->getMessage());
+
+            return redirect()->back()
+                ->with('fail', $message)
+                ->withInput();
+        }
     }
 
     /**

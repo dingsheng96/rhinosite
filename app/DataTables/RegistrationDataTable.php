@@ -2,14 +2,14 @@
 
 namespace App\DataTables;
 
-use App\Models\User;
+use App\Models\Registration;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class MerchantDataTable extends DataTable
+class RegistrationDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -23,22 +23,27 @@ class MerchantDataTable extends DataTable
             ->eloquent($query)
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
-                return view('components.action', [
+
+                $actions = [
                     'no_action' => $this->no_action ?: null,
                     'view' => [
-                        'permission' => 'merchant.read',
-                        'route' => route('users.merchants.show', ['merchant' => $data->id])
-                    ],
-                    'update' => [
-                        'permission' => 'merchant.update',
-                        'route' => '#updatemerchantModal',
-                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode(['name' => $data->name, 'code' => $data->code]) . "'" . ' data-route="' . route('users.merchants.update', ['merchant' => $data->id]) . '"'
-                    ],
-                    'delete' => [
-                        'permission' => 'merchant.delete',
-                        'route' => route('users.merchants.destroy', ['merchant' => $data->id])
+                        'permission' => 'merchant.create',
+                        'route' => route('users.registrations.show', ['registration' => $data->id])
                     ]
-                ])->render();
+                ];
+
+                if ($data->status == Registration::STATUS_PENDING) {
+                    $update = [
+                        'update' => [
+                            'permission' => 'merchant.create',
+                            'route' => route('users.registrations.edit', ['registration' => $data->id]),
+                        ]
+                    ];
+
+                    $actions = array_merge($actions, $update);
+                }
+
+                return view('components.action', $actions)->render();
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
@@ -55,12 +60,16 @@ class MerchantDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\User $model
+     * @param \App\Models\Registration $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(User $model)
+    public function query(Registration $model)
     {
-        return $model->merchant()->newQuery();
+        return $model->when(!empty($this->request), function ($query) {
+            $query->when(!empty($this->request->get('status')), function ($query) {
+                $query->where('status', $this->request->get('status'));
+            });
+        })->newQuery();
     }
 
     /**
@@ -71,7 +80,7 @@ class MerchantDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('merchant-table')
+            ->setTableId('registration-table')
             ->addTableClass('table-hover table-bordered table-head-fixed table-striped')
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -107,6 +116,6 @@ class MerchantDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Merchant_' . date('YmdHis');
+        return 'Registration_' . date('YmdHis');
     }
 }

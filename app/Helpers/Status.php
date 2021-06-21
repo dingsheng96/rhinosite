@@ -2,6 +2,9 @@
 
 namespace App\Helpers;
 
+use App\Models\User;
+use App\Models\Registration;
+
 class Status
 {
     public static function instance()
@@ -9,11 +12,11 @@ class Status
         return new self();
     }
 
-    public function activationStatus(): array
+    public function accountStatus(): array
     {
         return [
-            'active' => 'Active',
-            'inactive'  => 'Inactive'
+            User::STATUS_ACTIVE => 'Active',
+            User::STATUS_INACTIVE  => 'Inactive'
         ];
     }
 
@@ -34,6 +37,15 @@ class Status
             'success' => 'Success',
             'confirmed' => 'Confirmed',
             'rejected' => 'Rejected'
+        ];
+    }
+
+    public function registrationStatus(): array
+    {
+        return [
+            Registration::STATUS_PENDING => 'Pending',
+            Registration::STATUS_APPROVED => 'Approved',
+            Registration::STATUS_REJECTED => 'Rejected'
         ];
     }
 
@@ -68,6 +80,10 @@ class Status
                 'text' => __('labels.rejected'),
                 'class' => 'badge badge-pill badge-lg badge-danger'
             ],
+            'approved' => [
+                'text' => __('labels.approved'),
+                'class' => 'badge badge-pill badge-lg badge-success'
+            ]
         ];
 
         return $labels[$status];

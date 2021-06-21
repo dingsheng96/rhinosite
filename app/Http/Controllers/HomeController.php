@@ -21,7 +21,8 @@ class HomeController extends Controller
         $projects_count =   (clone $projects)->count();
         $projects_list  =   (clone $projects)->take(4);
 
+        $data = compact('projects_count', 'projects_list');
 
-        return view('dashboard', compact('projects_count', 'projects_list'));
+        return view('dashboard.' . Auth::user()->folder_name, $data);
     }
 }

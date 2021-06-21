@@ -25,7 +25,7 @@ class AdminController extends Controller
      */
     public function index(AdminDataTable $dataTable)
     {
-        $statuses = Status::instance()->activationStatus();
+        $statuses = Status::instance()->accountStatus();
 
         return $dataTable->render('users.admin.index', compact('statuses'));
     }

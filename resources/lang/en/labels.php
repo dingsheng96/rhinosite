@@ -17,6 +17,8 @@ return [
     'failed' => 'Failed',
     'confirmed' => 'Confirmed',
     'rejected' => 'Rejected',
+    'approved' => 'Approved',
+    'download' => 'Download',
 
     'start_session' => 'Sign in to start your session',
     'copyright' => '&copy ' . config('app.name') . ' ' . date('Y'),
@@ -33,6 +35,7 @@ return [
     'current_bought_product' => 'Current Bought Product',
     'view_all' => 'View All',
     'empty_list' => "You don't have any :list yet",
+    'no_records' => 'No records found.',
     'errors_found' => 'Errors found!',
     'dropdown_placeholder' => 'Please select :label',
     'delete_confirm_question' => 'Are you sure?',
@@ -62,5 +65,11 @@ return [
     'mobile_no' => 'Mobile No',
     'tel_no' => 'Tel No',
     'reg_no' => 'Reg No',
-    'registration' => 'Registration'
+    'address_1' => 'Address 1',
+    'address_2' => 'Address 2',
+    'postcode' => 'Postal Code',
+    'city' => 'City/Town',
+    'country_state' => 'State/Province',
+    'country' => 'Country',
+    'media' => 'Media'
 ];

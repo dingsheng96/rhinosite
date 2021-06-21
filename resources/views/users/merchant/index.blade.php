@@ -10,9 +10,10 @@
                 <div class="card-header bg-transparent">
                     @can('merchant.create')
                     <span class="card-tools">
-                        <a href="" class="btn btn-outline-primary" data-toggle="modal">
-                            <i class="fas fa-clipboard"></i>
-                            {{ __('labels.registration') . '('.$registrations_count.')' }}
+                        <a href="{{ route('users.registrations.index', ['status' => 'pending']) }}" class="btn btn-outline-primary">
+                            <i class="fas fa-clipboard-list"></i>
+                            {{ trans_choice('modules.submodules.registration', 2) }}
+                            <h5 class="d-inline"><span class="badge badge-danger rounded-circle">{{ $registrations_count ?? 0 }}</span></h5>
                         </a>
                     </span>
                     @endcan
