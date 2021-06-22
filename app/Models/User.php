@@ -15,14 +15,14 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use SoftDeletes, HasRoles, Notifiable;
 
-    const STATUS_ACTIVE = 'active';
-    const STATUS_INACTIVE = 'inactive';
+    const STATUS_ACTIVE     =   'active';
+    const STATUS_INACTIVE   =   'inactive';
 
     protected $table = 'users';
 
     protected $fillable = [
-        'name', 'email', 'mobile_no', 'tel_no', 'reg_no',
-        'password', 'remember_token', 'status', 'registration_id', 'email_verified_at'
+        'name', 'phones', 'email', 'password',
+        'remember_token', 'status', 'email_verified_at'
     ];
 
     protected $hidden = [
@@ -34,9 +34,9 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     // Relationships
-    public function registration()
+    public function userDetails()
     {
-        return $this->belongsTo(Registration::class, 'registration_id', 'id');
+        return $this->hasMany(UserDetails::class, 'user_id', 'id');
     }
 
     public function address()
@@ -97,7 +97,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getProfileImageAttribute()
     {
-        $media = $this->media()->where('type', Media::TYPE_PROFILE)->first();
+        return $this->media()
+            ->where('type', Media::TYPE_PROFILE)
+            ->first();
     }
 
     public function getFolderNameAttribute()
