@@ -20,4 +20,10 @@ class Unit extends Model
     {
         return $this->hasMany(Project::class, 'unit_id', 'id');
     }
+
+    // Attributes
+    public function getFullDisplayAttribute()
+    {
+        return $this->name . ' (' . $this->display . ')';
+    }
 }

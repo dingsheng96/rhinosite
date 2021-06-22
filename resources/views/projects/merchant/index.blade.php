@@ -13,7 +13,7 @@
                         @can('project.create')
                         <a href="{{ route('projects.create') }}" class="btn btn-primary float-md-right btn-rounded-corner">
                             <i class="fas fa-plus"></i>
-                            {{ __('labels.add_new', ['module' => trans_choice('modules.project', 1)]) }}
+                            {{ __('modules.create', ['module' => trans_choice('modules.project', 1)]) }}
                         </a>
                         @endcan
                     </div>
@@ -73,9 +73,11 @@
                     @endforelse
                 </div>
 
+                @if ($projects->count() > 0)
                 <div class="card-footer bg-transparent d-flex justify-content-md-end justify-content-center">
                     {!! $projects->links() !!}
                 </div>
+                @endif
             </div>
         </div>
     </div>

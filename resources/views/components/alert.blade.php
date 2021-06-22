@@ -4,14 +4,9 @@
     <div class="row">
         <div class="col-12">
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <h5 class="alert-heading">
-                    <i class="fas fa-exclamation-circle mr-2"></i>
-                    {{ __('labels.errors_found') }}
-                </h5>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <hr>
                 <ul>
                     @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>

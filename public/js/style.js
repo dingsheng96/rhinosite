@@ -115,4 +115,17 @@ $(function() {
         $(this).find('input').val(date);
     });
 
+    $('.sluggable').on('input', function() {
+
+        let input = $(this).val();
+
+        let slug = input.toString().trim().toLowerCase()
+            .replace(/\s+/g, "-")
+            .replace(/[^\w\-]+/g, "")
+            .replace(/\-\-+/g, "-")
+            .replace(/^-+/, "")
+            .replace(/-+$/, "");
+
+        $('.sluggable-input').val(slug);
+    });
 });

@@ -19,7 +19,6 @@ return [
     'rejected' => 'Rejected',
     'approved' => 'Approved',
     'download' => 'Download',
-    'add_new' => 'Add New :module',
     'show_records' => 'Showing :item of :total records',
 
     'start_session' => 'Sign in to start your session',
@@ -44,7 +43,7 @@ return [
     'delete_confirm_question' => 'Are you sure?',
     'delete_info' => 'You will not be able to revert this!',
     'password_format' => 'Minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter and 1 number',
-    'upload_file_rules' => 'Only :maxfiles :extensions files are allowed, and must be not more than :maxsize',
+    'upload_file_rules' => 'Only :extensions file is allowed, and must be not more than :maxsize|Only maximum :maxfiles :extensions files are allowed, and must be not more than :maxsize',
     'boosts_ads_preference_text' => 'You may choose to boost this project',
     'select_prefer_boosts_ads_days' => 'Select your preferred day to boost ads.',
 
@@ -90,5 +89,9 @@ return [
     'upload_thumbnail' => 'Upload Thumbnail',
     'upload_image' => 'Upload Image|Upload Images',
     'ads_type' => 'Ads Type',
-    'boosts_ads_date' => 'Boosts Ads Date'
+    'boosts_ads_date' => 'Boosts Ads Date',
+    'slug' => 'Slug',
+    'unit_price' => 'Unit Price',
+    'unit_value' => 'Unit Value',
+    'unit' => 'Unit'
 ];

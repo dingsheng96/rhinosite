@@ -139,3 +139,33 @@ function removeChildOption(dropdown)
 
     dropdown.val(0).trigger("change");
 }
+
+function alertHeader(messages)
+{
+    let content = $('div.content');
+
+    let html = '<div class="container-fluid">'
+        + '<div class="row">'
+        + '<div class="col-12">'
+        + '<div class="alert alert-danger alert-dismissible fade show" role="alert">'
+        + '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+        + '<span aria-hidden="true">&times;</span>'
+        + '</button>'
+        + '<ul>';
+
+    if($.isArray(messages)) {
+        $.each(messages, function (el, message) {
+            html += '<li>' + message + '</li>';
+        });
+    } else {
+        html += '<li>' + messages + '</li>';
+    }
+
+    html += '</ul>'
+        + '</div>'
+        + '</div>'
+        + '</div>'
+        + '</div>';
+
+    content.prepend(html);
+}

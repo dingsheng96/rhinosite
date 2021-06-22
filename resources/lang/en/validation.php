@@ -152,7 +152,21 @@ return [
         'currency' => 'currency',
         'dial' => 'dial code',
         'file' => 'file',
-        'description' => 'description'
+        'description' => 'description',
+        'title_en' => 'title of project (english)',
+        'title_cn' => 'title of project (chinese)',
+        'category' => 'category',
+        'thumbnail' => 'thumbnail',
+        'materials' => 'materials',
+        'services' => 'services',
+        'address_1' => 'address 1',
+        'address_2' => 'address 2',
+        'country' => 'country',
+        'postcode' => 'postcode',
+        'country_state' => 'state / province',
+        'city' => 'city / town',
+        'ads_type' => 'ads type',
+        'boost_ads_date' => 'boosts ads date'
     ],
 
 ];

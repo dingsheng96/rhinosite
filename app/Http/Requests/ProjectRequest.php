@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Unit;
 use App\Models\AdsType;
+use App\Models\Project;
 use App\Models\Category;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -32,24 +34,51 @@ class ProjectRequest extends FormRequest
      */
     public function rules()
     {
+        $merchant_id = $this->get('merchant') ?? Auth::id();
+
         return [
-            'title_en'          =>  ['required'],
-            'title_cn'          =>  ['required'],
+            'title_en'          =>  [
+                'required', 'min:3', 'max:100',
+                Rule::unique(Project::class, 'title')
+                    ->ignore($this->route('project'), 'id')
+                    ->where('user_id', $merchant_id)
+                    ->whereNull('deleted_at')
+            ],
+            'title_cn'          =>  ['required', 'min:3', 'max:100'],
+            'slug'              =>  [
+                'required', 'min:3', 'max:200',
+                Rule::unique(Project::class, 'slug')
+                    ->ignore($this->route('project'), 'id')
+                    ->where('user_id', $merchant_id)
+                    ->whereNull('deleted_at')
+            ],
             'category'          =>  ['required', 'exists:' . Category::class . ',id'],
+            'unit_price'        =>  ['required', 'numeric'],
+            'unit_value'        =>  ['required', 'numeric'],
+            'unit'              =>  ['required', 'exists:' . Unit::class . ',id'],
             'thumbnail'         =>  ['required', 'image', 'mimes:jpg,jpeg,png', 'max:2000', 'dimensions:max_height=1024,max_width=1024'],
             'files'             =>  ['required', 'array'],
-            'files.*'           =>  ['image', 'mimes.jpg,jpeg,png', 'max:2000', 'dimensions:max_height=1024,max_width=1024'],
-            'description'       =>  ['nullable'],
-            'materials'         =>  ['nullable'],
-            'services'          =>  ['nullable'],
+            'files.*'           =>  ['image', 'mimes:jpg,jpeg,png', 'max:2000', 'dimensions:max_height=1024,max_width=1024'],
+            'description'       =>  ['required'],
+            'materials'         =>  ['required'],
+            'services'          =>  ['required'],
             'address_1'         =>  ['required'],
             'address_2'         =>  ['required'],
             'country'           =>  ['required', 'exists:' . Country::class . ',id'],
             'postcode'          =>  ['required', 'digits:5'],
-            'country_state'     =>  ['required', Rule::exists(CountryState::class, 'id')->where('country_id', $this->get('country'))],
-            'city'              =>  ['required', Rule::exists(City::class, 'id')->where('country_state_id', $this->get('country_state'))],
+            'country_state'     =>  [
+                'required',
+                Rule::exists(CountryState::class, 'id')
+                    ->where('country_id', $this->get('country'))
+            ],
+            'city'              =>  [
+                'required',
+                Rule::exists(City::class, 'id')
+                    ->where('country_state_id', $this->get('country_state'))
+            ],
             'ads_type'          =>  ['filled', 'exists:' . AdsType::class . ',id'],
-            'boost_ads_date'    =>  ['required_with:ads_type', 'date', 'date_format:d/m/Y']
+            'boost_ads_date'    =>  ['required_with:ads_type', 'nullable', 'date', 'date_format:d/m/Y'],
+            'merchant'          =>  [Rule::requiredIf(Auth::user()->is_admin)]
         ];
     }
 
@@ -71,22 +100,22 @@ class ProjectRequest extends FormRequest
     public function attributes()
     {
         return [
-            'title_en',
-            'title_cn',
-            'category',
-            'thumbnail',
-            'files.*',
-            'description',
-            'materials',
-            'services',
-            'address_1',
-            'address_2',
-            'country',
-            'postcode',
-            'country_state',
-            'city',
-            'ads_type',
-            'boost_ads_date'
+            'title_en'          =>  __('validation.attributes.title_en'),
+            'title_cn'          =>  __('validation.attributes.title_cn'),
+            'category'          =>  __('validation.attributes.category'),
+            'thumbnail'         =>  __('validation.attributes.thumbnail'),
+            'files.*'           =>  __('validation.attributes.file'),
+            'description'       =>  __('validation.attributes.description'),
+            'materials'         =>  __('validation.attributes.materials'),
+            'services'          =>  __('validation.attributes.services'),
+            'address_1'         =>  __('validation.attributes.address_1'),
+            'address_2'         =>  __('validation.attributes.address_2'),
+            'country'           =>  __('validation.attributes.country'),
+            'postcode'          =>  __('validation.attributes.postcode'),
+            'country_state'     =>  __('validation.attributes.country_state'),
+            'city'              =>  __('validation.attributes.city'),
+            'ads_type'          =>  __('validation.attributes.ads_type'),
+            'boost_ads_date'    =>  __('validation.attributes.boost_ads_date')
         ];
     }
 }

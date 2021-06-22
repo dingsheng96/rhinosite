@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Helpers\Message;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\DataTables\ProjectDataTable;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ProjectRequest;
+use App\Support\Facades\ProjectFacade;
 use App\Models\Settings\Country\Country;
+use App\Models\Settings\Role\Permission;
 
 class ProjectController extends Controller
 {
@@ -35,9 +39,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        $countries = Country::orderBy('name', 'asc')->get();
-
-        return view('projects.' . Auth::user()->folder_name . '.create', compact('countries'));
+        return view('projects.' . Auth::user()->folder_name . '.create');
     }
 
     /**
@@ -48,7 +50,46 @@ class ProjectController extends Controller
      */
     public function store(ProjectRequest $request)
     {
-        //
+        DB::beginTransaction();
+
+        $action     =   Permission::ACTION_CREATE;
+        $module     =   strtolower(trans_choice('modules.project', 1));
+        $message    =   Message::instance()->format($action, $module);
+
+        try {
+
+            $project = Project::create([
+                'title' => $request->get('title_en'),
+                ''
+            ]);
+
+            $project = ProjectFacade::storeData($request);
+
+            DB::commit();
+
+            $message = Message::instance()->format($action, $module, 'success');
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($project)
+                ->withProperties($request->all())
+                ->log($message);
+
+            return redirect()->route('settings.currencies.index')->withSuccess($message);
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn(new Project())
+                ->withProperties($request->all())
+                ->log($e->getMessage());
+
+            return redirect()->back()
+                ->with('fail', $message)
+                ->withInput();
+        }
     }
 
     /**

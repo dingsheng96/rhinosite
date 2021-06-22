@@ -2,9 +2,11 @@
 
 namespace App\Support\Services;
 
+use Illuminate\Http\Request;
+
 class BaseService
 {
-    public $model;
+    public $model, $request;
 
     public function __construct($model)
     {
@@ -14,6 +16,13 @@ class BaseService
     public function setModel($model)
     {
         $this->model = $model;
+
+        return $this;
+    }
+
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
 
         return $this;
     }
