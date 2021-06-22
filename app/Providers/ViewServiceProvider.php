@@ -8,10 +8,10 @@ class ViewServiceProvider extends ServiceProvider
 {
     protected $composers = [
         \App\Http\View\Composers\CountryComposer::class => [
-            'projects.admin.create', 'projects.admin.edit', 'projects.merchant.edit', 'projects.merchant.create'
+            'projects.create', 'projects.edit'
         ],
         \App\Http\View\Composers\UnitComposer::class => [
-            'projects.admin.create', 'projects.admin.edit', 'projects.merchant.edit', 'projects.merchant.create'
+            'projects.create', 'projects.edit'
         ]
     ];
 

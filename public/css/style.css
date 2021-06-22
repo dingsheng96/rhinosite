@@ -78,3 +78,13 @@
 .btn-rounded-corner {
     border-radius: 30px;
 }
+
+.card-lists {
+    height: 35rem;
+}
+
+.card-img-thumbnail {
+    height: 18rem;
+    width: 100%;
+    object-fit: contain;
+}

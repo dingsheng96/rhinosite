@@ -93,5 +93,7 @@ return [
     'slug' => 'Slug',
     'unit_price' => 'Unit Price',
     'unit_value' => 'Unit Value',
-    'unit' => 'Unit'
+    'unit' => 'Unit',
+    'publish_now' => 'Publish Now',
+    'merchant' => 'Merchant'
 ];

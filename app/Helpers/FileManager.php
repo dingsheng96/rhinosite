@@ -42,7 +42,7 @@ class FileManager
             return $storage->putFile($store_path, new File($file));
         }
 
-        return $storage->putFileAs($store_path, new File($file), $name);
+        return $storage->putFileAs($store_path, new File($file), $filename);
     }
 
     public function removeAndStore(string $store_path, $new_file, $old_file, string $filename = null): string
@@ -51,7 +51,7 @@ class FileManager
 
             $storage = Storage::disk($this->disk);
 
-            if ($storage->exists($old_file)) {
+            if (!empty($old_file) && $storage->exists($old_file)) {
 
                 $storage->delete($old_file);
             }

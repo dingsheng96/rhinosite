@@ -26,6 +26,12 @@ class BladeServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Blade::if('admin', function () {
+            return Auth::user()->is_admin;
+        });
+
+        Blade::if('merchant', function () {
+            return Auth::user()->is_merchant;
+        });
     }
 }

@@ -55,7 +55,7 @@
                                         </div>
 
                                         <div class="row">
-                                            <div class="col-12 col-md-6">
+                                            <div class="col-12 @merchant col-md-6 @endmerchant @admin col-md-4 @endadmin">
                                                 <div class="form-group">
                                                     <label for="slug" class="col-form-label">{{ __('labels.slug') }}</label>
                                                     <input type="text" name="slug" id="slug" class="form-control @error('slug') is-invalid @enderror sluggable-input" value="{{ old('slug') }}" readonly>
@@ -66,12 +66,28 @@
                                                     @enderror
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-md-6">
+                                            @admin
+                                            <div class="col-12 col-md-4">
                                                 <div class="form-group">
-                                                    <label for="category" class="col-form-label">{{ __('labels.category') }} <span class="text-red">*</span></label>
-                                                    <select name="category" id="category" class="form-control select2 @error('category') is-invalid @enderror" required>
-                                                        <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.category'))]) }} ---</option>
+                                                    <label for="merchant" class="col-form-label">{{ __('labels.merchant') }} <span class="text-red">*</span></label>
+                                                    <select name="merchant" id="merchant" class="form-control select2 @error('merchant') is-invalid @enderror" required>
+                                                        <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.merchant'))]) }} ---</option>
                                                     </select>
+                                                    @error('merchant')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            @endadmin
+                                            <div class="col-12 @merchant col-md-6 @endmerchant @admin col-md-4 @endadmin">
+                                                <div class="form-group">
+                                                    <label for="publish" class="col-form-label">{{ __('labels.status') }}</label>
+                                                    <div class="icheck-primary">
+                                                        <input type="checkbox" name="publish" id="publish">
+                                                        <label for="publish">{{ __('labels.publish_now') }}</label>
+                                                    </div>
                                                     @error('category')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>

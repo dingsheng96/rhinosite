@@ -166,7 +166,12 @@ return [
         'country_state' => 'state / province',
         'city' => 'city / town',
         'ads_type' => 'ads type',
-        'boost_ads_date' => 'boosts ads date'
+        'boost_ads_date' => 'boosts ads date',
+        'slug' => 'slug',
+        'unit_price' => 'unit price',
+        'unit_value' => 'unit value',
+        'unit' => 'unit',
+        'on_listing' => 'on listing'
     ],
 
 ];

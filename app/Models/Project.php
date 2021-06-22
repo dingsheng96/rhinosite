@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\Misc;
+use App\Helpers\Status;
 use App\Models\Settings\Currency;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,11 +12,14 @@ class Project extends Model
 {
     use SoftDeletes;
 
+    const MEDIA_THUMBNAIL_PATH = '/projects/thumbnails';
+    const MEDIA_IMAGE_PATH = '/projects/images';
+
     protected $table = 'projects';
 
     protected $fillable = [
         'title', 'description', 'user_id', 'services', 'materials',
-        'currency_id', 'unit_price', 'unit_id', 'unit_value', 'on_listing'
+        'currency_id', 'unit_price', 'unit_id', 'unit_value', 'published'
     ];
 
     // Relationships
@@ -44,6 +48,11 @@ class Project extends Model
         return $this->belongsTo(Currency::class, 'currency_id', 'id');
     }
 
+    public function media()
+    {
+        return $this->morphMany(Media::class, 'sourceable');
+    }
+
     // Scopes
     public function scopeListing($query, bool $status)
     {
@@ -63,9 +72,9 @@ class Project extends Model
 
     public function getLocationAttribute()
     {
-        $city           =   $this->city->name ?? '';
-        $country_state  =   $this->city->countryState->name ?? '';
-        $country        =   $this->city->country->name ?? '';
+        $city           =   $this->address->city->name ?? '';
+        $country_state  =   $this->address->city->countryState->name ?? '';
+        $country        =   $this->address->city->country->name ?? '';
 
         return $city . ', ' . $country_state . ', ' . $country;
     }
@@ -73,9 +82,36 @@ class Project extends Model
     public function getEnglishTitleAttribute()
     {
         return $this->translations()
-        ->whereHas('language', function ($query) {
-            $query->where('code', Language::CODE_EN);
-        })->first()
-        ->value;
+            ->whereHas('language', function ($query) {
+                $query->where('code', Language::CODE_EN);
+            })->first()
+            ->value;
+    }
+
+    public function getChineseTitleAttribute()
+    {
+        return $this->translations()
+            ->whereHas('language', function ($query) {
+                $query->where('code', Language::CODE_CN);
+            })->first()
+            ->value;
+    }
+
+    public function getPublishStatusLabelAttribute()
+    {
+        $published = $this->published;
+        return $this->published;
+        if (!$published) {
+            return null;
+        }
+
+        return Status::instance()->statusLabel('publish')['published'];
+    }
+
+    public function getThumbnailAttribute()
+    {
+        return $this->media()
+            ->where('type', Media::TYPE_THUMBNAIL)
+            ->first();
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Helpers\Message;
+use App\Helpers\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\DataTables\ProjectDataTable;
@@ -28,7 +29,7 @@ class ProjectController extends Controller
                 ->with(['translations'])
                 ->paginate(15, ['*'], 'page', $request->get('page'));
 
-            return view('projects.' . Auth::user()->folder_name . '.index', compact('projects'));
+            return view('projects.index.' . Auth::user()->folder_name, compact('projects'));
         }
     }
 
@@ -39,7 +40,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return view('projects.' . Auth::user()->folder_name . '.create');
+        return view('projects.create');
     }
 
     /**
@@ -55,19 +56,18 @@ class ProjectController extends Controller
         $action     =   Permission::ACTION_CREATE;
         $module     =   strtolower(trans_choice('modules.project', 1));
         $message    =   Message::instance()->format($action, $module);
+        $status     =   'fail';
 
         try {
 
-            $project = Project::create([
-                'title' => $request->get('title_en'),
-                ''
-            ]);
-
-            $project = ProjectFacade::storeData($request);
+            $project = ProjectFacade::setRequest($request)
+                ->storeData()
+                ->getModel();
 
             DB::commit();
 
             $message = Message::instance()->format($action, $module, 'success');
+            $status  = 'success';
 
             activity()->useLog('web')
                 ->causedBy(Auth::user())
@@ -75,7 +75,14 @@ class ProjectController extends Controller
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->route('settings.currencies.index')->withSuccess($message);
+            return Response::instance()
+                ->withStatusCode('modules.project', 'actions.' . $action . $status)
+                ->withStatus($status)
+                ->withMessage($message, true)
+                ->withData([
+                    'redirect_to' => route('projects.index')
+                ])
+                ->sendJson();
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
@@ -86,9 +93,11 @@ class ProjectController extends Controller
                 ->withProperties($request->all())
                 ->log($e->getMessage());
 
-            return redirect()->back()
-                ->with('fail', $message)
-                ->withInput();
+            return Response::instance()
+                ->withStatusCode('modules.project', 'actions.' . $action . $status)
+                ->withStatus($status)
+                ->withMessage($message, true)
+                ->sendJson();
         }
     }
 

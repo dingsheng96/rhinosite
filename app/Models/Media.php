@@ -9,8 +9,9 @@ class Media extends Model
 {
     use SoftDeletes;
 
-    const TYPE_THUMBNAIL = 'thumbnail';
-    const TYPE_PROFILE = 'profile';
+    const TYPE_THUMBNAIL    =   'thumbnail';
+    const TYPE_PROFILE      =   'profile';
+    const TYPE_IMAGE        =   'image';
 
     protected $table = 'media';
 

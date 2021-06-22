@@ -10,7 +10,7 @@ class BaseService
 
     public function __construct($model)
     {
-        $this->model = $model;
+        $this->model = new $model;
     }
 
     public function setModel($model)

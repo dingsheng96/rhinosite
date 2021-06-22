@@ -26,9 +26,12 @@ $(function () {
             init: function() {
 
                 let myDropzone = this;
+                let maxImageWidth = 1024;
+                let maxImageHeight = 1024;
 
-                btn_submit.on('click', function (event) {
-                    event.preventDefault();
+                btn_submit.on('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
 
                     dropzoneDiv.removeClass('is-invalid');
                     dropzoneDiv.parent().find('.invalid-feedback').remove();
@@ -47,16 +50,32 @@ $(function () {
                     this.removeFile(file);
                 });
 
-                this.on('sending', function (file, xhr, formData) {
+                this.on("thumbnail", function(file) {
+                    if (file.width > maxImageWidth || file.height > maxImageHeight) {
+
+                        this.removeFile(file);
+
+                        let message = 'Dimensions of image exceeds limit.';
+                        customAlert(message, 'error');
+                    }
+                });
+
+                this.on('sendingmultiple', function (file, xhr, formData) {
 
                     let data = form.serializeArray();
 
                     $.each(data, function (key, el) {
                         formData.append(el.name, el.value);
                     });
+
+                    let thumbnail = form.find('[name=thumbnail]')[0].files[0];
+
+                    if(thumbnail) {
+                        formData.append('thumbnail', thumbnail);
+                    }
                 });
 
-                this.on('success', function (file, response) {
+                this.on('successmultiple', function (file, response) {
 
                     this.removeAllFiles();
 
@@ -74,7 +93,7 @@ $(function () {
                     });
                 });
 
-                this.on('error', function (file, response) {
+                this.on('errormultiple', function (file, response) {
 
                     console.log(response);
 

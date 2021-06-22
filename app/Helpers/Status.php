@@ -83,6 +83,12 @@ class Status
             'approved' => [
                 'text' => __('labels.approved'),
                 'class' => 'badge badge-pill badge-lg badge-success'
+            ],
+            'publish' => [
+                '1' => [
+                    'text' => __('labels.publishing'),
+                    'class' => 'badge badge-pill badge-lg badge-success'
+                ]
             ]
         ];
 

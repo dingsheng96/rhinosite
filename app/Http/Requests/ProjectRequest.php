@@ -52,7 +52,6 @@ class ProjectRequest extends FormRequest
                     ->where('user_id', $merchant_id)
                     ->whereNull('deleted_at')
             ],
-            'category'          =>  ['required', 'exists:' . Category::class . ',id'],
             'unit_price'        =>  ['required', 'numeric'],
             'unit_value'        =>  ['required', 'numeric'],
             'unit'              =>  ['required', 'exists:' . Unit::class . ',id'],
@@ -102,7 +101,6 @@ class ProjectRequest extends FormRequest
         return [
             'title_en'          =>  __('validation.attributes.title_en'),
             'title_cn'          =>  __('validation.attributes.title_cn'),
-            'category'          =>  __('validation.attributes.category'),
             'thumbnail'         =>  __('validation.attributes.thumbnail'),
             'files.*'           =>  __('validation.attributes.file'),
             'description'       =>  __('validation.attributes.description'),
@@ -115,7 +113,11 @@ class ProjectRequest extends FormRequest
             'country_state'     =>  __('validation.attributes.country_state'),
             'city'              =>  __('validation.attributes.city'),
             'ads_type'          =>  __('validation.attributes.ads_type'),
-            'boost_ads_date'    =>  __('validation.attributes.boost_ads_date')
+            'boost_ads_date'    =>  __('validation.attributes.boost_ads_date'),
+            'slug'              =>  __('validation.attributes.slug'),
+            'unit_price'        =>  __('validation.attributes.unit_price'),
+            'unit_value'        =>  __('validation.attributes.unit_value'),
+            'unit'              =>  __('validation.attributes.unit'),
         ];
     }
 }

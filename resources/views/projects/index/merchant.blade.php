@@ -27,16 +27,24 @@
                             <div class="card-deck">
                                 @endif
 
-                                <div class="card">
-                                    <img class="card-img-top" src="..." alt="Card image cap">
+                                <div class="card card-lists">
+                                    <img class="card-img-top card-img-thumbnail" src="{{ $project->thumbnail->full_file_path }}" alt="{{ $project->thumbnail->filename }}">
                                     <div class="card-body">
-                                        @foreach ($project->translations as $title)
-                                        <h5 class="card-title">{{ $title->value ?? '-' }}</h5>
-                                        @endforeach
-                                        <h4 class="card-text font-weight-bold">{{ $project->price ?? '-' }}</h4>
-                                        <p class="card-text"><small class="text-muted">{{ $project->location ?? '-' }}</small></p>
+                                        <h5 class="card-text">{{ $project->english_title ?? '-' }}</h5>
+                                        <h5 class="card-text">{{ $project->chinese_title ?? '-' }}</h5>
+                                        <div class="row my-3">
+                                            <div class="col-12 col-md-6">
+                                                <h3 class="card-text font-weight-bold d-inline">{{ $project->price ?? '-' }}</h3>
+                                            </div>
+                                            <div class="col-12 col-md-6 text-md-right">
+                                                <h6 class="card-text d-inline text-muted">{{ $project->location ?? '-' }}</h6>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="card-footer bg-transparent text-md-right text-center">
+                                    <div class="card-footer bg-transparent d-flex justify-content-end">
+
+                                        {!! $project->publish_label_status !!}
+
                                         @canany(['project.read', 'project.update', 'project.delete'])
                                         @include('components.action', [
                                         'view' => [
@@ -53,6 +61,7 @@
                                         ]
                                         ])
                                         @endcanany
+
                                     </div>
                                 </div>
 
