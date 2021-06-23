@@ -20,6 +20,7 @@ class PermissionSeeder extends Seeder
 
         foreach ($this->getData() as $data) {
             Permission::create([
+                'name'          =>  $data['name'],
                 'guard_name'    =>  $data['guard_name'],
                 'display'       =>  $data['display'],
                 'description'   =>  $data['description'],

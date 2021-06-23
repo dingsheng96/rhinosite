@@ -14,8 +14,8 @@
         "country": 190,
         "country_state": 191,
         "city": 192,
-        "currency": 193,
-        "registration": 194,
+        "currency": 200,
+        "category": 210,
         "system": 900
     },
     "actions": {

@@ -20,8 +20,9 @@ class ModuleSeeder extends Seeder
 
         foreach ($sorted_data as $data) {
             Module::create([
-                'display' => $data['display'],
-                'description' => $data['description']
+                'name'          =>  $data['name'],
+                'display'       =>  $data['display'],
+                'description'   =>  $data['description']
             ]);
         }
 
@@ -42,6 +43,7 @@ class ModuleSeeder extends Seeder
             ['name' => 'project', 'display' => 'Project', 'description' => 'Project Module'],
             ['name' => 'ads', 'display' => 'Ads', 'description' => 'Ads Module'],
             ['name' => 'order', 'display' => 'Order', 'description' => 'Order Module'],
+            ['name' => 'category', 'display' => 'category', 'description' => 'Category Module'],
         ];
     }
 }

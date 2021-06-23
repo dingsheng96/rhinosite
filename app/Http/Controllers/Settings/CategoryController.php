@@ -3,26 +3,26 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Helpers\Message;
+use App\Models\Category;
 use App\Helpers\Response;
-use App\Models\Settings\Currency;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\DataTables\CountryDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\DataTables\CurrencyDataTable;
+use App\DataTables\CategoryDataTable;
 use App\Models\Settings\Role\Permission;
-use App\Http\Requests\Settings\CurrencyRequest;
+use App\Http\Requests\Settings\CategoryRequest;
 
-class CurrencyController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(CurrencyDataTable $dataTable)
+    public function index(CategoryDataTable $dataTable)
     {
-        return $dataTable->render('settings.currency.index');
+        return $dataTable->render('settings.category.index');
     }
 
     /**
@@ -41,21 +41,21 @@ class CurrencyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CurrencyRequest $request)
+    public function store(CategoryRequest $request)
     {
         DB::beginTransaction();
 
         $action     =   Permission::ACTION_CREATE;
-        $module     =   strtolower(trans_choice('modules.submodules.currency', 1));
+        $module     =   strtolower(trans_choice('modules.submodules.category', 1));
         $message    =   Message::instance()->format($action, $module);
 
         try {
 
             $input = $request->get('create');
 
-            $currency = Currency::create([
-                'name' => $input['name'],
-                'code' => $input['code']
+            $category = Category::create([
+                'name'          => $input['name'],
+                'description'   => $input['description']
             ]);
 
             DB::commit();
@@ -64,24 +64,22 @@ class CurrencyController extends Controller
 
             activity()->useLog('web')
                 ->causedBy(Auth::user())
-                ->performedOn($currency)
+                ->performedOn($category)
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->route('settings.currencies.index')->withSuccess($message);
+            return redirect()->route('settings.categories.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
             activity()->useLog('web')
                 ->causedBy(Auth::user())
-                ->performedOn(new Currency())
+                ->performedOn(new Category())
                 ->withProperties($request->all())
                 ->log($e->getMessage());
 
-            return redirect()->back()
-                ->with('fail', $message)
-                ->withInput();
+            return redirect()->back()->with('fail', $message)->withInput();
         }
     }
 
@@ -91,10 +89,9 @@ class CurrencyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Currency $currency, CountryDataTable $dataTable)
+    public function show($id)
     {
-        return $dataTable->with(['currency' => $currency])
-            ->render('settings.currency.show', compact('currency'));
+        //
     }
 
     /**
@@ -115,23 +112,23 @@ class CurrencyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CurrencyRequest $request, Currency $currency)
+    public function update(CategoryRequest $request, Category $category)
     {
         DB::beginTransaction();
 
         $action     =   Permission::ACTION_UPDATE;
-        $module     =   strtolower(trans_choice('modules.submodules.currency', 1));
+        $module     =   strtolower(trans_choice('modules.submodules.category', 1));
         $message    =   Message::instance()->format($action, $module);
 
         try {
 
             $input = $request->get('update');
 
-            $currency->name = $input['name'];
-            $currency->code = $input['code'];
+            $category->name         = $input['name'];
+            $category->description  = $input['description'];
 
-            if ($currency->isDirty()) {
-                $currency->save();
+            if ($category->isDirty()) {
+                $category->save();
             }
 
             DB::commit();
@@ -140,24 +137,22 @@ class CurrencyController extends Controller
 
             activity()->useLog('web')
                 ->causedBy(Auth::user())
-                ->performedOn($currency)
+                ->performedOn($category)
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->route('settings.currencies.index')->withSuccess($message);
+            return redirect()->route('settings.categories.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
             activity()->useLog('web')
                 ->causedBy(Auth::user())
-                ->performedOn($currency)
+                ->performedOn($category)
                 ->withProperties($request->all())
                 ->log($e->getMessage());
 
-            return redirect()->back()
-                ->with('fail', $message)
-                ->withInput();
+            return redirect()->back()->with('fail', $message)->withInput();
         }
     }
 
@@ -167,46 +162,42 @@ class CurrencyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Currency $currency)
+    public function destroy(Category $category)
     {
         $action     =   Permission::ACTION_DELETE;
-        $module     =   strtolower(trans_choice('modules.submodules.currency', 1));
-        $status     =   'success';
+        $module     =   strtolower(trans_choice('modules.submodules.category', 1));
+        $status     =   'fail';
         $message    =   Message::instance()->format($action, $module);
 
         try {
 
-            throw_if(
-                $currency->countries()->count() > 0,
-                new \Exception($message),
-            );
+            throw_if($category->users()->count() > 0, new \Exception($message));
 
-            $currency->delete();
+            $category->delete();
 
             $message = Message::instance()->format($action, $module, 'success');
+            $status = 'success';
 
             activity()->useLog('web')
                 ->causedBy(Auth::user())
-                ->performedOn($currency)
+                ->performedOn($category)
                 ->log($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            $status = 'fail';
-
             activity()->useLog('web')
                 ->causedBy(Auth::user())
-                ->performedOn($currency)
+                ->performedOn($category)
                 ->log($e->getMessage());
         }
 
         return Response::instance()
-            ->withStatusCode('modules.currency', 'actions.' . $action . $status)
+            ->withStatusCode('modules.category', 'actions.' . $action . $status)
             ->withStatus($status)
             ->withMessage($message, true)
             ->withData([
-                'redirect_to' => route('settings.countries.index')
+                'redirect_to' => route('settings.categories.index')
             ])
             ->sendJson();
     }

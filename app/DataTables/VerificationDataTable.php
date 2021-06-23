@@ -129,6 +129,6 @@ class VerificationDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Registration_' . date('YmdHis');
+        return 'Verfication_' . date('YmdHis');
     }
 }

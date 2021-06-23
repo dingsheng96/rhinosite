@@ -49,7 +49,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->morphMany(Media::class, 'sourceable');
     }
 
-    public function category()
+    public function categories()
     {
         return $this->belongsToMany(Category::class, UserCategory::class, 'user_id', 'category_id', 'id', 'id');
     }
@@ -129,6 +129,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getUserCategoryAttribute()
     {
-        return $this->category()->first();
+        return $this->categories()->first();
     }
 }

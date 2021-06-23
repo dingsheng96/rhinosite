@@ -47,6 +47,7 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
         Route::resource('currencies', 'CurrencyController');
         Route::resource('roles', 'RoleController');
+        Route::resource('categories', 'CategoryController');
     });
 });
 

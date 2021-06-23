@@ -29,6 +29,6 @@ return [
         'admin' => 'Admin|Admins',
         'merchant' => 'Merchant|Merchants',
         'member' => 'Member|Members',
-        'registration' => 'Registration|Registrations'
+        'category' => 'Category|Categories',
     ]
 ];

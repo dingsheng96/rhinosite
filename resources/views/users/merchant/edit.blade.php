@@ -100,7 +100,7 @@
                                                     <select name="category" id="category" class="form-control select2 @error('category') is-invalid @enderror" required>
                                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.category'))]) }} ---</option>
                                                         @foreach ($categories as $category)
-                                                        <option value="{{ $category->id }}" {{ old('category', $user->user_category->id) == $category->id ? 'selected' : null }}> {{ $category->name }}</option>
+                                                        <option value="{{ $category->id }}" {{ old('category', $merchant->user_category->id ?? null) == $category->id ? 'selected' : null }}> {{ $category->name }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('category')
