@@ -4,13 +4,12 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-use App\Models\Settings\Country\Country;
 
 class AppServiceProvider extends ServiceProvider
 {
     protected $custom_facades = [
         'countryFacade' => \App\Support\Services\CountryService::class,
-        'registrationFacade' => \App\Support\Services\RegistrationService::class,
+        'userDetailFacade' => \App\Support\Services\UserDetailService::class,
         'projectFacade' => \App\Support\Services\ProjectService::class
     ];
 

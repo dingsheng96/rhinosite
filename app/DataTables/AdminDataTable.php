@@ -45,7 +45,7 @@ class AdminDataTable extends DataTable
                 return $data->created_at->toDateTimeString();
             })
             ->editColumn('status', function ($data) {
-                return $data->status_label;
+                return '<h5>' . $data->status_label . '</h5>';
             })
             ->filterColumn('status', function ($query, $keyword) {
                 $query->where('status', strtolower($keyword));

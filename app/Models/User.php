@@ -97,7 +97,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $label = Status::instance()->statusLabel($this->status);
 
-        return '<h5><span class="' . $label['class'] . '">' . $label['text'] . '</span></h5>';
+        return '<span class="' . $label['class'] . ' px-3">' . $label['text'] . '</span>';
     }
 
     public function getProfileImageAttribute()

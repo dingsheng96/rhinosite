@@ -24,6 +24,12 @@ class Media extends Model
         return $this->morphTo();
     }
 
+    // Scopes
+    public function scopeSsmDocuments($query)
+    {
+        return $query->where('type', self::TYPE_COMPANY_SSM);
+    }
+
     // Attributes
     public function getFilePathAttribute()
     {

@@ -6,7 +6,6 @@ use App\Models\Media;
 use App\Helpers\Status;
 use App\Helpers\Message;
 use App\Models\UserDetails;
-use App\Models\Registration;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
@@ -14,10 +13,17 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Settings\Role\Permission;
 use App\DataTables\VerificationDataTable;
-use App\Support\Facades\RegistrationFacade;
+use App\Support\Facades\UserDetailFacade;
 
 class VerificationController extends Controller
 {
+    public $statuses;
+
+    public function __construct()
+    {
+        $this->statuses = Status::instance()->verificationStatus();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -58,7 +64,11 @@ class VerificationController extends Controller
      */
     public function show(UserDetails $verification)
     {
-        return view('verification.show', compact('verification'));
+        $documents = Media::ssmDocuments()
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        return view('verification.show', compact('verification', 'documents'));
     }
 
     /**
@@ -69,9 +79,8 @@ class VerificationController extends Controller
      */
     public function edit(UserDetails $verification)
     {
-        $statuses = Status::instance()->verificationStatus();
-
-        $documents = Media::where('type', Media::TYPE_COMPANY_SSM)
+        $statuses = $this->statuses;
+        $documents = Media::ssmDocuments()
             ->orderBy('created_at', 'asc')
             ->get();
 
@@ -85,25 +94,26 @@ class VerificationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Registration $registration)
+    public function update(Request $request, UserDetails $verification)
     {
         $request->validate([
             'status' => [
                 'required',
-                Rule::in(collect(Status::instance()->registrationStatus())->keys()->toArray())
+                Rule::in(array_keys($this->statuses))
             ]
         ]);
 
         DB::beginTransaction();
 
         $action     =   Permission::ACTION_UPDATE;
-        $module     =   strtolower(trans_choice('modules.submodules.registration', 1));
+        $module     =   strtolower(trans_choice('modules.verification', 1));
         $message    =   Message::instance()->format($action, $module);
 
         try {
-
-            RegistrationFacade::setModel($registration)
-                ->validateRegistration($request->get('status'));
+            // verification in user details service
+            $verification = UserDetailFacade::setModel($verification)
+                ->setRequest($request)
+                ->verify();
 
             DB::commit();
 
@@ -111,24 +121,22 @@ class VerificationController extends Controller
 
             activity()->useLog('web')
                 ->causedBy(Auth::user())
-                ->performedOn($registration)
+                ->performedOn($verification)
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->route('users.registrations.index')->withSuccess($message);
+            return redirect()->route('verifications.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
             activity()->useLog('web')
                 ->causedBy(Auth::user())
-                ->performedOn($registration)
+                ->performedOn($verification)
                 ->withProperties($request->all())
                 ->log($e->getMessage());
 
-            return redirect()->back()
-                ->with('fail', $message)
-                ->withInput();
+            return redirect()->back()->with('fail', $message)->withInput();
         }
     }
 

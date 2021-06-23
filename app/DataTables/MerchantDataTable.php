@@ -31,8 +31,7 @@ class MerchantDataTable extends DataTable
                     ],
                     'update' => [
                         'permission' => 'merchant.update',
-                        'route' => '#updatemerchantModal',
-                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode(['name' => $data->name, 'code' => $data->code]) . "'" . ' data-route="' . route('users.merchants.update', ['merchant' => $data->id]) . '"'
+                        'route' => route('users.merchants.edit', ['merchant' => $data->id])
                     ],
                     'delete' => [
                         'permission' => 'merchant.delete',
@@ -44,7 +43,7 @@ class MerchantDataTable extends DataTable
                 return $data->created_at->toDateTimeString();
             })
             ->editColumn('status', function ($data) {
-                return $data->status_label;
+                return '<h5>' . $data->status_label . '</h5>';
             })
             ->filterColumn('status', function ($query, $keyword) {
                 $query->where('status', strtolower($keyword));
@@ -91,7 +90,7 @@ class MerchantDataTable extends DataTable
             Column::computed('DT_RowIndex', '#'),
             Column::make('name')->title(__('labels.name')),
             Column::make('email')->title(__('labels.email')),
-            Column::make('mobile_no')->title(__('labels.mobile_no')),
+            Column::make('phone')->title(__('labels.contact_no')),
             Column::make('status')->title(__('labels.status')),
             Column::make('created_at')->title(__('labels.datetime')),
             Column::computed('action', __('labels.action'))

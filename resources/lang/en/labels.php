@@ -46,6 +46,7 @@ return [
     'upload_file_rules' => 'Only :extensions file is allowed, and must be not more than :maxsize|Only maximum :maxfiles :extensions files are allowed, and must be not more than :maxsize',
     'boosts_ads_preference_text' => 'You may choose to boost this project',
     'select_prefer_boosts_ads_days' => 'Select your preferred day to boost ads.',
+    'change_profile_pic' => 'Change Profile Picture',
 
     'project' => 'Project|Projects',
     'country_state' => 'Country State|Country States',
@@ -72,9 +73,6 @@ return [
     'address_1' => 'Address 1',
     'address_2' => 'Address 2',
     'postcode' => 'Postal Code',
-    'city' => 'City/Town',
-    'country_state' => 'State/Province',
-    'country' => 'Country',
     'media' => 'Media',
     'project_title' => 'Title of Project (:lang)',
     'english' => 'English',

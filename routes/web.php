@@ -1,7 +1,10 @@
 <?php
 
+use App\Models\UserDetails;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Notifications\AccountVerified;
+use App\Support\Facades\UserDetailFacade;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,4 +58,11 @@ Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
     });
 
     Route::get('ads-boosters/{ads}/available-date', 'DateController@getAdsBoosterAvailableDate')->name('ads-boosters.available-date');
+});
+
+Route::get('mail', function () {
+
+    $details = UserDetails::find(2);
+
+    return (new AccountVerified($details))->toMail($details->user);
 });

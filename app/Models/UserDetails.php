@@ -59,11 +59,16 @@ class UserDetails extends Model
         return $query->where('status', self::STATUS_PENDING);
     }
 
+    public function scopeApprovedDetails($query)
+    {
+        return $query->where('status', self::STATUS_APPROVED);
+    }
+
     // Attributes
     public function getStatusLabelAttribute()
     {
         $label = Status::instance()->statusLabel($this->status);
 
-        return '<h5><span class="' . $label['class'] . ' px-3">' . $label['text'] . '</span></h5>';
+        return '<span class="' . $label['class'] . ' px-3">' . $label['text'] . '</span>';
     }
 }
