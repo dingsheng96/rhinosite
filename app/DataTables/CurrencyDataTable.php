@@ -32,7 +32,7 @@ class CurrencyDataTable extends DataTable
                     'update' => [
                         'permission' => 'currency.update',
                         'route' => '#updateCurrencyModal',
-                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode(['name' => $data->name, 'code' => $data->code]) . "'" . ' data-route="' . route('settings.currencies.update', ['currency' => $data->id]) . '"'
+                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode(['id' => $data->id, 'name' => $data->name, 'code' => $data->code]) . "'"
                     ],
                     'delete' => [
                         'permission' => 'currency.delete',

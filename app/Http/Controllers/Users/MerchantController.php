@@ -4,11 +4,16 @@ namespace App\Http\Controllers\Users;
 
 use App\Models\User;
 use App\Models\Media;
+use App\Helpers\Message;
 use App\Models\Category;
+use App\Helpers\Response;
 use App\Models\UserDetails;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\DataTables\MerchantDataTable;
+use App\Models\Settings\Role\Permission;
+use App\Http\Requests\Settings\Users\MerchantRequest;
 
 class MerchantController extends Controller
 {
@@ -49,7 +54,7 @@ class MerchantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $merchant)
     {
         //
     }
@@ -84,9 +89,56 @@ class MerchantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(MerchantRequest $request, User $merchant)
     {
-        //
+        DB::beginTransaction();
+
+        $action     =   Permission::ACTION_UPDATE;
+        $module     =   strtolower(trans_choice('modules.project', 1));
+        $message    =   Message::instance()->format($action, $module);
+        $status     =   'fail';
+
+        try {
+
+            $project = ProjectFacade::setRequest($request)
+                ->storeData()
+                ->getModel();
+
+            DB::commit();
+
+            $message = Message::instance()->format($action, $module, 'success');
+            $status  = 'success';
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($project)
+                ->withProperties($request->all())
+                ->log($message);
+
+            return Response::instance()
+                ->withStatusCode('modules.project', 'actions.' . $action . $status)
+                ->withStatus($status)
+                ->withMessage($message, true)
+                ->withData([
+                    'redirect_to' => route('projects.index')
+                ])
+                ->sendJson();
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn(new Project())
+                ->withProperties($request->all())
+                ->log($e->getMessage());
+
+            return Response::instance()
+                ->withStatusCode('modules.project', 'actions.' . $action . $status)
+                ->withStatus($status)
+                ->withMessage($message, true)
+                ->sendJson();
+        }
     }
 
     /**

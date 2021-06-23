@@ -10,7 +10,8 @@ class AppServiceProvider extends ServiceProvider
     protected $custom_facades = [
         'countryFacade' => \App\Support\Services\CountryService::class,
         'userDetailFacade' => \App\Support\Services\UserDetailService::class,
-        'projectFacade' => \App\Support\Services\ProjectService::class
+        'projectFacade' => \App\Support\Services\ProjectService::class,
+        'merchantFacade' => \App\Support\Services\MerchantService::class,
     ];
 
     /**

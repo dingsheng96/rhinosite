@@ -18,7 +18,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="POST" role="form" enctype="multipart/form-data">
+            <form action="{{ route('settings.currencies.update', '__REPLACE__') }}" method="POST" role="form" enctype="multipart/form-data">
                 @csrf
                 @method('put')
 

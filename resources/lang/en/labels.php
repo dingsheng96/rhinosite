@@ -47,6 +47,7 @@ return [
     'boosts_ads_preference_text' => 'You may choose to boost this project',
     'select_prefer_boosts_ads_days' => 'Select your preferred day to boost ads.',
     'change_profile_pic' => 'Change Profile Picture',
+    'change_logo' => 'Change Logo',
 
     'project' => 'Project|Projects',
     'country_state' => 'Country State|Country States',

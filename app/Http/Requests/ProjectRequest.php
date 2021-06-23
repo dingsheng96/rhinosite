@@ -61,8 +61,8 @@ class ProjectRequest extends FormRequest
             'description'       =>  ['required'],
             'materials'         =>  ['required'],
             'services'          =>  ['required'],
-            'address_1'         =>  ['required'],
-            'address_2'         =>  ['required'],
+            'address_1'         =>  ['required', 'min:3', 'max:255'],
+            'address_2'         =>  ['nullable'],
             'country'           =>  ['required', 'exists:' . Country::class . ',id'],
             'postcode'          =>  ['required', 'digits:5'],
             'country_state'     =>  [

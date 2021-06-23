@@ -125,17 +125,17 @@
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <label for="profile_pic" class="col-form-label">{{ __('labels.change_profile_pic') }}</label>
+                                                    <label for="logo" class="col-form-label">{{ __('labels.change_logo') }}</label>
                                                     <div class="row">
                                                         <div class="col-12 col-md-3">
                                                             <img src="{{ asset('storage/nopreview.png') }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
                                                         </div>
                                                         <div class="col-12 col-md-9">
                                                             <div class="custom-file">
-                                                                <input type="file" id="profile_pic" name="profile_pic" class="custom-file-input custom-img-input @error('profile_pic') is-invalid @enderror" required accept=".jpg,.jpeg,.png">
-                                                                <label class="custom-file-label" for="profile_pic">Choose file</label>
+                                                                <input type="file" id="logo" name="logo" class="custom-file-input custom-img-input @error('logo') is-invalid @enderror" accept=".jpg,.jpeg,.png">
+                                                                <label class="custom-file-label" for="logo">Choose file</label>
                                                                 <p>{{ trans_choice('labels.upload_file_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG']) }}</p>
-                                                                @error('profile_pic')
+                                                                @error('logo')
                                                                 <span class="invalid-feedback" role="alert">
                                                                     <strong>{{ $message }}</strong>
                                                                 </span>
