@@ -54,9 +54,9 @@ class Project extends Model
     }
 
     // Scopes
-    public function scopeListing($query, bool $status)
+    public function scopePublished($query, bool $status = true)
     {
-        return $query->where('on_listing', $status);
+        return $query->where('published', $status);
     }
 
     // Attributes

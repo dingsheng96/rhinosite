@@ -11,7 +11,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $projects = Project::listing(true)
+        $projects = Project::published()
             ->with(['translations'])
             ->when(Auth::user()->role_name != Role::ROLE_SUPER_ADMIN, function ($query) {
                 $query->where('user_id', Auth::user()->id);

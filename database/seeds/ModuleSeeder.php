@@ -2,6 +2,7 @@
 
 use App\Models\Module;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ModuleSeeder extends Seeder
 {
@@ -12,17 +13,19 @@ class ModuleSeeder extends Seeder
      */
     public function run()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        DB::statement('TRUNCATE TABLE ' . (new Module())->getTable());
+
         $sorted_data = collect($this->getData())->sortBy('name');
 
         foreach ($sorted_data as $data) {
-            Module::updateOrCreate(
-                ['name' => $data['name']],
-                [
-                    'display' => $data['display'],
-                    'description' => $data['description']
-                ]
-            );
+            Module::create([
+                'display' => $data['display'],
+                'description' => $data['description']
+            ]);
         }
+
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 
     public function getData()

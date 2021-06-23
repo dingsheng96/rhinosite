@@ -8,7 +8,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name') . ' | ' . ($title ?? '') }}</title>
+    <title>{{ config('app.name') }} @if (!empty($title)) {{ ' | ' . $title }} @endif</title>
 
     <link rel="stylesheet" href="{{ asset('css/app.css?v=' . time()) }}">
     <link rel="stylesheet" href="{{ asset('css/style.css?v=' . time()) }}">
@@ -18,32 +18,29 @@
 
 <body class="hold-transition layout-fixed {{ $body ?? '' }}">
 
-    @auth
+    @if (Auth::check() && (!isset($guest_view) || !$guest_view))
 
     <div class="wrapper">
-        @include('layouts.topnav')
 
-        @include('layouts.sidenav')
+        @include('layouts.topnav') {{-- auth topnav --}}
+        @include('layouts.sidenav') {{-- auth sidenav --}}
 
         <div class="content-wrapper">
-
-            @include('layouts.header')
-
+            @include('layouts.header') {{-- auth content header --}}
             <div class="content">
                 @includeWhen(Session::has('success') || Session::has('fail') ||$errors->any(), 'components.alert')
-
                 @yield('content')
             </div>
         </div>
 
-        @include('layouts.footer')
+        @include('layouts.footer') {{-- auth footer --}}
     </div>
 
     @else
 
     @yield('content')
 
-    @endauth
+    @endif
 
     <script src="{{ asset('js/app.js?v=' . time()) }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
