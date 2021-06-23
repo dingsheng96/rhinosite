@@ -86,7 +86,7 @@ class RoleDataTable extends DataTable
             Column::make('name')->title(__('labels.name')),
             Column::make('description')->title(__('labels.description')),
             Column::make('created_at')->title(__('labels.datetime')),
-            Column::computed('action')
+            Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),
         ];

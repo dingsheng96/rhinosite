@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Users;
+namespace App\Http\Controllers;
 
+use App\Models\Media;
 use App\Helpers\Status;
 use App\Helpers\Message;
+use App\Models\UserDetails;
 use App\Models\Registration;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -11,20 +13,20 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Settings\Role\Permission;
-use App\DataTables\RegistrationDataTable;
+use App\DataTables\VerificationDataTable;
 use App\Support\Facades\RegistrationFacade;
 
-class RegistrationController extends Controller
+class VerificationController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, RegistrationDataTable $dataTable)
+    public function index(Request $request, VerificationDataTable $dataTable)
     {
         return $dataTable->with(['request' => $request])
-            ->render('users.registration.index');
+            ->render('verification.index');
     }
 
     /**
@@ -54,9 +56,9 @@ class RegistrationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Registration $registration)
+    public function show(UserDetails $verification)
     {
-        return view('users.registration.show', compact('registration'));
+        return view('verification.show', compact('verification'));
     }
 
     /**
@@ -65,11 +67,15 @@ class RegistrationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Registration $registration)
+    public function edit(UserDetails $verification)
     {
-        $statuses = Status::instance()->registrationStatus();
+        $statuses = Status::instance()->verificationStatus();
 
-        return view('users.registration.edit', compact('registration', 'statuses'));
+        $documents = Media::where('type', Media::TYPE_COMPANY_SSM)
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        return view('verification.edit', compact('verification', 'statuses', 'documents'));
     }
 
     /**

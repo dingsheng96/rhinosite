@@ -86,7 +86,7 @@ class CurrencyDataTable extends DataTable
             Column::make('name')->title(__('labels.name')),
             Column::make('code')->title(__('labels.code')),
             Column::make('created_at')->title(__('labels.datetime')),
-            Column::computed('action')
+            Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),
         ];

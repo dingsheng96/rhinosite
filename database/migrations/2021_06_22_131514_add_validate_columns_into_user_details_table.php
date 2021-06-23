@@ -19,7 +19,7 @@ class AddValidateColumnsIntoUserDetailsTable extends Migration
 
                 $table->timestamp('validated_at')->nullable()->after('pic_email');
                 $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending')->after('pic_email');
-                $table->unsignedBigInteger('validated_by')->index()->after('pic_email');
+                $table->unsignedBigInteger('validated_by')->index()->nullable()->after('pic_email');
 
                 $table->foreign('validated_by')->references('id')->on('users');
             });

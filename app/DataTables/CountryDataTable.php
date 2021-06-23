@@ -109,7 +109,7 @@ class CountryDataTable extends DataTable
                 ->searchable(false)
                 ->title(trans_choice('labels.city', 2)),
             Column::make('created_at')->title(__('labels.datetime')),
-            Column::computed('action')
+            Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),
         ];

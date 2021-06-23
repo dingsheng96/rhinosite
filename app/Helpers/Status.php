@@ -3,7 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\User;
-use App\Models\Registration;
+use App\Models\UserDetails;
 
 class Status
 {
@@ -40,12 +40,12 @@ class Status
         ];
     }
 
-    public function registrationStatus(): array
+    public function verificationStatus(): array
     {
         return [
-            Registration::STATUS_PENDING => 'Pending',
-            Registration::STATUS_APPROVED => 'Approved',
-            Registration::STATUS_REJECTED => 'Rejected'
+            UserDetails::STATUS_PENDING => 'Pending',
+            UserDetails::STATUS_APPROVED => 'Approved',
+            UserDetails::STATUS_REJECTED => 'Rejected'
         ];
     }
 

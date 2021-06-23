@@ -35,9 +35,10 @@
 
                 @canany(['merchant.create', 'merchant.update'])
                 <li class="nav-item">
-                    <a href="{{ route('projects.index') }}" class="nav-link {{ Nav::hasSegment('projects', 1, 'active') }}">
-                        <i class="nav-icon fas fa-briefcase"></i>
-                        <p>{{ trans_choice('modules.project', 2) }}</p>
+                    <a href="{{ route('verifications.index') }}" class="nav-link {{ Nav::hasSegment('verifications', 1, 'active') }}">
+                        <i class="nav-icon fas fa-id-card"></i>
+                        <p>{{ trans_choice('modules.verification', 2) }}</p>
+                        <span class="badge badge-pill badge-light px-2 bg-orange right">{{ $verifications_count ?? 0 }}</span>
                     </a>
                 </li>
                 @endcanany

@@ -150,7 +150,7 @@ class ProjectService extends BaseService
             foreach ($images as $image) {
 
                 $setup = [
-                    'save_path' =>   Project::MEDIA_THUMBNAIL_PATH,
+                    'save_path' =>   Project::MEDIA_IMAGE_PATH,
                     'filename'  =>   $image->getClientOriginalName(),
                     'extension' =>   $image->getClientOriginalExtension(),
                     'filesize'  =>   $image->getSize(),

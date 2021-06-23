@@ -77,7 +77,7 @@ class CityDataTable extends DataTable
             Column::computed('DT_RowIndex', '#'),
             Column::make('name')->title(__('labels.name')),
             Column::make('created_at')->title(__('labels.datetime')),
-            Column::computed('action')
+            Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),
         ];

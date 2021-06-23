@@ -49,6 +49,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->morphMany(Media::class, 'sourceable');
     }
 
+    public function category()
+    {
+        return $this->belongsToMany(Category::class, UserCategory::class, 'user_id', 'category_id', 'id', 'id');
+    }
+
     // Scopes
     public function scopeAdmin($query)
     {
@@ -120,5 +125,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getIsMerchantAttribute()
     {
         return $this->role_name == Role::ROLE_MERCHANT;
+    }
+
+    public function getUserCategoryAttribute()
+    {
+        return $this->category()->first();
     }
 }

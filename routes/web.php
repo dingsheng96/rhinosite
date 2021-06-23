@@ -26,11 +26,12 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
     Route::resource('projects', 'ProjectController');
 
+    Route::resource('verifications', 'VerificationController');
+
     Route::group(['prefix' => 'users', 'as' => 'users.', 'namespace' => 'Users'], function () {
         Route::resource('admins', 'AdminController');
         Route::resource('members', 'MemberController');
         Route::resource('merchants', 'MerchantController');
-        Route::resource('registrations', 'RegistrationController')->except(['create', 'store']);
     });
 
     Route::group(['prefix' => 'settings', 'as' => 'settings.', 'namespace' => 'Settings'], function () {

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class ViewServiceProvider extends ServiceProvider
@@ -35,5 +36,7 @@ class ViewServiceProvider extends ServiceProvider
         foreach ($this->composers as $composer => $views) {
             view()->composer($views, $composer);
         }
+
+        View::share('verifications_count', \App\Models\UserDetails::pendingVerifications()->count());
     }
 }

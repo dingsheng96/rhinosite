@@ -53,11 +53,17 @@ class UserDetails extends Model
         return $this->morphMany(Media::class, 'sourceable');
     }
 
+    // Scopes
+    public function scopePendingVerifications($query)
+    {
+        return $query->where('status', self::STATUS_PENDING);
+    }
+
     // Attributes
     public function getStatusLabelAttribute()
     {
         $label = Status::instance()->statusLabel($this->status);
 
-        return '<h5><span class="' . $label['class'] . '">' . $label['text'] . '</span></h5>';
+        return '<h5><span class="' . $label['class'] . ' px-3">' . $label['text'] . '</span></h5>';
     }
 }

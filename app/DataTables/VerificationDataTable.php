@@ -2,14 +2,14 @@
 
 namespace App\DataTables;
 
-use App\Models\Registration;
+use App\Models\UserDetails;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class RegistrationDataTable extends DataTable
+class VerificationDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -24,26 +24,26 @@ class RegistrationDataTable extends DataTable
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
 
-                $actions = [
+                return view('components.action', [
                     'no_action' => $this->no_action ?: null,
                     'view' => [
                         'permission' => 'merchant.create',
-                        'route' => route('users.registrations.show', ['registration' => $data->id])
+                        'route' => route('verifications.show', ['verification' => $data->id])
+                    ],
+                    'update' => [
+                        'permission' => 'merchant.create',
+                        'route' => route('verifications.edit', ['verification' => $data->id]),
                     ]
-                ];
-
-                if ($data->status == Registration::STATUS_PENDING) {
-                    $update = [
-                        'update' => [
-                            'permission' => 'merchant.create',
-                            'route' => route('users.registrations.edit', ['registration' => $data->id]),
-                        ]
-                    ];
-
-                    $actions = array_merge($actions, $update);
-                }
-
-                return view('components.action', $actions)->render();
+                ])->render();
+            })
+            ->addColumn('name', function ($data) {
+                return $data->user->name;
+            })
+            ->addColumn('email', function ($data) {
+                return $data->user->email;
+            })
+            ->addColumn('phone', function ($data) {
+                return $data->user->phone;
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
@@ -54,22 +54,35 @@ class RegistrationDataTable extends DataTable
             ->filterColumn('status', function ($query, $keyword) {
                 $query->where('status', strtolower($keyword));
             })
+            ->filterColumn('name', function ($query, $keyword) {
+                $query->whereHas('user', function ($query) use ($keyword) {
+                    $query->where('name', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('email', function ($query, $keyword) {
+                $query->whereHas('user', function ($query) use ($keyword) {
+                    $query->where('email', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('phone', function ($query, $keyword) {
+                $query->whereHas('user', function ($query) use ($keyword) {
+                    $query->where('phone', 'like', "%{$keyword}%");
+                });
+            })
             ->rawColumns(['action', 'status']);
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Registration $model
+     * @param \App\Models\UserDetails $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Registration $model)
+    public function query(UserDetails $model)
     {
-        return $model->when(!empty($this->request), function ($query) {
-            $query->when(!empty($this->request->get('status')), function ($query) {
-                $query->where('status', $this->request->get('status'));
-            });
-        })->newQuery();
+        return $model->with(['user'])
+            ->where('status', UserDetails::STATUS_PENDING)
+            ->newQuery();
     }
 
     /**
@@ -80,7 +93,7 @@ class RegistrationDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('registration-table')
+            ->setTableId('verification-table')
             ->addTableClass('table-hover table-bordered table-head-fixed table-striped')
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -100,10 +113,10 @@ class RegistrationDataTable extends DataTable
             Column::computed('DT_RowIndex', '#'),
             Column::make('name')->title(__('labels.name')),
             Column::make('email')->title(__('labels.email')),
-            Column::make('mobile_no')->title(__('labels.mobile_no')),
+            Column::make('phone')->title(__('labels.contact_no')),
             Column::make('status')->title(__('labels.status')),
             Column::make('created_at')->title(__('labels.datetime')),
-            Column::computed('action')
+            Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),
         ];

@@ -94,7 +94,7 @@ class AdminDataTable extends DataTable
             Column::make('email')->title(__('labels.email')),
             Column::make('status')->title(__('labels.status')),
             Column::make('created_at')->title(__('labels.datetime')),
-            Column::computed('action')
+            Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),
         ];

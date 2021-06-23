@@ -12,6 +12,7 @@ class Media extends Model
     const TYPE_THUMBNAIL    =   'thumbnail';
     const TYPE_PROFILE      =   'profile';
     const TYPE_IMAGE        =   'image';
+    const TYPE_COMPANY_SSM  =   'ssm';
 
     protected $table = 'media';
 

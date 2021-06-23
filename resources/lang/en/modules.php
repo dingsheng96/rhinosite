@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'list' => ':module list',
+    'list' => ':module List',
     'edit' => 'Edit :module',
     'create' => 'Create :module',
     'view' => 'View :module',
@@ -18,6 +18,7 @@ return [
     'product' => 'Product|Products',
     'setting' => 'Setting|Settings',
     'user' => 'User|Users',
+    'verification' => 'Verification|Verifications',
 
     'submodules' => [
         'country' => 'Country|Countries',
