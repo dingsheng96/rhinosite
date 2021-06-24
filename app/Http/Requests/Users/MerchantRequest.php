@@ -2,14 +2,17 @@
 
 namespace App\Http\Requests\Users;
 
-use App\Models\User;
+use App\Helpers\Status;
 use App\Models\Category;
 use App\Rules\PhoneFormat;
 use App\Rules\UniqueMerchant;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use App\Models\Settings\Country\City;
+use App\Models\Settings\Country\Country;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Settings\Country\CountryState;
 
 class MerchantRequest extends FormRequest
 {
@@ -35,11 +38,12 @@ class MerchantRequest extends FormRequest
             'name'          =>  ['required', 'min:3', 'max:255', new UniqueMerchant('name', $this->route('merchant'))],
             'phone'         =>  ['required', new PhoneFormat],
             'email'         =>  ['required', 'email', new UniqueMerchant('email', $this->route('merchant'))],
+            'status'        =>  ['required', Rule::in(array_keys(Status::instance()->accountStatus()))],
             'website'       =>  ['nullable', 'url'],
             'facebook'      =>  ['nullable', 'url'],
             'category'      =>  ['required', 'exists:' . Category::class . ',id'],
-            'experience'    =>  ['required', 'integer', 'between:1,3'],
-            'logo'          =>  [Rule::requiredIf(!empty($this->route('merchant'))), 'nullable', 'image', 'max:2000', 'mimes:jpg,jpeg,png', 'dimensions:max_height=1024,max_width=1024'],
+            'experience'    =>  ['required', 'integer', 'min:1', 'max:999'],
+            'logo'          =>  [Rule::requiredIf(empty($this->route('merchant'))), 'nullable', 'image', 'max:2000', 'mimes:jpg,jpeg,png', 'dimensions:max_height=1024,max_width=1024'],
             'pic_name'      =>  ['required'],
             'pic_phone'     =>  ['required', new PhoneFormat],
             'pic_email'     =>  ['required', 'email'],

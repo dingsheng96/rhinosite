@@ -102,38 +102,37 @@ class ProjectService extends BaseService
     {
         if ($this->request->hasFile('thumbnail')) {
 
-            $thumbnail  =   $this->request->file('thumbnail');
+            $file  =   $this->request->file('thumbnail');
 
-            $setup = [
-                'save_path' =>   Project::MEDIA_THUMBNAIL_PATH,
-                'filename'  =>   $thumbnail->getClientOriginalName(),
-                'extension' =>   $thumbnail->getClientOriginalExtension(),
-                'filesize'  =>   $thumbnail->getSize(),
-                'filetype'  =>   Media::TYPE_THUMBNAIL,
-                'filemime'  =>   FileManager::instance()->getMimesType($thumbnail->getClientOriginalExtension())
+            $config = [
+                'save_path' =>   Project::STORE_PATH,
+                'type'      =>   Media::TYPE_THUMBNAIL,
+                'filemime'  =>   FileManager::instance()->getMimesType($file->getClientOriginalExtension()),
+                'filename'  =>   $file->getClientOriginalName(),
+                'extension' =>   $file->getClientOriginalExtension(),
+                'filesize'  =>   $file->getSize(),
             ];
 
-            $media = $this->model->media()
-                ->where('type', Media::TYPE_THUMBNAIL)
+            $media = $this->model->media()->thumbnail()
                 ->firstOr(function () {
                     return new Media();
                 });
 
             FileManager::instance()->removeAndStore(
-                $setup['save_path'],
-                $thumbnail,
+                $config['save_path'],
+                $file,
                 $media->file_path ?? null,
-                $setup['filename']
+                $config['filename']
             );
 
-            $media->type                =   $setup['filetype'];
-            $media->original_filename   =   $setup['filename'];
-            $media->filename            =   $setup['filename'];
-            $media->path                =   $setup['save_path'];
-            $media->extension           =   $setup['extension'];
-            $media->size                =   $setup['filesize'];
-            $media->mime                =   $setup['filemime'];
-            $media->properties          =   json_encode($setup, JSON_UNESCAPED_UNICODE);
+            $media->type                =   $config['type'];
+            $media->original_filename   =   $config['filename'];
+            $media->filename            =   $config['filename'];
+            $media->path                =   $config['save_path'];
+            $media->extension           =   $config['extension'];
+            $media->size                =   $config['filesize'];
+            $media->mime                =   $config['filemime'];
+            $media->properties          =   json_encode($config, JSON_UNESCAPED_UNICODE);
 
             if ($media->exists && $media->isDirty()) {
                 $media->save();
@@ -144,38 +143,7 @@ class ProjectService extends BaseService
 
         if ($this->request->hasFile('files')) {
 
-            $images     =   $this->request->file('files');
-            $save_path  =   Project::MEDIA_IMAGE_PATH;
-
-            foreach ($images as $image) {
-
-                $setup = [
-                    'save_path' =>   Project::MEDIA_IMAGE_PATH,
-                    'filename'  =>   $image->getClientOriginalName(),
-                    'extension' =>   $image->getClientOriginalExtension(),
-                    'filesize'  =>   $image->getSize(),
-                    'filetype'  =>   Media::TYPE_IMAGE,
-                    'filemime'  =>   FileManager::instance()->getMimesType($image->getClientOriginalExtension())
-                ];
-
-                FileManager::instance()->store(
-                    $save_path,
-                    $image,
-                    $setup['filename']
-                );
-
-                $media = new Media();
-                $media->type                =   $setup['filetype'];
-                $media->original_filename   =   $setup['filename'];
-                $media->filename            =   $setup['filename'];
-                $media->path                =   $setup['save_path'];
-                $media->extension           =   $setup['extension'];
-                $media->size                =   $setup['filesize'];
-                $media->mime                =   $setup['filemime'];
-                $media->properties          =   json_encode($setup, JSON_UNESCAPED_UNICODE);
-
-                $this->model->media()->save($media);
-            }
+            $this->storeMedia($this->request->file('files'), Media::TYPE_IMAGE, Project::STORE_PATH);
         }
     }
 }

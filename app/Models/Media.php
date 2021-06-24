@@ -12,7 +12,8 @@ class Media extends Model
     const TYPE_THUMBNAIL    =   'thumbnail';
     const TYPE_PROFILE      =   'profile';
     const TYPE_IMAGE        =   'image';
-    const TYPE_COMPANY_SSM  =   'ssm';
+    const TYPE_SSM          =   'ssm';
+    const TYPE_LOGO         =   'logo';
 
     protected $table = 'media';
 
@@ -25,9 +26,24 @@ class Media extends Model
     }
 
     // Scopes
-    public function scopeSsmDocuments($query)
+    public function scopeSsm($query)
     {
-        return $query->where('type', self::TYPE_COMPANY_SSM);
+        return $query->where('type', self::TYPE_SSM);
+    }
+
+    public function scopeThumbnail($query)
+    {
+        return $query->where('type', self::TYPE_THUMBNAIL);
+    }
+
+    public function scopeLogo($query)
+    {
+        return $query->where('type', self::TYPE_LOGO);
+    }
+
+    public function scopeProfileImage($query)
+    {
+        return $query->where('type', Media::TYPE_PROFILE);
     }
 
     // Attributes

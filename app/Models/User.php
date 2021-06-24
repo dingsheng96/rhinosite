@@ -17,6 +17,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     const STATUS_ACTIVE     =   'active';
     const STATUS_INACTIVE   =   'inactive';
+    const STORE_PATH        =   'user';
 
     protected $table = 'users';
 
@@ -72,20 +73,16 @@ class User extends Authenticatable implements MustVerifyEmail
     // Attributes
     public function getFullAddressAttribute()
     {
-        $address = $this->address()->first();
-
-        $full_address = '';
-
-        if ($address) {
-            $full_address  .=   ($address->address_1 . ', ') ?? '';
-            $full_address  .=   ($address->address_2 . ', ') ?? '';
-            $full_address  .=   ($address->postcode . ', ') ?? '';
-            $full_address  .=   ($address->city->name . ', ') ?? '';
-            $full_address  .=   ($address->city->country_state_name . ', ') ?? '';
-            $full_address  .=   ($address->city->country_name . ', ') ?? '';
+        if ($this->address) {
+            $full_address  =    $this->address->address_1 . ', ';
+            $full_address  .=   $this->address->address_2 . ', ';
+            $full_address  .=   $this->address->postcode . ', ';
+            $full_address  .=   $this->address->city->name . ', ';
+            $full_address  .=   $this->address->city->country_state_name . ', ';
+            $full_address  .=   $this->address->city->country_name;
         }
 
-        return $full_address;
+        return $full_address ?? null;
     }
 
     public function getRoleNameAttribute()
@@ -102,9 +99,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getProfileImageAttribute()
     {
-        return $this->media()
-            ->where('type', Media::TYPE_PROFILE)
-            ->first();
+        return $this->media()->profile_image()->first();
+    }
+
+    public function getLogoAttribute()
+    {
+        return $this->media()->logo()->first();
     }
 
     public function getFolderNameAttribute()

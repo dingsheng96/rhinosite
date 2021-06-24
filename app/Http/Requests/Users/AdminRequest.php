@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Users;
 
 use App\Models\User;
+use App\Helpers\Status;
 use App\Rules\PasswordFormat;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -47,7 +48,7 @@ class AdminRequest extends FormRequest
             ],
             'create.status' => [
                 'required',
-                'in:' . User::STATUS_ACTIVE . ',' . User::STATUS_INACTIVE
+                Rule::in(array_keys(Status::instance()->accountStatus()))
             ],
             'create.password' => [
                 'required',

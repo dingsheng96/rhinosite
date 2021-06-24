@@ -64,7 +64,7 @@ class VerificationController extends Controller
      */
     public function show(UserDetails $verification)
     {
-        $documents = Media::ssmDocuments()
+        $documents = Media::ssm()
             ->orderBy('created_at', 'asc')
             ->get();
 
@@ -80,7 +80,7 @@ class VerificationController extends Controller
     public function edit(UserDetails $verification)
     {
         $statuses = $this->statuses;
-        $documents = Media::ssmDocuments()
+        $documents = Media::ssm()
             ->orderBy('created_at', 'asc')
             ->get();
 

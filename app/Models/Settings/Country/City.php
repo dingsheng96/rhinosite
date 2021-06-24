@@ -27,12 +27,12 @@ class City extends Model
     }
 
     // Attributes
-    public function getCountryStateName()
+    public function getCountryStateNameAttribute()
     {
-        return $this->country_state->name ?? '';
+        return $this->countryState->name ?? '';
     }
 
-    public function getCountryName()
+    public function getCountryNameAttribute()
     {
         return $this->country->name ?? '';
     }

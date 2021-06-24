@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Users;
 
 use App\Models\User;
 use App\Models\Media;
+use App\Helpers\Status;
 use App\Helpers\Message;
 use App\Models\Category;
 use App\Helpers\Response;
@@ -11,9 +12,11 @@ use App\Models\UserDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\DataTables\MerchantDataTable;
+use App\Support\Facades\MerchantFacade;
 use App\Models\Settings\Role\Permission;
-use App\Http\Requests\Settings\Users\MerchantRequest;
+use App\Http\Requests\Users\MerchantRequest;
 
 class MerchantController extends Controller
 {
@@ -56,7 +59,17 @@ class MerchantController extends Controller
      */
     public function show(User $merchant)
     {
-        //
+        $user_details = $merchant->userDetails()
+            ->approvedDetails()
+            ->with(['media'])
+            ->first();
+
+        $documents = $merchant->media()
+            ->ssm()
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        return view('users.merchant.show', compact('merchant', 'documents', 'user_details'));
     }
 
     /**
@@ -67,19 +80,21 @@ class MerchantController extends Controller
      */
     public function edit(User $merchant)
     {
-        $user_details = UserDetails::approvedDetails()
+        $user_details = $merchant->userDetails()
+            ->approvedDetails()
             ->with(['media'])
-            ->where('user_id', $merchant->id)
             ->first();
 
-        $documents = $user_details->media()
-            ->ssmDocuments()
+        $documents = $merchant->media()
+            ->ssm()
             ->orderBy('created_at', 'asc')
             ->get();
 
+        $statuses = Status::instance()->accountStatus();
+
         $categories = Category::orderBy('name', 'asc')->get();
 
-        return view('users.merchant.edit', compact('merchant', 'documents', 'user_details', 'categories'));
+        return view('users.merchant.edit', compact('merchant', 'documents', 'user_details', 'categories', 'statuses'));
     }
 
     /**
@@ -94,50 +109,40 @@ class MerchantController extends Controller
         DB::beginTransaction();
 
         $action     =   Permission::ACTION_UPDATE;
-        $module     =   strtolower(trans_choice('modules.project', 1));
+        $module     =   strtolower(trans_choice('modules.submodules.merchant', 1));
         $message    =   Message::instance()->format($action, $module);
         $status     =   'fail';
 
         try {
 
-            $project = ProjectFacade::setRequest($request)
+            $merchant = MerchantFacade::setModel($merchant)
+                ->setRequest($request)
                 ->storeData()
                 ->getModel();
 
             DB::commit();
 
-            $message = Message::instance()->format($action, $module, 'success');
             $status  = 'success';
+            $message = Message::instance()->format($action, $module, $status);
 
             activity()->useLog('web')
                 ->causedBy(Auth::user())
-                ->performedOn($project)
+                ->performedOn($merchant)
                 ->withProperties($request->all())
                 ->log($message);
 
-            return Response::instance()
-                ->withStatusCode('modules.project', 'actions.' . $action . $status)
-                ->withStatus($status)
-                ->withMessage($message, true)
-                ->withData([
-                    'redirect_to' => route('projects.index')
-                ])
-                ->sendJson();
+            return redirect()->route('users.merchants.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
             activity()->useLog('web')
                 ->causedBy(Auth::user())
-                ->performedOn(new Project())
+                ->performedOn(new User())
                 ->withProperties($request->all())
                 ->log($e->getMessage());
 
-            return Response::instance()
-                ->withStatusCode('modules.project', 'actions.' . $action . $status)
-                ->withStatus($status)
-                ->withMessage($message, true)
-                ->sendJson();
+            return redirect()->back()->withErrors($message)->withInput();
         }
     }
 

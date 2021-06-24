@@ -104,4 +104,5 @@ return [
     'pic_name' => 'Name of Person in Charge',
     'pic_contact' => 'Contact No. of Person in Charge',
     'pic_email' => 'Email of Person in Charge',
+    'logo' => 'Logo'
 ];

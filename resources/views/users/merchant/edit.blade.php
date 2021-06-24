@@ -28,11 +28,26 @@
                                 <div class="tab-content" id="vert-tabs-tabContent">
                                     <div class="tab-pane text-left fade show active" id="vert-tabs-general" role="tabpanel" aria-labelledby="vert-tabs-general-tab">
                                         <div class="row">
-                                            <div class="col-12">
+                                            <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="name" class="col-form-label">{{ __('labels.name') }} <span class="text-red">*</span></label>
                                                     <input type="text" name="name" id="name" value="{{ old('name', $merchant->name) ?? null }}" class="form-control ucfirst @error('name') is-invalid @enderror" required>
                                                     @error('name')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="status" class="col-form-label">{{ __('labels.status') }}</label>
+                                                    <select name="status" id="status" class="form-control select2 @error('status') is-invalid @enderror">
+                                                        @foreach ($statuses as $status => $display)
+                                                        <option value="{{ $status }}" {{ old('status', $merchant->status) == $status }}>{{ $display }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('status')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
@@ -73,7 +88,7 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="website" class="col-form-label">{{ __('labels.website') }}</label>
-                                                    <input type="url" name="website" id="website" value="{{ old('website', $user_details->website) ?? null }}" class="form-control @error('website') is-invalid @enderror">
+                                                    <input type="url" name="website" id="website" value="{{ old('website', $user_details->website ?? null) }}" class="form-control @error('website') is-invalid @enderror">
                                                     @error('website')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -84,7 +99,7 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="facebook" class="col-form-label">{{ __('labels.facebook') }}</label>
-                                                    <input type="url" name="facebook" id="facebook" value="{{ old('facebook', $user_details->facebook ) ?? null }}" class="form-control @error('facebook') is-invalid @enderror">
+                                                    <input type="url" name="facebook" id="facebook" value="{{ old('facebook', $user_details->facebook ?? null) }}" class="form-control @error('facebook') is-invalid @enderror">
                                                     @error('facebook')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -113,7 +128,7 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="experience" class="col-form-label">{{ __('labels.years_of_experience') }} <span class="text-red">*</span></label>
-                                                    <input type="number" name="experience" id="experience" value="{{ old('experience', $user_details->years_of_experience ) ?? null }}" class="form-control @error('experience') is-invalid @enderror" min="0" step="1" required>
+                                                    <input type="number" name="experience" id="experience" value="{{ old('experience', $user_details->years_of_experience ?? 0) }}" class="form-control @error('experience') is-invalid @enderror" min="0" step="1" required>
                                                     @error('experience')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -128,7 +143,7 @@
                                                     <label for="logo" class="col-form-label">{{ __('labels.change_logo') }}</label>
                                                     <div class="row">
                                                         <div class="col-12 col-md-3">
-                                                            <img src="{{ asset('storage/nopreview.png') }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
+                                                            <img src="{{ ($merchant->logo) ? $merchant->logo->full_file_path : $this->asset('storage/nopreview.png') }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
                                                         </div>
                                                         <div class="col-12 col-md-9">
                                                             <div class="custom-file">
@@ -153,7 +168,7 @@
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     <label for="pic_name" class="col-form-label">{{ __('labels.pic_name') }} <span class="text-red">*</span></label>
-                                                    <input type="text" name="pic_name" id="pic_name" value="{{ old('pic_name', $user_details->pic_name ) ?? null }}" class="form-control @error('pic_name') is-invalid @enderror" required>
+                                                    <input type="text" name="pic_name" id="pic_name" value="{{ old('pic_name', $user_details->pic_name ?? null) }}" class="form-control @error('pic_name') is-invalid @enderror" required>
                                                     @error('pic_name')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -171,7 +186,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text bg-white">+</span>
                                                         </div>
-                                                        <input type="text" name="pic_phone" id="pic_phone" value="{{ old('pic_phone', $user_details->pic_phone) ?? null }}" class="form-control @error('pic_phone') is-invalid @enderror" required>
+                                                        <input type="text" name="pic_phone" id="pic_phone" value="{{ old('pic_phone', $user_details->pic_phone ?? null)  }}" class="form-control @error('pic_phone') is-invalid @enderror" required>
                                                     </div>
                                                     @error('pic_phone')
                                                     <span class="invalid-feedback" role="alert">
@@ -183,7 +198,7 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="pic_email" class="col-form-label">{{ __('labels.pic_email') }} <span class="text-red">*</span></label>
-                                                    <input type="email" name="pic_email" id="pic_email" value="{{ old('pic_name', $user_details->pic_email ) ?? null }}" class="form-control @error('pic_email') is-invalid @enderror" required>
+                                                    <input type="email" name="pic_email" id="pic_email" value="{{ old('pic_name', $user_details->pic_email ?? null) }}" class="form-control @error('pic_email') is-invalid @enderror" required>
                                                     @error('pic_email')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -262,7 +277,7 @@
                                                     <select name="country" id="country" class="form-control select2 @error('country') is-invalid @enderror country-state-filter" required>
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.country', 1))]) }} ---</option>
                                                         @foreach ($countries as $country)
-                                                        <option value="{{ $country->id }}" {{ old('country', $merchant->address->city->country->id ?? null) == $country->id ? 'selected' : null }}>{{ $country->name }}</option>
+                                                        <option value="{{ $country->id }}" {{ old('country', $merchant->address->city->country->id ?? 0) == $country->id ? 'selected' : null }}>{{ $country->name }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('country')
@@ -304,7 +319,7 @@
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
                                                     <label for="city" class="col-form-label">{{ trans_choice('labels.city', 1) }} <span class="text-red">*</span></label>
-                                                    <select name="city" id="city" class="form-control select2 @error('city') is-invalid @enderror city-dropdown" data-selected="{{ old('city', $merchant->address->city ?? 0) }}"
+                                                    <select name="city" id="city" class="form-control select2 @error('city') is-invalid @enderror city-dropdown" data-selected="{{ old('city', $merchant->address->city->id ?? 0) }}"
                                                         data-city-route="{{ route('data.countries.country-states.cities', ['__FIRST_REPLACE__', '__SECOND_REPLACE__']) }}" required>
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.city', 1))]) }} ---</option>
                                                     </select>

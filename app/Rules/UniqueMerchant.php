@@ -15,7 +15,7 @@ class UniqueMerchant implements Rule
      *
      * @return void
      */
-    public function __construct(string $unique_column, int $ignore_id = null, string $ignore_column = 'id')
+    public function __construct(string $unique_column, $ignore_id = null, string $ignore_column = 'id')
     {
         $this->ignore_id = $ignore_id;
         $this->ignore_column = $ignore_column;
@@ -33,7 +33,12 @@ class UniqueMerchant implements Rule
     {
         return !User::where($this->unique_column, $value)
             ->when(!empty($this->ignore_id), function ($query) {
-                $query->where($this->ignore_column, '!=', $this->ignore_id);
+
+                if (is_object($this->ignore_id)) {
+                    $query->where($this->ignore_column, '!=', $this->ignore_id->{$this->ignore_column});
+                } else {
+                    $query->where($this->ignore_column, '!=', $this->ignore_id);
+                }
             })
             ->whereHas('roles', function ($query) {
                 $query->where('name', Role::ROLE_MERCHANT);

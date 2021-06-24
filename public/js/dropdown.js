@@ -5,6 +5,8 @@ $(function() {
     if ($(".country-state-filter").length > 0) {
 
         if ($(".country-state-filter option:selected").val() != 0) {
+
+            country_id = $(".country-state-filter option:selected").val();
             getCountryStatesFromCountry($(".country-state-filter option:selected").val());
         }
 
@@ -15,12 +17,13 @@ $(function() {
         });
     }
 
-    if ($(".city-filter").length > 0) {
-        if ($(".city-filter option:selected").val() != 0) {
-            getCitiesFromCountryState(country_id, $(".city-filter option:selected").val());
+    if ($(".country-state-dropdown").length > 0) {
+
+        if ($(".country-state-dropdown option:selected").val() != 0) {
+            getCitiesFromCountryState(country_id, $(".country-state-dropdown option:selected").val());
         }
 
-        $(".city-filter").on("change", function() {
+        $(".country-state-dropdown").on("change", function() {
             getCitiesFromCountryState(country_id, $(this).val());
         });
     }

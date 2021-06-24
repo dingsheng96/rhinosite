@@ -12,8 +12,7 @@ class Project extends Model
 {
     use SoftDeletes;
 
-    const MEDIA_THUMBNAIL_PATH = '/projects/thumbnails';
-    const MEDIA_IMAGE_PATH = '/projects/images';
+    const STORE_PATH = '/projects';
 
     protected $table = 'projects';
 
