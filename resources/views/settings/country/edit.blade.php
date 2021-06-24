@@ -68,9 +68,9 @@
                 <div class="card-header bg-transparent">
                     <h3 class="card-title">{{ trans_choice('labels.country_state', 2) }}</h3>
                     <div class="card-tools">
-                        <a href="#countryStateModal" class="btn btn-outline-primary" data-toggle="modal">
+                        <a href="#countryStateModal" class="btn btn-outline-primary btn-rounded-corner" data-toggle="modal">
                             <i class="fas fa-plus"></i>
-                            {{ __('labels.create') }}
+                            {{ __('modules.create', ['module' => trans_choice('modules.submodules.country_state', 1)]) }}
                         </a>
                     </div>
                 </div>

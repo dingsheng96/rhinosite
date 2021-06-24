@@ -23,14 +23,14 @@ class ProjectController extends Controller
      */
     public function index(Request $request, ProjectDataTable $dataTable)
     {
-        if (Auth::user()->is_merchant) {
+        $projects = Project::orderBy('created_at', 'desc')
+            ->when(Auth::user()->is_merchant, function ($query) {
+                $query->where('user_id', Auth::id());
+            })
+            ->with(['translations'])
+            ->paginate(15, ['*'], 'page', $request->get('page'));
 
-            $projects = Project::where('user_id', Auth::user()->id)
-                ->with(['translations'])
-                ->paginate(15, ['*'], 'page', $request->get('page'));
-
-            return view('projects.index.' . Auth::user()->folder_name, compact('projects'));
-        }
+        return view('projects.index', compact('projects'));
     }
 
     /**

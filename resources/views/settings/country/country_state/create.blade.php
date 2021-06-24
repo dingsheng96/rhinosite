@@ -62,7 +62,7 @@
                         <i class="fas fa-times mr-2"></i>
                         {{ __('labels.cancel') }}
                     </button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-outline-primary">
                         <i class="fas fa-paper-plane mr-2"></i>
                         {{ __('labels.submit') }}
                     </button>

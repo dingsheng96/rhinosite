@@ -11,7 +11,7 @@
                     <h3 class="card-title">{{ __('labels.show_records', ['total' => $projects->total(), 'item' => $projects->count()]) }}</h3>
                     <div class="card-tools">
                         @can('project.create')
-                        <a href="{{ route('projects.create') }}" class="btn btn-primary float-md-right btn-rounded-corner">
+                        <a href="{{ route('projects.create') }}" class="btn btn-outline-primary float-md-right btn-rounded-corner">
                             <i class="fas fa-plus"></i>
                             {{ __('modules.create', ['module' => trans_choice('modules.project', 1)]) }}
                         </a>
