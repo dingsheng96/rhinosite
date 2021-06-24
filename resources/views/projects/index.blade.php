@@ -34,7 +34,7 @@
                                         <h5 class="card-text">{{ $project->chinese_title ?? '-' }}</h5>
                                         <div class="row my-3">
                                             <div class="col-12 col-md-6">
-                                                <h3 class="card-text font-weight-bold d-inline">{{ $project->price ?? '-' }}</h3>
+                                                <h3 class="card-text font-weight-bold d-inline">{{ $project->price_with_label ?? '-' }}</h3>
                                             </div>
                                             <div class="col-12 col-md-6 text-md-right">
                                                 <h6 class="card-text d-inline text-muted">{{ $project->location ?? '-' }}</h6>

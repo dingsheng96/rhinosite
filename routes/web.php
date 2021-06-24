@@ -27,6 +27,7 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
     Route::get('dashboard', 'HomeController@index')->name('dashboard');
 
+    Route::delete('projects/{project}/media/{media}', 'ProjectController@deleteMedia')->name('projects.media.destroy');
     Route::resource('projects', 'ProjectController');
 
     Route::resource('verifications', 'VerificationController');

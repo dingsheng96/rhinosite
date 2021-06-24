@@ -143,7 +143,7 @@
                                                     <label for="logo" class="col-form-label">{{ __('labels.change_logo') }}</label>
                                                     <div class="row">
                                                         <div class="col-12 col-md-3">
-                                                            <img src="{{ ($merchant->logo) ? $merchant->logo->full_file_path : $this->asset('storage/nopreview.png') }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
+                                                            <img src="{{ $merchant->logo->full_file_path ?? $default_preview }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
                                                         </div>
                                                         <div class="col-12 col-md-9">
                                                             <div class="custom-file">

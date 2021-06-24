@@ -88,7 +88,7 @@
                                         <div class="col-12 col-md-6">
                                             <div class="form-group">
                                                 <label for="logo" class="col-form-label">{{ __('labels.logo') }}</label>
-                                                <img src="{{ ($merchant->logo) ? $merchant->logo->full_file_path : $this->asset('storage/nopreview.png') }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
+                                                <img src="{{ $merchant->logo->full_file_path ?? $default_preview }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-6">

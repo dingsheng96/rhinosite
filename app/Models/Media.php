@@ -14,10 +14,14 @@ class Media extends Model
     const TYPE_IMAGE        =   'image';
     const TYPE_SSM          =   'ssm';
     const TYPE_LOGO         =   'logo';
+    const DEFAULT_IMAGE     =   'nopreview.png';
 
     protected $table = 'media';
 
-    protected $fillable = [];
+    protected $fillable = [
+        'sourceable_type', 'sourceable_id', 'type', 'original_filename',
+        'filename', 'path', 'extension', 'size', 'mime', 'properties'
+    ];
 
     // Relationships
     public function sourceable()
@@ -43,7 +47,12 @@ class Media extends Model
 
     public function scopeProfileImage($query)
     {
-        return $query->where('type', Media::TYPE_PROFILE);
+        return $query->where('type', self::TYPE_PROFILE);
+    }
+
+    public function scopeImage($query)
+    {
+        return $query->where('type', self::TYPE_IMAGE);
     }
 
     // Attributes
@@ -65,5 +74,10 @@ class Media extends Model
     public function getTypeInTextAttribute()
     {
         return ucwords(str_replace("-", " ", $this->type));
+    }
+
+    public function getDefaultPreviewImageAttribute()
+    {
+        return asset('storage/' . self::DEFAULT_IMAGE);
     }
 }

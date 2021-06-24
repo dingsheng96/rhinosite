@@ -47,19 +47,15 @@ class FileManager
 
     public function removeAndStore(string $store_path, $new_file, $old_file, string $filename = null): string
     {
-        if (!empty($new_file)) {
-
-            $storage = Storage::disk($this->disk);
-
-            if (!empty($old_file) && $storage->exists($old_file)) {
-
-                $storage->delete($old_file);
-            }
-
-            return $this->store($store_path, $new_file, $filename);
+        if (empty($new_file)) {
+            return $old_file;
         }
 
-        return $old_file;
+        if (!empty($old_file)) {
+            $this->removeFile($old_file);
+        }
+
+        return $this->store($store_path, $new_file, $filename);
     }
 
     public function putFileContent(string $store_path, $content): void
@@ -91,5 +87,14 @@ class FileManager
                 return $collection->only($inclusives);
             })
             ->sort()->toArray();
+    }
+
+    public function removeFile(string $file_path)
+    {
+        $storage = Storage::disk($this->disk);
+
+        if ($storage->exists($file_path)) {
+            $storage->delete($file_path);
+        }
     }
 }

@@ -37,8 +37,8 @@ class ProjectService extends BaseService
 
         $this->model->title         =  $this->request->get('title_en');
         $this->model->description   =  $this->request->get('description');
-        $this->model->user_id       =  $this->request->get('user') ?? auth()->id();
-        $this->model->services      =  $this->request->get('servics');
+        $this->model->user_id       =  $this->request->get('merchant') ?? auth()->id();
+        $this->model->services      =  $this->request->get('services');
         $this->model->materials     =  $this->request->get('materials');
         $this->model->currency_id   =  $currency->id;
         $this->model->unit_price    =  Misc::instance()->getPriceFromFloatToInt($this->request->get('unit_price'));
@@ -143,7 +143,14 @@ class ProjectService extends BaseService
 
         if ($this->request->hasFile('files')) {
 
-            $this->storeMedia($this->request->file('files'), Media::TYPE_IMAGE, Project::STORE_PATH);
+            $files = $this->request->file('files');
+
+            throw_if(
+                (count($files) + $this->model->media()->image()->count()) > $this->model::IMAGES_LIMIT,
+                new \Exception(__('labels.files_reached_limit'))
+            );
+
+            $this->storeMedia($files, Media::TYPE_IMAGE, Project::STORE_PATH);
         }
     }
 }

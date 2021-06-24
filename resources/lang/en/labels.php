@@ -43,11 +43,13 @@ return [
     'delete_confirm_question' => 'Are you sure?',
     'delete_info' => 'You will not be able to revert this!',
     'password_format' => 'Minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter and 1 number',
-    'upload_file_rules' => 'Only :extensions file is allowed, and must be not more than :maxsize|Only maximum :maxfiles :extensions files are allowed, and must be not more than :maxsize',
+    'upload_file_rules' => '{1} <li>Only :extensions file type allowed.</li><li>Total file size must be not more than :maxsize.</li><li>Recommend file dimension: :dimension px.</li>|{2,} <li>Only total of :maxfiles files allowed.</li><li>Only :extensions file type allowed</li><li>Total file size must be not more than :maxsize.</li><li>Recommend file dimension: :dimension px.</li>',
     'boosts_ads_preference_text' => 'You may choose to boost this project',
     'select_prefer_boosts_ads_days' => 'Select your preferred day to boost ads.',
     'change_profile_pic' => 'Change Profile Picture',
     'change_logo' => 'Change Logo',
+    'files_reached_limit' => 'The files has reached the limit.',
+    'drag_and_drop' => 'Drag and drop files here to upload',
 
     'project' => 'Project|Projects',
     'country_state' => 'Country State|Country States',
@@ -64,6 +66,8 @@ return [
     'code' => 'Code',
     'upload_file' => 'Upload File|Upload Files',
     'document' => 'Document|Documents',
+    'file' => 'File|Files',
+    'image' => 'Image|Images',
     'with_city' => 'With Cities',
     'description' => 'Description',
     'role' => 'Role',
@@ -104,5 +108,7 @@ return [
     'pic_name' => 'Name of Person in Charge',
     'pic_contact' => 'Contact No. of Person in Charge',
     'pic_email' => 'Email of Person in Charge',
-    'logo' => 'Logo'
+    'logo' => 'Logo',
+    'image' => 'Image|Images',
+    'type' => 'Type'
 ];

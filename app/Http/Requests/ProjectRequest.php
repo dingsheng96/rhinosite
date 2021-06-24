@@ -6,6 +6,7 @@ use App\Models\Unit;
 use App\Models\AdsType;
 use App\Models\Project;
 use App\Models\Category;
+use App\Rules\ExistMerchant;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -55,8 +56,8 @@ class ProjectRequest extends FormRequest
             'unit_price'        =>  ['required', 'numeric'],
             'unit_value'        =>  ['required', 'numeric'],
             'unit'              =>  ['required', 'exists:' . Unit::class . ',id'],
-            'thumbnail'         =>  ['required', 'image', 'mimes:jpg,jpeg,png', 'max:2000', 'dimensions:max_height=1024,max_width=1024'],
-            'files'             =>  ['required', 'array'],
+            'thumbnail'         =>  [Rule::requiredIf(empty($this->route('project'))), 'nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2000', 'dimensions:max_height=1024,max_width=1024'],
+            'files'             =>  [Rule::requiredIf(empty($this->route('project'))), 'nullable', 'array'],
             'files.*'           =>  ['image', 'mimes:jpg,jpeg,png', 'max:2000', 'dimensions:max_height=1024,max_width=1024'],
             'description'       =>  ['required'],
             'materials'         =>  ['required'],
@@ -77,7 +78,7 @@ class ProjectRequest extends FormRequest
             ],
             'ads_type'          =>  ['filled', 'exists:' . AdsType::class . ',id'],
             'boost_ads_date'    =>  ['required_with:ads_type', 'nullable', 'date', 'date_format:d/m/Y'],
-            'merchant'          =>  [Rule::requiredIf(Auth::user()->is_admin)]
+            'merchant'          =>  [Rule::requiredIf(Auth::user()->is_admin), 'nullable', new ExistMerchant()]
         ];
     }
 

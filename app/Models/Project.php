@@ -12,7 +12,8 @@ class Project extends Model
 {
     use SoftDeletes;
 
-    const STORE_PATH = '/projects';
+    const STORE_PATH    = '/projects';
+    const IMAGES_LIMIT  = 5;
 
     protected $table = 'projects';
 
@@ -59,14 +60,19 @@ class Project extends Model
     }
 
     // Attributes
-    public function getPriceAttribute()
+    public function getPriceWithLabelAttribute()
     {
         $currency   =   $this->currency->code;
-        $price      =   Misc::instance()->getPriceFromIntToFloat($this->unit_price);
+        $price      =   $this->price;
         $unit       =   $this->unit->display;
         $unit_value =   $this->unit_value;
 
         return $currency . $price . ' / ' . $unit_value . $unit;
+    }
+
+    public function getPriceAttribute()
+    {
+        return Misc::instance()->getPriceFromIntToFloat($this->unit_price ?? 0);
     }
 
     public function getLocationAttribute()

@@ -8,11 +8,12 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-transparent">
-                    <h3 class="card-title">{{ __('modules.create', ['module' => trans_choice('modules.project', 1)]) }}</h3>
+                    <h3 class="card-title">{{ __('modules.edit', ['module' => trans_choice('modules.project', 1)]) }}</h3>
                 </div>
 
-                <form action="{{ route('projects.store') }}" method="post" enctype="multipart/form-data" role="form">
+                <form action="{{ route('projects.update', ['project' => $project->id]) }}" method="post" enctype="multipart/form-data" role="form">
                     @csrf
+                    @method('put')
 
                     <div class="card-body">
                         <div class="row">
@@ -31,10 +32,10 @@
                                     <div class="tab-pane text-left fade show active" id="vert-tabs-general" role="tabpanel" aria-labelledby="vert-tabs-general-tab">
 
                                         <div class="row">
-                                            <div class="col-12 col-md-6">
+                                            <div class="col-12">
                                                 <div class="form-group">
                                                     <label for="title_en" class="col-form-label">{{ __('labels.project_title', ['lang' => __('labels.english')]) }} <span class="text-red">*</span></label>
-                                                    <input type="text" name="title_en" id="title_en" class="form-control @error('title_en') is-invalid @enderror sluggable" value="{{ old('title_en') }}" required>
+                                                    <input type="text" name="title_en" id="title_en" class="form-control @error('title_en') is-invalid @enderror sluggable" value="{{ old('title_en', $project->english_title) }}" required>
                                                     @error('title_en')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -42,10 +43,13 @@
                                                     @enderror
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-md-6">
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-12">
                                                 <div class="form-group">
                                                     <label for="title_cn" class="col-form-label">{{ __('labels.project_title', ['lang' => __('labels.chinese')]) }} <span class="text-red">*</span></label>
-                                                    <input type="text" name="title_cn" id="title_cn" class="form-control @error('title_cn') is-invalid @enderror" value="{{ old('title_cn') }}" required>
+                                                    <input type="text" name="title_cn" id="title_cn" class="form-control @error('title_cn') is-invalid @enderror" value="{{ old('title_cn', $project->chinese_title) }}" required>
                                                     @error('title_cn')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -59,7 +63,7 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="slug" class="col-form-label">{{ __('labels.slug') }}</label>
-                                                    <input type="text" name="slug" id="slug" class="form-control @error('slug') is-invalid @enderror sluggable-input" value="{{ old('slug') }}" readonly>
+                                                    <input type="text" name="slug" id="slug" class="form-control @error('slug') is-invalid @enderror sluggable-input" value="{{ old('slug', $project->slug) }}" readonly>
                                                     @error('slug')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -71,7 +75,7 @@
                                                 <div class="form-group">
                                                     <label for="publish" class="col-form-label">{{ __('labels.status') }}</label>
                                                     <div class="icheck-primary">
-                                                        <input type="checkbox" name="publish" id="publish" {{ old('publish', 'on') ? 'checked' : null }}>
+                                                        <input type="checkbox" name="publish" id="publish" {{ old('publish', $project->published) ? 'checked' : null }}>
                                                         <label for="publish">{{ __('labels.publish_now') }}</label>
                                                     </div>
                                                     @error('category')
@@ -87,7 +91,7 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="unit_value" class="col-form-label">{{ __('labels.unit_value') }} <span class="text-red">*</span></label>
-                                                    <input type="number" name="unit_value" id="unit_value" class="form-control @error('unit_value') is-invalid @enderror" value="{{ old('unit_value', '0.00') }}" min="0.00" step="0.01" required>
+                                                    <input type="number" name="unit_value" id="unit_value" class="form-control @error('unit_value') is-invalid @enderror" value="{{ old('unit_value', $project->unit_value) }}" min="0.00" step="0.01" required>
                                                     @error('unit_value')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -101,7 +105,7 @@
                                                     <select name="unit" id="unit" class="form-control select2 @error('unit') is-invalid @enderror" required>
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.unit'))]) }} ---</option>
                                                         @foreach ($units as $unit)
-                                                        <option value="{{ $unit->id }}" {{ old('unit') == $unit->id ? 'selected' : null }}>{{ $unit->full_display }}</option>
+                                                        <option value="{{ $unit->id }}" {{ old('unit', $project->unit_id) == $unit->id ? 'selected' : null }}>{{ $unit->full_display }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('unit')
@@ -117,7 +121,7 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="unit_price" class="col-form-label">{{ __('labels.unit_price') }} <span class="text-red">*</span></label>
-                                                    <input type="number" name="unit_price" id="unit_price" class="form-control @error('unit_price') is-invalid @enderror" value="{{ old('unit_price', '0.00') }}" min="0.00" step="0.01" required>
+                                                    <input type="number" name="unit_price" id="unit_price" class="form-control @error('unit_price') is-invalid @enderror" value="{{ old('unit_price', $project->price) }}" min="0.00" step="0.01" required>
                                                     @error('unit_price')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -132,7 +136,7 @@
                                                     <select name="merchant" id="merchant" class="form-control select2 @error('merchant') is-invalid @enderror" required>
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.merchant'))]) }} ---</option>
                                                         @foreach ($merchants as $merchant)
-                                                        <option value="{{ $merchant->id }}" {{ old('merchant') == $merchant->id ? 'selected' : null }}>{{ $merchant->name }}</option>
+                                                        <option value="{{ $merchant->id }}" {{ old('merchant', $project->user_id) == $merchant->id ? 'selected' : null }}>{{ $merchant->name }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('merchant')
@@ -150,7 +154,7 @@
                                         <div class="form-group">
                                             <label for="description" class="col-form-label">{{ __('labels.description') }} <span class="text-red">*</span></label>
                                             <textarea name="description" id="description" cols="100" rows="5" placeholder="{{ __('labels.text_placeholder', ['label' => strtolower(__('labels.description'))]) }}" required
-                                                class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
+                                                class="form-control @error('description') is-invalid @enderror">{{ old('description', $project->description) }}</textarea>
                                             @error('description')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -160,7 +164,7 @@
                                         <div class="form-group">
                                             <label for="materials" class="col-form-label">{{ __('labels.material_used') }} <span class="text-red">*</span></label>
                                             <textarea name="materials" id="meterials" cols="100" rows="5" placeholder="{{ __('labels.text_placeholder', ['label' => strtolower(__('labels.material_used'))]) }}" required
-                                                class="form-control @error('materials') is-invalid @enderror">{{ old('materials') }}</textarea>
+                                                class="form-control @error('materials') is-invalid @enderror">{{ old('materials', $project->materials) }}</textarea>
                                             @error('materials')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -170,7 +174,7 @@
                                         <div class="form-group">
                                             <label for="services" class="col-form-label">{{ __('labels.services') }} <span class="text-red">*</span></label>
                                             <textarea name="services" id="services" cols="100" rows="5" placeholder="{{ __('labels.text_placeholder', ['label' => strtolower(__('labels.services'))]) }}" class="form-control @error('services') is-invalid @enderror"
-                                                required>{{ old('services') }}</textarea>
+                                                required>{{ old('services', $project->services) }}</textarea>
                                             @error('services')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -180,6 +184,7 @@
                                     </div>
 
                                     <div class="tab-pane fade" id="vert-tabs-media" role="tabpanel" aria-labelledby="vert-tabs-media-tab">
+
                                         <div class="form-group">
                                             <label for="thumbnail" class="col-form-label">{{ __('labels.upload_thumbnail') }} <span class="text-red">*</span></label>
                                             <div class="row">
@@ -200,9 +205,11 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        @if ($max_files > 0)
                                         <div class="form-group">
                                             <label for="files" class="col-form-label">{{ trans_choice('labels.upload_image', 2) }}</label>
-                                            <div class="dropzone" id="myDropzone" data-max-files="{{ $max_files }}" data-accepted-files=".jpg,.jpeg,.png">
+                                            <div class="dropzone" id="myDropzone" data-max-files="{{ $max_files }}" data-accepted-files=".jpg,.jpeg,.png" data-action="update">
                                                 <div class="dz-default dz-message">
                                                     <h1><i class="fas fa-cloud-upload-alt"></i></h1>
                                                     <h4>{{ __('labels.drag_and_drop') }}</h4>
@@ -215,12 +222,73 @@
                                             @enderror
                                             <ul>{!! trans_choice('labels.upload_file_rules', 2, ['maxsize' => '10mb', 'extensions' => 'JPG,JPEG, PNG', 'maxfiles' => $max_files, 'dimension' => '1024x1024']) !!}</ul>
                                         </div>
+                                        @endif
+
+                                        <div class="form-group">
+                                            <label for="tbl_image">{{ __('modules.view', ['module' => trans_choice('labels.image', 2)]) }}</label>
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-hover" id="tbl_image">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 5%;">{{ __('#') }}</th>
+                                                            <th style="width: 15%">{{ __('labels.type') }}</th>
+                                                            <th style="width: 65%;">{{ __('labels.filename') }}</th>
+                                                            <th style="width: 15%">{{ __('labels.action') }}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>{{ $project->thumbnail->type }}</td>
+                                                            <td>
+                                                                <img src="{{ $project->thumbnail->full_file_path }}" alt="{{ $project->thumbnail->filename }}" class="table-img-preview">
+                                                                <a href="{{ $project->thumbnail->full_file_path }}" target="_blank" class="ml-2">
+                                                                    <i class="fas fa-external-link-alt"></i>
+                                                                    {{ $project->thumbnail->filename }}
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <a role="button" href="{{ $project->thumbnail->full_file_path }}" class="btn btn-success mr-2" download title="{{ __('labels.download') }}">
+                                                                    <i class="fas fa-download"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        @forelse ($media as $image)
+                                                        <tr>
+                                                            <td>{{ ($loop->iteration + 1) }}</td>
+                                                            <td>{{ $image->type }}</td>
+                                                            <td>
+                                                                <img src="{{ $image->full_file_path }}" alt="{{ $image->filename }}" class="table-img-preview">
+                                                                <a href="{{ $image->full_file_path }}" target="_blank" class="ml-2">
+                                                                    <i class="fas fa-external-link-alt"></i>
+                                                                    {{ $image->filename }}
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <a role="button" href="{{ $image->full_file_path }}" class="btn btn-success mr-2" download title="{{ __('labels.download') }}">
+                                                                    <i class="fas fa-download"></i>
+                                                                </a>
+                                                                <a role="button" href="#" class="btn btn-danger ml-2" title="{{ __('labels.delete') }}" data-toggle="modal"
+                                                                    onclick="event.preventDefault(); deleteAlert('{{ __('labels.delete_confirm_question') }}', '{{ __('labels.delete_info') }}', '{{ route('projects.media.destroy', ['project' => $project->id, 'media' => $image->id]) }}')">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        @empty
+                                                        <tr>
+                                                            <td colspan="3" class="text-center">{{ __('labels.no_records') }}</td>
+                                                        </tr>
+                                                        @endforelse
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="tab-pane fade" id="vert-tabs-location" role="tabpanel" aria-labelledby="vert-tabs-location-tab">
                                         <div class="form-group">
                                             <label for="address_1" class="col-form-label">{{ __('labels.address_1') }} <span class="text-red">*</span></label>
-                                            <input type="text" name="address_1" id="address_1" class="form-control @error('address_1') is-invalid @enderror" value="{{ old('address_1') }}" required>
+                                            <input type="text" name="address_1" id="address_1" class="form-control @error('address_1') is-invalid @enderror" value="{{ old('address_1', $project->address->address_1 ?? null) }}" required>
                                             @error('address_1')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -230,7 +298,7 @@
 
                                         <div class="form-group">
                                             <label for="address_2" class="col-form-label">{{ __('labels.address_2') }} <span class="text-red">*</span></label>
-                                            <input type="text" name="address_2" id="address_2" class="form-control @error('address_2') is-invalid @enderror" value="{{ old('address_2') }}" required>
+                                            <input type="text" name="address_2" id="address_2" class="form-control @error('address_2') is-invalid @enderror" value="{{ old('address_2', $project->address->address_2 ?? null) }}" required>
                                             @error('address_2')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -245,7 +313,7 @@
                                                     <select name="country" id="country" class="form-control select2 @error('country') is-invalid @enderror country-state-filter" required>
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.country', 1))]) }} ---</option>
                                                         @foreach ($countries as $country)
-                                                        <option value="{{ $country->id }}" {{ old('country') == $country->id ? 'selected' : null }}>{{ $country->name }}</option>
+                                                        <option value="{{ $country->id }}" {{ old('country', $project->address->city->country->id ?? null) == $country->id ? 'selected' : null }}>{{ $country->name }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('country')
@@ -259,7 +327,7 @@
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
                                                     <label for="postcode" class="col-form-label">{{ __('labels.postcode') }} <span class="text-red">*</span></label>
-                                                    <input type="text" name="postcode" id="postcode" class="form-control @error('postcode') is-invalid @enderror" value="{{ old('postcode') }}" required>
+                                                    <input type="text" name="postcode" id="postcode" class="form-control @error('postcode') is-invalid @enderror" value="{{ old('postcode', $project->address->postcode) }}" required>
                                                     @error('postcode')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -273,8 +341,8 @@
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
                                                     <label for="country_state" class="col-form-label">{{ trans_choice('labels.country_state', 1) }} <span class="text-red">*</span></label>
-                                                    <select name="country_state" id="country_state" class="form-control select2 @error('country_state') is-invalid @enderror country-state-dropdown city-filter" data-selected="{{ old('country_state') }}"
-                                                        data-country-state-route="{{ route('data.countries.country-states', ['__REPLACE__']) }}" required>
+                                                    <select name="country_state" id="country_state" class="form-control select2 @error('country_state') is-invalid @enderror country-state-dropdown city-filter"
+                                                        data-selected="{{ old('country_state', $project->address->city->countryState->id ?? null) }}" data-country-state-route="{{ route('data.countries.country-states', ['__REPLACE__']) }}" required>
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.country_state', 1))]) }} ---</option>
                                                     </select>
                                                     @error('country_state')
@@ -287,7 +355,7 @@
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
                                                     <label for="city" class="col-form-label">{{ trans_choice('labels.city', 1) }} <span class="text-red">*</span></label>
-                                                    <select name="city" id="city" class="form-control select2 @error('city') is-invalid @enderror city-dropdown" data-selected="{{ old('city') }}"
+                                                    <select name="city" id="city" class="form-control select2 @error('city') is-invalid @enderror city-dropdown" data-selected="{{ old('city', $project->address->city->id ?? null) }}"
                                                         data-city-route="{{ route('data.countries.country-states.cities', ['__FIRST_REPLACE__', '__SECOND_REPLACE__']) }}" required>
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.city', 1))]) }} ---</option>
                                                     </select>

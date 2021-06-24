@@ -75,7 +75,7 @@ class BaseService
         );
 
         $this->model->media()->create([
-            'type'                =>   $config['filetype'],
+            'type'                =>   $config['type'],
             'original_filename'   =>   $config['filename'],
             'filename'            =>   $config['filename'],
             'path'                =>   $config['save_path'],

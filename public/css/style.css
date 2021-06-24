@@ -16,7 +16,8 @@
     object-fit: contain;
     height: 50px;
     width: 50px;
-    border-radius: 15px;
+    border-radius: 12px;
+    border: rgb(206, 204, 204) solid 0.8px;
 }
 
 .custom-img-preview {
