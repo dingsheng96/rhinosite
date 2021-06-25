@@ -80,6 +80,13 @@ class User extends Authenticatable implements MustVerifyEmail
         });
     }
 
+    public function scopeMember($query)
+    {
+        return $query->whereHas('roles', function ($query) {
+            $query->where('name', Role::ROLE_MEMBER);
+        });
+    }
+
     // Attributes
     public function getFullAddressAttribute()
     {

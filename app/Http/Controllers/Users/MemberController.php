@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Users;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\DataTables\MemberDataTable;
+use App\Http\Controllers\Controller;
 
 class MemberController extends Controller
 {
@@ -12,9 +14,9 @@ class MemberController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(MemberDataTable $dataTable)
     {
-        //
+        return $dataTable->render('users.member.index');
     }
 
     /**
@@ -44,7 +46,7 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $member)
     {
         //
     }
@@ -55,9 +57,9 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $member)
     {
-        //
+        return view('users.member.edit', compact('member'));
     }
 
     /**
@@ -67,7 +69,7 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $member)
     {
         //
     }
@@ -78,7 +80,7 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $member)
     {
         //
     }
