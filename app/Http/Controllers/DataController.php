@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Response;
 use Illuminate\Http\Request;
-use App\Models\Settings\Country\City;
-use App\Models\Settings\Country\Country;
-use App\Models\Settings\Role\Permission;
-use App\Models\Settings\Country\CountryState;
+use App\Models\City;
+use App\Models\Country;
+use App\Models\Permission;
+use App\Models\CountryState;
 
 class DataController extends Controller
 {

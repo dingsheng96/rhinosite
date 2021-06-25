@@ -15,7 +15,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\DataTables\MerchantDataTable;
 use App\Support\Facades\MerchantFacade;
-use App\Models\Settings\Role\Permission;
+use App\Models\Permission;
 use App\Http\Requests\Users\MerchantRequest;
 
 class MerchantController extends Controller

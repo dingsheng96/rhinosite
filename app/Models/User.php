@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Role;
 use App\Helpers\Status;
-use App\Models\Settings\Role\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -53,6 +53,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function categories()
     {
         return $this->belongsToMany(Category::class, UserCategory::class, 'user_id', 'category_id', 'id', 'id');
+    }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class, 'user_id', 'id');
+    }
+
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class, 'user_id', 'id');
     }
 
     // Scopes

@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Settings\Country;
+namespace App\Http\Controllers\Settings;
 
+use App\Models\Country;
 use App\Helpers\Message;
+use App\Models\Currency;
 use App\Helpers\Response;
-use Illuminate\Http\Request;
-use App\Models\Settings\Currency;
+use App\Models\Permission;
 use Illuminate\Support\Facades\DB;
 use App\DataTables\CountryDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Settings\Country\Country;
-use App\Models\Settings\Role\Permission;
 use App\DataTables\CountryStateDataTable;
 use App\Http\Requests\Settings\Country\CountryRequest;
 

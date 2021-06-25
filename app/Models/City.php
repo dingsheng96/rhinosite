@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Models\Settings\Country;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Settings\Country\Country;
-use App\Models\Settings\Country\CountryState;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class City extends Model

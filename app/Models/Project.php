@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Helpers\Misc;
 use App\Helpers\Status;
-use App\Models\Settings\Currency;
+use App\Models\Currency;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -51,6 +51,11 @@ class Project extends Model
     public function media()
     {
         return $this->morphMany(Media::class, 'sourceable');
+    }
+
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class, 'sourceable');
     }
 
     // Scopes

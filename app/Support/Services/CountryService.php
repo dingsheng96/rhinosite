@@ -2,7 +2,7 @@
 
 namespace App\Support\Services;
 
-use App\Models\Settings\Country\Country;
+use App\Models\Country;
 
 class CountryService extends BaseService
 {

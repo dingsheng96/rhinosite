@@ -7,7 +7,7 @@ use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
-use App\Models\Settings\Country\CountryState;
+use App\Models\CountryState;
 
 class CountryStateDataTable extends DataTable
 {
@@ -49,7 +49,7 @@ class CountryStateDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Settings\Country\CountryState $model
+     * @param \App\Models\CountryState $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query(CountryState $model)

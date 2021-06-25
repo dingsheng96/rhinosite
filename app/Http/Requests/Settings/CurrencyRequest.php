@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Settings;
 
 use Illuminate\Validation\Rule;
-use App\Models\Settings\Currency;
+use App\Models\Currency;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;

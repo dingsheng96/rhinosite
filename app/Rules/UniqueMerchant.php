@@ -3,7 +3,7 @@
 namespace App\Rules;
 
 use App\Models\User;
-use App\Models\Settings\Role\Role;
+use App\Models\Role;
 use Illuminate\Contracts\Validation\Rule;
 
 class UniqueMerchant implements Rule

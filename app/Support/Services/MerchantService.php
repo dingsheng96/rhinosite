@@ -12,7 +12,7 @@ use App\Models\Translation;
 use App\Models\UserDetails;
 use Illuminate\Support\Str;
 use App\Helpers\FileManager;
-use App\Models\Settings\Currency;
+use App\Models\Currency;
 
 class MerchantService extends BaseService
 {

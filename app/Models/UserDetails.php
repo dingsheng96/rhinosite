@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\Status;
-use App\Models\Settings\Role\Role;
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 

@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Settings\Currency;
+use App\Models\Currency;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
@@ -49,7 +49,7 @@ class CurrencyDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Settings\Currency $model
+     * @param \App\Models\Currency $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query(Currency $model)

@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Settings\Role\Role;
+use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;

@@ -9,10 +9,10 @@ use App\Rules\UniqueMerchant;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Settings\Country\City;
-use App\Models\Settings\Country\Country;
+use App\Models\City;
+use App\Models\Country;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Settings\Country\CountryState;
+use App\Models\CountryState;
 
 class MerchantRequest extends FormRequest
 {

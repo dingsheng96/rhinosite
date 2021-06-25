@@ -11,7 +11,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Settings\Role\Permission;
+use App\Models\Permission;
 use App\DataTables\VerificationDataTable;
 use App\Support\Facades\UserDetailFacade;
 

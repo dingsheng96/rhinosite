@@ -43,7 +43,8 @@ class ModuleSeeder extends Seeder
             ['name' => 'project', 'display' => 'Project', 'description' => 'Project Module'],
             ['name' => 'ads', 'display' => 'Ads', 'description' => 'Ads Module'],
             ['name' => 'order', 'display' => 'Order', 'description' => 'Order Module'],
-            ['name' => 'category', 'display' => 'category', 'description' => 'Category Module'],
+            ['name' => 'category', 'display' => 'Category', 'description' => 'Category Module'],
+            ['name' => 'activity_log', 'display' => 'Activity Log', 'description' => 'Activity Log Module'],
         ];
     }
 }

@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Settings\Country;
+namespace App\Http\Controllers\Settings;
 
+use App\Models\Country;
 use App\Helpers\Message;
 use App\Helpers\Response;
+use App\Models\Permission;
 use App\Helpers\FileManager;
-use Illuminate\Http\Request;
+use App\Models\CountryState;
 use App\DataTables\CityDataTable;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Models\Settings\Country\Country;
-use App\Models\Settings\Role\Permission;
-use App\Models\Settings\Country\CountryState;
 use App\Imports\Settings\Country\CountryStateImport;
 use App\Imports\Settings\Country\CountryStateCityImport;
 use App\Http\Requests\Settings\Country\CountryStateRequest;

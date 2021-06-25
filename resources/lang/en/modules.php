@@ -30,5 +30,6 @@ return [
         'merchant' => 'Merchant|Merchants',
         'member' => 'Member|Members',
         'category' => 'Category|Categories',
+        'activity_logs' => 'Activity Logs'
     ]
 ];

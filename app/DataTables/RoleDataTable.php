@@ -4,7 +4,7 @@ namespace App\DataTables;
 
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use App\Models\Settings\Role\Role;
+use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
@@ -49,7 +49,7 @@ class RoleDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Settings\Role\Role $model
+     * @param \App\Models\Role $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query(Role $model)

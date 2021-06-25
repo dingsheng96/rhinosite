@@ -3,7 +3,7 @@
 namespace App\Imports\Settings\Country;
 
 use Maatwebsite\Excel\Concerns\ToModel;
-use App\Models\Settings\Country\Country;
+use App\Models\Country;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\WithValidation;

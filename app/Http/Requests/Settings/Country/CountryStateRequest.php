@@ -6,7 +6,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Settings\Country\CountryState;
+use App\Models\CountryState;
 
 class CountryStateRequest extends FormRequest
 {

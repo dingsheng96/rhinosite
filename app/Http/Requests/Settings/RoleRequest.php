@@ -3,10 +3,10 @@
 namespace App\Http\Requests\Settings;
 
 use Illuminate\Validation\Rule;
-use App\Models\Settings\Role\Role;
+use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Settings\Role\Permission;
+use App\Models\Permission;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RoleRequest extends FormRequest

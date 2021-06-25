@@ -2,10 +2,10 @@
 
 namespace App\Imports\Settings\Country;
 
-use App\Models\Settings\Country\City;
+use App\Models\City;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
-use App\Models\Settings\Country\CountryState;
+use App\Models\CountryState;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\WithValidation;
 

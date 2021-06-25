@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Settings;
 
 use App\Helpers\Message;
 use App\Helpers\Response;
-use App\Models\Settings\Currency;
+use App\Models\Currency;
 use Illuminate\Support\Facades\DB;
 use App\DataTables\CountryDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\DataTables\CurrencyDataTable;
-use App\Models\Settings\Role\Permission;
+use App\Models\Permission;
 use App\Http\Requests\Settings\CurrencyRequest;
 
 class CurrencyController extends Controller

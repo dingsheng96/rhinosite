@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\DataTables\CategoryDataTable;
-use App\Models\Settings\Role\Permission;
+use App\Models\Permission;
 use App\Http\Requests\Settings\CategoryRequest;
 
 class CategoryController extends Controller

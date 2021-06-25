@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Role;
 use App\Models\User;
-use App\Models\Settings\Role\Role;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -50,7 +50,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
-        $this->mapAdminRoutes();
+        //
     }
 
     /**
@@ -82,20 +82,6 @@ class RouteServiceProvider extends ServiceProvider
             ->group(base_path('routes/api.php'));
     }
 
-    /**
-     * Define the "admin" routes for the application.
-     *
-     * These routes all receive session state, CSRF protection, etc.
-     *
-     * @return void
-     */
-    protected function mapAdminRoutes()
-    {
-        Route::middleware('web')
-            ->namespace($this->namespace)
-            ->group(base_path('routes/web.php'));
-    }
-
     protected function routeBindings()
     {
         Route::bind('admin', function ($value) {
@@ -110,6 +96,14 @@ class RouteServiceProvider extends ServiceProvider
             return User::where('id', $value)
                 ->whereHas('roles', function ($query) {
                     $query->where('name', Role::ROLE_MERCHANT);
+                })
+                ->firstOrFail();
+        });
+
+        Route::bind('member', function ($value) {
+            return User::where('id', $value)
+                ->whereHas('roles', function ($query) {
+                    $query->where('name', Role::ROLE_MEMBER);
                 })
                 ->firstOrFail();
         });

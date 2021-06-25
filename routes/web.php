@@ -40,15 +40,13 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
     Route::group(['prefix' => 'settings', 'as' => 'settings.', 'namespace' => 'Settings'], function () {
 
-        Route::group(['namespace' => 'Country'], function () {
-            Route::resource('countries', 'CountryController');
-            Route::resource('countries.country-states', 'CountryStateController');
-            Route::resource('countries.country-states.cities', 'CityController');
-        });
-
-        Route::resource('currencies', 'CurrencyController');
         Route::resource('roles', 'RoleController');
         Route::resource('categories', 'CategoryController');
+        Route::resource('currencies', 'CurrencyController');
+        Route::resource('countries', 'CountryController');
+        Route::resource('countries.country-states', 'CountryStateController');
+        Route::resource('countries.country-states.cities', 'CityController');
+        Route::resource('activity-logs', 'ActivityLogController');
     });
 });
 

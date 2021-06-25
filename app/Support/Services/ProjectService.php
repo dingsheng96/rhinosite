@@ -10,7 +10,7 @@ use App\Models\Language;
 use App\Models\Translation;
 use Illuminate\Support\Str;
 use App\Helpers\FileManager;
-use App\Models\Settings\Currency;
+use App\Models\Currency;
 
 class ProjectService extends BaseService
 {

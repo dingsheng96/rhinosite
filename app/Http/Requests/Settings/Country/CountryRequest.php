@@ -3,10 +3,10 @@
 namespace App\Http\Requests\Settings\Country;
 
 use Illuminate\Validation\Rule;
-use App\Models\Settings\Currency;
+use App\Models\Currency;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Settings\Country\Country;
+use App\Models\Country;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CountryRequest extends FormRequest

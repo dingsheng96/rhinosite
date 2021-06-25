@@ -4,7 +4,7 @@ namespace App\DataTables;
 
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use App\Models\Settings\Country\Country;
+use App\Models\Country;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
@@ -58,7 +58,7 @@ class CountryDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Settings\Country\Country $model
+     * @param \App\Models\Country $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query(Country $model)

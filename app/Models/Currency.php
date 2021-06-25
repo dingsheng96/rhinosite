@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Models\Settings;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Settings\Country\Country;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Currency extends Model

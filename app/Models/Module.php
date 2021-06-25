@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Settings\Role\Permission;
+use App\Models\Permission;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Module extends Model

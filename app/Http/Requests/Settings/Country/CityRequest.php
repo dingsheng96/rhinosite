@@ -5,7 +5,7 @@ namespace App\Http\Requests\Settings\Country;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Settings\Country\City;
+use App\Models\City;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CityRequest extends FormRequest

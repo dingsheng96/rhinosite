@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\User;
-use App\Models\Settings\Role\Role;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 

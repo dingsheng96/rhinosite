@@ -121,6 +121,13 @@
                             </a>
                         </li>
                         @endcanany
+                        @canany(['activity_log.create', 'activity_log.read'. 'activity_log.update', 'activity_log.delete'])
+                        <li class="nav-item">
+                            <a href="{{ route('settings.activity-logs.index') }}" class="nav-link {{ Nav::hasSegment('activity-logs', 2, 'active') }}">
+                                <p>{{ __('modules.submodules.activity_logs') }}</p>
+                            </a>
+                        </li>
+                        @endcanany
                     </ul>
                 </li>
                 @endcanany

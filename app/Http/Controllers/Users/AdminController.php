@@ -8,12 +8,12 @@ use App\Helpers\Message;
 use App\Helpers\Response;
 use Illuminate\Http\Request;
 use App\DataTables\AdminDataTable;
-use App\Models\Settings\Role\Role;
+use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Settings\Role\Permission;
+use App\Models\Permission;
 use App\Http\Requests\Users\AdminRequest;
 
 class AdminController extends Controller

@@ -14,8 +14,8 @@ use App\DataTables\ProjectDataTable;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ProjectRequest;
 use App\Support\Facades\ProjectFacade;
-use App\Models\Settings\Country\Country;
-use App\Models\Settings\Role\Permission;
+use App\Models\Country;
+use App\Models\Permission;
 
 class ProjectController extends Controller
 {
@@ -112,7 +112,11 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        return view('projects.show', compact('project'));
+        $media      =   $project->media();
+        $images     =   (clone ($media))->image()->get();
+        $thumbnail  =   (clone ($media))->thumbnail()->first();
+
+        return view('projects.show', compact('project', 'images', 'thumbnail'));
     }
 
     /**
