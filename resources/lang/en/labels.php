@@ -110,5 +110,8 @@ return [
     'pic_email' => 'Email of Person in Charge',
     'logo' => 'Logo',
     'image' => 'Image|Images',
-    'type' => 'Type'
+    'type' => 'Type',
+    'subject_to' => 'Subject To',
+    'caused_by' => 'Caused By',
+    'log_name' => 'Log Name'
 ];
