@@ -36,9 +36,9 @@ class Currency extends Model
         return $this->hasMany(Transaction::class, 'currency_id', 'id');
     }
 
-    public function products()
+    public function prices()
     {
-        return $this->hasMany(Product::class, 'currency_id', 'id');
+        return $this->hasMany(Price::class, 'currency_id', 'id');
     }
 
     // Attributes

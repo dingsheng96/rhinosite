@@ -43,7 +43,32 @@
                 </li>
                 @endcanany
 
-                @canany(['admin.create', 'admin.read'. 'admin.update', 'admin.delete', 'member.create', 'member.read'. 'member.update', 'member.delete', 'merchant.create', 'merchant.read'. 'merchant.update', 'merchant.delete'])
+                @canany(['product.create', 'product.read'. 'product.update', 'product.delete'])
+                <li class="nav-item has-treeview {{ Nav::hasSegment(['ecommerce'], 1, 'menu-open') }}">
+                    <a href="#" class="nav-link {{ Nav::hasSegment(['ecommerce'], 1, 'active') }}">
+                        <i class="nav-icon fas fa-shopping-bag"></i>
+                        <p>
+                            {{ __('modules.ecommerce') }}
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        @canany(['product.create', 'product.read'. 'product.update', 'product.delete'])
+                        <li class="nav-item">
+                            <a href="{{ route('ecommerce.products.index') }}" class="nav-link {{ Nav::hasSegment('products', 2, 'active') }}">
+                                <p>{{ trans_choice('modules.submodules.product', 2) }}</p>
+                            </a>
+                        </li>
+                        @endcanany
+                    </ul>
+                </li>
+                @endcanany
+
+                @canany([
+                'admin.create', 'admin.read'. 'admin.update', 'admin.delete',
+                'member.create', 'member.read'. 'member.update', 'member.delete',
+                'merchant.create', 'merchant.read'. 'merchant.update', 'merchant.delete'
+                ])
                 <li class="nav-item has-treeview {{ Nav::hasSegment(['users'], 1, 'menu-open') }}">
                     <a href="#" class="nav-link {{ Nav::hasSegment(['users'], 1, 'active') }}">
                         <i class="nav-icon fas fa-users"></i>

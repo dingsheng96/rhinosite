@@ -48,6 +48,11 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
         Route::resource('countries.country-states.cities', 'CityController');
         Route::resource('activity-logs', 'ActivityLogController');
     });
+
+    Route::group(['prefix' => 'ecommerce', 'as' => 'ecommerce.', 'namespace' => 'Ecommerce'], function () {
+
+        Route::resource('products', 'ProductController');
+    });
 });
 
 Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
@@ -58,11 +63,4 @@ Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
     });
 
     Route::get('ads-boosters/{ads}/available-date', 'DateController@getAdsBoosterAvailableDate')->name('ads-boosters.available-date');
-});
-
-Route::get('mail', function () {
-
-    $details = UserDetails::find(2);
-
-    return (new AccountVerified($details))->toMail($details->user);
 });

@@ -19,6 +19,7 @@ return [
     'setting' => 'Setting|Settings',
     'user' => 'User|Users',
     'verification' => 'Verification|Verifications',
+    'ecommerce' => 'Ecommerce',
 
     'submodules' => [
         'country' => 'Country|Countries',
@@ -30,6 +31,7 @@ return [
         'merchant' => 'Merchant|Merchants',
         'member' => 'Member|Members',
         'category' => 'Category|Categories',
-        'activity_logs' => 'Activity Logs'
+        'activity_logs' => 'Activity Logs',
+        'product' => 'Product|Products'
     ]
 ];

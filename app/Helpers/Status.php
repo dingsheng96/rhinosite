@@ -49,6 +49,14 @@ class Status
         ];
     }
 
+    public function availableStatus(): array
+    {
+        return [
+            '1' => __('labels.available'),
+            '0' => __('labels.unavailable'),
+        ];
+    }
+
     public function statusLabel(string $status): array
     {
         $labels = [
@@ -87,6 +95,16 @@ class Status
             'publish' => [
                 '1' => [
                     'text' => __('labels.publishing'),
+                    'class' => 'badge badge-pill badge-lg badge-success'
+                ]
+            ],
+            'availability' => [
+                '0' => [
+                    'text' => __('labels.unavailable'),
+                    'class' => 'badge badge-pill badge-lg badge-danger'
+                ],
+                '1' => [
+                    'text' => __('labels.available'),
                     'class' => 'badge badge-pill badge-lg badge-success'
                 ]
             ]

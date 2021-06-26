@@ -19,8 +19,10 @@ return [
     'rejected' => 'Rejected',
     'approved' => 'Approved',
     'download' => 'Download',
-    'show_records' => 'Showing :item of :total records',
+    'available' => 'Available',
+    'unavailable' => 'Unavailable',
 
+    'show_records' => 'Showing :item of :total records',
     'start_session' => 'Sign in to start your session',
     'copyright' => '&copy ' . config('app.name') . ' ' . date('Y'),
     'terms_policy' => 'Terms & Policies',
@@ -113,5 +115,9 @@ return [
     'type' => 'Type',
     'subject_to' => 'Subject To',
     'caused_by' => 'Caused By',
-    'log_name' => 'Log Name'
+    'log_name' => 'Log Name',
+    'unit_price_from' => 'Unit Price From',
+    'selling_price_from' => 'Selling Price From',
+    'price_from' => 'Price From',
+    'variation' => 'Variation|Variations'
 ];

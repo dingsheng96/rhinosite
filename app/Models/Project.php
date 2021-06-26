@@ -19,7 +19,7 @@ class Project extends Model
 
     protected $fillable = [
         'title', 'description', 'user_id', 'services', 'materials',
-        'currency_id', 'unit_price', 'unit_id', 'unit_value', 'published'
+        'unit_id', 'unit_value', 'published'
     ];
 
     // Relationships
@@ -43,11 +43,6 @@ class Project extends Model
         return $this->morphMany(Translation::class, 'translatable');
     }
 
-    public function currency()
-    {
-        return $this->belongsTo(Currency::class, 'currency_id', 'id');
-    }
-
     public function media()
     {
         return $this->morphMany(Media::class, 'sourceable');
@@ -56,6 +51,11 @@ class Project extends Model
     public function ratings()
     {
         return $this->hasMany(Rating::class, 'sourceable');
+    }
+
+    public function prices()
+    {
+        return $this->hasMany(Price::class, 'priceable');
     }
 
     // Scopes
