@@ -4,14 +4,35 @@ namespace App\Http\Controllers\Ecommerce;
 
 use App\Helpers\Status;
 use App\Models\Product;
-use App\Models\Currency;
-use App\Models\ProductType;
+use App\Helpers\Message;
+use App\Helpers\Response;
+use App\Models\Permission;
 use Illuminate\Http\Request;
+use App\Models\ProductCategory;
+use App\Models\ProductAttribute;
+use Illuminate\Support\Facades\DB;
 use App\DataTables\ProductDataTable;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Support\Facades\ProductFacade;
+use App\DataTables\ProductAttributeDataTable;
+use App\Http\Requests\Ecommerce\ProductRequest;
 
 class ProductController extends Controller
 {
+    public $stock_types, $categories, $statuses;
+
+    public function __construct()
+    {
+        $this->stock_types = [
+            ProductAttribute::STOCK_TYPE_FINITE => __('labels.finite'),
+            ProductAttribute::STOCK_TYPE_INFINITE => __('labels.infinite')
+        ];
+
+        $this->categories = ProductCategory::orderBy('name', 'asc')->get();
+        $this->statuses   = Status::instance()->productStatus();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -29,12 +50,12 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $currencies     =   Currency::orderBy('name', 'asc')->get();
-        $product_types  =   ProductType::orderBy('name', 'asc')->get();
         $max_files      =   Product::MAX_IMAGES;
-        $statuses       =   Status::instance()->availableStatus();
+        $statuses       =   $this->statuses;
+        $stock_types    =   $this->stock_types;
+        $categories     =   $this->categories;
 
-        return view('ecommerce.product.create', compact('currencies', 'product_types', 'max_files', 'statuses'));
+        return view('ecommerce.product.create', compact('categories', 'max_files', 'statuses', 'stock_types'));
     }
 
     /**
@@ -43,9 +64,56 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        //
+        DB::beginTransaction();
+
+        $action     =   Permission::ACTION_CREATE;
+        $module     =   strtolower(trans_choice('modules.submodules.product', 1));
+        $message    =   Message::instance()->format($action, $module);
+        $status     =   'fail';
+
+        try {
+
+            $product = ProductFacade::setRequest($request)->storeData()->getModel();
+
+            DB::commit();
+
+            $message =  Message::instance()->format($action, $module, 'success');
+            $status  =  'success';
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($product)
+                ->withProperties($request->all())
+                ->log($message);
+
+            return ($request->ajax())
+                ? Response::instance()
+                ->withStatusCode('modules.product', 'actions.' . $action . $status)
+                ->withStatus($status)
+                ->withMessage($message, true)
+                ->withData([
+                    'redirect_to' => route('ecommerce.products.index')
+                ])
+                ->sendJson()
+                : redirect()->route('ecommerce.products.index')->withSuccess($message);
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn(new Product())
+                ->withProperties($request->all())
+                ->log($e->getMessage());
+
+            return Response::instance()
+                ->withStatusCode('modules.product', 'actions.' . $action . $status)
+                ->withStatus($status)
+                ->withMessage($message, true)
+                ->sendJson();
+        }
     }
 
     /**
@@ -65,9 +133,21 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Product $product, ProductAttributeDataTable $dataTable)
     {
-        //
+        $attributes     =   $product->productAttributes()->get();
+        $thumbnail      =   $product->media()->thumbnail()->first();
+        $images         =   $product->media()->image()->get();
+        $max_files      =   Product::MAX_IMAGES - $images->count();
+        $statuses       =   $this->statuses;
+        $stock_types    =   $this->stock_types;
+        $categories     =   $this->categories;
+
+        return $dataTable->with(['product_id' => $product->id])
+            ->render(
+                'ecommerce.product.edit',
+                compact('product', 'max_files', 'statuses', 'stock_types', 'categories', 'thumbnail', 'images', 'attributes')
+            );
     }
 
     /**

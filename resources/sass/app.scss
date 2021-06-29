@@ -9,13 +9,13 @@
 @import "~admin-lte/dist/css/adminlte.css";
 
 //Import Plugins Here
-@import "~admin-lte/plugins/fontawesome-free/css/all.min.css";
-@import "~admin-lte/plugins/daterangepicker/daterangepicker.css";
+@import "~pikaday/css/pikaday.css";
 @import "~admin-lte/plugins/select2/css/select2.min.css";
-@import "~admin-lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css";
 @import "~admin-lte/plugins/summernote/summernote-bs4.css";
+@import "~admin-lte/plugins/fontawesome-free/css/all.min.css";
 @import "~admin-lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css";
-@import "~admin-lte/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css";
 @import "~admin-lte/plugins/datatables-bs4/css/dataTables.bootstrap4.css";
-@import "~admin-lte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css";
 @import "~admin-lte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css";
+@import "~admin-lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css";
+@import "~admin-lte/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css";
+@import "~admin-lte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css";

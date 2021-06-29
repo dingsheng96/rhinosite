@@ -99,22 +99,6 @@ $(function() {
             .text(fileName);
     });
 
-    // datepicker
-    $('.date-picker').daterangepicker({
-        singleDatePicker: true,
-        timePicker: false,
-        showDropdowns: true,
-        autoApply: true,
-        autoUpdateInput: false,
-        startDate: new Date(),
-        minDate: new Date(),
-    }).on('apply.daterangepicker', function (ev, picker) {
-
-        let date = picker.startDate.format('DD/MM/yyyy');
-
-        $(this).find('input').val(date);
-    });
-
     $('.sluggable').on('input', function() {
 
         let input = $(this).val();

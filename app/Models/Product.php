@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Helpers\Misc;
 use App\Helpers\Status;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,23 +11,20 @@ class Product extends Model
     use SoftDeletes;
 
     const MAX_IMAGES = 5;
+    const STORE_PATH = '/products';
+    const STATUS_ACTIVE = 'active';
+    const STATUS_INACTIVE = 'inactive';
 
     protected $table = 'products';
 
     protected $fillable = [
-        'name', 'description', 'product_type_id',
-        'currency_id', 'validity', 'is_available'
+        'name', 'description', 'status', 'product_category_id'
     ];
 
     // Relationships
-    public function productType()
+    public function productCategory()
     {
-        return $this->belongsTo(ProductType::class, 'product_type_id', 'id');
-    }
-
-    public function productItems()
-    {
-        return $this->hasMany(ProductItem::class, 'product_id', 'id');
+        return $this->belongsTo(ProductCategory::class, 'product_category_id', 'id');
     }
 
     public function productAttributes()
@@ -36,42 +32,23 @@ class Product extends Model
         return $this->hasMany(ProductAttribute::class, 'product_id', 'id');
     }
 
-    // Scopes
-    public function scopePriceChecker($query, $price)
+    public function media()
     {
-        $tbl_attribute = app(ProductAttribute::class)->getTable();
-
-        return $query->join($tbl_attribute, app(self::class)->getTable() . 'id', '=', $tbl_attribute . '.product_id')
-            ->where($tbl_attribute . '.selling_price', Misc::instance()->getPriceFromFloatToInt($price));
+        return $this->morphMany(Media::class, 'sourceable');
     }
 
-    public function scopeProductTypeChecker($query, string $name)
+    // Scopes
+    public function scopeProductCategoryChecker($query, $name)
     {
-        $tbl_attribute = (new ProductType())->getTable();
-
-        return $query->join($tbl_attribute, (new self())->getTable() . 'id', '=', $tbl_attribute . '.product_id')
-            ->where('name', 'like', '%' . $name . '%');
+        return $this->join(app(ProductCategory::class)->getTable(), $this->table . '.product_category_id', '=', app(ProductCategory::class)->getTable() . '.id')
+            ->where(app(ProductCategory::class)->getTable() . '.name', $name);
     }
 
     // Attributes
     public function getStatusLabelAttribute()
     {
-        $label = Status::instance()->statusLabel('availability');
+        $label = Status::instance()->statusLabel($this->status);
 
-        return '<span class="' . $label[$this->is_available]['class'] . ' px-3">' . $label[$this->is_available]['text'] . '</span>';
-    }
-
-    public function getLowestUnitPriceAttribute()
-    {
-        $product = $this->productAttributes()->orderBy('unit_price', 'asc')->first();
-
-        return Misc::instance()->getPriceFromIntToFloat($product->unit_price ?? 0);
-    }
-
-    public function getLowestSellingPriceAttribute()
-    {
-        $product = $this->productAttributes()->orderBy('selling_price', 'asc')->first();
-
-        return Misc::instance()->getPriceFromIntToFloat($product->selling_price ?? 0);
+        return '<span class="' . $label['class'] . ' px-3">' . $label['text'] . '</span>';
     }
 }

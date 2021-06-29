@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use App\Helpers\Misc;
 use App\Helpers\Status;
-use App\Models\Currency;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -13,7 +11,7 @@ class Project extends Model
     use SoftDeletes;
 
     const STORE_PATH    = '/projects';
-    const IMAGES_LIMIT  = 5;
+    const MAX_IMAGES  = 5;
 
     protected $table = 'projects';
 
@@ -55,7 +53,7 @@ class Project extends Model
 
     public function prices()
     {
-        return $this->hasMany(Price::class, 'priceable');
+        return $this->morphMany(Price::class, 'priceable');
     }
 
     // Scopes
@@ -67,17 +65,16 @@ class Project extends Model
     // Attributes
     public function getPriceWithLabelAttribute()
     {
-        $currency   =   $this->currency->code;
-        $price      =   $this->price;
+        $default_price  =   $this->prices
+            ->where('currency_id', Country::defaultCountry()->first()->currency_id)
+            ->first();
+
+        $currency   =   $default_price->currency->code;
+        $price      =   $default_price->unit_price;
         $unit       =   $this->unit->display;
-        $unit_value =   $this->unit_value;
+        $unit_value =   number_format($this->unit_value, 0, '.', '');
 
         return $currency . $price . ' / ' . $unit_value . $unit;
-    }
-
-    public function getPriceAttribute()
-    {
-        return Misc::instance()->getPriceFromIntToFloat($this->unit_price ?? 0);
     }
 
     public function getLocationAttribute()

@@ -10,10 +10,17 @@ class ProductAttribute extends Model
 {
     use SoftDeletes;
 
+    const STOCK_TYPE_INFINITE = 'infinite';
+    const STOCK_TYPE_FINITE = 'finite';
+
     protected $table = 'product_attributes';
 
     protected $fillable = [
-        'sku', 'is_available'
+        'product_id', 'sku', 'stock_type', 'quantity', 'is_available', 'validity'
+    ];
+
+    protected $casts = [
+        'is_available' => 'boolean'
     ];
 
     // Relationships

@@ -1,7 +1,8 @@
 <?php
 
-use App\Models\ProductType;
+use App\Models\ProductCategory;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ProductTypeSeeder extends Seeder
 {
@@ -12,8 +13,12 @@ class ProductTypeSeeder extends Seeder
      */
     public function run()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+
+        DB::statement('TRUNCATE TABLE ' . app(ProductCategory::class)->getTable());
+
         foreach ($this->getData() as $data) {
-            ProductType::updateOrCreate(
+            ProductCategory::updateOrCreate(
                 ['name' => $data['name']],
                 [
                     'name'          => $data['name'],
@@ -21,12 +26,14 @@ class ProductTypeSeeder extends Seeder
                 ],
             );
         }
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
 
     public function getData()
     {
         return [
-            ['name' => ProductType::TYPE_SUBSCRIPTION, 'description' => 'Subcription plan'],
+            ['name' => ProductCategory::TYPE_ADS, 'description' => 'Ads'],
         ];
     }
 }

@@ -20,7 +20,7 @@
                             <div class="col-5 col-md-3">
                                 <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist" aria-orientation="vertical">
                                     <a class="nav-link active" id="vert-tabs-general-tab" data-toggle="pill" href="#vert-tabs-general" role="tab" aria-controls="vert-tabs-general" aria-selected="true">{{ __('labels.general') }}</a>
-                                    <a class="nav-link" id="vert-tabs-description-tab" data-toggle="pill" href="#vert-tabs-description" role="tab" aria-controls="vert-tabs-description" aria-selected="false">{{ __('labels.description') }}</a>
+                                    <a class="nav-link" id="vert-tabs-cost-tab" data-toggle="pill" href="#vert-tabs-cost" role="tab" aria-controls="vert-tabs-cost" aria-selected="false">{{ __('labels.cost') }}</a>
                                     <a class="nav-link" id="vert-tabs-media-tab" data-toggle="pill" href="#vert-tabs-media" role="tab" aria-controls="vert-tabs-media" aria-selected="false">{{ __('labels.media') }}</a>
                                     <a class="nav-link" id="vert-tabs-location-tab" data-toggle="pill" href="#vert-tabs-location" role="tab" aria-controls="vert-tabs-location" aria-selected="false">{{ __('labels.location') }}</a>
                                     <a class="nav-link" id="vert-tabs-ads-tab" data-toggle="pill" href="#vert-tabs-ads" role="tab" aria-controls="vert-tabs-ads" aria-selected="false">{{ __('labels.boost_ads') }}</a>
@@ -30,7 +30,6 @@
                                 <div class="tab-content" id="vert-tabs-tabContent">
 
                                     <div class="tab-pane text-left fade show active" id="vert-tabs-general" role="tabpanel" aria-labelledby="vert-tabs-general-tab">
-
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="form-group">
@@ -87,6 +86,60 @@
                                             </div>
                                         </div>
 
+                                        @admin
+                                        <div class="row">
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="merchant" class="col-form-label">{{ __('labels.merchant') }} <span class="text-red">*</span></label>
+                                                    <select name="merchant" id="merchant" class="form-control select2 @error('merchant') is-invalid @enderror" required>
+                                                        <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.merchant'))]) }} ---</option>
+                                                        @foreach ($merchants as $merchant)
+                                                        <option value="{{ $merchant->id }}" {{ old('merchant', $project->user_id) == $merchant->id ? 'selected' : null }}>{{ $merchant->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('merchant')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endadmin
+
+                                        <div class="form-group">
+                                            <label for="description" class="col-form-label">{{ __('labels.description') }} <span class="text-red">*</span></label>
+                                            <textarea name="description" id="description" cols="100" rows="5" placeholder="{{ __('labels.text_placeholder', ['label' => strtolower(__('labels.description'))]) }}" required
+                                                class="form-control @error('description') is-invalid @enderror">{{ old('description', $project->description) }}</textarea>
+                                            @error('description')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="materials" class="col-form-label">{{ __('labels.material_used') }} <span class="text-red">*</span></label>
+                                            <textarea name="materials" id="meterials" cols="100" rows="5" placeholder="{{ __('labels.text_placeholder', ['label' => strtolower(__('labels.material_used'))]) }}" required
+                                                class="form-control @error('materials') is-invalid @enderror">{{ old('materials', $project->materials) }}</textarea>
+                                            @error('materials')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="services" class="col-form-label">{{ __('labels.services') }} <span class="text-red">*</span></label>
+                                            <textarea name="services" id="services" cols="100" rows="5" placeholder="{{ __('labels.text_placeholder', ['label' => strtolower(__('labels.services'))]) }}" class="form-control @error('services') is-invalid @enderror"
+                                                required>{{ old('services', $project->services) }}</textarea>
+                                            @error('services')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="vert-tabs-cost" role="tabpanel" aria-labelledby="vert-tabs-cost-tab">
                                         <div class="row">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
@@ -118,68 +171,60 @@
                                         </div>
 
                                         <div class="row">
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label for="unit_price" class="col-form-label">{{ __('labels.unit_price') }} <span class="text-red">*</span></label>
-                                                    <input type="number" name="unit_price" id="unit_price" class="form-control @error('unit_price') is-invalid @enderror" value="{{ old('unit_price', $project->price) }}" min="0.00" step="0.01" required>
-                                                    @error('unit_price')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            @admin
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label for="merchant" class="col-form-label">{{ __('labels.merchant') }} <span class="text-red">*</span></label>
-                                                    <select name="merchant" id="merchant" class="form-control select2 @error('merchant') is-invalid @enderror" required>
-                                                        <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.merchant'))]) }} ---</option>
-                                                        @foreach ($merchants as $merchant)
-                                                        <option value="{{ $merchant->id }}" {{ old('merchant', $project->user_id) == $merchant->id ? 'selected' : null }}>{{ $merchant->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('merchant')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            @endadmin
-                                        </div>
-                                    </div>
+                                            <div class="col-12 table-responsive">
+                                                <table class="table table-bordered" cellspacing="0" cellpadding="0" id="priceDynamicForm" data-object="{{ json_encode(old('price')) }}">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col" style="width: 45%;">{{ __('labels.currency') }}</th>
+                                                            <th scope="col" style="width: 45%;">{{ __('labels.unit_price') }}</th>
+                                                            <th scope="col" style="width: 10%;">{{ __('labels.action') }}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @forelse ($prices as $price)
+                                                        <tr>
+                                                            <td>
+                                                                {{ $price->currency->name }}
+                                                            </td>
+                                                            <td>
+                                                                {{ $price->unit_price }}
+                                                            </td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-danger" data-toggle="modal"
+                                                                    onclick="event.preventDefault(); deleteAlert('{{ __('labels.delete_confirm_question') }}', '{{ __('labels.delete_info') }}', '{{ route('projects.price.destroy', ['project' => $project->id, 'price' => $price->id]) }}');">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        @empty
+                                                        @endforelse
 
-                                    <div class="tab-pane fade" id="vert-tabs-description" role="tabpanel" aria-labelledby="vert-tabs-description-tab">
-                                        <div class="form-group">
-                                            <label for="description" class="col-form-label">{{ __('labels.description') }} <span class="text-red">*</span></label>
-                                            <textarea name="description" id="description" cols="100" rows="5" placeholder="{{ __('labels.text_placeholder', ['label' => strtolower(__('labels.description'))]) }}" required
-                                                class="form-control @error('description') is-invalid @enderror">{{ old('description', $project->description) }}</textarea>
-                                            @error('description')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="materials" class="col-form-label">{{ __('labels.material_used') }} <span class="text-red">*</span></label>
-                                            <textarea name="materials" id="meterials" cols="100" rows="5" placeholder="{{ __('labels.text_placeholder', ['label' => strtolower(__('labels.material_used'))]) }}" required
-                                                class="form-control @error('materials') is-invalid @enderror">{{ old('materials', $project->materials) }}</textarea>
-                                            @error('materials')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="services" class="col-form-label">{{ __('labels.services') }} <span class="text-red">*</span></label>
-                                            <textarea name="services" id="services" cols="100" rows="5" placeholder="{{ __('labels.text_placeholder', ['label' => strtolower(__('labels.services'))]) }}" class="form-control @error('services') is-invalid @enderror"
-                                                required>{{ old('services', $project->services) }}</textarea>
-                                            @error('services')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                                        <tr id="price_clone_template" hidden="true" aria-hidden="true">
+                                                            <td>
+                                                                <select name="prices[__REPLACE__][currency]" class="form-control" required disabled>
+                                                                    <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder' , ['label' => strtolower(__('labels.currency'))]) }} ---</option>
+                                                                    @foreach ($currencies as $currency)
+                                                                    <option value="{{ $currency->id }}">{{ $currency->name_with_code }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" name="prices[__REPLACE__][unit_price]" class="form-control" value="0.00" min="0.00" step="0.01" required disabled>
+                                                            </td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-danger btn-remove-row"><i class="fas fa-trash"></i></button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td colspan="3">
+                                                                <button type="button" class="btn btn-primary btn-add-row"><i class="fas fa-plus"></i>{{ __('labels.add_more') }}</button>
+                                                            </td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -369,7 +414,6 @@
                                         </div>
                                     </div>
 
-
                                     <div class="tab-pane fade" id="vert-tabs-ads" role="tabpanel" aria-labelledby="vert-tabs-ads-tab">
                                         <div class="form-group">
                                             <label for="boost_ads_text">{{ __('labels.boosts_ads_preference_text') }}</label>
@@ -410,19 +454,16 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-
-
                     </div>
 
                     <div class="card-footer bg-transparent text-md-right text-center">
-                        <a role="button" href="{{ route('projects.index') }}" class="btn btn-light mx-2">
+                        <a role="button" href="{{ route('projects.index') }}" class="btn btn-light mx-2 btn-rounded-corner">
                             <i class="fas fa-times"></i>
                             {{ __('labels.cancel') }}
                         </a>
-                        <button type="submit" class="btn btn-outline-primary">
+                        <button type="submit" class="btn btn-outline-primary btn-rounded-corner">
                             <i class="fas fa-paper-plane"></i>
                             {{ __('labels.submit') }}
                         </button>
@@ -432,6 +473,8 @@
             </div>
         </div>
     </div>
+
+    @include('components.alert')
 
 </div>
 

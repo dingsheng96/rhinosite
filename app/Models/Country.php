@@ -12,7 +12,7 @@ class Country extends Model
     protected $table = 'countries';
 
     protected $fillable = [
-        'name', 'currency_id', 'dial_code'
+        'name', 'code', 'set_default', 'currency_id', 'dial_code'
     ];
 
     // Relationships
@@ -29,5 +29,11 @@ class Country extends Model
     public function cities()
     {
         return $this->hasManyThrough(City::class, CountryState::class, 'country_id', 'country_state_id', 'id', 'id');
+    }
+
+    // Scope
+    public function scopeDefaultCountry()
+    {
+        return $this->where('set_default', true);
     }
 }

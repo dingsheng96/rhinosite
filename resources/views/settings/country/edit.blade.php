@@ -50,11 +50,11 @@
                         </div>
                     </div>
                     <div class="card-footer bg-transparent text-md-right text-center">
-                        <a role="button" href="{{ route('settings.countries.index') }}" class="btn btn-light mx-2">
+                        <a role="button" href="{{ route('settings.countries.index') }}" class="btn btn-light mx-2 btn-rounded-corner">
                             <i class="fas fa-times"></i>
                             {{ __('labels.cancel') }}
                         </a>
-                        <button type="submit" class="btn btn-outline-primary">
+                        <button type="submit" class="btn btn-outline-primary btn-rounded-corner">
                             <i class="fas fa-paper-plane"></i>
                             {{ __('labels.submit') }}
                         </button>

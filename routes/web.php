@@ -27,6 +27,7 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
     Route::get('dashboard', 'HomeController@index')->name('dashboard');
 
+    Route::delete('projects/{project}/prices/{price}', 'ProjectController@deletePrice')->name('projects.price.destroy');
     Route::delete('projects/{project}/media/{media}', 'ProjectController@deleteMedia')->name('projects.media.destroy');
     Route::resource('projects', 'ProjectController');
 
@@ -51,6 +52,7 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
     Route::group(['prefix' => 'ecommerce', 'as' => 'ecommerce.', 'namespace' => 'Ecommerce'], function () {
 
+        Route::delete('products/{product}/media/{media}', 'ProductController@deleteMedia')->name('products.media.destroy');
         Route::resource('products', 'ProductController');
     });
 });

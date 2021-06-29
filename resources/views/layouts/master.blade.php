@@ -12,7 +12,8 @@
 
     <link rel="stylesheet" href="{{ asset('css/app.css?v=' . time()) }}">
     <link rel="stylesheet" href="{{ asset('css/style.css?v=' . time()) }}">
-    <link rel="stylesheet" href="{{ asset('dropzone-5.7.0/dist/dropzone.css?v=' . time()) }}">
+    <link rel="stylesheet" href="{{ asset('dropzone-5.7.0/dist/dropzone.css') }}">
+
 
 </head>
 
@@ -43,13 +44,14 @@
     @endif
 
     <script src="{{ asset('js/app.js?v=' . time()) }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('dropzone-5.7.0/dist/dropzone.js?v=' . time()) }}"></script>
     <script src="{{ asset('js/style.js?v=' . time()) }}"></script>
     <script src="{{ asset('js/function.js?v=' . time()) }}"></script>
     <script src="{{ asset('js/dropdown.js?v=' . time()) }}"></script>
     <script src="{{ asset('js/modal.js?v=' . time()) }}"></script>
     <script src="{{ asset('js/dropzone.js?v=' . time()) }}"></script>
+    <script src="{{ asset('js/dynamic-form.js?v=' . time()) }}"></script>
     @stack('scripts')
 
 </body>

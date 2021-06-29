@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <div class="card-footer bg-transparent text-md-right text-center">
-                    <a role="button" href="{{ route('settings.currencies.index') }}" class="btn btn-light">
+                    <a role="button" href="{{ route('settings.currencies.index') }}" class="btn btn-light btn-rounded-corner">
                         <i class="fas fa-chevron-left"></i>
                         {{ __('labels.back') }}
                     </a>

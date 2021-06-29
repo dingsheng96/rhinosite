@@ -21,6 +21,7 @@ return [
     'download' => 'Download',
     'available' => 'Available',
     'unavailable' => 'Unavailable',
+    'add_more' => 'Add More',
 
     'show_records' => 'Showing :item of :total records',
     'start_session' => 'Sign in to start your session',
@@ -64,7 +65,6 @@ return [
     'password_confirmation' => 'Confirm Password',
     'datetime' => 'Date/Time',
     'dial_code' => 'Dial Code',
-    'currency' => 'Currency',
     'code' => 'Code',
     'upload_file' => 'Upload File|Upload Files',
     'document' => 'Document|Documents',
@@ -119,5 +119,16 @@ return [
     'unit_price_from' => 'Unit Price From',
     'selling_price_from' => 'Selling Price From',
     'price_from' => 'Price From',
-    'variation' => 'Variation|Variations'
+    'variation' => 'Variation|Variations',
+    'cost' => 'Cost',
+    'price' => 'Price',
+    'attribute' => 'Attribute|Attributes',
+    'sku' => 'SKU',
+    'finite' => 'Finite',
+    'infinite' => 'Infinite',
+    'stock_type' => 'Stock Type',
+    'validity' => 'Validity',
+    'day' => 'Day|Days',
+    'quantity' => 'Quantity',
+    'color' => 'Color'
 ];

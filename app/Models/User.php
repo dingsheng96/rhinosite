@@ -17,7 +17,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     const STATUS_ACTIVE     =   'active';
     const STATUS_INACTIVE   =   'inactive';
-    const STORE_PATH        =   'user';
+    const STORE_PATH        =   '/users';
 
     protected $table = 'users';
 

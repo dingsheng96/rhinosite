@@ -3,6 +3,8 @@
 namespace App\DataTables;
 
 use App\Models\Product;
+use App\Models\ProductCategory;
+use App\Models\ProductAttribute;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
@@ -23,15 +25,14 @@ class ProductDataTable extends DataTable
             ->eloquent($query)
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
-
                 return view('components.action', [
                     'no_action' => $this->no_action ?: null,
                     'view' => [
-                        'permission' => 'product.create',
+                        'permission' => 'product.read',
                         'route' => route('ecommerce.products.show', ['product' => $data->id])
                     ],
                     'update' => [
-                        'permission' => 'product.create',
+                        'permission' => 'product.update',
                         'route' => route('ecommerce.products.edit', ['product' => $data->id]),
                     ],
                     'delete' => [
@@ -43,27 +44,20 @@ class ProductDataTable extends DataTable
             ->addColumn('status', function ($data) {
                 return '<h5>' . $data->status_label . '</h5>';
             })
-            ->addColumn('price_from', function ($data) {
-                return $data->currency->code . $data->lowest_selling_price . ' ++';
-            })
             ->addColumn('variation', function ($data) {
                 return $data->product_attributes_count ?? 0;
             })
-            ->addColumn('type', function ($data) {
-                return $data->productType->name;
+            ->addColumn('category', function ($data) {
+                return $data->category_name;
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
             ->filterColumn('status', function ($query, $keyword) {
-                return $query->when(strtolower($keyword) == 'available', function ($query) {
-                    $query->where('is_available', true);
-                })->when(strtolower($keyword) == 'unavailable', function ($query) {
-                    $query->where('is_available', false);
-                });
+                return $query->where('status', strtolower($keyword));
             })
-            ->filterColumn('type', function ($query, $keyword) {
-                return $query->productTypeChecker($keyword);
+            ->filterColumn('category', function ($query, $keyword) {
+                return $query->where(app(ProductCategory::class)->getTable() . '.name', 'like', "%{$keyword}%");
             })
             ->rawColumns(['action', 'status']);
     }
@@ -76,8 +70,16 @@ class ProductDataTable extends DataTable
      */
     public function query(Product $model)
     {
-        return $model->with(['productPrices'])
+        $tbl_product = app(Product::class)->getTable();
+        $tbl_category = app(ProductCategory::class)->getTable();
+
+        return $model->select($tbl_product . '.*', $tbl_category . '.id AS category_id, ', $tbl_category . '.name AS category_name')
             ->withCount(['productAttributes'])
+            ->join(
+                $tbl_category,
+                $tbl_product . '.product_category_id',
+                $tbl_category . '.id'
+            )
             ->newQuery();
     }
 
@@ -108,8 +110,7 @@ class ProductDataTable extends DataTable
         return [
             Column::computed('DT_RowIndex', '#'),
             Column::make('name')->title(__('labels.name')),
-            Column::make('type')->title(__('labels.type')),
-            Column::make('price_from')->title(__('labels.price_from')),
+            Column::make('category')->title(__('labels.category')),
             Column::make('variation')->title(trans_choice('labels.variation', 2)),
             Column::make('status')->title(__('labels.status')),
             Column::make('created_at')->title(__('labels.datetime')),

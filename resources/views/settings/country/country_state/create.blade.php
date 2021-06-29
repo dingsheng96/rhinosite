@@ -58,11 +58,11 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">
+                    <button type="button" class="btn btn-light btn-rounded-corner" data-dismiss="modal">
                         <i class="fas fa-times mr-2"></i>
                         {{ __('labels.cancel') }}
                     </button>
-                    <button type="submit" class="btn btn-outline-primary">
+                    <button type="submit" class="btn btn-outline-primary btn-rounded-corner">
                         <i class="fas fa-paper-plane mr-2"></i>
                         {{ __('labels.submit') }}
                     </button>

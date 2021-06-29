@@ -10,7 +10,7 @@ class UnitComposer
     /**
      * Create a new categories composer.
      *
-     * @param  CountryRepository $countries
+     * @param  UnitRepository $units
      * @return void
      */
     public function __construct()

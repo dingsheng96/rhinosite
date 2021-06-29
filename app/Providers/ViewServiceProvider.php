@@ -22,6 +22,9 @@ class ViewServiceProvider extends ServiceProvider
         \App\Http\View\Composers\DefaultPreviewComposer::class => [
             '*'
         ],
+        \App\Http\View\Composers\CurrencyComposer::class => [
+            '*'
+        ],
     ];
 
     /**

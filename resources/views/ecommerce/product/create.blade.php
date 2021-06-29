@@ -19,14 +19,14 @@
                             <div class="col-5 col-md-3">
                                 <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist" aria-orientation="vertical">
                                     <a class="nav-link active" id="vert-tabs-general-tab" data-toggle="pill" href="#vert-tabs-general" role="tab" aria-controls="vert-tabs-general" aria-selected="true">{{ __('labels.general') }}</a>
-                                    <a class="nav-link" id="vert-tabs-description-tab" data-toggle="pill" href="#vert-tabs-description" role="tab" aria-controls="vert-tabs-description" aria-selected="false">{{ __('labels.description') }}</a>
                                     <a class="nav-link" id="vert-tabs-media-tab" data-toggle="pill" href="#vert-tabs-media" role="tab" aria-controls="vert-tabs-media" aria-selected="false">{{ __('labels.media') }}</a>
+                                    <a class="nav-link" id="vert-tabs-attributes-tab" data-toggle="pill" href="#vert-tabs-attributes" role="tab" aria-controls="vert-tabs-attributes" aria-selected="false">{{ trans_choice('labels.attribute', 2) }}</a>
                                 </div>
                             </div>
                             <div class="col-7 col-md-9">
                                 <div class="tab-content" id="vert-tabs-tabContent">
 
-                                    <div class="tab-pane text-left fade show active" id="vert-tabs-general" role="tabpanel" aria-labelledby="vert-tabs-general-tab">
+                                    <div class="tab-pane fade show active" id="vert-tabs-general" role="tabpanel" aria-labelledby="vert-tabs-general-tab">
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="form-group">
@@ -43,33 +43,31 @@
 
                                         <div class="row">
                                             <div class="col-12 col-md-6">
-                                                <div class="form-group clearfix">
-                                                    <label for="available" class="col-form-label">{{ __('labels.status') }}</label>
-                                                    <div class="d-flex">
-                                                        @foreach ($statuses as $index => $status)
-                                                        <div class="icheck-primary d-inline mr-3">
-                                                            <input type="radio" name="available" id="available_{{ $loop->iteration }}" value="{{ $index }}" {{ old('available', 1) == $index ? 'checked' : null }}>
-                                                            <label for="available_{{ $loop->iteration }}">{{$status }}</label>
-                                                        </div>
+                                                <div class="form-group">
+                                                    <label for="category" class="col-form-label">{{ __('labels.category') }} <span class="text-red">*</span></label>
+                                                    <select name="category" id="category" class="form-control select2 @error('category') is-invalid @enderror">
+                                                        <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.category'))]) }} ---</option>
+                                                        @foreach ($categories as $category)
+                                                        <option value="{{ $category->id }}" {{ old('category') == $category->id ? 'selected' : null }}>{{ $category->name }}</option>
                                                         @endforeach
-                                                    </div>
-                                                    @error('available')
+                                                    </select>
+                                                    @error('category')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
                                                     @enderror
                                                 </div>
                                             </div>
+
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="type" class="col-form-label">{{ __('labels.type') }} <span class="text-red">*</span></label>
-                                                    <select name="type" id="type" class="form-control select2 @error('type') is-invalid @enderror">
-                                                        <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => __('labels.type')]) }} ---</option>
-                                                        @foreach ($product_types as $type)
-                                                        <option value="{{ $type->id }}" {{ old('type') == $type->id ? 'selected' : null }}>{{ $type->name }}</option>
+                                                    <label for="status" class="col-form-label">{{ __('labels.status') }} <span class="text-red">*</span></label>
+                                                    <select name="status" id="status" class="form-control select2 @error('status') is-invalid @enderror">
+                                                        @foreach ($statuses as $status => $text)
+                                                        <option value="{{ $status }}" {{ old('status', 'active') == $status ? 'selected' : null }}>{{ $text }}</option>
                                                         @endforeach
                                                     </select>
-                                                    @error('type')
+                                                    @error('status')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
@@ -92,9 +90,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="tab-pane fade" id="vert-tabs-description" role="tabpanel" aria-labelledby="vert-tabs-description-tab">
                                     </div>
 
                                     <div class="tab-pane fade" id="vert-tabs-media" role="tabpanel" aria-labelledby="vert-tabs-media-tab">
@@ -135,19 +130,162 @@
                                         </div>
                                     </div>
 
+                                    <div class="tab-pane fade" id="vert-tabs-attributes" role="tabpanel" aria-labelledby="vert-tabs-attributes-tab">
+                                        <div class="row">
+                                            <div class="col-12 table-responsive">
+                                                <table class="table table-bordered" id="attributeDynamicForm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col" style="width: 75%;">{{ trans_choice('labels.attribute', 2) }}</th>
+                                                            <th scope="col" style="width: 15%">{{ __('labels.status') }}</th>
+                                                            <th scope="col" style="width: 10%">{{ __('labels.action') }}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <div class="row">
+                                                                    <div class="col-md-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="sku0">{{ __('labels.sku') }}</label>
+                                                                            <input type="text" name="attributes[0][sku]" id="sku0" class="form-control">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="stock_type0">{{ __('labels.stock_type') }}</label>
+                                                                            <select name="attributes[0][stock_type]" id="stock_type0" class="form-control">
+                                                                                <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.stock_type'))]) }} ---</option>
+                                                                                @foreach ($stock_types as $type => $text)
+                                                                                <option value="{{ $type }}">{{ $text }}</option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="quantity0">{{ __('labels.quantity') }}</label>
+                                                                            <input type="number" name="attributes[0][quantity]" id="quantity0" class="form-control" value="0" min="0" step="1">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="validity0">{{ __('labels.validity') . '(' . trans_choice('labels.day', 2) . ')' }}</label>
+                                                                            <input type="number" name="attributes[0][validity]" id="validity0" class="form-control" step="1">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="color0">{{ __('labels.color') }}</label>
+                                                                            <input type="color" name="attributes[0][color]" id="color0" class="form-control form-control-color">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="form-group">
+                                                                    <div class="icheck-primary">
+                                                                        <input type="checkbox" name="attributes[0][is_available]" id="is_available0">
+                                                                        <label for="is_available0">{{ __('labels.available') }}</label>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-danger btn-remove-row">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr id="attributeCloneTemplate" hidden="true" aria-hidden="true">
+                                                            <td>
+                                                                <div class="row">
+                                                                    <div class="col-md-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="sku__REPLACE__">{{ __('labels.sku') }}</label>
+                                                                            <input type="text" name="attributes[__REPLACE__][sku]" id="sku__REPLACE__" class="form-control" disabled>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="stock_type__REPLACE__">{{ __('labels.stock_type') }}</label>
+                                                                            <select name="attributes[__REPLACE__][stock_type]" id="stock_type__REPLACE__" class="form-control" disabled>
+                                                                                <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.stock_type'))]) }} ---</option>
+                                                                                @foreach ($stock_types as $type => $text)
+                                                                                <option value="{{ $type }}">{{ $text }}</option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="quantity__REPLACE__">{{ __('labels.quantity') }}</label>
+                                                                            <input type="number" name="attributes[__REPLACE__][quantity]" id="quantity__REPLACE__" class="form-control" value="0" min="0" step="1" disabled>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="validity__REPLACE__">{{ __('labels.validity') . '(' . trans_choice('labels.day', 2) . ')' }}</label>
+                                                                            <input type="number" name="attributes[__REPLACE__][validity]" id="validity__REPLACE__" class="form-control" min="0" step="1" disabled>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="color__REPLACE__">{{ __('labels.color') }}</label>
+                                                                            <input type="color" name="attributes[__REPLACE__][color]" id="color__REPLACE__" class="form-control form-control-color" disabled>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="form-group">
+                                                                    <div class="icheck-primary">
+                                                                        <input type="checkbox" name="attributes[__REPLACE__][is_available]" id="is_available__REPLACE__" disabled>
+                                                                        <label for="is_available__REPLACE__">{{ __('labels.available') }}</label>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-danger btn-remove-row">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td colspan="3">
+                                                                <button type="button" class="btn btn-primary btn-add-row">
+                                                                    <i class="fas fa-plus"></i>
+                                                                    {{ __('labels.add_more') }}
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
 
                     <div class="card-footer bg-transparent text-md-right text-center">
-                        <a role="button" href="{{ route('projects.index') }}" class="btn btn-light mx-2">
+                        <a role="button" href="{{ route('ecommerce.products.index') }}" class="btn btn-light mx-2 btn-rounded-corner">
                             <i class="fas fa-times"></i>
                             {{ __('labels.cancel') }}
                         </a>
-                        <button type="submit" class="btn btn-outline-primary">
+                        <button type="submit" class="btn btn-outline-primary btn-rounded-corner">
                             <i class="fas fa-paper-plane"></i>
                             {{ __('labels.submit') }}
                         </button>

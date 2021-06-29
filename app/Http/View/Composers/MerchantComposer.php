@@ -10,7 +10,7 @@ class MerchantComposer
     /**
      * Create a new categories composer.
      *
-     * @param  CountryRepository $countries
+     * @param  MerchantRepository $merchants
      * @return void
      */
     public function __construct()

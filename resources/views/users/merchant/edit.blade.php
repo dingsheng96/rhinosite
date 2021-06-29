@@ -149,7 +149,7 @@
                                                             <div class="custom-file">
                                                                 <input type="file" id="logo" name="logo" class="custom-file-input custom-img-input @error('logo') is-invalid @enderror" accept=".jpg,.jpeg,.png">
                                                                 <label class="custom-file-label" for="logo">Choose file</label>
-                                                                <p>{{ trans_choice('labels.upload_file_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG']) }}</p>
+                                                                <ul>{!! trans_choice('labels.upload_file_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG']) !!}</ul>
                                                                 @error('logo')
                                                                 <span class="invalid-feedback" role="alert">
                                                                     <strong>{{ $message }}</strong>
@@ -338,11 +338,11 @@
                     </div>
 
                     <div class="card-footer bg-transparent text-md-right text-center">
-                        <a href="{{ route('users.merchants.index') }}" role="button" class="btn btn-light mx-2">
+                        <a href="{{ route('users.merchants.index') }}" role="button" class="btn btn-light mx-2 btn-rounded-corner">
                             <i class="fas fa-times"></i>
                             {{ __('labels.cancel') }}
                         </a>
-                        <button type="submit" class="btn btn-outline-primary">
+                        <button type="submit" class="btn btn-outline-primary btn-rounded-corner">
                             <i class="fas fa-paper-plane"></i>
                             {{ __('labels.submit') }}
                         </button>

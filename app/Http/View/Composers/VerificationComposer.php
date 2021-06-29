@@ -10,7 +10,7 @@ class VerificationComposer
     /**
      * Create a new categories composer.
      *
-     * @param  CountryRepository $countries
+     * @param  VerificationRespository $verifications
      * @return void
      */
     public function __construct()

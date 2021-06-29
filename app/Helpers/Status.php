@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\User;
+use App\Models\Product;
 use App\Models\UserDetails;
 
 class Status
@@ -49,11 +50,11 @@ class Status
         ];
     }
 
-    public function availableStatus(): array
+    public function productStatus(): array
     {
         return [
-            '1' => __('labels.available'),
-            '0' => __('labels.unavailable'),
+            Product::STATUS_ACTIVE => __('labels.active'),
+            Product::STATUS_INACTIVE => __('labels.inactive'),
         ];
     }
 
