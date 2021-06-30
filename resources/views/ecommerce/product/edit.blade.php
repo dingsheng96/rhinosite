@@ -95,7 +95,7 @@
 
                                     <div class="tab-pane fade" id="vert-tabs-media" role="tabpanel" aria-labelledby="vert-tabs-media-tab">
                                         <div class="form-group">
-                                            <label for="thumbnail" class="col-form-label">{{ __('labels.upload_thumbnail') }} <span class="text-red">*</span></label>
+                                            <label for="thumbnail" class="col-form-label">{{ __('labels.upload_thumbnail') }}</label>
                                             <div class="row">
                                                 <div class="col-12 col-md-3">
                                                     <img src="{{ $default_preview }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
@@ -118,7 +118,7 @@
                                         @if ($max_files > 0)
                                         <div class="form-group">
                                             <label for="files" class="col-form-label">{{ trans_choice('labels.upload_image', 2) }}</label>
-                                            <div class="dropzone" id="myDropzone" data-max-files="{{ $max_files }}" data-accepted-files=".jpg,.jpeg,.png">
+                                            <div class="dropzone" id="myDropzone" data-max-files="{{ $max_files }}" data-accepted-files=".jpg,.jpeg,.png" data-action="update">
                                                 <div class="dz-default dz-message">
                                                     <h1><i class="fas fa-cloud-upload-alt"></i></h1>
                                                     <h4>{{ __('labels.drag_and_drop') }}</h4>
@@ -146,65 +146,6 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="row">
-                                                                    <div class="col-md-6 col-12">
-                                                                        <div class="form-group">
-                                                                            <label for="sku0">{{ __('labels.sku') }}</label>
-                                                                            <input type="text" name="attributes[0][sku]" id="sku0" class="form-control">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6 col-12">
-                                                                        <div class="form-group">
-                                                                            <label for="stock_type0">{{ __('labels.stock_type') }}</label>
-                                                                            <select name="attributes[0][stock_type]" id="stock_type0" class="form-control">
-                                                                                <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.stock_type'))]) }} ---</option>
-                                                                                @foreach ($stock_types as $type => $text)
-                                                                                <option value="{{ $type }}">{{ $text }}</option>
-                                                                                @endforeach
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-md-6 col-12">
-                                                                        <div class="form-group">
-                                                                            <label for="quantity0">{{ __('labels.quantity') }}</label>
-                                                                            <input type="number" name="attributes[0][quantity]" id="quantity0" class="form-control" value="0" min="0" step="1">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6 col-12">
-                                                                        <div class="form-group">
-                                                                            <label for="validity0">{{ __('labels.validity') . '(' . trans_choice('labels.day', 2) . ')' }}</label>
-                                                                            <input type="number" name="attributes[0][validity]" id="validity0" class="form-control" step="1">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-md-6 col-12">
-                                                                        <div class="form-group">
-                                                                            <label for="color0">{{ __('labels.color') }}</label>
-                                                                            <input type="color" name="attributes[0][color]" id="color0" class="form-control form-control-color">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="form-group">
-                                                                    <div class="icheck-primary">
-                                                                        <input type="checkbox" name="attributes[0][is_available]" id="is_available0">
-                                                                        <label for="is_available0">{{ __('labels.available') }}</label>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <button type="button" class="btn btn-danger btn-remove-row">
-                                                                    <i class="fas fa-trash"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-
                                                         <tr id="attributeCloneTemplate" hidden="true" aria-hidden="true">
                                                             <td>
                                                                 <div class="row">
@@ -301,7 +242,7 @@
 
     <div class="row">
 
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-5">
             <div class="card">
                 <div class="card-header bg-transparent">
                     <h3 class="card-title">
@@ -366,11 +307,13 @@
                                                 <i class="fas fa-download mr-2 text-success"></i>
                                                 {{ __('labels.download') }}
                                             </a>
+                                            @can('product.delete')
                                             <a role="button" href="#" class="dropdown-item" title="{{ __('labels.delete') }}" data-toggle="modal"
                                                 onclick="event.preventDefault(); deleteAlert('{{ __('labels.delete_confirm_question') }}', '{{ __('labels.delete_info') }}', '{{ route('ecommerce.products.media.destroy', ['product' => $product->id, 'media' => $image->id]) }}')">
                                                 <i class="fas fa-trash mr-2 text-red"></i>
                                                 {{ __('labels.delete') }}
                                             </a>
+                                            @endcan
                                         </div>
                                     </td>
                                 </tr>
@@ -386,7 +329,7 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-7">
             <div class="card">
                 <div class="card-header bg-transparent">
                     <h3 class="card-title">

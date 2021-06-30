@@ -7,7 +7,6 @@ use App\Models\Product;
 use App\Helpers\Message;
 use App\Helpers\Response;
 use App\Models\Permission;
-use Illuminate\Http\Request;
 use App\Models\ProductCategory;
 use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\DB;
@@ -122,9 +121,14 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Product $product, ProductAttributeDataTable $dataTable)
     {
-        //
+        $attributes     =   $product->productAttributes()->get();
+        $thumbnail      =   $product->media()->thumbnail()->first();
+        $images         =   $product->media()->image()->get();
+
+        return $dataTable->with(['product_id' => $product->id])
+            ->render('ecommerce.product.show', compact('product', 'attributes', 'thumbnail', 'images'));
     }
 
     /**
@@ -157,9 +161,58 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, Product $product)
     {
-        //
+        DB::beginTransaction();
+
+        $action     =   Permission::ACTION_UPDATE;
+        $module     =   strtolower(trans_choice('modules.submodules.product', 1));
+        $message    =   Message::instance()->format($action, $module);
+        $status     =   'fail';
+
+        try {
+
+            $product = ProductFacade::setModel($product)->setRequest($request)->storeData()->getModel();
+
+            DB::commit();
+
+            $status  =  'success';
+            $message =  Message::instance()->format($action, $module, $status);
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($product)
+                ->withProperties($request->all())
+                ->log($message);
+
+            return ($request->ajax())
+                ? Response::instance()
+                ->withStatusCode('modules.product', 'actions.' . $action . $status)
+                ->withStatus($status)
+                ->withMessage($message, true)
+                ->withData([
+                    'redirect_to' => route('ecommerce.products.index')
+                ])
+                ->sendJson()
+                : redirect()->route('ecommerce.products.index')->withSuccess($message);
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($product)
+                ->withProperties($request->all())
+                ->log($e->getMessage());
+
+            return ($request->ajax())
+                ? Response::instance()
+                ->withStatusCode('modules.product', 'actions.' . $action . $status)
+                ->withStatus($status)
+                ->withMessage($message, true)
+                ->sendJson()
+                : redirect()->back()->with('fail', $message)->withInput();
+        }
     }
 
     /**
@@ -168,8 +221,41 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        //
+        $action     =   Permission::ACTION_DELETE;
+        $module     =   strtolower(trans_choice('modules.submodules.product', 1));
+        $message    =   Message::instance()->format($action, $module);
+        $status     =   'fail';
+
+        try {
+
+            $product->delete($product);
+
+            $status     =   'success';
+            $message    =   Message::instance()->format($action, $module, $status);
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($product)
+                ->log($message);
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($product)
+                ->log($e->getMessage());
+        }
+
+        return Response::instance()
+            ->withStatusCode('modules.product', 'actions.' . $action . $status)
+            ->withStatus($status)
+            ->withMessage($message, true)
+            ->withData([
+                'redirect_to' => route('ecommerce.products.index')
+            ])
+            ->sendJson();
     }
 }

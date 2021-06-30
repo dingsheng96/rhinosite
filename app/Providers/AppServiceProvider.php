@@ -62,5 +62,6 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\Project::observe(\App\Observers\ProjectObserver::class);
         \App\Models\Country::observe(\App\Observers\CountryObserver::class);
         \App\Models\CountryState::observe(\App\Observers\CountryStateObserver::class);
+        \App\Models\Product::observe(\App\Observers\ProductObserver::class);
     }
 }

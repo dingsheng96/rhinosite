@@ -297,18 +297,14 @@ class ProjectController extends Controller
     {
         $action     =   Permission::ACTION_DELETE;
         $module     =   strtolower(trans_choice('labels.price', 1));
-        $status     =   'fail';
         $message    =   Message::instance()->format($action, $module);
+        $status     =   'fail';
 
         try {
 
-            $project->prices()
-                ->where('id', $price->id)
-                ->first()
-                ->delete();
-
-            $message    =   Message::instance()->format($action, $module, 'success');
+            $price->delete();
             $status     =   'success';
+            $message    =   Message::instance()->format($action, $module, $status);
 
             activity()->useLog('web')
                 ->causedBy(Auth::user())

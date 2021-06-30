@@ -186,7 +186,8 @@ return [
         'stock_type' => 'stock type',
         'quantity' => 'quantity',
         'validity' => 'validity',
-        'color' => 'color'
+        'color' => 'color',
+        'discount' => 'discount'
     ],
 
 ];

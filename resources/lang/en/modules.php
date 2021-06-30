@@ -32,6 +32,7 @@ return [
         'member' => 'Member|Members',
         'category' => 'Category|Categories',
         'activity_logs' => 'Activity Logs',
-        'product' => 'Product|Products'
+        'product' => 'Product|Products',
+        'product_attribute' => 'Product Attribute|Product Attributes'
     ]
 ];

@@ -169,3 +169,17 @@ function alertHeader(messages)
 
     content.prepend(html);
 }
+
+function calcDiscountPercentage(unit_price, discount)
+{
+    let result = ((discount/unit_price) * 100) ?? 0
+
+    return result.toFixed(2);
+}
+
+function calcSellingPrice(unit_price, discount)
+{
+    let result = (unit_price - discount) ?? 0;
+
+    return result.toFixed(2);
+}

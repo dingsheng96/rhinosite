@@ -29,9 +29,9 @@ class ProductAttribute extends Model
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    public function productPrices()
+    public function prices()
     {
-        return $this->morphMany(ProductPrice::class, 'priceable');
+        return $this->morphMany(Price::class, 'priceable');
     }
 
     // Attributes

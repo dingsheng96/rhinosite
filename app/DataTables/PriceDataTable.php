@@ -2,16 +2,15 @@
 
 namespace App\DataTables;
 
-use App\Models\Product;
-use App\Models\ProductCategory;
-use App\Models\ProductAttribute;
+use App\Models\Price;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
+use Illuminate\Database\Eloquent\Builder;
 
-class ProductAttributeDataTable extends DataTable
+class PriceDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -27,48 +26,37 @@ class ProductAttributeDataTable extends DataTable
             ->addColumn('action', function ($data) {
                 return view('components.action', [
                     'no_action' => $this->no_action ?: null,
-                    'view' => [
-                        'permission' => 'product.read',
-                        'route' => route('ecommerce.products.attributes.show', ['product' => $this->product_id, 'attribute' => $data->id])
-                    ],
                     'update' => [
-                        'permission' => 'product.update',
-                        'route' => route('ecommerce.products.attributes.edit', ['product' => $this->product_id, 'attribute' => $data->id]),
+                        'permission' => $this->update_permission,
+                        'route' => '#updatePriceModal',
+                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode($data) . "'"
                     ],
                     'delete' => [
-                        'permission' => 'product.delete',
-                        'route' => route('ecommerce.products.attributes.destroy', ['product' => $this->product_id, 'attribute' => $data->id])
+                        'permission' => $this->delete_permission,
+                        'route' => str_replace('__REPLACE__', $data->id, $this->delete_route)
                     ]
                 ])->render();
             })
-            ->addColumn('status', function ($data) {
-                return '<h5>' . $data->status_label . '</h5>';
-            })
-            ->editColumn('quantity', function ($data) {
-                return $data->stock_type == ProductAttribute::STOCK_TYPE_INFINITE ? '<h4>&infin;</h4>' : $data->quantity;
+            ->addColumn('currency', function ($data) {
+                return $data->currency->code;
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
-            ->filterColumn('status', function ($query, $keyword) {
-                return $query->when($keyword == 'available', function ($query) {
-                    $query->where('is_available', true);
-                })->when($keyword == 'unavailable', function ($query) {
-                    $query->where('is_available', false);
-                });
-            })
-            ->rawColumns(['action', 'status', 'quantity']);
+            ->rawColumns(['action']);
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\ProductAttribute $model
+     * @param \App\Models\Price $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(ProductAttribute $model)
+    public function query(Price $model)
     {
-        return $model->where('product_id', $this->product_id)->newQuery();
+        return $model->whereHasMorph('priceable', $this->parent_class, function (Builder $query) {
+            $query->where('priceable_id', $this->parent_id);
+        })->newQuery();
     }
 
     /**
@@ -79,7 +67,7 @@ class ProductAttributeDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('product-attribute-table')
+            ->setTableId('price-table')
             ->addTableClass('table-hover table-bordered table-head-fixed table-striped')
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -97,9 +85,10 @@ class ProductAttributeDataTable extends DataTable
     {
         return [
             Column::computed('DT_RowIndex', '#'),
-            Column::make('sku')->title(__('labels.sku')),
-            Column::make('quantity')->title(__('labels.quantity')),
-            Column::make('status')->title(__('labels.status')),
+            Column::make('currency')->title(__('labels.currency')),
+            Column::make('unit_price')->title(__('labels.unit_price')),
+            Column::make('discount')->title(__('labels.discount')),
+            Column::make('selling_price')->title(__('labels.selling_price')),
             Column::make('created_at')->title(__('labels.datetime')),
             Column::computed('action', __('labels.action'))
                 ->exportable(false)
@@ -114,6 +103,6 @@ class ProductAttributeDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'ProductAttribute_' . date('YmdHis');
+        return 'Price_' . date('YmdHis');
     }
 }

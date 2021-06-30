@@ -53,7 +53,12 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::group(['prefix' => 'ecommerce', 'as' => 'ecommerce.', 'namespace' => 'Ecommerce'], function () {
 
         Route::delete('products/{product}/media/{media}', 'ProductController@deleteMedia')->name('products.media.destroy');
+        Route::post('products/{product}/attributes/{attribute}/prices', 'ProductAttributeController@storePrice')->name('products.attributes.prices.store');
+        Route::put('products/{product}/attributes/{attribute}/prices/{price}', 'ProductAttributeController@updatePrice')->name('products.attributes.prices.update');
+        Route::delete('products/{product}/attributes/{attribute}/prices/{price}', 'ProductAttributeController@deletePrice')->name('products.attributes.prices.destroy');
+
         Route::resource('products', 'ProductController');
+        Route::resource('products.attributes', 'ProductAttributeController');
     });
 });
 

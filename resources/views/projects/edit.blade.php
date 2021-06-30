@@ -199,7 +199,7 @@
                                                         @empty
                                                         @endforelse
 
-                                                        <tr id="price_clone_template" hidden="true" aria-hidden="true">
+                                                        <tr id="priceCloneTemplate" hidden="true" aria-hidden="true">
                                                             <td>
                                                                 <select name="prices[__REPLACE__][currency]" class="form-control" required disabled>
                                                                     <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder' , ['label' => strtolower(__('labels.currency'))]) }} ---</option>

@@ -112,4 +112,41 @@ $(function() {
 
         $('.sluggable-input').val(slug);
     });
+
+    // price
+    $('#create_unit_price').on('input', function () {
+
+        unit_price      =   $(this).val();
+        discount        =   $('#create_discount').val();
+
+        $('#create_discount_percentage').text(calcDiscountPercentage(unit_price, discount));
+        $('#create_selling_price').text(calcSellingPrice(unit_price, discount));
+    });
+
+    $('#create_discount').on('input', function () {
+
+        discount    = $(this).val();
+        unit_price  = $('#create_unit_price').val();
+
+        $('#create_discount_percentage').text(calcDiscountPercentage(unit_price, discount));
+        $('#create_selling_price').text(calcSellingPrice(unit_price, discount));
+    });
+
+    $('#update_unit_price').on('input', function () {
+
+        unit_price      =   $(this).val();
+        discount        =   $('#update_discount').val();
+
+        $('#update_discount_percentage').text(calcDiscountPercentage(unit_price, discount));
+        $('#update_selling_price').text(calcSellingPrice(unit_price, discount));
+    });
+
+    $('#update_discount').on('input', function () {
+
+        discount    = $(this).val();
+        unit_price  = $('#update_unit_price').val();
+
+        $('#update_discount_percentage').text(calcDiscountPercentage(unit_price, discount));
+        $('#update_selling_price').text(calcSellingPrice(unit_price, discount));
+    });
 });

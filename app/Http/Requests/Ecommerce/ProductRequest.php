@@ -67,7 +67,7 @@ class ProductRequest extends FormRequest
             ],
             'attributes' => [
                 Rule::requiredIf(empty($this->route('product'))),
-                'required',
+                'nullable',
                 'array'
             ],
             'attributes.*.sku' => [

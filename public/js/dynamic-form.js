@@ -1,7 +1,7 @@
 $(function () {
 
     let price_dynamic_form = $('#priceDynamicForm');
-    let price_row_template = $('#price_clone_template');
+    let price_row_template = $('#priceCloneTemplate');
 
     if(price_dynamic_form.length > 0) {
 
