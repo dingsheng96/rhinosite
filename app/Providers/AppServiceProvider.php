@@ -16,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
         'priceFacade' => \App\Support\Services\PriceService::class,
         'productFacade' => \App\Support\Services\ProductService::class,
         'packageFacade' => \App\Support\Services\PackageService::class,
+        'productAttributeFacade' => \App\Support\Services\ProductAttributeService::class,
     ];
 
     /**

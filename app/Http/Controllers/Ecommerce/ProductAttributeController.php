@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Ecommerce;
 
 use App\Models\Price;
+use App\Helpers\Status;
 use App\Models\Product;
 use App\Helpers\Message;
 use App\Helpers\Response;
@@ -14,11 +15,20 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Support\Facades\PriceFacade;
 use Illuminate\Support\Facades\Auth;
+use App\Support\Facades\ProductAttributeFacade;
 use App\Http\Requests\Ecommerce\ProductPriceRequest;
 use App\Http\Requests\Ecommerce\ProductAttributeRequest;
 
 class ProductAttributeController extends Controller
 {
+    public $stock_types, $statuses;
+
+    public function __construct()
+    {
+        $this->stock_types = [ProductAttribute::STOCK_TYPE_FINITE, ProductAttribute::STOCK_TYPE_INFINITE];
+        $this->statuses = Status::instance()->productStatus();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -34,9 +44,13 @@ class ProductAttributeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Product $product)
     {
-        //
+        return view('ecommerce.product.attribute.create', [
+            'product' => $product,
+            'stock_types' => $this->stock_types,
+            'statuses' => $this->statuses
+        ]);
     }
 
     /**
@@ -45,9 +59,47 @@ class ProductAttributeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductAttributeRequest $request, Product $product)
     {
-        //
+        DB::beginTransaction();
+
+        $action     =   Permission::ACTION_CREATE;
+        $module     =   strtolower(trans_choice('labels.attribute', 1));
+        $message    =   Message::instance()->format($action, $module);
+        $status     =   'fail';
+
+        try {
+
+            $attribute = ProductAttributeFacade::setParentModel($product)
+                ->setRequest($request)
+                ->storeData()
+                ->getModel();
+
+            DB::commit();
+
+            $status  =  'success';
+            $message =  Message::instance()->format($action, $module, $status);
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($attribute)
+                ->withProperties($request->all())
+                ->log($message);
+
+            return redirect()->route('ecommerce.products.edit', ['product' => $product->id])
+                ->withSuccess($message);
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn(new ProductAttribute())
+                ->withProperties($request->all())
+                ->log($e->getMessage());
+
+            return redirect()->back()->with('fail', $message)->withInput();
+        }
     }
 
     /**
@@ -75,18 +127,18 @@ class ProductAttributeController extends Controller
      */
     public function edit(Product $product, ProductAttribute $attribute, PriceDataTable $dataTable)
     {
-        $stock_types = [
-            ProductAttribute::STOCK_TYPE_FINITE => __('labels.finite'),
-            ProductAttribute::STOCK_TYPE_INFINITE => __('labels.infinite')
-        ];
+        $default_price = $attribute->prices()->defaultPrice()->first();
 
         return $dataTable->with([
             'parent_class' => ProductAttribute::class,
             'parent_id' => $attribute->id,
-            'delete_permission' => 'product.delete',
-            'update_permission' => 'product.update',
-            'delete_route' => route('ecommerce.products.attributes.prices.destroy', ['product' => $product->id, 'attribute' => $attribute->id, 'price' => '__REPLACE__'])
-        ])->render('ecommerce.product.attribute.edit', compact('product', 'attribute', 'stock_types'));
+        ])->render('ecommerce.product.attribute.edit', [
+            'product' => $product,
+            'attribute' => $attribute,
+            'statuses' => $this->statuses,
+            'stock_types' => $this->stock_types,
+            'default_price' => $default_price
+        ]);
     }
 
     /**
@@ -107,16 +159,10 @@ class ProductAttributeController extends Controller
 
         try {
 
-            $attribute->sku             = $request->get('sku');
-            $attribute->stock_type      = $request->get('stock_type');
-            $attribute->quantity        = $request->get('quantity');
-            $attribute->is_available    = $request->has('is_available');
-            $attribute->validity        = $request->get('validity');
-            $attribute->color           = $request->get('color');
-
-            if ($attribute->isDirty()) {
-                $attribute->save();
-            }
+            $attribute = ProductAttributeFacade::setModel($attribute)
+                ->setRequest($request)
+                ->storeData()
+                ->getModel();
 
             DB::commit();
 

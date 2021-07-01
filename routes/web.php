@@ -74,5 +74,5 @@ Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
 
     Route::get('products/{product}/sku', 'DataController@getSkuFromProduct')->name('products.sku');
 
-    // Route::get('ads-boosters/{ads}/available-date', 'DataController@getAdsBoosterAvailableDate')->name('ads-boosters.available-date');
+    Route::get('ads-boosters/{ads}/available-date', 'DataController@getAdsBoosterAvailableDate')->name('ads-boosters.available-date');
 });

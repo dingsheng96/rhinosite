@@ -59,13 +59,10 @@ class MerchantService extends BaseService
         // new details
         if (!$details->exists) {
             $details->status = UserDetails::STATUS_PENDING;
-            $this->model->userDetails()->save($details);
-
-            return $this;
         }
 
         if ($details->isDirty()) {
-            $details->save();
+            $this->model->userDetails()->save($details);
         }
 
         return $this;

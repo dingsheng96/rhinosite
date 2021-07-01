@@ -47,9 +47,7 @@ class ProductRequest extends FormRequest
                 'required',
                 Rule::in(array_keys(Status::instance()->productStatus()))
             ],
-            'description' => [
-                'required',
-            ],
+            'description' => ['nullable'],
             'thumbnail' => [
                 Rule::requiredIf(empty($this->route('product'))),
                 'nullable',

@@ -52,16 +52,25 @@ class Price extends Model
 
     public function getUnitPriceAttribute($value)
     {
-        return number_format(PriceFacade::convertIntToFloat($value), 2, '.', ',');
+        return number_format(PriceFacade::convertIntToFloat($value), 2, '.', '');
     }
 
     public function getSellingPriceAttribute($value)
     {
-        return number_format(PriceFacade::convertIntToFloat($value), 2, '.', ',');
+        return number_format(PriceFacade::convertIntToFloat($value), 2, '.', '');
     }
 
     public function getDiscountAttribute($value)
     {
-        return number_format(PriceFacade::convertIntToFloat($value), 2, '.', ',');
+        return number_format(PriceFacade::convertIntToFloat($value), 2, '.', '');
+    }
+
+    public function getDefaultLabelAttribute()
+    {
+        if ($this->is_default) {
+            return '<span class="badge badge-pill badge-success px-3">' . __('labels.default') . '</span>';
+        }
+
+        return;
     }
 }

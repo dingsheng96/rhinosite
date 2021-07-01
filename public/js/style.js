@@ -152,8 +152,8 @@ $(function() {
 
     $('.uprice-input').on('input', function () {
 
-        unit_price      =   $(this).val();
-        discount        =   $('.disc-input').val();
+        unit_price  =   $(this).val();
+        discount    =   $('.disc-input').val();
 
         $('.disc-perc-input').val(calcDiscountPercentage(unit_price, discount));
         $('.sale-price-input').val(calcSellingPrice(unit_price, discount));

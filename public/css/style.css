@@ -29,5 +29,11 @@
 }
 
 .form-control-color {
-    width: 15%;
+    width: 5vw;
+}
+
+@media screen and (max-width: 768px) {
+    .form-control-color {
+        width: 10vw;
+    }
 }

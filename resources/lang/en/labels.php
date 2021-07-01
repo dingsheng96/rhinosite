@@ -22,6 +22,7 @@ return [
     'available' => 'Available',
     'unavailable' => 'Unavailable',
     'add_more' => 'Add More',
+    'default' => 'Default',
 
     'show_records' => 'Showing :item of :total records',
     'start_session' => 'Sign in to start your session',

@@ -12,15 +12,13 @@ class ProductAttribute extends Model
 
     const STOCK_TYPE_INFINITE = 'infinite';
     const STOCK_TYPE_FINITE = 'finite';
+    const STATUS_ACTIVE = 'active';
+    const STATUS_INACTIVE = 'inactive';
 
     protected $table = 'product_attributes';
 
     protected $fillable = [
-        'product_id', 'sku', 'stock_type', 'quantity', 'is_available', 'validity'
-    ];
-
-    protected $casts = [
-        'is_available' => 'boolean'
+        'product_id', 'sku', 'stock_type', 'quantity', 'status', 'validity'
     ];
 
     // Relationships
@@ -43,8 +41,8 @@ class ProductAttribute extends Model
     // Attributes
     public function getStatusLabelAttribute()
     {
-        $label = Status::instance()->statusLabel('availability');
+        $label = Status::instance()->statusLabel($this->status);
 
-        return '<span class="' . $label[$this->is_available]['class'] . ' px-3">' . $label[$this->is_available]['text'] . '</span>';
+        return '<span class="' . $label['class'] . ' px-3">' . $label['text'] . '</span>';
     }
 }

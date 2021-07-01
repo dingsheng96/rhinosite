@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\Price;
+use App\Models\Currency;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
@@ -23,27 +24,21 @@ class PriceDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->addColumn('action', function ($data) {
-                return view('components.action', [
-                    'no_action' => $this->no_action ?: null,
-                    'update' => [
-                        'permission' => $this->update_permission,
-                        'route' => '#updatePriceModal',
-                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode($data) . "'"
-                    ],
-                    'delete' => [
-                        'permission' => $this->delete_permission,
-                        'route' => str_replace('__REPLACE__', $data->id, $this->delete_route)
-                    ]
-                ])->render();
-            })
             ->addColumn('currency', function ($data) {
-                return $data->currency->code;
+                return $data->currency->name_with_code;
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
-            ->rawColumns(['action']);
+            ->editColumn('is_default', function ($data) {
+                return '<h5>' . $data->default_label . '</h5>';
+            })
+            ->filterColumn('is_default', function ($query, $keyword) {
+                return $query->when($keyword == 'default', function ($query) {
+                    $query->where('is_default', true);
+                });
+            })
+            ->rawColumns(['action', 'is_default']);
     }
 
     /**
@@ -56,7 +51,8 @@ class PriceDataTable extends DataTable
     {
         return $model->whereHasMorph('priceable', $this->parent_class, function (Builder $query) {
             $query->where('priceable_id', $this->parent_id);
-        })->newQuery();
+        })
+            ->newQuery();
     }
 
     /**
@@ -86,13 +82,11 @@ class PriceDataTable extends DataTable
         return [
             Column::computed('DT_RowIndex', '#'),
             Column::make('currency')->title(__('labels.currency')),
+            Column::make('is_default')->title(__('labels.status')),
             Column::make('unit_price')->title(__('labels.unit_price')),
             Column::make('discount')->title(__('labels.discount')),
             Column::make('selling_price')->title(__('labels.selling_price')),
-            Column::make('created_at')->title(__('labels.datetime')),
-            Column::computed('action', __('labels.action'))
-                ->exportable(false)
-                ->printable(false),
+            Column::make('created_at')->title(__('labels.datetime'))
         ];
     }
 

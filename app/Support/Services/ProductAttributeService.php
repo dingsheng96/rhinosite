@@ -3,56 +3,45 @@
 namespace App\Support\Services;
 
 use App\Models\Price;
-use App\Models\Package;
 use App\Models\Currency;
+use App\Models\ProductAttribute;
 use App\Support\Facades\PriceFacade;
 
-class PackageService extends BaseService
+class ProductAttributeService extends BaseService
 {
     public function __construct()
     {
-        parent::__construct(Package::class);
+        parent::__construct(ProductAttribute::class);
     }
 
     public function storeData()
     {
-        $this->storeDetails();
+        $this->storeAttribute();
         $this->savePrice();
-        $this->storeItems();
 
         return $this;
     }
 
-    public function storeDetails()
+    public function storeAttribute()
     {
-        $this->model->name          = $this->request->get('name');
-        $this->model->description   = $this->request->get('description');
-        $this->model->stock_type    = $this->request->get('stock_type');
-        $this->model->quantity      = $this->request->get('quantity');
-        $this->model->status        = $this->request->get('status');
+        $attribute = !is_null($this->parent) ? new ProductAttribute() : $this->model;
 
-        if ($this->model->isDirty()) {
-            $this->model->save();
+        $attribute->sku         =   $this->request->get('sku');
+        $attribute->stock_type  =   $this->request->get('stock_type');
+        $attribute->quantity    =   $this->request->get('quantity');
+        $attribute->status      =   $this->request->get('status');
+        $attribute->validity    =   $this->request->get('validity');
+
+        if (is_null($this->parent)) {
+
+            if ($attribute->isDirty()) {
+                $attribute->save();
+            }
+        } else {
+            $this->parent->productAttributes()->save($attribute);
         }
 
-        $this->setModel($this->model);
-
-        return $this;
-    }
-
-    public function storeItems()
-    {
-        $items = $this->request->get('items');
-
-        $items_array = [];
-
-        foreach ($items as $item) {
-            $items_array = [
-                $item['sku'] => ['quantity' => $item['quantity']]
-            ];
-        }
-
-        $this->model->products()->sync($items_array);
+        $this->setModel($attribute);
 
         return $this;
     }

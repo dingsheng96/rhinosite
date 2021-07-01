@@ -12,6 +12,7 @@ use App\Support\Facades\PriceFacade;
 class BaseService
 {
     public $model, $request;
+    public $parent = null;
 
     public function __construct($model)
     {
@@ -37,6 +38,13 @@ class BaseService
         $this->model->refresh();
 
         return $this->model;
+    }
+
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+
+        return $this;
     }
 
     protected function storeMedia(Media $media, array $config, $file)
