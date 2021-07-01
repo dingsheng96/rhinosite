@@ -33,17 +33,10 @@
                 </li>
                 @endcanany
 
-                @canany(['merchant.create', 'merchant.update'])
-                <li class="nav-item">
-                    <a href="{{ route('verifications.index') }}" class="nav-link {{ Nav::hasSegment('verifications', 1, 'active') }}">
-                        <i class="nav-icon fas fa-id-card"></i>
-                        <p>{{ trans_choice('modules.verification', 2) }}</p>
-                        <span class="badge badge-pill badge-light px-2 bg-orange right">{{ $verifications_count ?? 0 }}</span>
-                    </a>
-                </li>
-                @endcanany
-
-                @canany(['product.create', 'product.read'. 'product.update', 'product.delete'])
+                @canany([
+                'product.create', 'product.read'. 'product.update', 'product.delete',
+                'package.create', 'package.read'. 'package.update', 'package.delete',
+                ])
                 <li class="nav-item has-treeview {{ Nav::hasSegment(['ecommerce'], 1, 'menu-open') }}">
                     <a href="#" class="nav-link {{ Nav::hasSegment(['ecommerce'], 1, 'active') }}">
                         <i class="nav-icon fas fa-shopping-bag"></i>
@@ -60,7 +53,24 @@
                             </a>
                         </li>
                         @endcanany
+                        @canany(['package.create', 'package.read'. 'package.update', 'package.delete'])
+                        <li class="nav-item">
+                            <a href="{{ route('ecommerce.packages.index') }}" class="nav-link {{ Nav::hasSegment('packages', 2, 'active') }}">
+                                <p>{{ trans_choice('modules.submodules.package', 2) }}</p>
+                            </a>
+                        </li>
+                        @endcanany
                     </ul>
+                </li>
+                @endcanany
+
+                @canany(['merchant.create', 'merchant.update'])
+                <li class="nav-item">
+                    <a href="{{ route('verifications.index') }}" class="nav-link {{ Nav::hasSegment('verifications', 1, 'active') }}">
+                        <i class="nav-icon fas fa-id-card"></i>
+                        <p>{{ trans_choice('modules.verification', 2) }}</p>
+                        <span class="badge badge-pill badge-light px-2 bg-orange right">{{ $verifications_count ?? 0 }}</span>
+                    </a>
                 </li>
                 @endcanany
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7e68ff6f21ca39c0d3d2894e4f8d85a8",
+    "content-hash": "1c6fc65ce7d4b7e9c80fc1bee7c889c4",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -6551,6 +6551,51 @@
                 }
             ],
             "time": "2021-04-16T12:08:33+00:00"
+        },
+        {
+            "name": "yangyiyi/extra-command",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yangyiyi/extra-command.git",
+                "reference": "715178526e3be46499242885d7c2fae62f70cb02"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yangyiyi/extra-command/zipball/715178526e3be46499242885d7c2fae62f70cb02",
+                "reference": "715178526e3be46499242885d7c2fae62f70cb02",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "YangYiYi\\ExtraCommand\\ExtraCommandServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "YangYiYi\\ExtraCommand\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tommy Liew",
+                    "email": "tommywudo1990@gmail.com"
+                }
+            ],
+            "description": "Extra command to generate Services and Facades for Laravel project",
+            "support": {
+                "issues": "https://github.com/yangyiyi/extra-command/issues",
+                "source": "https://github.com/yangyiyi/extra-command/tree/v.0.0.1"
+            },
+            "time": "2021-06-30T17:54:52+00:00"
         }
     ],
     "packages-dev": [
@@ -9260,7 +9305,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "yangyiyi/extra-command": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

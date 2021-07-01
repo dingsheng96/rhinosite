@@ -130,5 +130,7 @@ return [
     'validity' => 'Validity',
     'day' => 'Day|Days',
     'quantity' => 'Quantity',
-    'color' => 'Color'
+    'color' => 'Color',
+    'product' => 'Product|Products',
+    'item' => 'Item|Items'
 ];

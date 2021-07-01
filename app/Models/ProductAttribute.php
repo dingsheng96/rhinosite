@@ -34,6 +34,12 @@ class ProductAttribute extends Model
         return $this->morphMany(Price::class, 'priceable');
     }
 
+    public function package()
+    {
+        return $this->morphToMany(Package::class, 'packageable', PackageItem::class, 'packageable_id', 'package_id', 'id', 'id')
+            ->withPivot('quantity');
+    }
+
     // Attributes
     public function getStatusLabelAttribute()
     {

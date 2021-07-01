@@ -28,6 +28,17 @@ $(function() {
         });
     }
 
+    if($(".sku-filter").length > 0) {
+
+        if($('.sku-filter option:selected').val() != 0) {
+            getSkuFromProduct($('.sku-filter'), $('.sku-filter option:selected').val());
+        }
+
+        $(document).on("change", '.sku-filter', function() {
+            getSkuFromProduct($(this), $(this).val());
+        });
+    }
+
     if ($(".disabled-date-filter").length > 0) {
         if ($(".disabled-date-filter").val() != null && $(".disabled-date-filter").val() != "") {
             getDisableDate($(".disabled-date-filter").val());
@@ -89,5 +100,18 @@ function getDisableDate(source_id) {
                 }
             }
         });
+    }
+}
+
+function getSkuFromProduct(parent, product_id) {
+
+    let dropdown = parent.parents('tr').find('.sku-dropdown');
+
+    removeChildOption(dropdown);
+
+    let url = dropdown.data("sku-route").replace("__PRODUCT__", product_id);
+
+    if (product_id != null && product_id != "") {
+        setDataIntoDropdown(url, dropdown, "sku", "id");
     }
 }

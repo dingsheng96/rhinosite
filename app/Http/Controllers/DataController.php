@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\Response;
-use Illuminate\Http\Request;
 use App\Models\City;
 use App\Models\Country;
+use App\Models\Product;
+use App\Helpers\Response;
 use App\Models\Permission;
 use App\Models\CountryState;
+use Illuminate\Http\Request;
 
 class DataController extends Controller
 {
@@ -45,6 +46,24 @@ class DataController extends Controller
             ->withStatus($status)
             ->withMessage()
             ->withData($cities->toArray())
+            ->sendJson();
+    }
+
+    public function getSkuFromProduct(Product $product)
+    {
+        $action = Permission::ACTION_READ;
+        $status = 'success';
+
+        $sku = $product->productAttributes()
+            ->select('id', 'sku', 'product_id')
+            ->orderBy('sku', 'asc')
+            ->get();
+
+        return Response::instance()
+            ->withStatusCode('modules.product', 'actions.' . $action . $status)
+            ->withStatus($status)
+            ->withMessage()
+            ->withData($sku->toArray())
             ->sendJson();
     }
 }

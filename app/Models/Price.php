@@ -28,6 +28,12 @@ class Price extends Model
         return $this->belongsTo(Currency::class, 'currency_id', 'id');
     }
 
+    // Scopes
+    public function scopeDefaultPrice($query)
+    {
+        return $query->where('is_default', true);
+    }
+
     // Attributes
     public function setUnitPriceAttribute($value)
     {

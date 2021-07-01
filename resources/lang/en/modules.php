@@ -33,6 +33,7 @@ return [
         'category' => 'Category|Categories',
         'activity_logs' => 'Activity Logs',
         'product' => 'Product|Products',
-        'product_attribute' => 'Product Attribute|Product Attributes'
+        'product_attribute' => 'Product Attribute|Product Attributes',
+        'package' => 'Package|Packages',
     ]
 ];

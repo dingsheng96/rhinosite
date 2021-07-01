@@ -59,6 +59,9 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
         Route::resource('products', 'ProductController');
         Route::resource('products.attributes', 'ProductAttributeController');
+
+        Route::delete('packages/{package}/products/{product}', 'PackageController@deletePackageProduct')->name('packages.products.destroy');
+        Route::resource('packages', 'PackageController');
     });
 });
 
@@ -69,5 +72,7 @@ Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
         Route::get('country-states/{country_state}/cities', 'DataController@getCityFromCountryState')->name('country-states.cities');
     });
 
-    Route::get('ads-boosters/{ads}/available-date', 'DateController@getAdsBoosterAvailableDate')->name('ads-boosters.available-date');
+    Route::get('products/{product}/sku', 'DataController@getSkuFromProduct')->name('products.sku');
+
+    // Route::get('ads-boosters/{ads}/available-date', 'DataController@getAdsBoosterAvailableDate')->name('ads-boosters.available-date');
 });

@@ -64,4 +64,54 @@ $(function () {
             }
         });
     }
+
+    let packageItemDynamicForm  = $('#packageItemDynamicForm');
+    let packageItemCloneTemplate = $('#packageItemCloneTemplate');
+
+    if(packageItemDynamicForm.length > 0) {
+
+        let row = packageItemDynamicForm.find('tbody tr').not(':hidden').length + 1;
+
+        packageItemDynamicForm.on('click', '.btn-add-row', function (e) {
+
+            row++;
+
+            destroySelect2(packageItemCloneTemplate);
+
+            let newRow = packageItemCloneTemplate.clone(true)
+                .removeAttr('id')
+                .removeAttr("hidden")
+                .removeAttr("aria-hidden");
+
+            $(newRow).html(newRow.html()
+                .replaceAll('disabled', '')
+                .replaceAll('__REPLACE__', row)
+            );
+
+            packageItemDynamicForm.find('tbody').append(newRow);
+
+            reInitSelect2();
+        });
+
+        packageItemDynamicForm.on('click', '.btn-remove-row', function (e) {
+
+            if(packageItemDynamicForm.find('tbody tr').not(':hidden').length > 1) {
+                $(this).parents('tr').remove();
+            } else {
+                alert('At least one row is required.');
+            }
+        });
+    }
 });
+
+function reInitSelect2()
+{
+    $('.select2').select2({
+        theme: 'bootstrap4'
+    });
+}
+
+function destroySelect2(target)
+{
+    target.find('select.select2').select2('destroy');
+}

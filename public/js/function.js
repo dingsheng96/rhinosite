@@ -119,6 +119,7 @@ function setSelectedDataIntoDropdown(dropdown) {
 }
 
 function getAssociateArrayData(text, value) {
+
     let str_split = text.split(".");
     let new_value;
 

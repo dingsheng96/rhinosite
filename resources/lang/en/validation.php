@@ -187,7 +187,9 @@ return [
         'quantity' => 'quantity',
         'validity' => 'validity',
         'color' => 'color',
-        'discount' => 'discount'
+        'discount' => 'discount',
+        'product' => 'product',
+        'sku' => 'sku',
     ],
 
 ];

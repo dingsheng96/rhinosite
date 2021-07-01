@@ -1,10 +1,10 @@
 <?php
 
 use App\Models\Module;
+use App\Models\Permission;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Models\Permission;
 
 class PermissionSeeder extends Seeder
 {
@@ -15,11 +15,11 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-        DB::statement('TRUNCATE TABLE ' . (new Permission())->getTable());
 
         foreach ($this->getData() as $data) {
-            Permission::create([
+            Permission::firstOrCreate([
+                'name'          =>  $data['name'],
+            ], [
                 'name'          =>  $data['name'],
                 'guard_name'    =>  $data['guard_name'],
                 'display'       =>  $data['display'],
@@ -28,8 +28,6 @@ class PermissionSeeder extends Seeder
                 'action'        =>  $data['action'],
             ]);
         }
-
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 
     public function getData()

@@ -149,4 +149,22 @@ $(function() {
         $('#update_discount_percentage').text(calcDiscountPercentage(unit_price, discount));
         $('#update_selling_price').text(calcSellingPrice(unit_price, discount));
     });
+
+    $('.uprice-input').on('input', function () {
+
+        unit_price      =   $(this).val();
+        discount        =   $('.disc-input').val();
+
+        $('.disc-perc-input').val(calcDiscountPercentage(unit_price, discount));
+        $('.sale-price-input').val(calcSellingPrice(unit_price, discount));
+    });
+
+    $('.disc-input').on('input', function () {
+
+        discount    = $(this).val();
+        unit_price  = $('.uprice-input').val();
+
+        $('.disc-perc-input').val(calcDiscountPercentage(unit_price, discount));
+        $('.sale-price-input').val(calcSellingPrice(unit_price, discount));
+    });
 });
