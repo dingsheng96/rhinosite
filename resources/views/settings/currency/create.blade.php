@@ -1,59 +1,91 @@
-@if ($errors->has('create.*'))
+@extends('layouts.master', ['parent_title' => trans_choice('modules.setting', 2), 'title' => trans_choice('modules.submodules.currency', 2)])
 
-@push('scripts')
+@section('content')
 
-<script type="text/javascript">
-    $(window).on('load', function () {
-        $('#currencyModal').modal('show');
-    });
-</script>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-transparent">
+                    <h3 class="card-title">
+                        {{ __('modules.create', ['module' => trans_choice('modules.submodules.currency', 1)]) }}
+                    </h3>
+                </div>
 
-@endpush
+                <form action="{{ route('settings.currencies.store') }}" method="POST" role="form" enctype="multipart/form-data">
+                    @csrf
 
-@endif
+                    <div class="card-body">
 
-<div class="modal fade show hide" id="currencyModal" tabindex="-1" role="dialog" aria-labelledby="currencyModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="currencyModal">{{ __('modules.create', ['module' => trans_choice('modules.submodules.currency', 1)]) }}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="name" class="col-form-label">{{ __('labels.name') }}</label>
+                                    <input type="text" id="name" name="name" value="{{ old('name') }}" class="form-control ucfirst @error('name') is-invalid @enderror">
+                                    @error('name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label for="code" class="col-form-label">{{ __('labels.code') }}</label>
+                                    <input type="text" id="code" name="code" {{ old('code') }} class="form-control ucall @error('code') is-invalid @enderror">
+                                    @error('code')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label for="tbl_rate" class="col-form-label">{{ __('labels.conversion_rate') }}</label>
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-striped" id="tbl_rate">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" style="width: 10%;">{{ __('#') }}</th>
+                                                <th scope="col" style="width: 40%;">{{ __('labels.to_currency') }}</th>
+                                                <th scope="col" style="width: 50%;">{{ __('labels.rate') }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($currencies as $currency)
+                                            <tr>
+                                                <th scope="row">{{ $loop->iteration }}</th>
+                                                <td>{{ $currency->name_with_code }}</td>
+                                                <td>
+                                                    <input type="number" name="rate[{{ $currency->id }}]" value="{{ old('rate.'.$currency->id) }}" class="form-control @error('rate.' . $currency->id) is-invalid @enderror" step="0.00001">
+                                                    @error('rate.' . $currency->id)
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer bg-transparent text-md-right text-center">
+                        <a role="button" href="{{ route('settings.currencies.index') }}" class="btn btn-light mx-2 btn-rounded-corner">
+                            <i class="fas fa-times"></i>
+                            {{ __('labels.cancel') }}
+                        </a>
+                        <button type="submit" class="btn btn-outline-primary btn-rounded-corner">
+                            <i class="fas fa-paper-plane"></i>
+                            {{ __('labels.submit') }}
+                        </button>
+                    </div>
+                </form>
             </div>
-            <form action="{{ route('settings.currencies.store') }}" method="POST" role="form" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="name" class="col-form-label">{{ __('labels.name') }}</label>
-                        <input type="text" id="name" name="create[name]" class="form-control ucfirst @error('create.name') is-invalid @enderror">
-                        @error('create.name')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="code" class="col-form-label">{{ __('labels.code') }}</label>
-                        <input type="text" id="code" name="create[code]" class="form-control ucall @error('create.code') is-invalid @enderror">
-                        @error('create.code')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light btn-rounded-corner" data-dismiss="modal">
-                        <i class="fas fa-times mr-2"></i>
-                        {{ __('labels.cancel') }}
-                    </button>
-                    <button type="submit" class="btn btn-outline-primary btn-rounded-corner">
-                        <i class="fas fa-paper-plane mr-2"></i>
-                        {{ __('labels.submit') }}
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 </div>
+@endsection

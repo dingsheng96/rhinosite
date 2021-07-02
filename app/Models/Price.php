@@ -31,7 +31,9 @@ class Price extends Model
     // Scopes
     public function scopeDefaultPrice($query)
     {
-        return $query->where('is_default', true);
+        $default_currency = Currency::defaultCountryCurrency()->first();
+
+        return $query->where('currency_id', $default_currency->id);
     }
 
     // Attributes

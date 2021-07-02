@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Helpers\Message;
-use App\Helpers\Response;
 use App\Models\Currency;
+use App\Helpers\Response;
+use App\Models\Permission;
 use Illuminate\Support\Facades\DB;
 use App\DataTables\CountryDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\DataTables\CurrencyDataTable;
-use App\Models\Permission;
+use App\Support\Facades\CurrencyFacade;
 use App\Http\Requests\Settings\CurrencyRequest;
 
 class CurrencyController extends Controller
@@ -32,7 +33,7 @@ class CurrencyController extends Controller
      */
     public function create()
     {
-        //
+        return view('settings.currency.create');
     }
 
     /**
@@ -51,12 +52,7 @@ class CurrencyController extends Controller
 
         try {
 
-            $input = $request->get('create');
-
-            $currency = Currency::create([
-                'name' => $input['name'],
-                'code' => $input['code']
-            ]);
+            $currency = CurrencyFacade::setRequest($request)->storeData()->getModel();
 
             DB::commit();
 
@@ -103,9 +99,9 @@ class CurrencyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Currency $currency)
     {
-        //
+        return view('settings.currency.edit', compact('currency'));
     }
 
     /**
@@ -125,14 +121,7 @@ class CurrencyController extends Controller
 
         try {
 
-            $input = $request->get('update');
-
-            $currency->name = $input['name'];
-            $currency->code = $input['code'];
-
-            if ($currency->isDirty()) {
-                $currency->save();
-            }
+            $currency = CurrencyFacade::setModel($currency)->setRequest($request)->storeData()->getModel();
 
             DB::commit();
 

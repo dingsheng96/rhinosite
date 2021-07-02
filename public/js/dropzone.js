@@ -89,8 +89,6 @@ $(function () {
 
             this.removeAllFiles();
 
-            console.log(response);
-
             Swal.fire({
                 icon: response.status ? 'success' : 'error',
                 title: response.message,
@@ -104,8 +102,6 @@ $(function () {
         });
 
         this.on('errormultiple', function (file, response) {
-
-            console.log(response);
 
             let errors = response.errors;
             let messages = [];

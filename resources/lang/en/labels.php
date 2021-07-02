@@ -23,6 +23,7 @@ return [
     'unavailable' => 'Unavailable',
     'add_more' => 'Add More',
     'default' => 'Default',
+    'published' => 'Published',
 
     'show_records' => 'Showing :item of :total records',
     'start_session' => 'Sign in to start your session',
@@ -44,7 +45,7 @@ return [
     'errors_found' => 'Errors found!',
     'dropdown_placeholder' => 'Please select :label',
     'text_placeholder' => 'Enter :label',
-    'delete_confirm_question' => 'Are you sure?',
+    'confirm_question' => 'Are you sure?',
     'delete_info' => 'You will not be able to revert this!',
     'password_format' => 'Minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter and 1 number',
     'upload_file_rules' => '{1} <li>Only :extensions file type allowed.</li><li>Total file size must be not more than :maxsize.</li><li>Recommend file dimension: :dimension px.</li>|{2,} <li>Only total of :maxfiles files allowed.</li><li>Only :extensions file type allowed</li><li>Total file size must be not more than :maxsize.</li><li>Recommend file dimension: :dimension px.</li>',
@@ -64,7 +65,6 @@ return [
     'email' => 'Email',
     'password' => 'Password',
     'password_confirmation' => 'Confirm Password',
-    'datetime' => 'Date/Time',
     'dial_code' => 'Dial Code',
     'code' => 'Code',
     'upload_file' => 'Upload File|Upload Files',
@@ -133,5 +133,13 @@ return [
     'quantity' => 'Quantity',
     'color' => 'Color',
     'product' => 'Product|Products',
-    'item' => 'Item|Items'
+    'item' => 'Item|Items',
+    'title' => 'Title',
+    'to_currency' => 'To Currency',
+    'rate' => 'Rate',
+    'conversion_rate' => 'Conversion Rate',
+    'updated_at' => 'Updated At',
+    'last_login_at' => 'Last Login At',
+    'created_at' => 'Created At',
+
 ];

@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Media;
 use App\Models\Price;
-use App\Models\Country;
 use App\Models\Project;
 use App\Helpers\Message;
 use App\Helpers\Response;
 use App\Models\Permission;
 use App\Helpers\FileManager;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\DataTables\ProjectDataTable;
 use Illuminate\Support\Facades\Auth;
@@ -25,16 +22,9 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, ProjectDataTable $dataTable)
+    public function index(ProjectDataTable $dataTable)
     {
-        $projects = Project::orderBy('created_at', 'desc')
-            ->when(Auth::user()->is_merchant, function ($query) {
-                $query->where('user_id', Auth::id());
-            })
-            ->with(['translations'])
-            ->paginate(15, ['*'], 'page', $request->get('page'));
-
-        return view('projects.index', compact('projects'));
+        return $dataTable->render('projects.index');
     }
 
     /**

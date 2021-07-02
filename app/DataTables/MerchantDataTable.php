@@ -92,7 +92,7 @@ class MerchantDataTable extends DataTable
             Column::make('email')->title(__('labels.email')),
             Column::make('phone')->title(__('labels.contact_no')),
             Column::make('status')->title(__('labels.status')),
-            Column::make('created_at')->title(__('labels.datetime')),
+            Column::make('created_at')->title(__('labels.created_at')),
             Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),

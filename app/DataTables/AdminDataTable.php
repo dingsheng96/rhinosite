@@ -44,6 +44,9 @@ class AdminDataTable extends DataTable
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
+            ->editColumn('last_login_at', function ($data) {
+                return $data->last_login_at->toDateTimeString();
+            })
             ->editColumn('status', function ($data) {
                 return '<h5>' . $data->status_label . '</h5>';
             })
@@ -73,7 +76,7 @@ class AdminDataTable extends DataTable
     {
         return $this->builder()
             ->setTableId('admin-table')
-            ->addTableClass('table-hover table-bordered table-head-fixed table-striped')
+            ->addTableClass('table-hover table')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(0, 'asc')
@@ -89,14 +92,13 @@ class AdminDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#'),
-            Column::make('name')->title(__('labels.name')),
-            Column::make('email')->title(__('labels.email')),
-            Column::make('status')->title(__('labels.status')),
-            Column::make('created_at')->title(__('labels.datetime')),
-            Column::computed('action', __('labels.action'))
-                ->exportable(false)
-                ->printable(false),
+            Column::computed('DT_RowIndex', '#')->width('5%'),
+            Column::make('name')->title(__('labels.name'))->width('25%'),
+            Column::make('email')->title(__('labels.email'))->width('20%'),
+            Column::make('status')->title(__('labels.status'))->width('10%'),
+            Column::make('last_login_at')->title(__('labels.last_login_at'))->width('15%'),
+            Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
+            Column::computed('action', __('labels.action'))->width('10%')->exportable(false)->printable(false),
         ];
     }
 

@@ -81,7 +81,7 @@
                                     <select name="currency" id="currency" class="form-control select2 @error('currency') is-invalid @enderror">
                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.currency'))]) }} ---</option>
                                         @foreach ($currencies as $currency)
-                                        <option value="{{ $currency->id }}" {{ old('currency') == $currency->id ? 'selected' : null }}>{{ $currency->name_with_code }}</option>
+                                        <option value="{{ $currency->id }}" {{ old('currency', $default_currency->id) == $currency->id ? 'selected' : null }}>{{ $currency->name_with_code }}</option>
                                         @endforeach
                                     </select>
                                     @error('currency')

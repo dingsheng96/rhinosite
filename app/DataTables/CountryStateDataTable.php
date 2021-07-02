@@ -88,7 +88,7 @@ class CountryStateDataTable extends DataTable
             Column::make('cities_count')
                 ->searchable(false)
                 ->title(trans_choice('labels.city', 2)),
-            Column::make('created_at')->title(__('labels.datetime')),
+            Column::make('created_at')->title(__('labels.created_at')),
             Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),

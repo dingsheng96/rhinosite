@@ -35,6 +35,8 @@
         </div>
 
         @include('layouts.footer') {{-- auth footer --}}
+
+        @include('components.loader')
     </div>
 
     @else

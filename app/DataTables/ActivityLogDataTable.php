@@ -85,7 +85,7 @@ class ActivityLogDataTable extends DataTable
             Column::make('subject_to')->title(__('labels.subject_to')),
             Column::make('caused_by')->title(__('labels.caused_by')),
             Column::make('description')->title(__('labels.description')),
-            Column::make('created_at')->title(__('labels.datetime'))
+            Column::make('created_at')->title(__('labels.created_at'))
         ];
     }
 

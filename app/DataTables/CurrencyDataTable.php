@@ -31,8 +31,7 @@ class CurrencyDataTable extends DataTable
                     ],
                     'update' => [
                         'permission' => 'currency.update',
-                        'route' => '#updateCurrencyModal',
-                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode(['id' => $data->id, 'name' => $data->name, 'code' => $data->code]) . "'"
+                        'route' => route('settings.currencies.edit', ['currency' => $data->id]),
                     ],
                     'delete' => [
                         'permission' => 'currency.delete',
@@ -85,7 +84,7 @@ class CurrencyDataTable extends DataTable
             Column::computed('DT_RowIndex', '#'),
             Column::make('name')->title(__('labels.name')),
             Column::make('code')->title(__('labels.code')),
-            Column::make('created_at')->title(__('labels.datetime')),
+            Column::make('created_at')->title(__('labels.created_at')),
             Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),

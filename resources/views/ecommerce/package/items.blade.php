@@ -16,7 +16,7 @@
             <td>{{ $item->sku }}</td>
             <td>{{ $item->pivot->quantity }}</td>
             <td>
-                <a role="button" href="#" class="btn btn-danger" onclick="event.preventDefault(); deleteAlert('{{ __('labels.delete_confirm_question') }}', '{{ __('labels.delete_info') }}', '{{ route('ecommerce.packages.products.destroy', ['package' => $package->id, 'product' => $item->id]) }}')">
+                <a role="button" href="#" class="btn btn-danger" onclick="event.preventDefault(); deleteAlert('{{ __('labels.confirm_question') }}', '{{ __('labels.delete_info') }}', '{{ route('ecommerce.packages.products.destroy', ['package' => $package->id, 'product' => $item->id]) }}')">
                     <i class="fas fa-trash"></i>
                 </a>
             </td>

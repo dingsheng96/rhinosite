@@ -1,5 +1,7 @@
 function customAlert(message, status)
 {
+    $('.loading').hide();
+
     Swal.fire({
         icon: status,
         title: message,
@@ -46,6 +48,7 @@ function deleteAlert(title, message, redirectUrl)
                     });
                 },
                 error: (xhl) => {
+
                     Swal.fire({
                         icon: 'error',
                         title: xhl.message,
@@ -71,7 +74,11 @@ function logoutAlert(title)
         buttonsStyling: false,
         reverseButtons: true
     }).then((result) => {
+
         if (result.isConfirmed) {
+
+            $('.loading').show();
+
             $('#logout-form').submit();
         }
     });

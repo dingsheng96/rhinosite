@@ -42,27 +42,29 @@ class PackageService extends BaseService
 
     public function storeItems()
     {
-        $items = $this->request->get('items');
+        if ($this->request->has('items')) {
 
-        $items_array = [];
+            $items = $this->request->get('items');
 
-        foreach ($items as $item) {
-            $items_array = [
-                $item['sku'] => ['quantity' => $item['quantity']]
-            ];
+            $items_array = [];
+
+            foreach ($items as $item) {
+                $items_array = [
+                    $item['sku'] => ['quantity' => $item['quantity']]
+                ];
+            }
+
+            $this->model->products()->sync($items_array);
         }
 
-        $this->model->products()->sync($items_array);
 
         return $this;
     }
 
     public function savePrice()
     {
-        $currencies = Currency::all();
-
         $default_price = $this->model->prices()
-            ->defaultPrice()
+            ->where('currency_id', $this->request->get('currency'))
             ->firstOr(function () {
                 return new Price();
             });
@@ -72,11 +74,12 @@ class PackageService extends BaseService
         $default_price->discount                =   $this->request->get('discount');
         $default_price->discount_percentage     =   PriceFacade::calcDiscountPercentage($this->request->get('discount'), $this->request->get('unit_price'));
         $default_price->selling_price           =   PriceFacade::calcSellingPrice($this->request->get('discount'), $this->request->get('unit_price'));
-        $default_price->is_default              =   true;
 
         if ($default_price->isDirty()) {
             $this->model->prices()->save($default_price);
         }
+
+        PriceFacade::setParent($this->model)->storeConvertedPrice($default_price);
 
         return $this;
     }

@@ -63,16 +63,14 @@ class Project extends Model
     }
 
     // Attributes
-    public function getPriceWithLabelAttribute()
+    public function getPriceWithUnitAttribute()
     {
-        $default_price  =   $this->prices
-            ->where('currency_id', Country::defaultCountry()->first()->currency_id)
-            ->first();
+        $default_price = $this->prices()->defaultPrice()->first();
 
         $currency   =   $default_price->currency->code;
         $price      =   $default_price->unit_price;
         $unit       =   $this->unit->display;
-        $unit_value =   number_format($this->unit_value, 0, '.', '');
+        $unit_value =   $this->unit_value;
 
         return $currency . $price . ' / ' . $unit_value . $unit;
     }
@@ -104,15 +102,16 @@ class Project extends Model
             ->value;
     }
 
-    public function getPublishStatusLabelAttribute()
+    public function getStatusLabelAttribute()
     {
-        $published = $this->published;
-        return $this->published;
-        if (!$published) {
-            return null;
+        if ($this->published) {
+
+            $label =  Status::instance()->statusLabel('published');
+
+            return '<span class="' . $label['class'] . ' px-3">' . $label['text'] . '</span>';
         }
 
-        return Status::instance()->statusLabel('publish')['published'];
+        return;
     }
 
     public function getThumbnailAttribute()
@@ -120,5 +119,10 @@ class Project extends Model
         return $this->media()
             ->where('type', Media::TYPE_THUMBNAIL)
             ->first();
+    }
+
+    public function getUnitValueAttribute($value)
+    {
+        return (float) $value;
     }
 }

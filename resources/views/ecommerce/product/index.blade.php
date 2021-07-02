@@ -18,7 +18,7 @@
                     </span>
                     @endcan
                 </div>
-                <div class="card-body table-responsive">
+                <div class="card-body">
                     {!! $dataTable->table() !!}
                 </div>
             </div>

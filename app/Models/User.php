@@ -23,7 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected $fillable = [
         'name', 'phones', 'email', 'password',
-        'remember_token', 'status', 'email_verified_at'
+        'remember_token', 'status', 'last_login_at', 'email_verified_at'
     ];
 
     protected $hidden = [
@@ -32,6 +32,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'last_login_at' => 'datetime'
     ];
 
     // Relationships

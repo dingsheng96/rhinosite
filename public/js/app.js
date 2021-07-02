@@ -93004,8 +93004,6 @@ module.exports = function(module) {
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
-__webpack_require__(/*! pikaday/pikaday.js */ "./node_modules/pikaday/pikaday.js");
-
 __webpack_require__(/*! admin-lte/plugins/select2/js/select2.full.min.js */ "./node_modules/admin-lte/plugins/select2/js/select2.full.min.js");
 
 __webpack_require__(/*! admin-lte/plugins/datatables/jquery.dataTables.js */ "./node_modules/admin-lte/plugins/datatables/jquery.dataTables.js");
@@ -93021,6 +93019,10 @@ __webpack_require__(/*! admin-lte/plugins/datatables-responsive/js/dataTables.re
 __webpack_require__(/*! admin-lte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js */ "./node_modules/admin-lte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js");
 
 __webpack_require__(/*! admin-lte/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js */ "./node_modules/admin-lte/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js");
+
+var Pikaday = __webpack_require__(/*! pikaday/pikaday.js */ "./node_modules/pikaday/pikaday.js");
+
+window.Pikaday = Pikaday;
 
 /***/ }),
 

@@ -10,7 +10,7 @@
                 <img src="https://ui-avatars.com/api/?background=f6993f&color=ffffff&size=30&rounded=true&name={{ str_replace(' ', '+', Auth::user()->name) }}" alt="user" class="img-circle elevation-2 mr-2">
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <a href="#" class="dropdown-item" onclick="event.preventDefault(); logoutAlert('{{ __('labels.confirm_question') }}');">
                     <i class="fas fa-sign-out-alt mr-2" style="color: red;"></i>
                     <span>{{ __('labels.logout') }}</span>
                 </a>

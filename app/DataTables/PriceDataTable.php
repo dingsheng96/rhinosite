@@ -86,7 +86,7 @@ class PriceDataTable extends DataTable
             Column::make('unit_price')->title(__('labels.unit_price')),
             Column::make('discount')->title(__('labels.discount')),
             Column::make('selling_price')->title(__('labels.selling_price')),
-            Column::make('created_at')->title(__('labels.datetime'))
+            Column::make('created_at')->title(__('labels.created_at'))
         ];
     }
 

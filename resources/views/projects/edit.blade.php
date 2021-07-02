@@ -191,7 +191,7 @@
                                                             </td>
                                                             <td>
                                                                 <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                                    onclick="event.preventDefault(); deleteAlert('{{ __('labels.delete_confirm_question') }}', '{{ __('labels.delete_info') }}', '{{ route('projects.price.destroy', ['project' => $project->id, 'price' => $price->id]) }}');">
+                                                                    onclick="event.preventDefault(); deleteAlert('{{ __('labels.confirm_question') }}', '{{ __('labels.delete_info') }}', '{{ route('projects.price.destroy', ['project' => $project->id, 'price' => $price->id]) }}');">
                                                                     <i class="fas fa-trash"></i>
                                                                 </button>
                                                             </td>
@@ -314,7 +314,7 @@
                                                                     <i class="fas fa-download"></i>
                                                                 </a>
                                                                 <a role="button" href="#" class="btn btn-danger ml-2" title="{{ __('labels.delete') }}" data-toggle="modal"
-                                                                    onclick="event.preventDefault(); deleteAlert('{{ __('labels.delete_confirm_question') }}', '{{ __('labels.delete_info') }}', '{{ route('projects.media.destroy', ['project' => $project->id, 'media' => $image->id]) }}')">
+                                                                    onclick="event.preventDefault(); deleteAlert('{{ __('labels.confirm_question') }}', '{{ __('labels.delete_info') }}', '{{ route('projects.media.destroy', ['project' => $project->id, 'media' => $image->id]) }}')">
                                                                     <i class="fas fa-trash"></i>
                                                                 </a>
                                                             </td>

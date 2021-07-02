@@ -28,7 +28,7 @@
     {{-- delete button --}}
     @isset($delete)
     @can($delete['permission'])
-    <a role="button" href="{{ $delete['route'] ?? '#' }}" class="dropdown-item" onclick="event.preventDefault(); deleteAlert('{{ __('labels.delete_confirm_question') }}', '{{ __('labels.delete_info') }}', '{{ $delete['route'] }}')" @isset($delete['attribute']) {!! $delete['attribute'] !!} @endisset>
+    <a role="button" href="{{ $delete['route'] ?? '#' }}" class="dropdown-item" onclick="event.preventDefault(); deleteAlert('{{ __('labels.confirm_question') }}', '{{ __('labels.delete_info') }}', '{{ $delete['route'] }}')" @isset($delete['attribute']) {!! $delete['attribute'] !!} @endisset>
         <i class="fas fa-trash mr-2 text-red"></i>
         {{ __('labels.delete') }}
     </a>

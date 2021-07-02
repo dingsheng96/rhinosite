@@ -50,7 +50,7 @@ class PackageRequest extends FormRequest
             'unit_price' => ['required', 'numeric', 'min:0'],
             'discount' => ['required', 'numeric', 'min:0'],
             'description' => ['nullable'],
-            'items' => [Rule::requiredIf($this->route('package')), 'nullable', 'array'],
+            'items' => [Rule::requiredIf(!$this->route('package')), 'nullable', 'array'],
             'items.*.product' => ['exists:' . Product::class . ',id'],
             'items.*.sku' => ['distinct', Rule::exists(ProductAttribute::class, 'id')],
             'items.*.quantity' => ['integer', 'min:0']

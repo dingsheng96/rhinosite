@@ -32,6 +32,28 @@
     width: 5vw;
 }
 
+.loading {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    background: rgba(240, 238, 238, 0.25) no-repeat center center;
+    z-index: 10000;
+}
+
+.card-loader {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 250px;
+}
+
 @media screen and (max-width: 768px) {
     .form-control-color {
         width: 10vw;

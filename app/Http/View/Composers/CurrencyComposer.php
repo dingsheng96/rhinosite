@@ -27,5 +27,6 @@ class CurrencyComposer
     public function compose(View $view)
     {
         $view->with('currencies', Currency::orderBy('name', 'asc')->get());
+        $view->with('default_currency', Currency::defaultCountryCurrency()->first());
     }
 }

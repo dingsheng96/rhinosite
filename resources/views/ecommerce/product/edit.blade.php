@@ -203,7 +203,7 @@
                                             </a>
                                             @can('product.delete')
                                             <a role="button" href="#" class="dropdown-item" title="{{ __('labels.delete') }}" data-toggle="modal"
-                                                onclick="event.preventDefault(); deleteAlert('{{ __('labels.delete_confirm_question') }}', '{{ __('labels.delete_info') }}', '{{ route('ecommerce.products.media.destroy', ['product' => $product->id, 'media' => $image->id]) }}')">
+                                                onclick="event.preventDefault(); deleteAlert('{{ __('labels.confirm_question') }}', '{{ __('labels.delete_info') }}', '{{ route('ecommerce.products.media.destroy', ['product' => $product->id, 'media' => $image->id]) }}')">
                                                 <i class="fas fa-trash mr-2 text-red"></i>
                                                 {{ __('labels.delete') }}
                                             </a>

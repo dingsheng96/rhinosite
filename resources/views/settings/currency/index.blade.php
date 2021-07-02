@@ -10,23 +10,20 @@
                 <div class="card-header bg-transparent">
                     @can('currency.create')
                     <span class="card-tools">
-                        <a href="#currencyModal" class="btn btn-outline-primary btn-rounded-corner" data-toggle="modal">
+                        <a href="{{ route('settings.currencies.create') }}" class="btn btn-outline-primary btn-rounded-corner">
                             <i class="fas fa-plus"></i>
                             {{ __('modules.create', ['module' => trans_choice('modules.submodules.currency', 1)]) }}
                         </a>
                     </span>
                     @endcan
                 </div>
-                <div class="card-body table-responsive">
+                <div class="card-body">
                     {!! $dataTable->table() !!}
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-@includeWhen(Auth::user()->can('currency.create'), 'settings.currency.create')
-@includeWhen(Auth::user()->can('currency.update'), 'settings.currency.edit')
 
 @endsection
 

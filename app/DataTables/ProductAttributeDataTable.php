@@ -100,7 +100,7 @@ class ProductAttributeDataTable extends DataTable
             Column::make('sku')->title(__('labels.sku')),
             Column::make('quantity')->title(__('labels.quantity')),
             Column::make('status')->title(__('labels.status')),
-            Column::make('created_at')->title(__('labels.datetime')),
+            Column::make('created_at')->title(__('labels.created_at')),
             Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),

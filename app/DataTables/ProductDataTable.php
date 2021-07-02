@@ -113,7 +113,7 @@ class ProductDataTable extends DataTable
             Column::make('category')->title(__('labels.category')),
             Column::make('variation')->title(trans_choice('labels.variation', 2)),
             Column::make('status')->title(__('labels.status')),
-            Column::make('created_at')->title(__('labels.datetime')),
+            Column::make('created_at')->title(__('labels.created_at')),
             Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),

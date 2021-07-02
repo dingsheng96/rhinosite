@@ -2,10 +2,9 @@
 
 namespace App\DataTables;
 
+use App\Models\Project;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use App\Models\Role;
-use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
@@ -25,34 +24,67 @@ class ProjectDataTable extends DataTable
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return view('components.action', [
-                    'no_action' => $this->no_action ?: ($data->name == Role::ROLE_SUPER_ADMIN),
+                    'no_action' => $this->no_action ?: null,
                     'view' => [
-                        'permission' => 'role.read',
-                        'route' => route('settings.roles.show', ['role' => $data->id])
+                        'permission' => 'project.read',
+                        'route' => route('projects.show', ['project' => $data->id])
                     ],
                     'update' => [
-                        'permission' => 'role.update',
-                        'route' => route('settings.roles.edit', ['role' => $data->id]),
+                        'permission' => 'project.update',
+                        'route' => route('projects.edit', ['project' => $data->id]),
                     ],
                     'delete' => [
-                        'permission' => 'role.delete',
-                        'route' => route('settings.roles.destroy', ['role' => $data->id])
+                        'permission' => 'project.delete',
+                        'route' => route('projects.destroy', ['project' => $data->id])
                     ]
                 ])->render();
+            })
+            ->addColumn('status', function ($data) {
+                return '<h5>' . $data->status_label . '</h5>';
+            })
+            ->addColumn('merchant', function ($data) {
+                return $data->user->name;
+            })
+            ->addColumn('price', function ($data) {
+                return $data->price_with_unit;
+            })
+            ->editColumn('title', function ($data) {
+                return $data->english_title . '<br/>' . $data->chinese_title;
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
-            ->rawColumns(['action']);
+            ->rawColumns(['action', 'status', 'title'])
+            ->filterColumn('status', function ($query, $keyword) {
+                $query->when($keyword == 'published', function ($query) {
+                    $query->where('published', true);
+                });
+            })
+            ->filterColumn('merchant', function ($query, $keyword) {
+                $query->whereHas('user', function ($query) use ($keyword) {
+                    $query->where('name', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('title', function ($query, $keyword) {
+                $query->whereHas('translations', function ($query) use ($keyword) {
+                    $query->where('value', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('price', function ($query, $keyword) {
+                $query->orWhere('unit_value', 'like', "%{$keyword}%")
+                    ->orWhereHas('prices', function ($query) use ($keyword) {
+                        $query->defaultPrice()->where('selling_price', 'like', "%{$keyword}%");
+                    });
+            });
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Role $model
+     * @param \App\Models\Project $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Role $model)
+    public function query(Project $model)
     {
         return $model->newQuery();
     }
@@ -65,7 +97,7 @@ class ProjectDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('role-table')
+            ->setTableId('project-table')
             ->addTableClass('table-hover table-bordered table-head-fixed table-striped')
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -83,9 +115,11 @@ class ProjectDataTable extends DataTable
     {
         return [
             Column::computed('DT_RowIndex', '#'),
-            Column::make('name')->title(__('labels.name')),
-            Column::make('description')->title(__('labels.description')),
-            Column::make('created_at')->title(__('labels.datetime')),
+            Column::make('title')->title(__('labels.title')),
+            Column::make('merchant')->title(__('labels.merchant')),
+            Column::make('price')->title(__('labels.price') . ' / ' . __('labels.unit')),
+            Column::make('status')->title(__('labels.status')),
+            Column::make('created_at')->title(__('labels.created_at')),
             Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),

@@ -2,8 +2,8 @@
 
 namespace App\Support\Services;
 
-
 use App\Models\Price;
+use App\Models\Currency;
 
 class PriceService extends BaseService
 {
@@ -39,5 +39,35 @@ class PriceService extends BaseService
     public function calcSellingPrice($discount, $price)
     {
         return $price - $discount;
+    }
+
+    public function storeConvertedPrice($default_price)
+    {
+        $currencies = Currency::get()->except($default_price->currency_id);
+
+        foreach ($currencies as $currency) {
+
+            $convert_rate = $default_price->currency
+                ->fromCurrencyRates()
+                ->where('to_currency', $currency->id)
+                ->first()
+                ->rate;
+
+            $price = $this->parent->prices()
+                ->where('currency_id', $currency->id)
+                ->firstOr(function () {
+                    return new Price();
+                });
+
+            $price->currency_id             =   $currency->id;
+            $price->unit_price              =   $default_price->unit_price * $convert_rate;
+            $price->discount                =   $default_price->discount * $convert_rate;
+            $price->discount_percentage     =   $default_price->discount_percentage;
+            $price->selling_price           =   $default_price->selling_price * $convert_rate;
+
+            $this->parent->prices()->save($price);
+        }
+
+        return $this;
     }
 }

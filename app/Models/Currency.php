@@ -41,9 +41,35 @@ class Currency extends Model
         return $this->hasMany(Price::class, 'currency_id', 'id');
     }
 
+    public function fromCurrencyRates()
+    {
+        return $this->hasMany(CurrencyRate::class, 'from_currency', 'id');
+    }
+
+    public function toCurrencyRates()
+    {
+        return $this->hasMany(CurrencyRate::class, 'to_currency', 'id');
+    }
+
+    // Scopes
+    public function scopeDefaultCountryCurrency($query)
+    {
+        return $query->whereHas('countries', function ($query) {
+            $query->where('set_default', true);
+        });
+    }
+
     // Attributes
     public function getNameWithCodeAttribute()
     {
         return $this->name . ' (' . $this->code . ')';
+    }
+
+    // Functions
+    public function getConversionRate(int $to_currency)
+    {
+        return $this->fromCurrencyRates()
+            ->where('to_currency', $to_currency)
+            ->first();
     }
 }

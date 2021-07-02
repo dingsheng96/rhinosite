@@ -89,7 +89,8 @@ class PackageDataTable extends DataTable
             ->minifiedAjax()
             ->orderBy(0, 'asc')
             ->responsive(true)
-            ->autoWidth(true);
+            ->autoWidth(true)
+            ->processing(false);
     }
 
     /**
@@ -106,7 +107,7 @@ class PackageDataTable extends DataTable
             Column::make('price')->title(__('labels.price')),
             Column::make('quantity')->title(__('labels.quantity')),
             Column::make('status')->title(__('labels.status')),
-            Column::make('created_at')->title(__('labels.datetime')),
+            Column::make('created_at')->title(__('labels.created_at')),
             Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),

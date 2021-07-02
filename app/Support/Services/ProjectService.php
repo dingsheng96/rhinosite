@@ -37,7 +37,7 @@ class ProjectService extends BaseService
         $this->model->unit_id       =  $this->request->get('unit');
         $this->model->unit_value    =  $this->request->get('unit_value');
         $this->model->published     =  $this->request->has('publish');
-        $this->model->slug          =  Str::slug($this->request->get('slug'), '-');
+        $this->model->slug          =  Str::slug($this->request->get('title_en'), '-');
 
         if ($this->model->isDirty()) {
             $this->model->save();

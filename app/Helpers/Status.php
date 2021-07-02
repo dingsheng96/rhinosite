@@ -102,11 +102,9 @@ class Status
                 'text' => __('labels.approved'),
                 'class' => 'badge badge-pill badge-lg badge-success'
             ],
-            'publish' => [
-                '1' => [
-                    'text' => __('labels.publishing'),
-                    'class' => 'badge badge-pill badge-lg badge-success'
-                ]
+            'published' => [
+                'text' => __('labels.published'),
+                'class' => 'badge badge-pill badge-lg badge-success'
             ],
             'availability' => [
                 '0' => [
