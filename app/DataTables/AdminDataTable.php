@@ -76,12 +76,13 @@ class AdminDataTable extends DataTable
     {
         return $this->builder()
             ->setTableId('admin-table')
-            ->addTableClass('table-hover table')
+            ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(0, 'asc')
             ->responsive(true)
-            ->autoWidth(true);
+            ->autoWidth(true)
+            ->processing(false);
     }
 
     /**
@@ -98,7 +99,9 @@ class AdminDataTable extends DataTable
             Column::make('status')->title(__('labels.status'))->width('10%'),
             Column::make('last_login_at')->title(__('labels.last_login_at'))->width('15%'),
             Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
-            Column::computed('action', __('labels.action'))->width('10%')->exportable(false)->printable(false),
+            Column::computed('action', __('labels.action'))->width('10%')
+                ->exportable(false)
+                ->printable(false)
         ];
     }
 

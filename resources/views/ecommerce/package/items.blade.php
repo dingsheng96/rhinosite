@@ -1,4 +1,5 @@
-<table class="table table-bordered" id="packageItemDynamicForm">
+<table class="table table-hover w-100" id="packageItemDynamicForm">
+
     <thead>
         <tr>
             <th scope="col" style="width: 35%;">{{ trans_choice('labels.product', 1) }}</th>
@@ -7,6 +8,7 @@
             <th scope="col" style="width: 10%;">{{ __('labels.action') }}</th>
         </tr>
     </thead>
+
     <tbody>
 
         @if (!empty($items))

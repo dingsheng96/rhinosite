@@ -92,12 +92,13 @@ class ProductDataTable extends DataTable
     {
         return $this->builder()
             ->setTableId('product-table')
-            ->addTableClass('table-hover table-bordered table-head-fixed table-striped')
+            ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(0, 'asc')
             ->responsive(true)
-            ->autoWidth(true);
+            ->autoWidth(true)
+            ->processing(false);
     }
 
     /**
@@ -108,13 +109,13 @@ class ProductDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#'),
-            Column::make('name')->title(__('labels.name')),
-            Column::make('category')->title(__('labels.category')),
-            Column::make('variation')->title(trans_choice('labels.variation', 2)),
-            Column::make('status')->title(__('labels.status')),
-            Column::make('created_at')->title(__('labels.created_at')),
-            Column::computed('action', __('labels.action'))
+            Column::computed('DT_RowIndex', '#')->width('5%'),
+            Column::make('name')->title(__('labels.name'))->width('30%'),
+            Column::make('category')->title(__('labels.category'))->width('20%'),
+            Column::make('variation')->title(trans_choice('labels.variation', 2))->width('10%'),
+            Column::make('status')->title(__('labels.status'))->width('10%'),
+            Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
+            Column::computed('action', __('labels.action'))->width('10%')
                 ->exportable(false)
                 ->printable(false),
         ];

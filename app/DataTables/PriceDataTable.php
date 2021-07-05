@@ -30,15 +30,7 @@ class PriceDataTable extends DataTable
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
-            ->editColumn('is_default', function ($data) {
-                return '<h5>' . $data->default_label . '</h5>';
-            })
-            ->filterColumn('is_default', function ($query, $keyword) {
-                return $query->when($keyword == 'default', function ($query) {
-                    $query->where('is_default', true);
-                });
-            })
-            ->rawColumns(['action', 'is_default']);
+            ->rawColumns(['action']);
     }
 
     /**
@@ -64,12 +56,13 @@ class PriceDataTable extends DataTable
     {
         return $this->builder()
             ->setTableId('price-table')
-            ->addTableClass('table-hover table-bordered table-head-fixed table-striped')
+            ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(0, 'asc')
             ->responsive(true)
-            ->autoWidth(true);
+            ->autoWidth(true)
+            ->processing(false);
     }
 
     /**
@@ -80,13 +73,12 @@ class PriceDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#'),
-            Column::make('currency')->title(__('labels.currency')),
-            Column::make('is_default')->title(__('labels.status')),
-            Column::make('unit_price')->title(__('labels.unit_price')),
-            Column::make('discount')->title(__('labels.discount')),
-            Column::make('selling_price')->title(__('labels.selling_price')),
-            Column::make('created_at')->title(__('labels.created_at'))
+            Column::computed('DT_RowIndex', '#')->width('5%'),
+            Column::make('currency')->title(__('labels.currency'))->width('20%'),
+            Column::make('unit_price')->title(__('labels.unit_price'))->width('20%'),
+            Column::make('discount')->title(__('labels.discount'))->width('20%'),
+            Column::make('selling_price')->title(__('labels.selling_price'))->width('20%'),
+            Column::make('created_at')->title(__('labels.created_at'))->width('15%')
         ];
     }
 
