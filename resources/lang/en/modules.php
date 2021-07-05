@@ -13,13 +13,15 @@ return [
     'dashboard' => 'Dashboard',
     'profile' => 'Profile',
     'ads' => 'Ads',
+    'ecommerce' => 'Ecommerce',
     'project' => 'Project|Projects',
     'order' => 'Order|Orders',
     'product' => 'Product|Products',
     'setting' => 'Setting|Settings',
     'user' => 'User|Users',
     'verification' => 'Verification|Verifications',
-    'ecommerce' => 'Ecommerce',
+    'purchase' => 'Purchase|Purchases',
+    'subscription' => 'Subscription|Subscriptions',
 
     'submodules' => [
         'country' => 'Country|Countries',
@@ -35,6 +37,7 @@ return [
         'product' => 'Product|Products',
         'product_attribute' => 'Product Attribute|Product Attributes',
         'package' => 'Package|Packages',
-        'order' => 'Order|Orders'
+        'order' => 'Order|Orders',
+        'cart' => 'Cart'
     ]
 ];

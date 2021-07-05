@@ -4,10 +4,21 @@
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
     </ul>
+
     <ul class="navbar-nav ml-auto">
+
+        @merchant
         <li class="nav-item dropdown">
-            <a data-toggle="dropdown" class="nav-link border-0 bg-transparent" style="cursor: pointer;">
-                <img src="https://ui-avatars.com/api/?background=f6993f&color=ffffff&size=30&rounded=true&name={{ str_replace(' ', '+', Auth::user()->name) }}" alt="user" class="img-circle elevation-2 mr-2">
+            <a class="nav-link" href="{{ route('ecommerce.carts.index') }}">
+                <h5 class="mx-2"><i class="fas fa-shopping-cart"></i></h5>
+                <span class="badge badge-danger navbar-badge rounded-circle">{{ Auth::user()->cart_item_count }}</span>
+            </a>
+        </li>
+        @endmerchant
+
+        <li class="nav-item dropdown">
+            <a data-toggle="dropdown" class="nav-link" href="#">
+                <h5><i class="fas fa-cog"></i></h5>
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <a href="#" class="dropdown-item" onclick="event.preventDefault(); logoutAlert('{{ __('labels.confirm_question') }}');">

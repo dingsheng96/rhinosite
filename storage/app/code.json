@@ -16,6 +16,7 @@
         "city": 192,
         "currency": 200,
         "category": 210,
+        "cart": 220,
         "system": 900
     },
     "actions": {

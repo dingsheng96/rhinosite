@@ -39,6 +39,7 @@ return [
     'current_ads_boosting' => 'Current Ads Boosting',
     'total_ads_available' => 'Total Ads Available',
     'current_bought_product' => 'Current Bought Product',
+    'current_plan' => 'Current Plan',
     'view_all' => 'View All',
     'empty_list' => "You don't have any :list yet",
     'no_records' => 'No records found.',
@@ -143,5 +144,17 @@ return [
     'created_at' => 'Created At',
     'user' => 'User',
     'order_no' => 'Order No.',
-    'grand_total' => 'Grand Total'
+    'grand_total' => 'Grand Total',
+    'subscribed_at' => 'Subscribed At|Subscribed Date : :date',
+    'expired_at' => 'Expired At|Expired Date : :date',
+    'renewed_at' => 'Renewed At',
+    'month' => '{1} :value month|{2,} :value months',
+    'available_packages' => 'Available Packages',
+    'my_cart_summary' => 'My Cart Summary',
+    'total' => 'Total',
+    'sub_total' => 'Sub Total',
+    'grand_total' => 'Grand Total',
+    'total_items' => 'Total Items : :quantity',
+    'make_payment' => 'Make Payment',
+    'change_plan' => 'Change Plan'
 ];

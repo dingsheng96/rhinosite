@@ -20,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
         'currencyFacade' => \App\Support\Services\CurrencyService::class,
         'orderFacade' => \App\Support\Services\OrderService::class,
         'transactionFacade' => \App\Support\Services\TransactionService::class,
+        'cartFacade' => \App\Support\Services\CartService::class,
     ];
 
     /**

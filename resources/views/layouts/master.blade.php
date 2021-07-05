@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ asset('css/app.css?v=' . time()) }}">
     <link rel="stylesheet" href="{{ asset('css/style.css?v=' . time()) }}">
     <link rel="stylesheet" href="{{ asset('dropzone-5.7.0/dist/dropzone.css') }}">
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
 
 
 </head>
@@ -46,8 +47,9 @@
     @endif
 
     <script src="{{ asset('js/app.js?v=' . time()) }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('dropzone-5.7.0/dist/dropzone.js?v=' . time()) }}"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('js/style.js?v=' . time()) }}"></script>
     <script src="{{ asset('js/function.js?v=' . time()) }}"></script>
     <script src="{{ asset('js/dropdown.js?v=' . time()) }}"></script>

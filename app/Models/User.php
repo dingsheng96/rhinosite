@@ -66,6 +66,16 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Rating::class, 'user_id', 'id');
     }
 
+    public function userSubscriptions()
+    {
+        return $this->hasMany(UserSubscription::class, 'user_id', 'id');
+    }
+
+    public function cart()
+    {
+        return $this->hasOne(Cart::class, 'user_id', 'id');
+    }
+
     // Scopes
     public function scopeAdmin($query)
     {
@@ -148,5 +158,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getUserCategoryAttribute()
     {
         return $this->categories()->first();
+    }
+
+    public function getCartItemCountAttribute()
+    {
+        return optional($this->cart)->count() ?? 0;
     }
 }

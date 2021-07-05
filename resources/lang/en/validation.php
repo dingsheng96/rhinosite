@@ -190,7 +190,8 @@ return [
         'discount' => 'discount',
         'product' => 'product',
         'sku' => 'sku',
-        'rate' => 'rate'
+        'rate' => 'rate',
+        'item' => 'item'
     ],
 
 ];

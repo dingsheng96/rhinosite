@@ -33,6 +33,8 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
     Route::resource('ads', 'AdsController');
 
+    Route::resource('subscriptions', 'SubscriptionController');
+
     Route::resource('verifications', 'VerificationController');
 
     Route::group(['prefix' => 'users', 'as' => 'users.', 'namespace' => 'Users'], function () {
@@ -66,6 +68,8 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
         Route::resource('packages', 'PackageController');
 
         Route::resource('orders', 'OrderController');
+
+        Route::resource('carts', 'CartController');
     });
 });
 

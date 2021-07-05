@@ -38,4 +38,9 @@ class Package extends Model
 
         return '<span class="' . $label['class'] . ' px-3">' . $label['text'] . '</span>';
     }
+
+    public function getPriceAttribute()
+    {
+        return $this->prices()->defaultPrice()->first();
+    }
 }
