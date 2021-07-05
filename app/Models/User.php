@@ -38,7 +38,7 @@ class User extends Authenticatable implements MustVerifyEmail
     // Relationships
     public function userDetails()
     {
-        return $this->hasMany(UserDetails::class, 'user_id', 'id');
+        return $this->hasMany(UserDetail::class, 'user_id', 'id');
     }
 
     public function address()

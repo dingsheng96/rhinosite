@@ -33,6 +33,15 @@
                 </li>
                 @endcanany
 
+                @canany(['ads.create', 'ads.read', 'ads.update', 'ads.delete'])
+                <li class="nav-item">
+                    <a href="{{ route('ads.index') }}" class="nav-link {{ Nav::hasSegment('ads', 1, 'active') }}">
+                        <i class="nav-icon fas fa-ad"></i>
+                        <p>{{ __('modules.ads') }}</p>
+                    </a>
+                </li>
+                @endcanany
+
                 @canany([
                 'product.create', 'product.read'. 'product.update', 'product.delete',
                 'package.create', 'package.read'. 'package.update', 'package.delete',
@@ -57,6 +66,13 @@
                         <li class="nav-item">
                             <a href="{{ route('ecommerce.packages.index') }}" class="nav-link {{ Nav::hasSegment('packages', 2, 'active') }}">
                                 <p>{{ trans_choice('modules.submodules.package', 2) }}</p>
+                            </a>
+                        </li>
+                        @endcanany
+                        @canany(['order.create', 'order.read'. 'order.update', 'order.delete'])
+                        <li class="nav-item">
+                            <a href="{{ route('ecommerce.orders.index') }}" class="nav-link {{ Nav::hasSegment('orders', 2, 'active') }}">
+                                <p>{{ trans_choice('modules.submodules.order', 2) }}</p>
                             </a>
                         </li>
                         @endcanany

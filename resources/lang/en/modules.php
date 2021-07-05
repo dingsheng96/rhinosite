@@ -35,5 +35,6 @@ return [
         'product' => 'Product|Products',
         'product_attribute' => 'Product Attribute|Product Attributes',
         'package' => 'Package|Packages',
+        'order' => 'Order|Orders'
     ]
 ];

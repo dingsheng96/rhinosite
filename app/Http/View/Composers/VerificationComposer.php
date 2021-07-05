@@ -3,7 +3,7 @@
 namespace App\Http\View\Composers;
 
 use Illuminate\View\View;
-use App\Models\UserDetails;
+use App\Models\UserDetail;
 
 class VerificationComposer
 {
@@ -26,6 +26,6 @@ class VerificationComposer
      */
     public function compose(View $view)
     {
-        $view->with('verifications_count', UserDetails::pendingVerifications()->count());
+        $view->with('verifications_count', UserDetail::pendingVerifications()->count());
     }
 }

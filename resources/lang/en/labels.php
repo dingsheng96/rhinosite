@@ -141,5 +141,7 @@ return [
     'updated_at' => 'Updated At',
     'last_login_at' => 'Last Login At',
     'created_at' => 'Created At',
-
+    'user' => 'User',
+    'order_no' => 'Order No.',
+    'grand_total' => 'Grand Total'
 ];

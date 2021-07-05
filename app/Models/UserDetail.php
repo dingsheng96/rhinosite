@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use App\Helpers\Status;
 use App\Models\Role;
+use App\Helpers\Status;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class UserDetails extends Model
+class UserDetail extends Model
 {
     use SoftDeletes;
 

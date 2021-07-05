@@ -8,18 +8,26 @@ use App\Helpers\Status;
 use App\Helpers\Message;
 use App\Models\Category;
 use App\Helpers\Response;
-use App\Models\UserDetails;
+use App\Models\Permission;
+use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\DataTables\MerchantDataTable;
 use App\Support\Facades\MerchantFacade;
-use App\Models\Permission;
 use App\Http\Requests\Users\MerchantRequest;
 
 class MerchantController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['can:merchant.read']);
+        $this->middleware(['can:merchant.create'])->only(['create', 'store']);
+        $this->middleware(['can:merchant.update'])->only(['edit', 'update']);
+        $this->middleware(['can:merchant.delete'])->only(['delete']);
+    }
+
     /**
      * Display a listing of the resource.
      *

@@ -1,30 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Users;
+namespace App\Http\Controllers\Ecommerce;
 
-use App\Models\User;
 use Illuminate\Http\Request;
-use App\DataTables\MemberDataTable;
+use App\DataTables\OrderDataTable;
 use App\Http\Controllers\Controller;
 
-class MemberController extends Controller
+class OrderController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['can:member.read']);
-        $this->middleware(['can:member.create'])->only(['create', 'store']);
-        $this->middleware(['can:member.update'])->only(['edit', 'update']);
-        $this->middleware(['can:member.delete'])->only(['delete']);
-    }
-
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(MemberDataTable $dataTable)
+    public function index(OrderDataTable $dataTable)
     {
-        return $dataTable->render('users.member.index');
+        return $dataTable->render('ecommerce.order.index');
     }
 
     /**
@@ -54,7 +45,7 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(User $member)
+    public function show($id)
     {
         //
     }
@@ -65,9 +56,9 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $member)
+    public function edit($id)
     {
-        return view('users.member.edit', compact('member'));
+        //
     }
 
     /**
@@ -77,7 +68,7 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $member)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -88,7 +79,7 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $member)
+    public function destroy($id)
     {
         //
     }

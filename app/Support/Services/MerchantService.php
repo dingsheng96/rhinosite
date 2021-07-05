@@ -4,7 +4,7 @@ namespace App\Support\Services;
 
 use App\Models\User;
 use App\Models\Media;
-use App\Models\UserDetails;
+use App\Models\UserDetail;
 use App\Helpers\FileManager;
 
 class MerchantService extends BaseService
@@ -46,7 +46,7 @@ class MerchantService extends BaseService
         $details = $this->model->userDetails()
             ->approvedDetails()
             ->firstOr(function () {
-                return new UserDetails();
+                return new UserDetail();
             });
 
         $details->years_of_experience   =   $this->request->get('experience');
@@ -58,7 +58,7 @@ class MerchantService extends BaseService
 
         // new details
         if (!$details->exists) {
-            $details->status = UserDetails::STATUS_PENDING;
+            $details->status = UserDetail::STATUS_PENDING;
         }
 
         if ($details->isDirty()) {

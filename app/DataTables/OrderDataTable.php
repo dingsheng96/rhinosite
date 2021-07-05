@@ -2,14 +2,14 @@
 
 namespace App\DataTables;
 
-use App\Models\UserDetail;
+use App\Models\Order;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class VerificationDataTable extends DataTable
+class OrderDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -36,38 +36,14 @@ class VerificationDataTable extends DataTable
                     ]
                 ])->render();
             })
-            ->addColumn('name', function ($data) {
+            ->addColumn('user', function ($data) {
                 return $data->user->name;
-            })
-            ->addColumn('email', function ($data) {
-                return $data->user->email;
-            })
-            ->addColumn('phone', function ($data) {
-                return $data->user->phone;
-            })
-            ->editColumn('created_at', function ($data) {
-                return $data->created_at->toDateTimeString();
             })
             ->editColumn('status', function ($data) {
                 return '<h5>' . $data->status_label . '</h5>';
             })
-            ->filterColumn('status', function ($query, $keyword) {
-                $query->where('status', strtolower($keyword));
-            })
-            ->filterColumn('name', function ($query, $keyword) {
-                $query->whereHas('user', function ($query) use ($keyword) {
-                    $query->where('name', 'like', "%{$keyword}%");
-                });
-            })
-            ->filterColumn('email', function ($query, $keyword) {
-                $query->whereHas('user', function ($query) use ($keyword) {
-                    $query->where('email', 'like', "%{$keyword}%");
-                });
-            })
-            ->filterColumn('phone', function ($query, $keyword) {
-                $query->whereHas('user', function ($query) use ($keyword) {
-                    $query->where('phone', 'like', "%{$keyword}%");
-                });
+            ->editColumn('created_at', function ($data) {
+                return $data->created_at->toDateTimeString();
             })
             ->rawColumns(['action', 'status']);
     }
@@ -75,14 +51,12 @@ class VerificationDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\UserDetail $model
+     * @param \App\Models\Order $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(UserDetail $model)
+    public function query(Order $model)
     {
-        return $model->with(['user'])
-            ->where('status', UserDetail::STATUS_PENDING)
-            ->newQuery();
+        return $model->newQuery();
     }
 
     /**
@@ -93,7 +67,7 @@ class VerificationDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('verification-table')
+            ->setTableId('order-table')
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -112,9 +86,10 @@ class VerificationDataTable extends DataTable
     {
         return [
             Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('name')->title(__('labels.name'))->width('25%'),
-            Column::make('email')->title(__('labels.email'))->width('20%'),
-            Column::make('phone')->title(__('labels.contact_no'))->width('15%'),
+            Column::make('user')->title(__('labels.user'))->width('20%'),
+            Column::make('order_no')->title(__('labels.order_no'))->width('15%'),
+            Column::make('grand_total')->title(__('labels.grand_total'))->width('15%'),
+            Column::make('total_items')->title(trans_choice('labels.item', 2))->width('10%'),
             Column::make('status')->title(__('labels.status'))->width('10%'),
             Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
             Column::computed('action', __('labels.action'))->width('10%')
@@ -130,6 +105,6 @@ class VerificationDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Verfication_' . date('YmdHis');
+        return 'Order_' . date('YmdHis');
     }
 }

@@ -1,20 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Users;
+namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
-use App\DataTables\MemberDataTable;
-use App\Http\Controllers\Controller;
 
-class MemberController extends Controller
+class AdsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['can:member.read']);
-        $this->middleware(['can:member.create'])->only(['create', 'store']);
-        $this->middleware(['can:member.update'])->only(['edit', 'update']);
-        $this->middleware(['can:member.delete'])->only(['delete']);
+        $this->middleware(['can:ads.read']);
+        $this->middleware(['can:ads.create'])->only(['create', 'store']);
+        $this->middleware(['can:ads.update'])->only(['edit', 'update']);
+        $this->middleware(['can:ads.delete'])->only(['delete']);
     }
 
     /**
@@ -22,9 +19,9 @@ class MemberController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(MemberDataTable $dataTable)
+    public function index()
     {
-        return $dataTable->render('users.member.index');
+        return;
     }
 
     /**
@@ -54,7 +51,7 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(User $member)
+    public function show($id)
     {
         //
     }
@@ -65,9 +62,9 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $member)
+    public function edit($id)
     {
-        return view('users.member.edit', compact('member'));
+        //
     }
 
     /**
@@ -77,7 +74,7 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $member)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -88,7 +85,7 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $member)
+    public function destroy($id)
     {
         //
     }

@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\UserDetails;
+use App\Models\UserDetail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Notifications\AccountVerified;
@@ -30,6 +30,8 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::delete('projects/{project}/prices/{price}', 'ProjectController@deletePrice')->name('projects.price.destroy');
     Route::delete('projects/{project}/media/{media}', 'ProjectController@deleteMedia')->name('projects.media.destroy');
     Route::resource('projects', 'ProjectController');
+
+    Route::resource('ads', 'AdsController');
 
     Route::resource('verifications', 'VerificationController');
 
@@ -62,6 +64,8 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
         Route::delete('packages/{package}/products/{product}', 'PackageController@deletePackageProduct')->name('packages.products.destroy');
         Route::resource('packages', 'PackageController');
+
+        Route::resource('orders', 'OrderController');
     });
 });
 

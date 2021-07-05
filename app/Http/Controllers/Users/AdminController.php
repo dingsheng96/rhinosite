@@ -2,22 +2,30 @@
 
 namespace App\Http\Controllers\Users;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Helpers\Status;
 use App\Helpers\Message;
 use App\Helpers\Response;
+use App\Models\Permission;
 use Illuminate\Http\Request;
 use App\DataTables\AdminDataTable;
-use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Permission;
 use App\Http\Requests\Users\AdminRequest;
 
 class AdminController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['can:admin.read']);
+        $this->middleware(['can:admin.create'])->only(['create', 'store']);
+        $this->middleware(['can:admin.update'])->only(['edit', 'update']);
+        $this->middleware(['can:admin.delete'])->only(['delete']);
+    }
+
     /**
      * Display a listing of the resource.
      *

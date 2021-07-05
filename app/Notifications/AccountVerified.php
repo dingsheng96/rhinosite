@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Models\UserDetails;
+use App\Models\UserDetail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,7 +19,7 @@ class AccountVerified extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(UserDetails $user_details)
+    public function __construct(UserDetail $user_details)
     {
         $this->user_details = $user_details;
     }

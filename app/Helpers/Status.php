@@ -5,7 +5,7 @@ namespace App\Helpers;
 use App\Models\User;
 use App\Models\Package;
 use App\Models\Product;
-use App\Models\UserDetails;
+use App\Models\UserDetail;
 
 class Status
 {
@@ -45,9 +45,9 @@ class Status
     public function verificationStatus(): array
     {
         return [
-            UserDetails::STATUS_PENDING => 'Pending',
-            UserDetails::STATUS_APPROVED => 'Approved',
-            UserDetails::STATUS_REJECTED => 'Rejected'
+            UserDetail::STATUS_PENDING => 'Pending',
+            UserDetail::STATUS_APPROVED => 'Approved',
+            UserDetail::STATUS_REJECTED => 'Rejected'
         ];
     }
 
