@@ -10,7 +10,7 @@
 
     <div class="card">
         <div class="card-body login-card-body">
-            <p class="login-box-msg">{{ __('labels.start_session') }}</p>
+            <p class="login-box-msg">{{ __('messages.start_session') }}</p>
 
             <form action="{{ route('login') }}" method="post" role="form" enctype="multipart/form-data">
 

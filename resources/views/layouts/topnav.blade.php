@@ -10,7 +10,7 @@
         @merchant
         <li class="nav-item dropdown">
             <a class="nav-link" href="{{ route('ecommerce.carts.index') }}">
-                <h5 class="mx-2"><i class="fas fa-shopping-cart"></i></h5>
+                <i class="fas fa-shopping-cart"></i>
                 <span class="badge badge-danger navbar-badge rounded-circle">{{ Auth::user()->cart_item_count }}</span>
             </a>
         </li>
@@ -18,11 +18,15 @@
 
         <li class="nav-item dropdown">
             <a data-toggle="dropdown" class="nav-link" href="#">
-                <h5><i class="fas fa-cog"></i></h5>
+                <i class="fas fa-th-large"></i>
             </a>
-            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                <a href="#" class="dropdown-item" onclick="event.preventDefault(); logoutAlert('{{ __('labels.confirm_question') }}');">
-                    <i class="fas fa-sign-out-alt mr-2" style="color: red;"></i>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a href="{{ route('account.index') }}" class="dropdown-item">
+                    <i class="fas fa-user mr-2 text-cyan"></i>
+                    <span>{{ __('labels.user_account') }}</span>
+                </a>
+                <a href="#" class="dropdown-item" onclick="event.preventDefault(); logoutAlert('{{ __('messages.confirm_question') }}');">
+                    <i class="fas fa-sign-out-alt mr-2 text-red"></i>
                     <span>{{ __('labels.logout') }}</span>
                 </a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

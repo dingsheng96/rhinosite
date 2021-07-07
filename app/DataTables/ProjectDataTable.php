@@ -3,8 +3,10 @@
 namespace App\DataTables;
 
 use App\Models\Project;
+use Illuminate\Support\Arr;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
@@ -40,7 +42,7 @@ class ProjectDataTable extends DataTable
                 ])->render();
             })
             ->addColumn('status', function ($data) {
-                return '<h5>' . $data->status_label . '</h5>';
+                return '<span>' . $data->status_label . '</span>';
             })
             ->addColumn('merchant', function ($data) {
                 return $data->user->name;
@@ -49,12 +51,16 @@ class ProjectDataTable extends DataTable
                 return $data->price_with_unit;
             })
             ->editColumn('title', function ($data) {
-                return $data->english_title . '<br/>' . $data->chinese_title;
+                return  '<div class="row">
+                <div class="col-6 col-md-2">
+                <img src="' . $data->thumbnail->full_file_path . '" alt="' . $data->thumbnail->filename . '" class="table-img-preview">
+                </div>
+                <div class="col-6 col-md-10">' . $data->english_title . '<br/>' . $data->chinese_title . '</div>
+                </div>';
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
-            ->rawColumns(['action', 'status', 'title'])
             ->filterColumn('status', function ($query, $keyword) {
                 $query->when($keyword == 'published', function ($query) {
                     $query->where('published', true);
@@ -75,7 +81,8 @@ class ProjectDataTable extends DataTable
                     ->orWhereHas('prices', function ($query) use ($keyword) {
                         $query->defaultPrice()->where('selling_price', 'like', "%{$keyword}%");
                     });
-            });
+            })
+            ->rawColumns(['action', 'status', 'title']);
     }
 
     /**
@@ -86,7 +93,9 @@ class ProjectDataTable extends DataTable
      */
     public function query(Project $model)
     {
-        return $model->newQuery();
+        return $model->when(Auth::user()->is_merchant, function ($query) {
+            $query->where('user_id', Auth::id());
+        })->newQuery();
     }
 
     /**
@@ -114,7 +123,7 @@ class ProjectDataTable extends DataTable
      */
     protected function getColumns()
     {
-        return [
+        $columns = [
             Column::computed('DT_RowIndex', '#')->width('5%'),
             Column::make('title')->title(__('labels.title'))->width('25%'),
             Column::make('merchant')->title(__('labels.merchant'))->width('20%'),
@@ -125,6 +134,12 @@ class ProjectDataTable extends DataTable
                 ->exportable(false)
                 ->printable(false),
         ];
+
+        if (Auth::user()->is_merchant) {
+            $columns = Arr::except($columns, 2);
+        }
+
+        return $columns;
     }
 
     /**

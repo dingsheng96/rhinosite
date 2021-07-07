@@ -10,9 +10,9 @@
                 <div class="card-header bg-transparent">
                     @can('role.create')
                     <span class="card-tools">
-                        <a href="#roleModal" class="btn btn-outline-primary" data-toggle="modal">
+                        <a href="#roleModal" class="btn btn-outline-primary btn-rounded-corner" data-toggle="modal">
                             <i class="fas fa-plus"></i>
-                            {{ __('labels.create') }}
+                            {{ __('modules.create', ['module' => trans_choice('modules.submodules.role', 1)]) }}
                         </a>
                     </span>
                     @endcan

@@ -41,10 +41,10 @@
                 <div class="card-footer bg-transparent">
                     <div class="row">
                         <div class="col-12">
-                            <a role="button" href="{{ route('ecommerce.carts.index') }}" class="btn btn-outline-primary btn-rounded-corner float-right">
-                                <i class="far fa-paper-plane"></i>
+                            <button type="button" class="btn btn-outline-primary btn-rounded-corner float-right btn-select-package" data-route="{{ route('ecommerce.carts.store') }}">
+                                <i class="fas fa-paper-plane"></i>
                                 {{ __('labels.change_plan') }}
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>

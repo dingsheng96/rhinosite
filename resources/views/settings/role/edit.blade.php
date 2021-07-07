@@ -8,7 +8,9 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-transparent">
-                    <h3 class="card-title">{{ __('modules.edit', ['module' => trans_choice('modules.submodules.role', 1)]) }}</h3>
+                    <h3 class="card-title font-weight-bold">
+                        {{ __('modules.edit', ['module' => trans_choice('modules.submodules.role', 1)]) }}
+                    </h3>
                 </div>
 
                 <form action="{{ route('settings.roles.update', ['role' => $role->id]) }}" method="post" enctype="multipart/form-data" role="form">
@@ -16,19 +18,9 @@
                     @method('put')
 
                     <div class="card-body">
-
-                        <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="role-tab" data-toggle="pill" href="#role" role="tab" aria-controls="role-tab" aria-selected="true">{{ __('labels.role') }}</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="permission-tab" data-toggle="pill" href="#permission" role="tab" aria-controls="permission" aria-selected="false">{{ __('labels.permissions') }}</a>
-                            </li>
-                        </ul>
-
-                        <div class="tab-content py-3" id="custom-content-below-tabContent">
-                            <div class="tab-pane fade show active" id="role" role="tabpanel" aria-labelledby="role-tab">
-                                <div class=" form-group">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
                                     <label for="name" class="col-form-label">{{ __('labels.name') }}</label>
                                     <input type="text" id="name" name="name" value="{{ old('name', $role->name) }}" class="form-control ucfirst @error('name') is-invalid @enderror">
                                     @error('name')
@@ -47,9 +39,12 @@
                                     @enderror
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="tab-pane fade show" id="permission" role="tabpanel" aria-labelledby="permission-tab">
-                                <div class="table-responsive">
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="tbl_permission" class="col-form-label">{{ trans_choice('labels.permission', 2) }}</label>
+                                <div class="table-responsive" id="tbl_permission">
                                     <table class="table table-bordered table-striped table-hover">
                                         <thead>
                                             <tr>

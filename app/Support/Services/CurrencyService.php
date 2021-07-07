@@ -4,6 +4,7 @@ namespace App\Support\Services;
 
 use App\Models\Currency;
 use App\Models\CurrencyRate;
+use App\Support\Services\BaseService;
 
 class CurrencyService extends BaseService
 {

@@ -27,6 +27,8 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
     Route::get('dashboard', 'HomeController@index')->name('dashboard');
 
+    Route::resource('account', 'AccountController');
+
     Route::delete('projects/{project}/prices/{price}', 'ProjectController@deletePrice')->name('projects.price.destroy');
     Route::delete('projects/{project}/media/{media}', 'ProjectController@deleteMedia')->name('projects.media.destroy');
     Route::resource('projects', 'ProjectController');
@@ -69,7 +71,9 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
         Route::resource('orders', 'OrderController');
 
-        Route::resource('carts', 'CartController');
+        Route::get('carts', 'CartController@index')->name('carts.index');
+        Route::post('carts', 'CartController@store')->name('carts.store');
+        Route::delete('carts/{cart}/cart-items/{cart_item}', 'CartController@destroy')->name('carts.cart-items.destroy');
     });
 });
 

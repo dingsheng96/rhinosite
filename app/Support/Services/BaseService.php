@@ -77,30 +77,26 @@ class BaseService
 
     public function storePrice()
     {
-        if ($this->request->has('prices')) {
+        $unit_price =   $this->request->get('unit_price') ?? 0;
+        $discount   =   $this->request->get('discount') ?? 0;
 
-            $data = $this->request->get('prices');
+        $default_price = $this->model->prices()
+            ->where('currency_id', $this->request->get('currency'))
+            ->firstOr(function () {
+                return new Price();
+            });
 
-            foreach ($data as $value) {
+        $default_price->currency_id             =   $this->request->get('currency');
+        $default_price->unit_price              =   $unit_price;
+        $default_price->discount                =   $discount;
+        $default_price->discount_percentage     =   PriceFacade::calcDiscountPercentage($discount, $unit_price);
+        $default_price->selling_price           =   PriceFacade::calcSellingPrice($discount, $unit_price);
 
-                $price = $this->model->prices()
-                    ->firstOr(function () {
-                        return new Price();
-                    });
-
-                $price->currency_id         =   $value['currency'];
-                $price->unit_price          =   $value['unit_price'];
-                $price->discount            =   $value['discount'] ?? 0;
-                $price->discount_percentage =   PriceFacade::calcDiscountPercentage(($value['discount'] ?? 0), $value['unit_price']);
-                $price->selling_price       =   $value['unit_price'] - ($value['discount'] ?? 0);
-
-                if ($price->exists && $price->isDirty()) {
-                    $price->save();
-                } else {
-                    $this->model->prices()->save($price);
-                }
-            }
+        if ($default_price->isDirty()) {
+            $this->model->prices()->save($default_price);
         }
+
+        PriceFacade::setParent($this->model)->storeConvertedPrice($default_price);
 
         return $this;
     }

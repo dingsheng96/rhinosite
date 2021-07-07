@@ -14,7 +14,7 @@
 
                     @can('project.create')
                     <div class="card-tools">
-                        <a href="{{ route('projects.create') }}" class="btn btn-outline-primary float-md-right btn-rounded-corner">
+                        <a href="{{ route('projects.create') }}" class="btn btn-outline-primary btn-rounded-corner">
                             <i class="fas fa-plus"></i>
                             {{ __('modules.create', ['module' => trans_choice('modules.project', 1)]) }}
                         </a>
@@ -34,5 +34,7 @@
 @endsection
 
 @push('scripts')
+
 {!! $dataTable->scripts() !!}
+
 @endpush

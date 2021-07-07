@@ -88,7 +88,7 @@ class MerchantRequest extends FormRequest
             'website'           =>  __('validation.attributes.website'),
             'facebook'          =>  __('validation.attributes.facebook'),
             'category'          =>  __('validation.attributes.category'),
-            'experience'        =>  __('validation.attributes.years_of_experience'),
+            'experience'        =>  __('validation.attributes.industry_since'),
             'logo'              =>  __('validation.attributes.logo'),
             'pic_name'          =>  __('validation.attributes.pic_name'),
             'pic_email'         =>  __('validation.attributes.pic_email'),

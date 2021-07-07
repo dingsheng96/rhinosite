@@ -177,7 +177,7 @@ return [
         'facebook' => 'facebook',
         'logo' => 'logo',
         'category' => 'category',
-        'years_of_experience' => 'years of experience',
+        'industry_since' => 'years of experience',
         'pic_name' => 'name of person in charge',
         'pic_email' => 'email of person in charge',
         'pic_phone' => 'contact no. of person in charge',

@@ -31,6 +31,11 @@ class Package extends Model
         return $this->morphMany(Price::class, 'priceable');
     }
 
+    public function cartItems()
+    {
+        return $this->morphMany(CartItem::class, 'cartable');
+    }
+
     // Attributes
     public function getStatusLabelAttribute()
     {

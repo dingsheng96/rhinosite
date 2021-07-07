@@ -42,7 +42,7 @@ class ProductDataTable extends DataTable
                 ])->render();
             })
             ->addColumn('status', function ($data) {
-                return '<h5>' . $data->status_label . '</h5>';
+                return '<span>' . $data->status_label . '</span>';
             })
             ->addColumn('variation', function ($data) {
                 return $data->product_attributes_count ?? 0;

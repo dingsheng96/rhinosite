@@ -74,7 +74,7 @@
                                             @empty
                                             <tr>
                                                 <td colspan="4" class="text-center">
-                                                    {{ __('labels.no_records') }}
+                                                    {{ __('messages.no_records') }}
                                                 </td>
                                             </tr>
                                             @endforelse

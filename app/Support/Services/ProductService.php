@@ -90,7 +90,7 @@ class ProductService extends BaseService
 
             $files = $this->request->file('files');
 
-            throw_if((count($files) + $this->model->media()->image()->count()) > $this->model::MAX_IMAGES, new \Exception(__('labels.files_reached_limit')));
+            throw_if((count($files) + $this->model->media()->image()->count()) > $this->model::MAX_IMAGES, new \Exception(__('messages.files_reached_limit')));
 
             foreach ($files as $file) {
                 $config = [

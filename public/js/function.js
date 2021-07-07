@@ -191,3 +191,13 @@ function calcSellingPrice(unit_price, discount)
 
     return result.toFixed(2);
 }
+
+function cartItemDecrement()
+{
+    alert('Minus 1');
+}
+
+function cartItemIncrement()
+{
+    alert('Plus 1');
+}

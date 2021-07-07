@@ -38,6 +38,11 @@ class ProductAttribute extends Model
             ->withPivot('quantity');
     }
 
+    public function cartItems()
+    {
+        return $this->morphMany(CartItem::class, 'cartable');
+    }
+
     // Attributes
     public function getStatusLabelAttribute()
     {

@@ -40,7 +40,7 @@ class PackageDataTable extends DataTable
                 ])->render();
             })
             ->addColumn('status', function ($data) {
-                return '<h5>' . $data->status_label . '</h5>';
+                return '<span>' . $data->status_label . '</span>';
             })
             ->addColumn('price', function ($data) {
                 return $data->prices->first()->currency->code . ' ' . $data->prices->first()->selling_price;
@@ -49,7 +49,7 @@ class PackageDataTable extends DataTable
                 return $data->created_at->toDateTimeString();
             })
             ->editColumn('quantity', function ($data) {
-                return $data->stock_type == Package::STOCK_TYPE_INFINITE ? '<h4>&infin;</h4>' : $data->quantity;
+                return $data->stock_type == Package::STOCK_TYPE_INFINITE ? '<span>&infin;</span>' : $data->quantity;
             })
             ->filterColumn('status', function ($query, $keyword) {
                 return $query->where('status', strtolower($keyword));

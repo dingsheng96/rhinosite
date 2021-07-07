@@ -15,13 +15,13 @@
                 </div>
 
                 <div class="widget-user-image">
-                    <img src="{{ 'https://ui-avatars.com/api/?background=f6993f&color=ffffff&rounded=true&name=?' }}" alt="user" class="elevation-2 img-circle">
+                    <img src="{{ Auth::user()->logo->full_file_path ?? $default_image }}" alt="user" class="elevation-2 img-circle">
                 </div>
 
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-12 d-flex flex-column align-items-md-end align-items-center mt-3 mt-md-0">
-                            <a role="button" href="#" class="mt-auto">
+                            <a role="button" href="{{ route('account.index', '#profile') }}" class="mt-auto">
                                 <i class="fas fa-edit"></i>
                                 {{ __('labels.edit', ['module' => __('modules.profile')]) }}
                             </a>
@@ -32,7 +32,7 @@
                         <div class="col-sm-4 border-right">
                             <div class="description-block">
                                 <h5 class="description-header"><i class="fas fa-phone"></i></h5>
-                                <span class="description-text">{{ Auth::user()->mobile_no ?? '-' }}</span>
+                                <span class="description-text">{{ Auth::user()->formatted_phone_number ?? '-' }}</span>
                             </div>
                         </div>
                         <div class="col-sm-4 border-right">

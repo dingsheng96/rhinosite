@@ -3,20 +3,20 @@
 namespace App\Models;
 
 use App\Models\Cart;
+use Illuminate\Support\Str;
 use App\Support\Facades\PriceFacade;
 use Illuminate\Database\Eloquent\Model;
 
 class CartItem extends Model
 {
+    const TYPE_PRODUCT = 'product';
+    const TYPE_PACKAGE = 'package';
+
     protected $table = 'cart_items';
 
-    protected $primaryKey = null;
-
-    public $incrementing = false;
-
     protected $fillable = [
-        'cart_id', 'item_index', 'cartable_type', 'cartable_id',
-        'quantity', 'total_price'
+        'cart_id', 'cartable_type', 'cartable_id',
+        'type', 'quantity', 'total_price'
     ];
 
     // Relationships
@@ -25,16 +25,12 @@ class CartItem extends Model
         return $this->belongsTo(Cart::class, 'cart_id', 'id');
     }
 
-    public function product()
+    public function cartable()
     {
-        return $this->morphTo(Product::class, 'cartable_type', 'cartable_id', 'id');
+        return $this->morphTo();
     }
 
-    public function package()
-    {
-        return $this->morphTo(Package::class, 'cartable_type', 'cartable_id', 'id');
-    }
-
+    // Attributes
     public function setTotalPriceAttribute($value)
     {
         $this->attributes['total_price'] = PriceFacade::convertFloatToInt($value);
@@ -43,5 +39,14 @@ class CartItem extends Model
     public function getTotalPriceAttribute($value)
     {
         return number_format(PriceFacade::convertIntToFloat($value), 2, '.', '');
+    }
+
+    public function getItemNameAttribute()
+    {
+        if ($this->cartable_type == ProductAttribute::class) {
+            return $this->cartable->product->name;
+        }
+
+        return $this->cartable->name;
     }
 }

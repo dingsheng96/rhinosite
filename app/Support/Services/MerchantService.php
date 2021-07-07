@@ -49,7 +49,7 @@ class MerchantService extends BaseService
                 return new UserDetail();
             });
 
-        $details->years_of_experience   =   $this->request->get('experience');
+        $details->industry_since        =   $this->request->get('experience');
         $details->website               =   $this->request->get('website');
         $details->facebook              =   $this->request->get('facebook');
         $details->pic_name              =   $this->request->get('pic_name');

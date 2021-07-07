@@ -42,10 +42,10 @@ class ProductAttributeDataTable extends DataTable
                 ])->render();
             })
             ->addColumn('status', function ($data) {
-                return '<h5>' . $data->status_label . '</h5>';
+                return '<span>' . $data->status_label . '</span>';
             })
             ->editColumn('quantity', function ($data) {
-                return $data->stock_type == ProductAttribute::STOCK_TYPE_INFINITE ? '<h4>&infin;</h4>' : $data->quantity;
+                return $data->stock_type == ProductAttribute::STOCK_TYPE_INFINITE ? '<span>&infin;</span>' : $data->quantity;
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();

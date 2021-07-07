@@ -16,9 +16,17 @@
 </li>
 @endcanany
 
+@canany(['package.create', 'package.read'. 'package.update', 'package.delete'])
+<li class="nav-item">
+    <a href="{{ route('ecommerce.packages.index') }}" class="nav-link {{ Nav::hasSegment('packages', 2, 'active') }}">
+        <i class="nav-icon fas fa-bookmark"></i>
+        <p>{{ trans_choice('modules.subscription', 2) }}</p>
+    </a>
+</li>
+@endcanany
+
 @canany([
 'product.create', 'product.read'. 'product.update', 'product.delete',
-'package.create', 'package.read'. 'package.update', 'package.delete',
 'order.create', 'order.read'. 'order.update', 'order.delete'
 ])
 <li class="nav-item has-treeview {{ Nav::hasSegment(['ecommerce'], 1, 'menu-open') }}">
@@ -34,13 +42,6 @@
         <li class="nav-item">
             <a href="{{ route('ecommerce.products.index') }}" class="nav-link {{ Nav::hasSegment('products', 2, 'active') }}">
                 <p>{{ trans_choice('modules.submodules.product', 2) }}</p>
-            </a>
-        </li>
-        @endcanany
-        @canany(['package.create', 'package.read'. 'package.update', 'package.delete'])
-        <li class="nav-item">
-            <a href="{{ route('ecommerce.packages.index') }}" class="nav-link {{ Nav::hasSegment('packages', 2, 'active') }}">
-                <p>{{ trans_choice('modules.submodules.package', 2) }}</p>
             </a>
         </li>
         @endcanany

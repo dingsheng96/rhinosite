@@ -110,20 +110,6 @@ $(function() {
             .text(fileName);
     });
 
-    $('.sluggable').on('input', function() {
-
-        let input = $(this).val();
-
-        let slug = input.toString().trim().toLowerCase()
-            .replace(/\s+/g, "-")
-            .replace(/[^\w\-]+/g, "")
-            .replace(/\-\-+/g, "-")
-            .replace(/^-+/, "")
-            .replace(/-+$/, "");
-
-        $('.sluggable-input').val(slug);
-    });
-
     // price
     $('.uprice-input').on('input', function () {
 
@@ -144,11 +130,8 @@ $(function() {
     });
 
     // carousel
-    let multiple_items_slide = $('.multiple-items-slide');
-
-    if(multiple_items_slide.length > 0) {
-
-        multiple_items_slide.slick({
+    if($('.multiple-items-slide').length > 0) {
+        $('.multiple-items-slide').slick({
             infinite: false,
             slidesToShow: 3,
             slidesToScroll: 3,
@@ -174,5 +157,16 @@ $(function() {
         });
     }
 
+    if($('.btn-decrement').length > 0) {
+        $('.btn-decrement').on('click', function () {
+            cartItemDecrement();
+        });
+    }
+
+    if($('.btn-increment').length > 0) {
+        $('.btn-increment').on('click', function () {
+            cartItemIncrement();
+        });
+    }
 });
 

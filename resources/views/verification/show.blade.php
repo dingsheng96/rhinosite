@@ -146,7 +146,7 @@
                                                         </tr>
                                                         @empty
                                                         <tr>
-                                                            <td colspan="3" class="text-center">{{ __('labels.no_records') }}</td>
+                                                            <td colspan="3" class="text-center">{{ __('messages.no_records') }}</td>
                                                         </tr>
                                                         @endforelse
                                                     </tbody>

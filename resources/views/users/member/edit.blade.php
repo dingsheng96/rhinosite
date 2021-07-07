@@ -127,8 +127,8 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="experience" class="col-form-label">{{ __('labels.years_of_experience') }} <span class="text-red">*</span></label>
-                                                    <input type="number" name="experience" id="experience" value="{{ old('experience', $user_details->years_of_experience ?? 0) }}" class="form-control @error('experience') is-invalid @enderror" min="0" step="1" required>
+                                                    <label for="experience" class="col-form-label">{{ __('labels.industry_since') }} <span class="text-red">*</span></label>
+                                                    <input type="number" name="experience" id="experience" value="{{ old('experience', $user_details->industry_since ?? 0) }}" class="form-control @error('experience') is-invalid @enderror" min="0" step="1" required>
                                                     @error('experience')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -149,7 +149,7 @@
                                                             <div class="custom-file">
                                                                 <input type="file" id="logo" name="logo" class="custom-file-input custom-img-input @error('logo') is-invalid @enderror" accept=".jpg,.jpeg,.png">
                                                                 <label class="custom-file-label" for="logo">Choose file</label>
-                                                                <p>{{ trans_choice('labels.upload_file_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG']) }}</p>
+                                                                <p>{{ trans_choice('messages.upload_file_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG']) }}</p>
                                                                 @error('logo')
                                                                 <span class="invalid-feedback" role="alert">
                                                                     <strong>{{ $message }}</strong>
@@ -239,7 +239,7 @@
                                                             </tr>
                                                             @empty
                                                             <tr>
-                                                                <td colspan="3" class="text-center">{{ __('labels.no_records') }}</td>
+                                                                <td colspan="3" class="text-center">{{ __('messages.no_records') }}</td>
                                                             </tr>
                                                             @endforelse
                                                         </tbody>

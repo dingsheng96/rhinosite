@@ -9,6 +9,7 @@ use App\Helpers\Message;
 use App\Helpers\Response;
 use App\Models\Permission;
 use App\Helpers\FileManager;
+use App\DataTables\PriceDataTable;
 use Illuminate\Support\Facades\DB;
 use App\DataTables\ProjectDataTable;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +18,14 @@ use App\Support\Facades\ProjectFacade;
 
 class ProjectController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['can:project.read']);
+        $this->middleware(['can:project.create'])->only(['create', 'store']);
+        $this->middleware(['can:project.update'])->only(['edit', 'update', 'deleteMedia']);
+        $this->middleware(['can:project.delete'])->only(['delete']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -118,11 +127,12 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        $media      =   $project->media()->image()->get();
-        $max_files  =   Project::MAX_IMAGES - $media->count();
-        $prices     =   $project->prices()->orderBy('created_at', 'desc')->get();
+        $thumbnail      =   $project->media()->thumbnail()->first();
+        $media          =   $project->media()->image()->get();
+        $max_files      =   Project::MAX_IMAGES - $media->count();
+        $default_price  =   $project->prices()->defaultPrice()->first();
 
-        return view('projects.edit', compact('project', 'max_files', 'media', 'prices'));
+        return view('projects.edit', compact('project', 'max_files', 'media', 'default_price'));
     }
 
     /**

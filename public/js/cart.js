@@ -12,4 +12,13 @@ $(function () {
         form.submit();
     });
 
+    if($('.subscription-card').length > 0) {
+        $('.subscription-card').on('click', function () {
+
+            $('.subscription-card').removeClass('border-primary');
+
+            $(this).addClass('border-primary');
+        });
+    }
+
 });

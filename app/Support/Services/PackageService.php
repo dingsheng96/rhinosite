@@ -2,10 +2,7 @@
 
 namespace App\Support\Services;
 
-use App\Models\Price;
 use App\Models\Package;
-use App\Models\Currency;
-use App\Support\Facades\PriceFacade;
 
 class PackageService extends BaseService
 {
@@ -17,7 +14,7 @@ class PackageService extends BaseService
     public function storeData()
     {
         $this->storeDetails();
-        $this->savePrice();
+        $this->storePrice();
         $this->storeItems();
 
         return $this;
@@ -57,29 +54,6 @@ class PackageService extends BaseService
             $this->model->products()->sync($items_array);
         }
 
-
-        return $this;
-    }
-
-    public function savePrice()
-    {
-        $default_price = $this->model->prices()
-            ->where('currency_id', $this->request->get('currency'))
-            ->firstOr(function () {
-                return new Price();
-            });
-
-        $default_price->currency_id             =   $this->request->get('currency');
-        $default_price->unit_price              =   $this->request->get('unit_price');
-        $default_price->discount                =   $this->request->get('discount');
-        $default_price->discount_percentage     =   PriceFacade::calcDiscountPercentage($this->request->get('discount'), $this->request->get('unit_price'));
-        $default_price->selling_price           =   PriceFacade::calcSellingPrice($this->request->get('discount'), $this->request->get('unit_price'));
-
-        if ($default_price->isDirty()) {
-            $this->model->prices()->save($default_price);
-        }
-
-        PriceFacade::setParent($this->model)->storeConvertedPrice($default_price);
 
         return $this;
     }

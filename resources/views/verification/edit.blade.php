@@ -76,8 +76,8 @@
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <div class="form-group">
-                                                    <label for="experience" class="col-form-label">{{ __('labels.years_of_experience') }}</label>
-                                                    <p class="form-control" id="experience">{{ $verification->years_of_experience ?? null }}</p>
+                                                    <label for="experience" class="col-form-label">{{ __('labels.industry_since') }}</label>
+                                                    <p class="form-control" id="experience">{{ $verification->industry_since ?? null }}</p>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-4">
@@ -162,7 +162,7 @@
                                                             </tr>
                                                             @empty
                                                             <tr>
-                                                                <td colspan="3" class="text-center">{{ __('labels.no_records') }}</td>
+                                                                <td colspan="3" class="text-center">{{ __('messages.no_records') }}</td>
                                                             </tr>
                                                             @endforelse
                                                         </tbody>

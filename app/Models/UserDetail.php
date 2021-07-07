@@ -18,12 +18,13 @@ class UserDetail extends Model
     protected $table = 'user_details';
 
     protected $fillable = [
-        'user_id', 'years_of_experience', 'website', 'facebook', 'pic_name',
+        'user_id', 'industry_since', 'website', 'facebook', 'pic_name',
         'pic_phone', 'pic_email', 'validated_by', 'status', 'validated_at'
     ];
 
     protected $casts = [
-        'validated_at' => 'datetime'
+        'validated_at' => 'datetime',
+        'industry_since' => 'date'
     ];
 
     // Relationships
@@ -70,5 +71,10 @@ class UserDetail extends Model
         $label = Status::instance()->statusLabel($this->status);
 
         return '<span class="' . $label['class'] . ' px-3">' . $label['text'] . '</span>';
+    }
+
+    public function getYearsOfExperienceAttribute()
+    {
+        return now()->diffInYears($this->industry_since);
     }
 }

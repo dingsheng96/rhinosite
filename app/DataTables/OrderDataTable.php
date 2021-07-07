@@ -40,7 +40,7 @@ class OrderDataTable extends DataTable
                 return $data->user->name;
             })
             ->editColumn('status', function ($data) {
-                return '<h5>' . $data->status_label . '</h5>';
+                return '<span>' . $data->status_label . '</span>';
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();

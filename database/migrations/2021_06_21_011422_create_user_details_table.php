@@ -20,7 +20,7 @@ class CreateUserDetailsTable extends Migration
         Schema::create('user_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->index();
-            $table->unsignedInteger('years_of_experience');
+            $table->unsignedInteger('industry_since');
             $table->string('website')->nullable();
             $table->string('facebook')->nullable();
             $table->string('pic_name')->comment('person in change');

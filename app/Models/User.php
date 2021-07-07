@@ -162,6 +162,18 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getCartItemCountAttribute()
     {
-        return optional($this->cart)->count() ?? 0;
+        return optional(optional($this->cart)->cartItems())->count() ?? 0;
+    }
+
+    public function getFormattedPhoneNumberAttribute()
+    {
+        $format = chunk_split($this->phone, 4, '-');
+
+        return '+' . rtrim($format, '-');
+    }
+
+    public function getCategoryAttribute()
+    {
+        return $this->categories->first();
     }
 }

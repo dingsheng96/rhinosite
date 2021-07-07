@@ -66,7 +66,7 @@
                             <strong>{{ $message }}</strong>
                         </span>
                         @enderror
-                        <small>* <strong>{{ __('labels.password_format') }}</strong></small>
+                        <small>* <strong>{{ __('messages.password_format') }}</strong></small>
                     </div>
 
                     <div class="form-group">

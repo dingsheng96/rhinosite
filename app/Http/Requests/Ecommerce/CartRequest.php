@@ -28,11 +28,10 @@ class CartRequest extends FormRequest
     public function rules()
     {
         return [
-            'items'             =>  ['required', 'array'],
-            'items.*.type'      =>  ['required', 'in:product,package'],
-            'items.*.item_id'   =>  ['required', new CheckCartItem(data_get($this->get('items'), '*.type'))],
-            'items.*.quantity'  =>  ['required', 'integer', 'min:0'],
-            'items.*.action'    =>  ['required', 'in:add,minus,delete']
+            'type'      =>  ['required', 'in:product,package'],
+            'action'    =>  ['required', 'in:add,minus'],
+            'item_id'   =>  ['required', new CheckCartItem($this->get('type'))],
+            'quantity'  =>  ['required', 'integer', 'min:0'],
         ];
     }
 
@@ -54,7 +53,7 @@ class CartRequest extends FormRequest
     public function attributes()
     {
         return [
-            'items.*' => __('validation.attributes.item')
+            'item.*' => __('validation.attributes.item')
         ];
     }
 }

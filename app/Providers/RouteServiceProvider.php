@@ -4,7 +4,11 @@ namespace App\Providers;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Package;
+use App\Models\CartItem;
+use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider

@@ -2,10 +2,7 @@
 
 namespace App\Support\Services;
 
-use App\Models\Price;
-use App\Models\Currency;
 use App\Models\ProductAttribute;
-use App\Support\Facades\PriceFacade;
 
 class ProductAttributeService extends BaseService
 {
@@ -17,7 +14,7 @@ class ProductAttributeService extends BaseService
     public function storeData()
     {
         $this->storeAttribute();
-        $this->savePrice();
+        $this->storePrice();
 
         return $this;
     }
@@ -42,30 +39,6 @@ class ProductAttributeService extends BaseService
         }
 
         $this->setModel($attribute);
-
-        return $this;
-    }
-
-    public function savePrice()
-    {
-        $currencies = Currency::all();
-
-        $default_price = $this->model->prices()
-            ->defaultPrice()
-            ->firstOr(function () {
-                return new Price();
-            });
-
-        $default_price->currency_id             =   $this->request->get('currency');
-        $default_price->unit_price              =   $this->request->get('unit_price');
-        $default_price->discount                =   $this->request->get('discount');
-        $default_price->discount_percentage     =   PriceFacade::calcDiscountPercentage($this->request->get('discount'), $this->request->get('unit_price'));
-        $default_price->selling_price           =   PriceFacade::calcSellingPrice($this->request->get('discount'), $this->request->get('unit_price'));
-        $default_price->is_default              =   true;
-
-        if ($default_price->isDirty()) {
-            $this->model->prices()->save($default_price);
-        }
 
         return $this;
     }

@@ -11,7 +11,6 @@ return [
 
     'login' => 'Login',
     'dashboard' => 'Dashboard',
-    'profile' => 'Profile',
     'ads' => 'Ads',
     'ecommerce' => 'Ecommerce',
     'project' => 'Project|Projects',
