@@ -15,7 +15,6 @@ return [
     'success' => 'Success',
     'pending' => 'Pending',
     'failed' => 'Failed',
-    'confirmed' => 'Confirmed',
     'rejected' => 'Rejected',
     'approved' => 'Approved',
     'download' => 'Download',
@@ -24,6 +23,9 @@ return [
     'add_more' => 'Add More',
     'default' => 'Default',
     'published' => 'Published',
+    'select' => 'Select',
+    'paid' => 'Paid',
+    'cancelled' => 'Cancelled',
 
     'copyright' => '&copy ' . config('app.name') . ' ' . date('Y'),
     'terms_policy' => 'Terms & Policies',
@@ -145,8 +147,7 @@ return [
     'total' => 'Total',
     'sub_total' => 'Sub Total',
     'grand_total' => 'Grand Total',
-    'make_payment' => 'Make Payment',
-    'change_plan' => 'Change Plan',
+    'pay_now' => 'Pay Now',
     'permission' => 'Permission|Permissions',
     'total_listings' => 'Total Listings',
     'change_thumbnail' => 'Change Thumbnail',
@@ -155,5 +156,7 @@ return [
     'profile' => 'Profile',
     'subscription' => 'Subscription',
     'years_of_experience' => 'Years Of Experience',
-    'settings' => 'Settings'
+    'settings' => 'Settings',
+    'package_include' => 'Package Include',
+    'select_payment_method' => 'Select a payment method'
 ];

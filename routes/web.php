@@ -35,9 +35,14 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
     Route::resource('ads', 'AdsController');
 
+    Route::post('subscriptions/{subscription}/purchase', 'SubscriptionController@purchase')->name('subscriptions.purchase');
     Route::resource('subscriptions', 'SubscriptionController');
 
     Route::resource('verifications', 'VerificationController');
+
+    Route::get('carts', 'CartController@index')->name('carts.index');
+    Route::post('carts', 'CartController@store')->name('carts.store');
+    Route::delete('carts/{cart}/cart-items/{cart_item}', 'CartController@destroy')->name('carts.cart-items.destroy');
 
     Route::group(['prefix' => 'users', 'as' => 'users.', 'namespace' => 'Users'], function () {
         Route::resource('admins', 'AdminController');
@@ -70,10 +75,6 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
         Route::resource('packages', 'PackageController');
 
         Route::resource('orders', 'OrderController');
-
-        Route::get('carts', 'CartController@index')->name('carts.index');
-        Route::post('carts', 'CartController@store')->name('carts.store');
-        Route::delete('carts/{cart}/cart-items/{cart_item}', 'CartController@destroy')->name('carts.cart-items.destroy');
     });
 });
 

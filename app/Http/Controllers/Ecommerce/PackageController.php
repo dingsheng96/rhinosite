@@ -25,7 +25,7 @@ class PackageController extends Controller
     {
         $this->products     =   Product::orderBy('name', 'asc')->get();
         $this->stock_types  =   [Package::STOCK_TYPE_FINITE, Package::STOCK_TYPE_INFINITE];
-        $this->statuses     =   Status::instance()->packageStatus();
+        $this->statuses     =   Status::instance()->activeStatus();
     }
 
     /**

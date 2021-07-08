@@ -3,6 +3,9 @@
 namespace App\Support\Services;
 
 use App\Models\Package;
+use Illuminate\Http\Request;
+use App\Support\Facades\CartFacade;
+use Illuminate\Support\Facades\Auth;
 
 class PackageService extends BaseService
 {
@@ -54,7 +57,29 @@ class PackageService extends BaseService
             $this->model->products()->sync($items_array);
         }
 
-
         return $this;
+    }
+
+    public function purchaseNewPackage()
+    {
+        $cart = Auth::user()->cart()->first();
+
+        if ($cart) {
+            // check cart items whether has package
+            if ($cart_item = $cart->cartItems()->where('type', 'package')->first()) {
+                $cart_item->delete();
+            }
+        }
+
+        // add into cart
+        $request = new Request();
+        $request->request->add(['item' => [
+            'item_id'   =>  $this->model->id,
+            'type'      =>  'package',
+            'quantity'  =>  1,
+            'action'    =>  'add'
+        ]]);
+
+        return CartFacade::setRequest($request)->addToCart()->getModel();
     }
 }

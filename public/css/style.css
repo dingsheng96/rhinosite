@@ -95,3 +95,35 @@
 .profile-user-img {
     height: 100px;
 }
+
+ul.package-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+ul.package-list > li.package-list-item {
+    padding-left: 1.5em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+ul.package-list > li.package-list-item::before {
+    font-family: "Font Awesome 5 Free";
+    content: "\f058";
+    display: inline-block;
+    margin-left: -1.5em;
+    width: 1.5em;
+    color: #28a745;
+}
+
+@media screen and (min-width: 768px) {
+    .multiple-items-slide .slick-track {
+        display: flex !important;
+        padding-top: 1em;
+        padding-bottom: 1em;
+    }
+
+    .multiple-items-slide .slick-slide {
+        height: inherit !important;
+    }
+}

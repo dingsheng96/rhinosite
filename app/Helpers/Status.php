@@ -3,9 +3,11 @@
 namespace App\Helpers;
 
 use App\Models\User;
+use App\Models\Order;
 use App\Models\Package;
 use App\Models\Product;
 use App\Models\UserDetail;
+use App\Models\Transaction;
 
 class Status
 {
@@ -14,31 +16,29 @@ class Status
         return new self();
     }
 
-    public function accountStatus(): array
+    public function activeStatus(): array
     {
         return [
-            User::STATUS_ACTIVE => 'Active',
-            User::STATUS_INACTIVE  => 'Inactive'
+            'active' => __('labels.active'),
+            'inactive'  => __('labels.inactive')
         ];
     }
 
     public function transactionStatus(): array
     {
         return [
-            'pending' => 'Pending',
-            'failed' => 'Failed',
-            'success' => 'Success'
+            Transaction::STATUS_PENDING => __('labels.pending'),
+            Transaction::STATUS_SUCCESS => __('labels.success'),
+            Transaction::STATUS_FAILED => __('labels.failed'),
         ];
     }
 
     public function orderStatus(): array
     {
         return [
-            'pending' => 'Pending',
-            'failed' => 'Failed',
-            'success' => 'Success',
-            'confirmed' => 'Confirmed',
-            'rejected' => 'Rejected'
+            Order::STATUS_PENDING => __('labels.pending'),
+            Order::STATUS_PAID => __('labels.paid'),
+            Order::STATUS_CANCELLED => __('labels.cancelled'),
         ];
     }
 
@@ -48,22 +48,6 @@ class Status
             UserDetail::STATUS_PENDING => 'Pending',
             UserDetail::STATUS_APPROVED => 'Approved',
             UserDetail::STATUS_REJECTED => 'Rejected'
-        ];
-    }
-
-    public function productStatus(): array
-    {
-        return [
-            Product::STATUS_ACTIVE => __('labels.active'),
-            Product::STATUS_INACTIVE => __('labels.inactive'),
-        ];
-    }
-
-    public function packageStatus(): array
-    {
-        return [
-            Package::STATUS_ACTIVE => __('labels.active'),
-            Package::STATUS_INACTIVE => __('labels.inactive'),
         ];
     }
 
@@ -90,9 +74,9 @@ class Status
                 'text' => __('labels.failed'),
                 'class' => 'badge badge-pill badge-lg badge-danger'
             ],
-            'confirmed' => [
-                'text' => __('labels.confirmed'),
-                'class' => 'badge badge-pill badge-lg badge-primary'
+            'paid' => [
+                'text' => __('labels.paid'),
+                'class' => 'badge badge-pill badge-lg badge-success'
             ],
             'rejected' => [
                 'text' => __('labels.rejected'),

@@ -2,10 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
+use App\Models\User;
+use App\Models\Order;
 use App\Models\Package;
+use App\Helpers\Message;
+use App\Models\Permission;
 use Illuminate\Http\Request;
 use App\Models\UserSubscription;
+use Illuminate\Support\Facades\DB;
+use App\Support\Facades\OrderFacade;
 use Illuminate\Support\Facades\Auth;
+use App\Support\Facades\PackageFacade;
 
 class SubscriptionController extends Controller
 {
@@ -28,7 +36,7 @@ class SubscriptionController extends Controller
                 ])
                 ->first();
 
-            $plans = Package::orderBy('validity', 'asc')->get();
+            $plans = Package::with(['products'])->orderBy('validity', 'asc')->get();
 
             return view('subscription.index', compact('subscription', 'plans'));
         }
@@ -98,5 +106,24 @@ class SubscriptionController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function purchase($package)
+    {
+        try {
+
+            $package = Package::where('id', $package)->firstOrFail();
+
+            $cart  =   PackageFacade::setModel($package)->purchaseNewPackage()->getModel();
+
+            DB::commit();
+
+            return redirect()->route('carts.index');
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+
+            return redirect()->back()->with('fail', $e->getMessage());
+        }
     }
 }

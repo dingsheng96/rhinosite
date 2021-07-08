@@ -9,17 +9,14 @@ class Cart extends Model
 {
     protected $table = 'carts';
 
-    public $incrementing = false;
-
     protected $fillable = [
-        'id', 'user_id', 'total_items', 'sub_total',
-        'discount', 'grand_total'
+        'user_id', 'cartable_type', 'cartable_id', 'type', 'quantity'
     ];
 
     // Relationships
-    public function cartItems()
+    public function cartable()
     {
-        return $this->hasMany(CartItem::class, 'cart_id', 'id');
+        return $this->morphTo();
     }
 
     public function user()
@@ -28,33 +25,28 @@ class Cart extends Model
     }
 
     // Attributes
-    public function setSubTotalAttribute($value)
+    public function getPriceAttribute()
     {
-        $this->attributes['sub_total'] = PriceFacade::convertFloatToInt($value);
+        return $this->cartable->prices()
+            ->defaultPrice()->first();
     }
 
-    public function setDiscountAttribute($value)
+    public function getItemTotalPriceAttribute()
     {
-        $this->attributes['discount'] = PriceFacade::convertFloatToInt($value);
+        $sub_total = $this->price->selling_price * $this->quantity;
+
+        return number_format($sub_total, 2, '.', '');
     }
 
-    public function setGrandTotalAttribute($value)
+    public function getGrandTotalAttribute()
     {
-        $this->attributes['grand_total'] = PriceFacade::convertFloatToInt($value);
+        $grand_total = $this->price->selling_price * $this->quantity;
+
+        return number_format($grand_total, 2, '.', '');
     }
 
-    public function getSubTotalAttribute($value)
+    public function getUnitPriceAttribute()
     {
-        return number_format(PriceFacade::convertIntToFloat($value), 2, '.', '');
-    }
-
-    public function getDiscountAttribute($value)
-    {
-        return number_format(PriceFacade::convertIntToFloat($value), 2, '.', '');
-    }
-
-    public function getGrandTotalAttribute($value)
-    {
-        return number_format(PriceFacade::convertIntToFloat($value), 2, '.', '');
+        return number_format($this->price->selling_price, 2, '.', '');
     }
 }

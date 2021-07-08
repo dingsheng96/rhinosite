@@ -121,4 +121,21 @@ class BaseService
 
         return $this;
     }
+
+    public function generateReportNo($model, string $column, string $prefix): string
+    {
+        $prefix .= date('Ymd');
+        $number = 0;
+
+        $latest_record = $model::select($column)
+            ->where($column, 'like', $prefix . '%')
+            ->orderBy($column, 'desc')
+            ->first();
+
+        if ($latest_record) {
+            $number = intval(str_replace($prefix, '', $latest_record->$column));
+        }
+
+        return $prefix . str_pad(strval($number + 1), 5, "0", STR_PAD_LEFT);
+    }
 }

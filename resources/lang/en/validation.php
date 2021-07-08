@@ -191,7 +191,8 @@ return [
         'product' => 'product',
         'sku' => 'sku',
         'rate' => 'rate',
-        'item' => 'item'
+        'item' => 'item',
+        'payment_method' => 'payment method'
     ],
 
 ];

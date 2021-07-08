@@ -1,4 +1,4 @@
-@extends('layouts.master', ['title' => __('modules.submodules.cart')])
+@extends('layouts.master', ['title' => __('modules.cart')])
 
 @section('content')
 
@@ -28,8 +28,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (!empty($cart))
-                                    @foreach ($cart->cartItems()->get() as $item)
+                                    @if (!empty($carts))
+                                    @foreach ($carts as $item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $item->item_name }}</td>
@@ -63,10 +63,10 @@
                                             @endif
                                         </td>
                                         <td class="text-center">{{ $item->unit_price ?? 0.00 }}</td>
-                                        <td class="text-center">{{ $item->total_price ?? 0.00 }}</td>
+                                        <td class="text-center">{{ $item->item_total_price ?? 0.00 }}</td>
                                         <td class="text-center">
                                             <a role="button" href="#" class="btn btn-danger btn-sm"
-                                                onclick="event.preventDefault(); deleteAlert('{{ __('messages.confirm_question') }}', '{{ __('messages.delete_info') }}', '{{ route('ecommerce.carts.cart-items.destroy', ['cart' => $cart->id, 'cart_item' => $item->id]) }}')">
+                                                onclick="event.preventDefault(); deleteAlert('{{ __('messages.confirm_question') }}', '{{ __('messages.delete_info') }}', '{{ route('carts.cart-items.destroy', ['cart' => $cart->id, 'cart_item' => $item->id]) }}')">
                                                 <i class=" fas fa-trash"></i>
                                             </a>
                                         </td>
@@ -82,21 +82,28 @@
                         </div>
                     </div>
 
-                    @if(!empty($cart))
+                    @if(!empty($carts))
                     <div class="row">
-                        <div class="col-6"></div>
+                        <div class="col-6">
+                            <p class="lead">{{ __('labels.select_payment_method') }} :</p>
+                            <div class="form-group clearfix">
+                                @foreach ($payment_methods as $method)
+                                <div class="icheck-primary d-inline {{ $loop->first ? null : 'mx-3' }}">
+                                    <input type="radio" id="method_{{ $loop->iteration }}" name="payment_method" value="{{ $method->id }}" form="createOrderForm" {{ old('payment_method', 1) == $method->id ? 'checked' : null }}>
+                                    <label for="method_{{ $loop->iteration }}">
+                                        {{ $method->name }}
+                                    </label>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
                         <div class="col-6">
                             <div class="table-responsive">
                                 <table class="table">
                                     <tr>
                                         <th style="width:65%">{{ __('labels.sub_total') }}</th>
                                         <th style="width:5%">:</th>
-                                        <td class="text-center">{{ $cart->sub_total ?? 0.00 }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ __('labels.discount') }}</th>
-                                        <th>:</th>
-                                        <td class="text-center">{{ $cart->discount ?? 0.00 }}</td>
+                                        <td class="text-center">{{ $carts->calculateTotal()->first()->sub_total ?? 0.00 }}</td>
                                     </tr>
                                     <tr>
                                         <th>{{ __('labels.grand_total') }}</th>
@@ -113,10 +120,13 @@
 
                 @if(!empty($cart))
                 <div class="card-footer bg-transparent text-right">
-                    <a role="button" class="btn btn-primary">
-                        <i class="far fa-credit-card"></i>
-                        {{ __('labels.make_payment') }}
-                    </a>
+                    <form action="{{ route('ecommerce.orders.store') }}" method="post" id="createOrderForm">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-primary btn-rounded-corner">
+                            <i class="far fa-credit-card"></i>
+                            {{ __('labels.pay_now') }}
+                        </button>
+                    </form>
                 </div>
                 @endif
             </div>

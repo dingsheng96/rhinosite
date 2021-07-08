@@ -29,7 +29,7 @@ class ProductController extends Controller
         ];
 
         $this->categories = ProductCategory::orderBy('name', 'asc')->get();
-        $this->statuses   = Status::instance()->productStatus();
+        $this->statuses   = Status::instance()->activeStatus();
     }
 
     /**

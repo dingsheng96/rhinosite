@@ -45,7 +45,7 @@ class ProductRequest extends FormRequest
             ],
             'status' => [
                 'required',
-                Rule::in(array_keys(Status::instance()->productStatus()))
+                Rule::in(array_keys(Status::instance()->activeStatus()))
             ],
             'description' => ['nullable'],
             'thumbnail' => [

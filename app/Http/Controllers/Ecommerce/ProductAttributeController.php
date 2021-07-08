@@ -26,7 +26,7 @@ class ProductAttributeController extends Controller
     public function __construct()
     {
         $this->stock_types = [ProductAttribute::STOCK_TYPE_FINITE, ProductAttribute::STOCK_TYPE_INFINITE];
-        $this->statuses = Status::instance()->productStatus();
+        $this->statuses = Status::instance()->activeStatus();
     }
 
     /**

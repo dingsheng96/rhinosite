@@ -98,7 +98,7 @@ class MerchantController extends Controller
             ->orderBy('created_at', 'asc')
             ->get();
 
-        $statuses = Status::instance()->accountStatus();
+        $statuses = Status::instance()->activeStatus();
 
         $categories = Category::orderBy('name', 'asc')->get();
 

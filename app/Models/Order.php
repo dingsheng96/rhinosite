@@ -11,6 +11,11 @@ class Order extends Model
 {
     use SoftDeletes;
 
+    const STATUS_PENDING = 'pending';
+    const STATUS_PAID = 'paid';
+    const STATUS_CANCELLED = 'cancelled';
+    const REPORT_PREFIX = 'ODR';
+
     protected $table = 'orders';
 
     protected $fillable = [
@@ -27,6 +32,11 @@ class Order extends Model
     public function transaction()
     {
         return $this->morphOne(Transaction::class, 'sourceable');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     // Attributes

@@ -9,7 +9,7 @@
 
         @merchant
         <li class="nav-item dropdown">
-            <a class="nav-link" href="{{ route('ecommerce.carts.index') }}">
+            <a class="nav-link" href="{{ route('carts.index') }}">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="badge badge-danger navbar-badge rounded-circle">{{ Auth::user()->cart_item_count }}</span>
             </a>

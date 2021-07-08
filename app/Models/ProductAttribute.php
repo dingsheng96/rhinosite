@@ -34,11 +34,17 @@ class ProductAttribute extends Model
 
     public function package()
     {
-        return $this->morphToMany(Package::class, 'packageable', PackageItem::class, 'packageable_id', 'package_id', 'id', 'id')
-            ->withPivot('quantity');
+        return $this->belongsToMany(
+            Package::class,
+            PackageItem::class,
+            'product_attribute_id',
+            'package_id',
+            'id',
+            'id'
+        )->withPivot('quantity');
     }
 
-    public function cartItems()
+    public function carts()
     {
         return $this->morphMany(CartItem::class, 'cartable');
     }

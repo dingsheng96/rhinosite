@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\MorphPivot;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class PackageItem extends MorphPivot
+class PackageItem extends Pivot
 {
     protected $table = 'package_items';
 
     protected $fillable = [
-        'package_id', 'packageable_type', 'packageable_id', 'quantity'
+        'package_id', 'product_attribute_id', 'quantity'
     ];
 }

@@ -27,30 +27,7 @@
     </div>
     @endif
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card mb-3">
-                <div class="card-header bg-transparent">
-                    <h3 class="card-title font-weight-bold">{{ __('labels.available_packages') }}</h3>
-                </div>
-
-                <div class="card-body">
-                    @include('subscription.plan')
-                </div>
-
-                <div class="card-footer bg-transparent">
-                    <div class="row">
-                        <div class="col-12">
-                            <button type="button" class="btn btn-outline-primary btn-rounded-corner float-right btn-select-package" data-route="{{ route('ecommerce.carts.store') }}">
-                                <i class="fas fa-paper-plane"></i>
-                                {{ __('labels.change_plan') }}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    @includeWhen(!empty($plans), 'subscription.plan', ['plans' => $plans])
 
 </div>
 

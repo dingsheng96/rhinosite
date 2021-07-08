@@ -21,6 +21,7 @@ return [
     'verification' => 'Verification|Verifications',
     'purchase' => 'Purchase|Purchases',
     'subscription' => 'Subscription|Subscriptions',
+    'cart' => 'Cart',
 
     'submodules' => [
         'country' => 'Country|Countries',
@@ -37,6 +38,5 @@ return [
         'product_attribute' => 'Product Attribute|Product Attributes',
         'package' => 'Package|Packages',
         'order' => 'Order|Orders',
-        'cart' => 'Cart'
     ]
 ];

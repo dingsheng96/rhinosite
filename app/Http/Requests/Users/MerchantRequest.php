@@ -38,7 +38,7 @@ class MerchantRequest extends FormRequest
             'name'          =>  ['required', 'min:3', 'max:255', new UniqueMerchant('name', $this->route('merchant'))],
             'phone'         =>  ['required', new PhoneFormat],
             'email'         =>  ['required', 'email', new UniqueMerchant('email', $this->route('merchant'))],
-            'status'        =>  ['required', Rule::in(array_keys(Status::instance()->accountStatus()))],
+            'status'        =>  ['required', Rule::in(array_keys(Status::instance()->activeStatus()))],
             'website'       =>  ['nullable', 'url'],
             'facebook'      =>  ['nullable', 'url'],
             'category'      =>  ['required', 'exists:' . Category::class . ',id'],

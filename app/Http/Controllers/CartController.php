@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Ecommerce;
+namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Helpers\Message;
@@ -8,6 +8,7 @@ use App\Models\CartItem;
 use App\Helpers\Response;
 use App\Models\Permission;
 use Illuminate\Http\Request;
+use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\DB;
 use App\Support\Facades\CartFacade;
 use App\Http\Controllers\Controller;
@@ -23,9 +24,13 @@ class CartController extends Controller
      */
     public function index()
     {
-        $cart = Auth::user()->cart()->with(['cartItems'])->first();
+        $user = Auth::user();
 
-        return view('ecommerce.cart.index', compact('cart'));
+        $carts = Cart::where('user_id', $user->id)->get();
+
+        $payment_methods = PaymentMethod::get();
+
+        return view('ecommerce.cart.index', compact('carts', 'payment_methods'));
     }
 
     /**

@@ -22,8 +22,14 @@ class Package extends Model
     // Relationships
     public function products()
     {
-        return $this->morphToMany(ProductAttribute::class, 'packageable', PackageItem::class, 'package_id', 'packageable_id', 'id', 'id')
-            ->withPivot('quantity');
+        return $this->belongsToMany(
+            ProductAttribute::class,
+            PackageItem::class,
+            'package_id',
+            'product_attribute_id',
+            'id',
+            'id'
+        )->withPivot('quantity');
     }
 
     public function prices()
@@ -31,7 +37,7 @@ class Package extends Model
         return $this->morphMany(Price::class, 'priceable');
     }
 
-    public function cartItems()
+    public function carts()
     {
         return $this->morphMany(CartItem::class, 'cartable');
     }
@@ -47,5 +53,10 @@ class Package extends Model
     public function getPriceAttribute()
     {
         return $this->prices()->defaultPrice()->first();
+    }
+
+    public function getSellingPriceWithCurrencyAttribute()
+    {
+        return $this->price->currency->code . $this->price->selling_price;
     }
 }
