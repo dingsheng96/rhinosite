@@ -5,6 +5,7 @@ namespace App\Support\Services;
 use App\Models\User;
 use App\Models\Media;
 use App\Helpers\FileManager;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Support\Services\BaseService;
 
@@ -18,9 +19,13 @@ class AccountService extends BaseService
     public function storeData()
     {
         $this->storeProfile();
-        $this->storeDetails();
-        $this->storeAddress();
-        $this->storeImage();
+
+        if (Auth::user()->is_merchant) {
+
+            $this->storeDetails();
+            $this->storeAddress();
+            $this->storeImage();
+        }
 
         return $this;
     }
@@ -28,8 +33,8 @@ class AccountService extends BaseService
     public function storeProfile()
     {
         $this->model->name      =  $this->request->get('name');
-        $this->model->phone     =  $this->request->get('phone');
         $this->model->email     =  $this->request->get('email');
+        $this->model->phone     =  $this->request->get('phone');
 
         if (!empty($this->request->get('new_password'))) {
             $this->model->password = Hash::make($this->request->get('new_password'));

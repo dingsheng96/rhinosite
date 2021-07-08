@@ -91,3 +91,7 @@
     height: 30vh;
     object-fit: cover;
 }
+
+.profile-user-img {
+    height: 100px;
+}

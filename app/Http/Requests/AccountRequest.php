@@ -31,35 +31,37 @@ class AccountRequest extends FormRequest
      */
     public function rules()
     {
+        $is_merchant = Auth::user()->is_merchant;
+
         return [
             'name' => [
                 'required', 'max:255',
                 Rule::unique(User::class, 'name')->ignore(Auth::id(), 'id')->whereNull('deleted_at')
             ],
             'phone' => [
-                'required', new PhoneFormat
+                Rule::requiredIf($is_merchant), 'nullable', new PhoneFormat
             ],
             'email' => [
                 'required', 'email', Rule::unique(User::class, 'email')->ignore(Auth::id(), 'id')->whereNull('deleted_at')
             ],
             'new_password' => ['nullable', 'confirmed', new PasswordFormat],
-            'pic_name' => ['required', 'max:255'],
-            'pic_phone' => ['required', new PhoneFormat],
-            'pic_email' => ['required', 'email'],
+            'pic_name' => [Rule::requiredIf($is_merchant), 'nullable', 'max:255'],
+            'pic_phone' => [Rule::requiredIf($is_merchant), 'nullable', new PhoneFormat],
+            'pic_email' => [Rule::requiredIf($is_merchant), 'nullable', 'email'],
             'website' => ['nullable', 'url', 'max:255'],
             'facebook' => ['nullable', 'url', 'max:255'],
-            'industry_since' => ['required', 'date_format:d/m/Y'],
-            'address_1' =>  ['required', 'min:3', 'max:255'],
+            'industry_since' => [Rule::requiredIf($is_merchant), 'nullable', 'date_format:d/m/Y'],
+            'address_1' =>  [Rule::requiredIf($is_merchant), 'nullable', 'min:3', 'max:255'],
             'address_2' =>  ['nullable'],
-            'country' =>  ['required', 'exists:' . Country::class . ',id'],
-            'postcode' =>  ['required', 'digits:5'],
+            'country' =>  [Rule::requiredIf($is_merchant), 'nullable', 'exists:' . Country::class . ',id'],
+            'postcode' =>  [Rule::requiredIf($is_merchant), 'nullable', 'digits:5'],
             'country_state' =>  [
-                'required',
+                Rule::requiredIf($is_merchant), 'nullable',
                 Rule::exists(CountryState::class, 'id')
                     ->where('country_id', $this->get('country'))
             ],
             'city' =>  [
-                'required',
+                Rule::requiredIf($is_merchant), 'nullable',
                 Rule::exists(City::class, 'id')
                     ->where('country_state_id', $this->get('country_state'))
             ],

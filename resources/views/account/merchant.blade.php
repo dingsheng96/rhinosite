@@ -14,8 +14,12 @@
                         <p>{!! $user->status_label !!}</p>
                     </div>
 
-                    @if (!empty($user_details))
                     <ul class="list-group list-group-unbordered mb-3">
+                        <li class="list-group-item">
+                            <strong><i class="fas fa-clock mr-1 text-orange"></i> {{ __('labels.last_login_at') }}</strong>
+                            <p class="text-muted">{{ $user->last_login_at->toDateTimeString() ?? '-' }}</p>
+                        </li>
+                        @if (!empty($user_details))
                         <li class="list-group-item">
                             <strong><i class="fas fa-cube mr-1 text-teal"></i> {{ __('labels.category') }}</strong>
                             <p class="text-muted">{{ $user->category->name }}</p>
@@ -40,8 +44,8 @@
                                 {{ $user_details->pic_email }}
                             </p>
                         </li>
+                        @endif
                     </ul>
-                    @endif
                 </div>
             </div>
         </div>
