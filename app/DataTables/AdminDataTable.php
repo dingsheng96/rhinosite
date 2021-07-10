@@ -28,16 +28,16 @@ class AdminDataTable extends DataTable
                     'no_action' => $this->no_action ?: $data->id == Auth::id(),
                     'view' => [
                         'permission' => 'admin.read',
-                        'route' => route('users.admins.show', ['admin' => $data->id])
+                        'route' => route('admins.show', ['admin' => $data->id])
                     ],
                     'update' => [
                         'permission' => 'admin.update',
                         'route' => '#updateadminModal',
-                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode(['name' => $data->name, 'code' => $data->code]) . "'" . ' data-route="' . route('users.admins.update', ['admin' => $data->id]) . '"'
+                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode(['name' => $data->name, 'code' => $data->code]) . "'" . ' data-route="' . route('admins.update', ['admin' => $data->id]) . '"'
                     ],
                     'delete' => [
                         'permission' => 'admin.delete',
-                        'route' => route('users.admins.destroy', ['admin' => $data->id])
+                        'route' => route('admins.destroy', ['admin' => $data->id])
                     ]
                 ])->render();
             })

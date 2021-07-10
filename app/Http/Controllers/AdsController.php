@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\ProductCategory;
+use Illuminate\Support\Facades\Auth;
 
 class AdsController extends Controller
 {
@@ -21,6 +24,16 @@ class AdsController extends Controller
      */
     public function index()
     {
+        if (Auth::user()->is_merchant) {
+
+            $ads = Product::whereHas('productCategory', function ($query) {
+                $query->where('name', ProductCategory::TYPE_ADS);
+            })->orderBy('name', 'asc')
+                ->get();
+
+            return view('ads.index', compact('ads'));
+        }
+
         return;
     }
 

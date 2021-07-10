@@ -165,9 +165,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->categories()->first();
     }
 
-    public function getCartItemCountAttribute()
+    public function getCartItemsCountAttribute()
     {
-        return optional(optional($this->cart)->cartItems())->count() ?? 0;
+        return $this->carts->count() ?? 0;
     }
 
     public function getFormattedPhoneNumberAttribute()
@@ -180,5 +180,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getCategoryAttribute()
     {
         return $this->categories->first();
+    }
+
+    public function getCurrentSubscriptionAttribute()
+    {
+        return $this->userSubscriptions()->active()->first();
     }
 }

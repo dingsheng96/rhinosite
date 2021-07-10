@@ -51,17 +51,52 @@
         </div>
 
         <div class="col-12 col-md-9">
-            <form action="{{ route('account.store') }}" method="post" role="form" enctype="multipart/form-data">
-                @csrf
-                <div class="card card-outline card-secondary">
-                    <div class="card-header bg-transparent p-2">
-                        <ul class="nav nav-pills">
-                            <li class="nav-item"><a class="nav-link active" href="#profile" data-toggle="tab">{{ __('labels.profile') }}</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#location" data-toggle="tab">{{ __('labels.location') }}</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">{{ __('labels.settings') }}</a></li>
-                        </ul>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="callout callout-success">
+
+                        <div class="row">
+                            <div class="col-md-10 col-12">
+                                <h5>{{ __('labels.current_plan') }}</h5>
+                            </div>
+                            <div class="col-md-2 col-12 text-md-right">
+                                <a href="{{ route('subscriptions.index') }}" role="button" class="btn btn-link">
+                                    {{ __('labels.change_plan') }}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <h2>{{ $user->current_subscription->package->name }}</h2>
+                                <p>
+                                    {{ trans_choice('labels.subscribed_at', 2, ['date' => $user->current_subscription->subscription_date]) }}
+                                    <br>
+                                    {{ trans_choice('labels.expired_at', 2, ['date' => $user->current_subscription->expired_date]) }}
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
+                    <div class="card card-outline card-secondary">
+                        <div class="card-body">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6"></div>
+            </div>
+
+            <div class="card card-outline card-secondary">
+                <div class="card-header bg-transparent p-2">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item"><a class="nav-link active" href="#profile" data-toggle="tab">{{ __('labels.profile') }}</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#location" data-toggle="tab">{{ __('labels.location') }}</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">{{ __('labels.settings') }}</a></li>
+                    </ul>
+                </div>
+                <form action="{{ route('account.store') }}" method="post" role="form" enctype="multipart/form-data">
+                    @csrf
                     <div class="card-body">
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="profile">
@@ -126,7 +161,7 @@
                                         <div class="form-group">
                                             <label for="industry_since" class="col-form-label">{{ __('labels.business_since') }} <span class="text-red">*</span></label>
                                             <div class="input-group">
-                                                <input type="text" name="industry_since" id="industry_since" value="{{ old('industry_since', $user_details->industry_since->format('d/m/Y')) }}" class="form-control date-picker @error('industry_since') is-invalid @enderror">
+                                                <input type="text" name="industry_since" id="industry_since" value="{{ old('industry_since', $user_details->industry_since) }}" class="form-control date-picker @error('industry_since') is-invalid @enderror">
                                                 @error('experience')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -358,8 +393,8 @@
                             {{ __('labels.submit') }}
                         </button>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -371,7 +406,7 @@
 <script>
     let datepicker = new Pikaday({
         field: $('.date-picker')[0],
-        format: 'DD/MM/YYYY'
+        format: 'YYYY-MM-DD'
     });
 </script>
 @endpush

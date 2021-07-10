@@ -29,53 +29,52 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
     Route::resource('account', 'AccountController');
 
+    Route::resource('ads', 'AdsController');
+
+    Route::resource('carts', 'CartController');
+
+    Route::resource('verifications', 'VerificationController');
+
     Route::delete('projects/{project}/prices/{price}', 'ProjectController@deletePrice')->name('projects.price.destroy');
     Route::delete('projects/{project}/media/{media}', 'ProjectController@deleteMedia')->name('projects.media.destroy');
     Route::resource('projects', 'ProjectController');
 
-    Route::resource('ads', 'AdsController');
-
     Route::post('subscriptions/{subscription}/purchase', 'SubscriptionController@purchase')->name('subscriptions.purchase');
     Route::resource('subscriptions', 'SubscriptionController');
 
-    Route::resource('verifications', 'VerificationController');
 
-    Route::get('carts', 'CartController@index')->name('carts.index');
-    Route::post('carts', 'CartController@store')->name('carts.store');
-    Route::delete('carts/{cart}/cart-items/{cart_item}', 'CartController@destroy')->name('carts.cart-items.destroy');
+    Route::resource('activity-logs', 'ActivityLogController');
 
-    Route::group(['prefix' => 'users', 'as' => 'users.', 'namespace' => 'Users'], function () {
-        Route::resource('admins', 'AdminController');
-        Route::resource('members', 'MemberController');
-        Route::resource('merchants', 'MerchantController');
-    });
+    Route::resource('admins', 'AdminController');
 
-    Route::group(['prefix' => 'settings', 'as' => 'settings.', 'namespace' => 'Settings'], function () {
+    Route::resource('members', 'MemberController');
 
-        Route::resource('roles', 'RoleController');
-        Route::resource('categories', 'CategoryController');
-        Route::resource('currencies', 'CurrencyController');
-        Route::resource('countries', 'CountryController');
-        Route::resource('countries.country-states', 'CountryStateController');
-        Route::resource('countries.country-states.cities', 'CityController');
-        Route::resource('activity-logs', 'ActivityLogController');
-    });
+    Route::resource('merchants', 'MerchantController');
 
-    Route::group(['prefix' => 'ecommerce', 'as' => 'ecommerce.', 'namespace' => 'Ecommerce'], function () {
+    Route::resource('orders', 'OrderController');
 
-        Route::delete('products/{product}/media/{media}', 'ProductController@deleteMedia')->name('products.media.destroy');
-        Route::post('products/{product}/attributes/{attribute}/prices', 'ProductAttributeController@storePrice')->name('products.attributes.prices.store');
-        Route::put('products/{product}/attributes/{attribute}/prices/{price}', 'ProductAttributeController@updatePrice')->name('products.attributes.prices.update');
-        Route::delete('products/{product}/attributes/{attribute}/prices/{price}', 'ProductAttributeController@deletePrice')->name('products.attributes.prices.destroy');
+    Route::delete('packages/{package}/products/{product}', 'PackageController@deletePackageProduct')->name('packages.products.destroy');
+    Route::resource('packages', 'PackageController');
 
-        Route::resource('products', 'ProductController');
-        Route::resource('products.attributes', 'ProductAttributeController');
+    Route::delete('products/{product}/media/{media}', 'ProductController@deleteMedia')->name('products.media.destroy');
+    Route::post('products/{product}/attributes/{attribute}/prices', 'ProductAttributeController@storePrice')->name('products.attributes.prices.store');
+    Route::put('products/{product}/attributes/{attribute}/prices/{price}', 'ProductAttributeController@updatePrice')->name('products.attributes.prices.update');
+    Route::delete('products/{product}/attributes/{attribute}/prices/{price}', 'ProductAttributeController@deletePrice')->name('products.attributes.prices.destroy');
 
-        Route::delete('packages/{package}/products/{product}', 'PackageController@deletePackageProduct')->name('packages.products.destroy');
-        Route::resource('packages', 'PackageController');
+    Route::resource('products', 'ProductController');
+    Route::resource('products.attributes', 'ProductAttributeController');
 
-        Route::resource('orders', 'OrderController');
-    });
+    Route::resource('roles', 'RoleController');
+
+    Route::resource('categories', 'CategoryController');
+
+    Route::resource('currencies', 'CurrencyController');
+
+    Route::resource('countries', 'CountryController');
+
+    Route::resource('countries.country-states', 'CountryStateController');
+
+    Route::resource('countries.country-states.cities', 'CityController');
 });
 
 Route::group(['prefix' => 'data', 'as' => 'data.'], function () {

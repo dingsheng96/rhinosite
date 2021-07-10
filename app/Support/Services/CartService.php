@@ -5,9 +5,9 @@ namespace App\Support\Services;
 use App\Models\Cart;
 use App\Models\Package;
 use App\Models\CartItem;
+use Illuminate\Support\Arr;
 use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Builder;
 
 class CartService extends BaseService
 {
@@ -31,8 +31,17 @@ class CartService extends BaseService
         return $this;
     }
 
+    public function setBuyer($buyer)
+    {
+        $this->buyer = $buyer;
+
+        return $this;
+    }
+
     public function addToCart()
     {
+        $this->setVariables();
+
         // check available stock, throw error if out of stock
         throw_if(
             $this->item->stock_type != get_class($this->item)::STOCK_TYPE_INFINITE &&
@@ -40,23 +49,33 @@ class CartService extends BaseService
             new \Exception(__('messages.out_of_stock'))
         );
 
-        // add into user cart
-        $this->model = $this->item->carts()
-            ->where('user_id', $this->buyer->id)
+        // create new cart if not exists
+        $this->model = Cart::firstOrNew(['user_id' => $this->buyer->id]);
+        $this->model->save();
+
+        $this->addCartItems();
+
+        return $this;
+    }
+
+    public function addCartItems()
+    {
+        if ($this->model->exists && $this->type == CartItem::TYPE_PACKAGE) {
+
+            $this->model->cartItems()->where('type', CartItem::TYPE_PACKAGE)->delete();
+        }
+
+        $cart_item = $this->model->cartItems()
             ->firstOr(function () {
-                return new Cart();
+                return new CartItem();
             });
 
-        $this->model->quantity  +=  $this->quantity;
+        $cart_item->cartable_type       =   get_class($this->item);
+        $cart_item->cartable_id         =   $this->item->id;
+        $cart_item->type                =   $this->type;
+        $cart_item->quantity            +=  $this->quantity;
 
-        if (!$this->model->exists) {
-            $this->model->user_id   =   $this->buyer_id;
-            $this->model->type      =   $this->type;
-        }
-
-        if ($this->model->isDirty()) {
-            $this->item->carts()->save($this->model);
-        }
+        $this->model->cartItems()->save($cart_item);
 
         return $this;
     }
@@ -118,24 +137,73 @@ class CartService extends BaseService
         return $this;
     }
 
-    public function getSubTotalInCart()
+    public function getSubTotal()
     {
         $sub_total = 0;
 
-        foreach ($this->parent->carts()->get() as $cart) {
-            $sub_total += $cart->quantity * $cart->cartable->price->selling_price;
+        $cart = Cart::where('user_id', $this->buyer->id)->first();
+
+        if ($cart) {
+            foreach ($cart->cartItems()->get() as $item) {
+                $sub_total += $item->quantity * $item->cartable->price->selling_price;
+            }
         }
 
         return $sub_total;
     }
 
-    public function getTotalItemsInCart()
+    public function getGrandTotal()
     {
-        return $this->parent->carts()->sum('quantity');
+        $grand_total = 0;
+
+        $cart = Cart::where('user_id', $this->buyer->id)->first();
+
+        if ($cart) {
+            foreach ($cart->cartItems()->get() as $item) {
+                $grand_total += $item->quantity * $item->cartable->price->selling_price;
+            }
+        }
+
+        return $grand_total;
     }
 
-    public function setBuyer($buyer)
+    public function getTotalItemsInCart()
     {
-        return $this->buyer = $buyer;
+        $total = 0;
+
+        $cart = Cart::where('user_id', $this->buyer->id)->first();
+
+        if ($cart) {
+            $total = $cart->cartItems()->sum('quantity');
+        }
+
+        return $total;
+    }
+
+    public function getCarts(): array
+    {
+        $carts = Cart::with([
+            'cartable.prices' => function ($query) {
+                $query->defaultPrice();
+            }
+        ])
+            ->where('user_id', Auth::id())
+            ->get()
+            ->map(function ($cart, $key) {
+                return [
+                    'id' => $cart->id,
+                    'name' => $cart->cartable->item_name,
+                    'quantity' => $cart->quantity,
+                    'price' => $cart->cartable->price->selling_price,
+                    'currency' => $cart->cartable->price->currency->code,
+                    'enable_quantity_input' => $cart->enable_quantity_input
+                ];
+            });
+
+        return [
+            'items' => $carts,
+            'sub_total' => $carts->sum('price') ?? 0,
+            'currency' => $carts->pluck('currency')->unique('currency')->first()
+        ];
     }
 }

@@ -29,7 +29,7 @@ class CategoryDataTable extends DataTable
                     'no_action' => $this->no_action ?: null,
                     'view' => [
                         'permission' => 'category.create',
-                        'route' => route('settings.categories.show', ['category' => $data->id])
+                        'route' => route('categories.show', ['category' => $data->id])
                     ],
                     'update' => [
                         'permission' => 'category.create',
@@ -38,7 +38,7 @@ class CategoryDataTable extends DataTable
                     ],
                     'delete' => [
                         'permission' => 'category.delete',
-                        'route' => route('settings.categories.destroy', ['category' => $data->id])
+                        'route' => route('categories.destroy', ['category' => $data->id])
                     ]
                 ])->render();
             })

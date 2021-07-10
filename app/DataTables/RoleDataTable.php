@@ -28,15 +28,15 @@ class RoleDataTable extends DataTable
                     'no_action' => $this->no_action ?: ($data->name == Role::ROLE_SUPER_ADMIN),
                     'view' => [
                         'permission' => 'role.read',
-                        'route' => route('settings.roles.show', ['role' => $data->id])
+                        'route' => route('roles.show', ['role' => $data->id])
                     ],
                     'update' => [
                         'permission' => 'role.update',
-                        'route' => route('settings.roles.edit', ['role' => $data->id]),
+                        'route' => route('roles.edit', ['role' => $data->id]),
                     ],
                     'delete' => [
                         'permission' => 'role.delete',
-                        'route' => route('settings.roles.destroy', ['role' => $data->id])
+                        'route' => route('roles.destroy', ['role' => $data->id])
                     ]
                 ])->render();
             })

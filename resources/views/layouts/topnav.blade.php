@@ -7,11 +7,12 @@
 
     <ul class="navbar-nav ml-auto">
 
+        {{-- CART --}}
         @merchant
         <li class="nav-item dropdown">
-            <a class="nav-link" href="{{ route('carts.index') }}">
+            <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
                 <i class="fas fa-shopping-cart"></i>
-                <span class="badge badge-danger navbar-badge rounded-circle">{{ Auth::user()->cart_item_count }}</span>
+                <span class="badge badge-danger navbar-badge rounded-circle">{{ Auth::user()->cart_items_count }}</span>
             </a>
         </li>
         @endmerchant

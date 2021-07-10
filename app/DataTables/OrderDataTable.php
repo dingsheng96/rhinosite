@@ -3,8 +3,11 @@
 namespace App\DataTables;
 
 use App\Models\Order;
+use Illuminate\Support\Arr;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
+use App\Support\Facades\PriceFacade;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
@@ -27,12 +30,12 @@ class OrderDataTable extends DataTable
                 return view('components.action', [
                     'no_action' => $this->no_action ?: null,
                     'view' => [
-                        'permission' => 'merchant.create',
-                        'route' => route('verifications.show', ['verification' => $data->id])
+                        'permission' => 'order.read',
+                        'route' => route('orders.show', ['order' => $data->id])
                     ],
                     'update' => [
-                        'permission' => 'merchant.create',
-                        'route' => route('verifications.edit', ['verification' => $data->id]),
+                        'permission' => 'order.update',
+                        'route' => route('orders.edit', ['order' => $data->id]),
                     ]
                 ])->render();
             })
@@ -45,6 +48,12 @@ class OrderDataTable extends DataTable
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
+            ->editColumn('grand_total', function ($data) {
+                return $data->grand_total_with_currency;
+            })
+            ->filterColumn('grand_total', function ($query, $keyword) {
+                return $query->where('grand_total', PriceFacade::convertFloatToInt($keyword));
+            })
             ->rawColumns(['action', 'status']);
     }
 
@@ -56,7 +65,9 @@ class OrderDataTable extends DataTable
      */
     public function query(Order $model)
     {
-        return $model->newQuery();
+        return $model->when(Auth::user()->is_merchant, function ($query) {
+            $query->where('user_id', Auth::id());
+        })->newQuery();
     }
 
     /**
@@ -84,10 +95,10 @@ class OrderDataTable extends DataTable
      */
     protected function getColumns()
     {
-        return [
+        $columns =  [
             Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('user')->title(__('labels.user'))->width('20%'),
             Column::make('order_no')->title(__('labels.order_no'))->width('15%'),
+            Column::make('user')->title(__('labels.user'))->width('20%'),
             Column::make('grand_total')->title(__('labels.grand_total'))->width('15%'),
             Column::make('total_items')->title(trans_choice('labels.item', 2))->width('10%'),
             Column::make('status')->title(__('labels.status'))->width('10%'),
@@ -96,6 +107,12 @@ class OrderDataTable extends DataTable
                 ->exportable(false)
                 ->printable(false),
         ];
+
+        if (Auth::user()->is_merchant) {
+            $columns = Arr::except($columns, 2);
+        }
+
+        return $columns;
     }
 
     /**

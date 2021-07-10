@@ -9,7 +9,7 @@
     @isset($view)
     @can($view['permission'])
     <a role="button" href="{{ $view['route'] ?? '#' }}" class="dropdown-item" @isset($view['attribute']) {!! $view['attribute'] !!} @endisset>
-        <i class="fas fa-eye mr-2 text-blue"></i>
+        <i class="fas fa-book-open mr-2 text-blue"></i>
         {{ __('labels.view') }}
     </a>
     @endcan

@@ -11,6 +11,7 @@ use App\Models\Permission;
 use Illuminate\Http\Request;
 use App\Models\UserSubscription;
 use Illuminate\Support\Facades\DB;
+use App\Support\Facades\CartFacade;
 use App\Support\Facades\OrderFacade;
 use Illuminate\Support\Facades\Auth;
 use App\Support\Facades\PackageFacade;
@@ -114,7 +115,20 @@ class SubscriptionController extends Controller
 
             $package = Package::where('id', $package)->firstOrFail();
 
-            $cart  =   PackageFacade::setModel($package)->purchaseNewPackage()->getModel();
+            $request = new Request();
+
+            $request->request->add([
+                'item' => [
+                    'item_id'   =>  $package->id,
+                    'type'      =>  'package',
+                    'quantity'  =>  1
+                ]
+            ]);
+
+            CartFacade::setRequest($request)
+                ->setBuyer(Auth::user())
+                ->addToCart()
+                ->getModel();
 
             DB::commit();
 
@@ -122,7 +136,7 @@ class SubscriptionController extends Controller
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
-
+            dd($e->getMessage());
             return redirect()->back()->with('fail', $e->getMessage());
         }
     }

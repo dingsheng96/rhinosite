@@ -27,15 +27,15 @@ class MemberDataTable extends DataTable
                     'no_action' => $this->no_action ?: null,
                     'view' => [
                         'permission' => 'member.read',
-                        'route' => route('users.members.show', ['member' => $data->id])
+                        'route' => route('members.show', ['member' => $data->id])
                     ],
                     'update' => [
                         'permission' => 'member.update',
-                        'route' => route('users.members.edit', ['member' => $data->id])
+                        'route' => route('members.edit', ['member' => $data->id])
                     ],
                     'delete' => [
                         'permission' => 'member.delete',
-                        'route' => route('users.members.destroy', ['member' => $data->id])
+                        'route' => route('members.destroy', ['member' => $data->id])
                     ]
                 ])->render();
             })

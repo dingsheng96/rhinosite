@@ -27,15 +27,15 @@ class PackageDataTable extends DataTable
                     'no_action' => $this->no_action ?: null,
                     'view' => [
                         'permission' => 'package.read',
-                        'route' => route('ecommerce.packages.show', ['package' => $data->id])
+                        'route' => route('packages.show', ['package' => $data->id])
                     ],
                     'update' => [
                         'permission' => 'package.update',
-                        'route' => route('ecommerce.packages.edit', ['package' => $data->id]),
+                        'route' => route('packages.edit', ['package' => $data->id]),
                     ],
                     'delete' => [
                         'permission' => 'package.delete',
-                        'route' => route('ecommerce.packages.destroy', ['package' => $data->id])
+                        'route' => route('packages.destroy', ['package' => $data->id])
                     ]
                 ])->render();
             })

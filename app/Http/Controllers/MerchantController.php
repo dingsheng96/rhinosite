@@ -1,0 +1,167 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use App\Models\Media;
+use App\Helpers\Status;
+use App\Helpers\Message;
+use App\Models\Category;
+use App\Helpers\Response;
+use App\Models\Permission;
+use App\Models\UserDetail;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\DataTables\MerchantDataTable;
+use App\Support\Facades\MerchantFacade;
+use App\Http\Requests\Users\MerchantRequest;
+
+class MerchantController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware(['can:merchant.read']);
+        $this->middleware(['can:merchant.create'])->only(['create', 'store']);
+        $this->middleware(['can:merchant.update'])->only(['edit', 'update']);
+        $this->middleware(['can:merchant.delete'])->only(['delete']);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(MerchantDataTable $dataTable)
+    {
+        return $dataTable->render('merchant.index');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(User $merchant)
+    {
+        $user_details = $merchant->userDetails()
+            ->approvedDetails()
+            ->with(['media'])
+            ->first();
+
+        $documents = $merchant->media()
+            ->ssm()
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        return view('merchant.show', compact('merchant', 'documents', 'user_details'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(User $merchant)
+    {
+        $user_details = $merchant->userDetails()
+            ->approvedDetails()
+            ->with(['media'])
+            ->first();
+
+        $documents = $merchant->media()
+            ->ssm()
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        $statuses = Status::instance()->activeStatus();
+
+        $categories = Category::orderBy('name', 'asc')->get();
+
+        return view('merchant.edit', compact('merchant', 'documents', 'user_details', 'categories', 'statuses'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(MerchantRequest $request, User $merchant)
+    {
+        DB::beginTransaction();
+
+        $action     =   Permission::ACTION_UPDATE;
+        $module     =   strtolower(trans_choice('modules.merchant', 1));
+        $message    =   Message::instance()->format($action, $module);
+        $status     =   'fail';
+
+        try {
+
+            $merchant = MerchantFacade::setModel($merchant)
+                ->setRequest($request)
+                ->storeData()
+                ->getModel();
+
+            DB::commit();
+
+            $status  = 'success';
+            $message = Message::instance()->format($action, $module, $status);
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($merchant)
+                ->withProperties($request->all())
+                ->log($message);
+
+            return redirect()->route('merchants.index')->withSuccess($message);
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn(new User())
+                ->withProperties($request->all())
+                ->log($e->getMessage());
+
+            return redirect()->back()->withErrors($message)->withInput();
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+}

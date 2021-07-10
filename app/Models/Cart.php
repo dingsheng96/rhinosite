@@ -4,24 +4,25 @@ namespace App\Models;
 
 use App\Support\Facades\PriceFacade;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class Cart extends Model
 {
     protected $table = 'carts';
 
     protected $fillable = [
-        'user_id', 'cartable_type', 'cartable_id', 'type', 'quantity'
+        'user_id', 'cartable_type', 'cartable_id', 'quantity'
     ];
 
     // Relationships
-    public function cartable()
-    {
-        return $this->morphTo();
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function cartable()
+    {
+        return $this->morphTo();
     }
 
     // Attributes
@@ -48,5 +49,28 @@ class Cart extends Model
     public function getUnitPriceAttribute()
     {
         return number_format($this->price->selling_price, 2, '.', '');
+    }
+
+    public function getUnitPriceWithCurrencyAttribute()
+    {
+        return $this->price->currency->code . $this->unit_price;
+    }
+
+    public function getItemNameAttribute()
+    {
+        if ($this->cartable_type == ProductAttribute::class) {
+            return $this->cartable->product->name;
+        }
+
+        return $this->cartable->name;
+    }
+
+    public function getEnableQuantityInputAttribute()
+    {
+        if ($this->cartable_type == Package::class) {
+            return false;
+        }
+
+        return true;
     }
 }

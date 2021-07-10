@@ -39,7 +39,7 @@ class Package extends Model
 
     public function carts()
     {
-        return $this->morphMany(CartItem::class, 'cartable');
+        return $this->morphMany(Cart::class, 'cartable');
     }
 
     // Attributes
@@ -58,5 +58,10 @@ class Package extends Model
     public function getSellingPriceWithCurrencyAttribute()
     {
         return $this->price->currency->code . $this->price->selling_price;
+    }
+
+    public function getItemNameAttribute()
+    {
+        return $this->name;
     }
 }

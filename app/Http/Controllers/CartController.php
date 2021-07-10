@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Helpers\Message;
-use App\Models\CartItem;
 use App\Helpers\Response;
 use App\Models\Permission;
 use Illuminate\Http\Request;
@@ -12,6 +11,7 @@ use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\DB;
 use App\Support\Facades\CartFacade;
 use App\Http\Controllers\Controller;
+use App\Support\Facades\PriceFacade;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Ecommerce\CartRequest;
 
@@ -26,11 +26,14 @@ class CartController extends Controller
     {
         $user = Auth::user();
 
-        $carts = Cart::where('user_id', $user->id)->get();
-
         $payment_methods = PaymentMethod::get();
 
-        return view('ecommerce.cart.index', compact('carts', 'payment_methods'));
+        $cart  = Cart::where('user_id', $user->id)->with(['cartItems'])->first();
+
+        $sub_total = CartFacade::setBuyer($user)->getSubTotal();
+
+
+        return view('cart.index', compact('cart', 'payment_methods', 'sub_total'));
     }
 
     /**
@@ -49,7 +52,7 @@ class CartController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CartRequest $request, Cart $cart)
+    public function store(CartRequest $request)
     {
         DB::beginTransaction();
 
@@ -57,19 +60,16 @@ class CartController extends Controller
         $module     =   strtolower(__('labels.cart'));
         $status     =   'fail';
         $message    =   Message::instance()->format($action, $module, $status);
-        $cart       =   [];
 
         try {
-            dd($cart);
-            $cart = CartFacade::setRequest($request)->storeData()->getModel();
 
-            $status     =   'success';
-            $message    =   Message::instance()->format($action, $module, $status);
+            $cart = CartFacade::setRequest($request)->storeData()->getModel();
 
             DB::commit();
         } catch (\Error | \Exception $ex) {
 
             DB::rollback();
+
             $message = $ex->getMessage();
         }
 
@@ -77,7 +77,6 @@ class CartController extends Controller
             ->withStatusCode('modules.cart', 'actions.' . $action . $status)
             ->withStatus($status)
             ->withMessage($message, true)
-            ->withData((array) $cart)
             ->sendJson();
     }
 
@@ -88,7 +87,7 @@ class CartController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Cart $cart, CartItem $cart_item)
+    public function update(Cart $cart)
     {
         //
     }
@@ -99,7 +98,7 @@ class CartController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cart $cart, CartItem $cart_item)
+    public function destroy(Cart $cart)
     {
         DB::beginTransaction();
 
@@ -110,7 +109,7 @@ class CartController extends Controller
 
         try {
 
-            CartFacade::setModel($cart)->removeItemFromCart($cart_item);
+            $cart->delete();
 
             $status     =   'success';
             $message    =   Message::instance()->format($action, $module, $status);
@@ -119,6 +118,7 @@ class CartController extends Controller
         } catch (\Error | \Exception $ex) {
 
             DB::rollback();
+
             $message = $ex->getMessage();
         }
 
@@ -126,9 +126,7 @@ class CartController extends Controller
             ->withStatusCode('modules.cart', 'actions.' . $action . $status)
             ->withStatus($status)
             ->withMessage($message, true)
-            ->withData([
-                'redirect_to' => route('ecommerce.carts.index')
-            ])
+            ->withData(CartFacade::getCarts())
             ->sendJson();
     }
 }

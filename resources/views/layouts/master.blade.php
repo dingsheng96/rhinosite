@@ -38,6 +38,8 @@
         @include('layouts.footer') {{-- auth footer --}}
 
         @include('components.loader')
+
+        @includeWhen(Auth::user()->is_merchant, 'cart.index')
     </div>
 
     @else
@@ -56,6 +58,7 @@
     <script src="{{ asset('js/modal.js?v=' . time()) }}"></script>
     <script src="{{ asset('js/dropzone.js?v=' . time()) }}"></script>
     <script src="{{ asset('js/dynamic-form.js?v=' . time()) }}"></script>
+    <script src="{{ asset('js/cart.js?v=' . time()) }}"></script>
     @stack('scripts')
 
 </body>

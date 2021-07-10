@@ -50,7 +50,7 @@ class AccountRequest extends FormRequest
             'pic_email' => [Rule::requiredIf($is_merchant), 'nullable', 'email'],
             'website' => ['nullable', 'url', 'max:255'],
             'facebook' => ['nullable', 'url', 'max:255'],
-            'industry_since' => [Rule::requiredIf($is_merchant), 'nullable', 'date_format:d/m/Y'],
+            'industry_since' => [Rule::requiredIf($is_merchant), 'nullable', 'date_format:Y-m-d'],
             'address_1' =>  [Rule::requiredIf($is_merchant), 'nullable', 'min:3', 'max:255'],
             'address_2' =>  ['nullable'],
             'country' =>  [Rule::requiredIf($is_merchant), 'nullable', 'exists:' . Country::class . ',id'],

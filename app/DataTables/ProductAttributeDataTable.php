@@ -29,15 +29,15 @@ class ProductAttributeDataTable extends DataTable
                     'no_action' => $this->no_action ?: null,
                     'view' => [
                         'permission' => 'product.read',
-                        'route' => route('ecommerce.products.attributes.show', ['product' => $this->product_id, 'attribute' => $data->id])
+                        'route' => route('products.attributes.show', ['product' => $this->product_id, 'attribute' => $data->id])
                     ],
                     'update' => [
                         'permission' => 'product.update',
-                        'route' => route('ecommerce.products.attributes.edit', ['product' => $this->product_id, 'attribute' => $data->id]),
+                        'route' => route('products.attributes.edit', ['product' => $this->product_id, 'attribute' => $data->id]),
                     ],
                     'delete' => [
                         'permission' => 'product.delete',
-                        'route' => route('ecommerce.products.attributes.destroy', ['product' => $this->product_id, 'attribute' => $data->id])
+                        'route' => route('products.attributes.destroy', ['product' => $this->product_id, 'attribute' => $data->id])
                     ]
                 ])->render();
             })

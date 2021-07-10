@@ -82,6 +82,10 @@ class Status
                 'text' => __('labels.rejected'),
                 'class' => 'badge badge-pill badge-lg badge-danger'
             ],
+            'cancelled' => [
+                'text' => __('labels.cancelled'),
+                'class' => 'badge badge-pill badge-lg badge-danger'
+            ],
             'approved' => [
                 'text' => __('labels.approved'),
                 'class' => 'badge badge-pill badge-lg badge-success'

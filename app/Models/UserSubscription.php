@@ -24,6 +24,11 @@ class UserSubscription extends Model
         return $this->hasMany(UserSubscriptionLog::class, 'user_subscription_id', 'id');
     }
 
+    public function package()
+    {
+        return $this->belongsTo(Package::class, 'package_id', 'id');
+    }
+
     // Scopes
     public function scopeActive($query)
     {
@@ -33,11 +38,21 @@ class UserSubscription extends Model
     // Attributes
     public function getSubscriptionDateAttribute()
     {
-        return $this->created_at->format('Sj M Y') ?? null;
+        return $this->created_at->format('jS M Y') ?? null;
     }
 
     public function getValidityInMonthAttribute()
     {
         return $this->validity / 30;
+    }
+
+    public function getActiveSubscriptionLogAttribute()
+    {
+        return $this->userSubscriptionLogs()->active()->first();
+    }
+
+    public function getExpiredDateAttribute()
+    {
+        return $this->active_subscription_log->expired_at->format('jS M Y');
     }
 }

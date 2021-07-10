@@ -27,15 +27,15 @@ class CurrencyDataTable extends DataTable
                     'no_action' => $this->no_action ?: null,
                     'view' => [
                         'permission' => 'currency.read',
-                        'route' => route('settings.currencies.show', ['currency' => $data->id])
+                        'route' => route('currencies.show', ['currency' => $data->id])
                     ],
                     'update' => [
                         'permission' => 'currency.update',
-                        'route' => route('settings.currencies.edit', ['currency' => $data->id]),
+                        'route' => route('currencies.edit', ['currency' => $data->id]),
                     ],
                     'delete' => [
                         'permission' => 'currency.delete',
-                        'route' => route('settings.currencies.destroy', ['currency' => $data->id])
+                        'route' => route('currencies.destroy', ['currency' => $data->id])
                     ]
                 ])->render();
             })

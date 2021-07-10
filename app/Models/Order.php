@@ -39,6 +39,11 @@ class Order extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class, 'currency_id', 'id');
+    }
+
     // Attributes
     public function setSubTotalAttribute($value)
     {
@@ -84,6 +89,21 @@ class Order extends Model
     {
         $statuses = Status::instance()->statusLabel($this->status);
 
-        return '<span class="px-2 ' . $statuses['class'] . '">' . $statuses['text'] . '</span>';
+        return '<span class="px-3 ' . $statuses['class'] . '">' . $statuses['text'] . '</span>';
+    }
+
+    public function getSubTotalWithCurrencyAttribute()
+    {
+        return $this->currency->code . ' ' . $this->sub_total;
+    }
+
+    public function getGrandTotalWithCurrencyAttribute()
+    {
+        return $this->currency->code . ' ' . $this->grand_total;
+    }
+
+    public function getPaidByAttribute()
+    {
+        return $this->transaction->paymentMethod()->first();
     }
 }

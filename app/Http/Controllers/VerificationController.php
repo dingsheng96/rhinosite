@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Media;
 use App\Helpers\Status;
 use App\Helpers\Message;
+use App\Models\Permission;
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Permission;
 use App\DataTables\VerificationDataTable;
 use App\Support\Facades\UserDetailFacade;
 

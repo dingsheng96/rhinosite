@@ -127,7 +127,8 @@ class BaseService
         $prefix .= date('Ymd');
         $number = 0;
 
-        $latest_record = $model::select($column)
+        $latest_record = $model::withTrashed()
+            ->select($column)
             ->where($column, 'like', $prefix . '%')
             ->orderBy($column, 'desc')
             ->first();

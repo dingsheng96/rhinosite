@@ -46,7 +46,7 @@ class ProductAttribute extends Model
 
     public function carts()
     {
-        return $this->morphMany(CartItem::class, 'cartable');
+        return $this->morphMany(Cart::class, 'cartable');
     }
 
     // Attributes
@@ -55,5 +55,10 @@ class ProductAttribute extends Model
         $label = Status::instance()->statusLabel($this->status);
 
         return '<span class="' . $label['class'] . ' px-3">' . $label['text'] . '</span>';
+    }
+
+    public function getDefaultPriceAttribute()
+    {
+        return $this->prices()->defaultPrice()->first();
     }
 }

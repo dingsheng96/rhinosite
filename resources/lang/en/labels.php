@@ -147,7 +147,7 @@ return [
     'total' => 'Total',
     'sub_total' => 'Sub Total',
     'grand_total' => 'Grand Total',
-    'pay_now' => 'Pay Now',
+    'check_out' => 'Check Out',
     'permission' => 'Permission|Permissions',
     'total_listings' => 'Total Listings',
     'change_thumbnail' => 'Change Thumbnail',
@@ -158,5 +158,11 @@ return [
     'years_of_experience' => 'Years Of Experience',
     'settings' => 'Settings',
     'package_include' => 'Package Include',
-    'select_payment_method' => 'Select a payment method'
+    'select_payment_method' => 'Select a payment method',
+    'change_plan' => 'Change Plan',
+    'purchase_order' => 'Purchase Order',
+    'order_date' => 'Order Date',
+    'order_id' => 'Order ID',
+    'paid_by' => 'Paid By',
+    'transaction_id' => 'Transaction ID'
 ];
