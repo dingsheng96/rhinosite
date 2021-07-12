@@ -77,7 +77,7 @@ class OrderController extends Controller
                 ->withProperties($ex)
                 ->log($ex->getMessage());
 
-            return redirect()->back()->with('fail', $ex->getMessage());
+            return redirect()->back()->with('fail', $message);
         }
     }
 

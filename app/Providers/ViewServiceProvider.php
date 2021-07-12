@@ -26,7 +26,7 @@ class ViewServiceProvider extends ServiceProvider
             '*'
         ],
         \App\Http\View\Composers\CartComposer::class => [
-            'cart.index', 'dashboard.merchant'
+            'cart.index', 'checkout.index'
         ],
     ];
 

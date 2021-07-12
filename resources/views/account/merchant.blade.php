@@ -77,12 +77,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="card card-outline card-secondary">
-                        <div class="card-body">
-
-                        </div>
-                    </div>
                 </div>
                 <div class="col-12 col-md-6"></div>
             </div>

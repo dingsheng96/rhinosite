@@ -35,6 +35,16 @@ class UserSubscription extends Model
         return $query->where('status', self::STATUS_ACTIVE);
     }
 
+    public function scopeAutoBilling($query)
+    {
+        return $query->where('auto_billing', true);
+    }
+
+    public function scopeInactive($query)
+    {
+        return $query->where('status', self::STATUS_INACTIVE);
+    }
+
     // Attributes
     public function getSubscriptionDateAttribute()
     {

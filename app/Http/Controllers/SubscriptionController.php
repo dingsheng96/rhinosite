@@ -93,7 +93,7 @@ class SubscriptionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Package $subscription)
     {
         //
     }
@@ -109,34 +109,30 @@ class SubscriptionController extends Controller
         //
     }
 
-    public function purchase($package)
+    public function purchase($subscription)
     {
         try {
 
-            $package = Package::where('id', $package)->firstOrFail();
+            $package = Package::with([
+                'prices' => function ($query) {
+                    $query->defaultPrice();
+                }
+            ])
+                ->where('id', $subscription)
+                ->orWhereHas('userSubscriptions', function ($query) {
+                    $query->where('user_id', Auth::id())->inactive();
+                })
+                ->firstOrFail();
 
-            $request = new Request();
-
-            $request->request->add([
-                'item' => [
-                    'item_id'   =>  $package->id,
-                    'type'      =>  'package',
-                    'quantity'  =>  1
-                ]
-            ]);
-
-            CartFacade::setRequest($request)
-                ->setBuyer(Auth::user())
-                ->addToCart()
-                ->getModel();
+            CartFacade::setBuyer(Auth::user())->addToCart($package)->getModel();
 
             DB::commit();
 
-            return redirect()->route('carts.index');
+            return redirect()->route('checkout.index');
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
-            dd($e->getMessage());
+
             return redirect()->back()->with('fail', $e->getMessage());
         }
     }

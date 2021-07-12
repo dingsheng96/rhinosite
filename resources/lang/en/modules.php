@@ -29,6 +29,7 @@ return [
 
     'subscription' => 'Subscription|Subscriptions',
     'cart' => 'Cart',
+    'checkout' => 'Check Out',
 
     'settings' => 'Settings',
     'country' => 'Country|Countries',

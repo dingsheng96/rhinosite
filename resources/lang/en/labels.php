@@ -143,7 +143,7 @@ return [
     'renewed_at' => 'Renewed At',
     'month' => '{1} :value month|{2,} :value months',
     'available_packages' => 'Available Packages',
-    'my_cart_summary' => 'My Cart Summary',
+    'summary' => 'Summary',
     'total' => 'Total',
     'sub_total' => 'Sub Total',
     'grand_total' => 'Grand Total',
@@ -158,11 +158,13 @@ return [
     'years_of_experience' => 'Years Of Experience',
     'settings' => 'Settings',
     'package_include' => 'Package Include',
-    'select_payment_method' => 'Select a payment method',
+    'select_payment_method' => 'Select Payment Method',
     'change_plan' => 'Change Plan',
     'purchase_order' => 'Purchase Order',
     'order_date' => 'Order Date',
     'order_id' => 'Order ID',
     'paid_by' => 'Paid By',
-    'transaction_id' => 'Transaction ID'
+    'transaction_id' => 'Transaction ID',
+    'pay_now' => 'Pay Now',
+    'order_review' => 'Order Review'
 ];

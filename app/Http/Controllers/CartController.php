@@ -13,6 +13,7 @@ use App\Support\Facades\CartFacade;
 use App\Http\Controllers\Controller;
 use App\Support\Facades\PriceFacade;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use App\Http\Requests\Ecommerce\CartRequest;
 
 class CartController extends Controller
@@ -24,16 +25,7 @@ class CartController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-
-        $payment_methods = PaymentMethod::get();
-
-        $cart  = Cart::where('user_id', $user->id)->with(['cartItems'])->first();
-
-        $sub_total = CartFacade::setBuyer($user)->getSubTotal();
-
-
-        return view('cart.index', compact('cart', 'payment_methods', 'sub_total'));
+        //
     }
 
     /**
@@ -87,9 +79,46 @@ class CartController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Cart $cart)
+    public function update(Request $request, Cart $cart)
     {
-        //
+        DB::beginTransaction();
+
+        $action     =   Permission::ACTION_UPDATE;
+        $module     =   strtolower(trans_choice('labels.item', 1));
+        $status     =   'fail';
+        $message    =   Message::instance()->format($action, $module, $status);
+
+        try {
+
+            $cart_action =   $request->get('action');
+
+            $item   =   $cart->cartable()->first();
+
+            if ($cart_action == 'decrement') {
+                CartFacade::setBuyer(Auth::user())->deductFromCart($item)->getModel();
+            } elseif ($cart_action == 'increment') {
+                CartFacade::setBuyer(Auth::user())->addToCart($item)->getModel();
+            }
+
+            $status     =   'success';
+            $message    =   Message::instance()->format($action, $module, $status);
+
+            DB::commit();
+        } catch (\Error | \Exception $ex) {
+
+            DB::rollback();
+
+            request()->session()->flash('fail', $ex->getMessage());
+
+            $message = $ex->getMessage();
+        }
+
+        return Response::instance()
+            ->withStatusCode('modules.cart', 'actions.' . $action . $status)
+            ->withStatus($status)
+            ->withMessage($message)
+            ->withData(CartFacade::getCarts())
+            ->sendJson();
     }
 
     /**

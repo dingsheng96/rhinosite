@@ -3,7 +3,6 @@
     <div class="p-3">
         <div>
             <h4>
-                <i class="fas fa-shopping-cart mr-2"></i>
                 {{ __('modules.cart') }}
             </h4>
         </div>
@@ -30,13 +29,13 @@
                     @if ($item['enable_quantity_input'])
                     <div class="row mt-3">
                         <div class="col-6">
-                            <div class="input-group input-group-sm">
+                            <div class="input-group input-group-sm" data-qty-route="{{ route('carts.update', ['cart' => $item['id']]) }}">
                                 <div class="input-group-prepend">
-                                    <button class="btn btn-outline-secondary" type="button">-</button>
+                                    <button class="btn btn-outline-secondary btn-qty-decrement" type="button">-</button>
                                 </div>
                                 <input type="text" value="{{ $item['quantity'] }}" class="form-control form-control-sm text-center disable-spinbox bg-white" disabled>
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button">+</button>
+                                    <button class="btn btn-outline-secondary btn-qty-increment" type="button">+</button>
                                 </div>
                             </div>
                         </div>

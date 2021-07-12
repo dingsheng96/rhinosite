@@ -6,7 +6,7 @@ function customAlert(message, status)
         icon: status,
         title: message,
         timer: 2000,
-        showConfirmButton: false
+        showConfirmButton: false,
     });
 }
 

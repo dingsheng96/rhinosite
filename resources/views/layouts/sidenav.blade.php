@@ -27,7 +27,7 @@
                 @canany(['ads.create', 'ads.read', 'ads.update', 'ads.delete'])
                 <li class="nav-item">
                     <a href="{{ route('ads.index') }}" class="nav-link {{ Nav::hasSegment('ads', 1, 'active') }}">
-                        <i class="nav-icon fas fa-ad"></i>
+                        <i class="nav-icon fab fa-adn"></i>
                         <p>{{ __('modules.ads') }}</p>
                     </a>
                 </li>

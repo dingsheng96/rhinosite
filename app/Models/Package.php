@@ -42,6 +42,11 @@ class Package extends Model
         return $this->morphMany(Cart::class, 'cartable');
     }
 
+    public function userSubscriptions()
+    {
+        return $this->hasMany(UserSubscription::class, 'package_id', 'id');
+    }
+
     // Attributes
     public function getStatusLabelAttribute()
     {

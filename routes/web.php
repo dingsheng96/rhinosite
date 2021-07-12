@@ -42,6 +42,8 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::post('subscriptions/{subscription}/purchase', 'SubscriptionController@purchase')->name('subscriptions.purchase');
     Route::resource('subscriptions', 'SubscriptionController');
 
+    Route::get('checkout', 'CheckOutController@index')->name('checkout.index');
+    Route::post('checkout', 'CheckOutController@store')->name('checkout.store');
 
     Route::resource('activity-logs', 'ActivityLogController');
 
