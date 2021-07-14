@@ -4,7 +4,7 @@ use App\Models\ProductCategory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class ProductTypeSeeder extends Seeder
+class ProductCategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -18,13 +18,10 @@ class ProductTypeSeeder extends Seeder
         DB::statement('TRUNCATE TABLE ' . app(ProductCategory::class)->getTable());
 
         foreach ($this->getData() as $data) {
-            ProductCategory::updateOrCreate(
-                ['name' => $data['name']],
-                [
-                    'name'          => $data['name'],
-                    'description'   => $data['description'],
-                ],
-            );
+            ProductCategory::create([
+                'name'          => $data['name'],
+                'description'   => $data['description'],
+            ],);
         }
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1');

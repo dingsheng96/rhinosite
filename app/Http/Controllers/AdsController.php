@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\User;
+use App\Models\Project;
+use App\Models\UserAdsQuota;
 use Illuminate\Http\Request;
-use App\Models\ProductCategory;
+use App\DataTables\AdsDataTable;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class AdsController extends Controller
@@ -22,19 +25,9 @@ class AdsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(AdsDataTable $dataTable)
     {
-        if (Auth::user()->is_merchant) {
-
-            $ads = Product::whereHas('productCategory', function ($query) {
-                $query->where('name', ProductCategory::TYPE_ADS);
-            })->orderBy('name', 'asc')
-                ->get();
-
-            return view('ads.index', compact('ads'));
-        }
-
-        return;
+        return $dataTable->render('ads.index');
     }
 
     /**
@@ -44,7 +37,30 @@ class AdsController extends Controller
      */
     public function create()
     {
-        //
+        $merchants = null;
+
+        if (Auth::user()->is_admin) {
+            $merchants = User::merchant()->active()->hasAdsQuota()->orderBy('name', 'asc')->get();
+        }
+
+        $projects = Project::published()
+            ->when(Auth::user()->is_merchant, function ($query) {
+                $query->where('user_id', Auth::id());
+            })
+            ->orderBy('title', 'asc')
+            ->get();
+
+        $ads_types = UserAdsQuota::with(['productAttribute'])
+            ->whereHas('productAttribute', function ($query) {
+                $query->active();
+            })
+            ->when(Auth::user()->is_merchant, function ($query) {
+                $query->where('user_id', Auth::id());
+            })
+            ->orderBy('id', 'asc')
+            ->get();
+
+        return view('ads.create', compact('projects', 'ads_types'));
     }
 
     /**

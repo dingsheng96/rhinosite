@@ -15,7 +15,7 @@
                 </div>
 
                 <div class="widget-user-image">
-                    <img src="{{ Auth::user()->logo->full_file_path ?? $default_image }}" alt="user" class="elevation-2 img-circle">
+                    <img src="{{ optional(Auth::user()->logo)->full_file_path ?? $default_preview }}" alt="user" class="elevation-2 img-circle img-responsive" style="height: 10vh;">
                 </div>
 
                 <div class="card-footer">

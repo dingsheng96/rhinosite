@@ -15,11 +15,11 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        DB::statement('TRUNCATE TABLE ' . (new Permission())->getTable());
 
         foreach ($this->getData() as $data) {
-            Permission::firstOrCreate([
-                'name'          =>  $data['name'],
-            ], [
+            Permission::create([
                 'name'          =>  $data['name'],
                 'guard_name'    =>  $data['guard_name'],
                 'display'       =>  $data['display'],
@@ -28,6 +28,8 @@ class PermissionSeeder extends Seeder
                 'action'        =>  $data['action'],
             ]);
         }
+
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 
     public function getData()

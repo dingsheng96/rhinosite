@@ -94,6 +94,18 @@ class Status
                 'text' => __('labels.published'),
                 'class' => 'badge badge-pill badge-lg badge-success'
             ],
+            'expired' => [
+                'text' => __('labels.expired'),
+                'class' => 'badge badge-pill badge-lg badge-danger'
+            ],
+            'boosting' => [
+                'text' => __('labels.boosting'),
+                'class' => 'badge badge-pill badge-lg badge-success'
+            ],
+            'incoming' => [
+                'text' => __('labels.incoming'),
+                'class' => 'badge badge-pill badge-lg badge-warning'
+            ],
             'availability' => [
                 '0' => [
                     'text' => __('labels.unavailable'),

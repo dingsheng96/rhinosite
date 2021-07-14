@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Models\ProductCategory;
+use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -104,6 +106,14 @@ class RouteServiceProvider extends ServiceProvider
             return User::where('id', $value)
                 ->whereHas('roles', function ($query) {
                     $query->where('name', Role::ROLE_MEMBER);
+                })
+                ->firstOrFail();
+        });
+
+        Route::bind('ads', function ($value) {
+            return ProductAttribute::where('id', $value)
+                ->whereHas('productCategory', function ($query) {
+                    $query->where(app(ProductCategory::class)->getTable() . '.name', ProductCategory::TYPE_ADS);
                 })
                 ->firstOrFail();
         });

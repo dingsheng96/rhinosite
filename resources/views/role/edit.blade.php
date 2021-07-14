@@ -67,7 +67,7 @@
                                         <tbody class="select-all-container">
                                             @foreach ($modules as $module)
                                             <tr>
-                                                <td class="font-weight-bold">{{ Str::title($module->name) }}</td>
+                                                <td class="font-weight-bold">{{ $module->display }}</td>
                                                 @foreach ($module->permissions as $permission)
                                                 <td>
                                                     <div class="icheck-primary">

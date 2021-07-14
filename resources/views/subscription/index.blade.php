@@ -11,7 +11,7 @@
                 <h3 class="text-center font-weight-bold mb-3">{{ __('labels.available_packages') }}</h3>
 
                 <div class="multiple-items-slide row">
-                    @foreach ($plans as $plan)
+                    @forelse ($plans as $plan)
                     <div class="col-12 col-sm-6 col-xl-3">
                         <div class="card card-orange card-outline h-100 py-xl-5">
                             <div class="card-body text-center">
@@ -52,7 +52,9 @@
                             </div>
                         </div>
                     </div>
-                    @endforeach
+                    @empty
+                    <h4 class="text-center">Coming soon...</h4>
+                    @endforelse
                 </div>
             </div>
         </div>

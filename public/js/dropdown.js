@@ -38,17 +38,6 @@ $(function() {
             getSkuFromProduct($(this), $(this).val());
         });
     }
-
-    if ($(".disabled-date-filter").length > 0) {
-        if ($(".disabled-date-filter").val() != null && $(".disabled-date-filter").val() != "") {
-            getDisableDate($(".disabled-date-filter").val());
-        }
-
-        $(".disabled-date-filter").on("change", function() {
-            getDisableDate($(this).val());
-        });
-    }
-
 });
 
 function getCountryStatesFromCountry(country_id) {
@@ -72,34 +61,6 @@ function getCitiesFromCountryState(country_id, state_id) {
 
     if (country_id != null && country_id != "" && state_id != null && state_id != "") {
         setDataIntoDropdown(url, dropdown, "name", "id");
-    }
-}
-
-function getDisableDate(source_id) {
-    let datepicker = $(".date-picker");
-
-    let url = datepicker.data("data-disabled-date-route").replace("__REPLACE__", source_id);
-
-    if (source_id != null && source_id != "") {
-        $.ajax({
-            url: url,
-            type: "GET",
-            success: xhr => {
-
-                if (xhr.status) {
-
-                    datepicker.daterangepicker({
-                        isInvalidDate: function (date) {
-                            $.each(xhr.data, function(index, value) {
-                                if(date == value) {
-                                    return true;
-                                }
-                            });
-                        }
-                    });
-                }
-            }
-        });
     }
 }
 

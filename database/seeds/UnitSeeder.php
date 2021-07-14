@@ -2,6 +2,7 @@
 
 use App\Models\Unit;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class UnitSeeder extends Seeder
 {
@@ -12,14 +13,18 @@ class UnitSeeder extends Seeder
      */
     public function run()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        DB::statement('TRUNCATE TABLE ' . (new Unit())->getTable());
+
         foreach ($this->getData() as $data) {
-            Unit::firstOrCreate([
-                'display' => $data['display']
-            ], [
+            Unit::create([
                 'name' => $data['name'],
+                'display' => $data['display'],
                 'description' => $data['description']
             ]);
         }
+
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 
     private function getData()

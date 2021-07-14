@@ -49,6 +49,22 @@ class ProductAttribute extends Model
         return $this->morphMany(Cart::class, 'cartable');
     }
 
+    public function productCategory()
+    {
+        return $this->hasOneThrough(ProductCategory::class, Product::class, 'id', 'id', 'product_id', 'product_category_id');
+    }
+
+    // Scopes
+    public function scopeActive($query)
+    {
+        return $query->where('status', self::STATUS_ACTIVE);
+    }
+
+    public function scopeInactive($query)
+    {
+        return $query->where('status', self::STATUS_INACTIVE);
+    }
+
     // Attributes
     public function getStatusLabelAttribute()
     {

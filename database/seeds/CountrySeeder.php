@@ -17,16 +17,13 @@ class CountrySeeder extends Seeder
         DB::statement('TRUNCATE TABLE ' . app(Country::class)->getTable());
 
         foreach ($this->getData() as $data) {
-            Country::updateOrCreate(
-                ['name' => $data['name']],
-                [
-                    'name'          =>  $data['name'],
-                    'code'          =>  $data['code'],
-                    'set_default'   =>  $data['set_default'],
-                    'currency_id'   =>  $data['currency_id'],
-                    'dial_code'     =>  $data['dial_code'],
-                ],
-            );
+            Country::create([
+                'name'          =>  $data['name'],
+                'code'          =>  $data['code'],
+                'set_default'   =>  $data['set_default'],
+                'currency_id'   =>  $data['currency_id'],
+                'dial_code'     =>  $data['dial_code'],
+            ]);
         }
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1');

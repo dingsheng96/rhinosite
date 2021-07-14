@@ -10,11 +10,10 @@
 
     <title>{{ config('app.name') }} @if (!empty($title)) {{ ' | ' . $title }} @endif</title>
 
-    <link rel="stylesheet" href="{{ asset('css/app.css?v=' . time()) }}">
-    <link rel="stylesheet" href="{{ asset('css/style.css?v=' . time()) }}">
-    <link rel="stylesheet" href="{{ asset('dropzone-5.7.0/dist/dropzone.css') }}">
-    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
-
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css?v=' . time()) }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css?v=' . time()) }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('dropzone-5.7.0/dist/dropzone.css') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
 
 </head>
 
@@ -48,17 +47,19 @@
 
     @endif
 
-    <script src="{{ asset('js/app.js?v=' . time()) }}"></script>
-    <script src="{{ asset('dropzone-5.7.0/dist/dropzone.js?v=' . time()) }}"></script>
-    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{{ asset('js/style.js?v=' . time()) }}"></script>
-    <script src="{{ asset('js/function.js?v=' . time()) }}"></script>
-    <script src="{{ asset('js/dropdown.js?v=' . time()) }}"></script>
-    <script src="{{ asset('js/modal.js?v=' . time()) }}"></script>
-    <script src="{{ asset('js/dropzone.js?v=' . time()) }}"></script>
-    <script src="{{ asset('js/dynamic-form.js?v=' . time()) }}"></script>
-    <script src="{{ asset('js/cart.js?v=' . time()) }}"></script>
+    <script type="text/javascript" src="{{ asset('js/app.js?v=' . time()) }}"></script>
+    <script type="text/javascript" src="{{ asset('dropzone-5.7.0/dist/dropzone.js?v=' . time()) }}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+    <script type="text/javascript" src="{{ asset('js/style.js?v=' . time()) }}"></script>
+    <script type="text/javascript" src="{{ asset('js/function.js?v=' . time()) }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dropdown.js?v=' . time()) }}"></script>
+    <script type="text/javascript" src="{{ asset('js/modal.js?v=' . time()) }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dropzone.js?v=' . time()) }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dynamic-form.js?v=' . time()) }}"></script>
+    <script type="text/javascript" src="{{ asset('js/cart.js?v=' . time()) }}"></script>
+    <script type="text/javascript" src="{{ asset('js/datepicker.js?v=' . time()) }}"></script>
     @stack('scripts')
 
 </body>

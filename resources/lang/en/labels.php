@@ -26,6 +26,9 @@ return [
     'select' => 'Select',
     'paid' => 'Paid',
     'cancelled' => 'Cancelled',
+    'expired' => 'Expired',
+    'boosting' => 'Boosting',
+    'incoming' => 'In Coming',
 
     'copyright' => '&copy ' . config('app.name') . ' ' . date('Y'),
     'terms_policy' => 'Terms & Policies',
@@ -45,6 +48,7 @@ return [
     'text_placeholder' => 'Enter :label',
     'change_profile_pic' => 'Change Profile Picture',
     'change_logo' => 'Change Logo',
+    'sign_up_a_plan' => 'Sign up a plan',
 
     'project' => 'Project|Projects',
     'country_state' => 'Country State|Country States',
@@ -166,5 +170,9 @@ return [
     'paid_by' => 'Paid By',
     'transaction_id' => 'Transaction ID',
     'pay_now' => 'Pay Now',
-    'order_review' => 'Order Review'
+    'order_review' => 'Order Review',
+    'boosted_at' => 'Boosted At|Boost Date',
+    'add_on' => 'Add On',
+    'buy_add_on' => 'Buy Add On',
+    'remaining' => 'Remaining'
 ];

@@ -26,6 +26,6 @@ class VerificationComposer
      */
     public function compose(View $view)
     {
-        $view->with('verifications_count', UserDetail::pendingVerifications()->count());
+        $view->with('verifications_count', UserDetail::pendingVerifications()->count() ?? 0);
     }
 }

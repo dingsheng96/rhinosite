@@ -12,6 +12,7 @@ return [
 
     'login' => 'Login',
 
+    'general' => 'General',
     'dashboard' => 'Dashboard',
     'ads' => 'Ads',
     'project' => 'Project|Projects',

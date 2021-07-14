@@ -16,7 +16,11 @@
         </div>
 
         <nav class="mt-2">
+
             <ul class="nav nav-pills nav-sidebar flex-column nav-legacy nav-flat" data-widget="treeview" role="menu" data-accordion="false">
+
+                <li class="nav-header">{{ __('modules.general') }}</li>
+
                 <li class="nav-item">
                     <a href="{{ route('dashboard') }}" class="nav-link {{ Nav::hasSegment('dashboard', 1, 'active') }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -27,7 +31,7 @@
                 @canany(['ads.create', 'ads.read', 'ads.update', 'ads.delete'])
                 <li class="nav-item">
                     <a href="{{ route('ads.index') }}" class="nav-link {{ Nav::hasSegment('ads', 1, 'active') }}">
-                        <i class="nav-icon fab fa-adn"></i>
+                        <i class="nav-icon fas fa-rocket"></i>
                         <p>{{ __('modules.ads') }}</p>
                     </a>
                 </li>
@@ -44,7 +48,6 @@
 
                 {{-- ECOMMERCE --}}
                 @canany(['product.create', 'product.read'. 'product.update', 'product.delete', 'order.create', 'order.read'. 'order.update', 'order.delete', 'package.create', 'package.read'. 'package.update', 'package.delete'])
-
                 <li class="nav-header">{{ __('modules.ecommerce') }}</li>
 
                 @canany(['product.create', 'product.read'. 'product.update', 'product.delete'])

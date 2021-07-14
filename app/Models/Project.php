@@ -56,6 +56,11 @@ class Project extends Model
         return $this->morphMany(Price::class, 'priceable');
     }
 
+    public function adsBoosters()
+    {
+        return $this->morphMany(AdsBooster::class, 'boostable');
+    }
+
     // Scopes
     public function scopePublished($query, bool $status = true)
     {

@@ -37,6 +37,11 @@ class Product extends Model
         return $this->morphMany(Media::class, 'sourceable');
     }
 
+    public function userAdsQuota()
+    {
+        return $this->hasManyThrough(UserAdsQuota::class, ProductAttribute::class, 'product_id', 'product_attribute_id', 'id', 'id');
+    }
+
     // Scopes
     public function scopeProductCategoryChecker($query, $name)
     {

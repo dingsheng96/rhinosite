@@ -77,16 +77,16 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::resource('countries.country-states', 'CountryStateController');
 
     Route::resource('countries.country-states.cities', 'CityController');
-});
 
-Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
+    Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
 
-    Route::group(['prefix' => 'countries/{country}', 'as' => 'countries.'], function () {
-        Route::get('country-states', 'DataController@getCountryStateFromCountry')->name('country-states');
-        Route::get('country-states/{country_state}/cities', 'DataController@getCityFromCountryState')->name('country-states.cities');
+        Route::group(['prefix' => 'countries/{country}', 'as' => 'countries.'], function () {
+            Route::get('country-states', 'DataController@getCountryStateFromCountry')->name('country-states');
+            Route::get('country-states/{country_state}/cities', 'DataController@getCityFromCountryState')->name('country-states.cities');
+        });
+
+        Route::get('products/{product}/sku', 'DataController@getSkuFromProduct')->name('products.sku');
+
+        Route::get('ads/{ads}/date', 'DataController@getAdsAvailableDate')->name('ads.date');
     });
-
-    Route::get('products/{product}/sku', 'DataController@getSkuFromProduct')->name('products.sku');
-
-    Route::get('ads-boosters/{ads}/available-date', 'DataController@getAdsBoosterAvailableDate')->name('ads-boosters.available-date');
 });

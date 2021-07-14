@@ -445,10 +445,13 @@
                         </h3>
                     </div>
                     <div class="card-body">
-                        <p class="cart-text">
+
+                        <p class="text-muted">Coming soon...</p>
+
+                        {{-- <p class="cart-text">
                             <span class="font-weight-bold">{{ __('messages.boosts_ads_preference_text') }}</span>
-                            <br>
-                            {{ __('messages.select_prefer_boosts_ads_days') }}
+                        <br>
+                        {{ __('messages.select_prefer_boosts_ads_days') }}
                         </p>
 
                         <div class="row">
@@ -469,8 +472,7 @@
                                 <div class="form-group">
                                     <label for="boost_ads_date" class="col-form-label">{{ __('labels.boosts_ads_date') }}</label>
                                     <div class="input-group date-picker">
-                                        <input type="text" id="boost_ads_date" name="boost_ads_date" class="form-control @error('boosts_ads_date') is-invalid @enderror bg-white" readonly placeholder="dd/mm/yyyy"
-                                            data-disabled-date-route="{{ route('data.ads-boosters.available-date', ['__REPLACE__']) }}">
+                                        <input type="text" id="boost_ads_date" name="boost_ads_date" class="form-control @error('boosts_ads_date') is-invalid @enderror bg-white" readonly placeholder="dd/mm/yyyy" data-disabled-date-route="{{ route('data.ads.date', ['ads' => '__REPLACE__']) }}">
                                         <div class="input-group-append">
                                             <span class="input-group-text bg-white"><i class="far fa-calendar"></i></span>
                                         </div>
@@ -482,7 +484,7 @@
                                     @enderror
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="card-footer bg-transparent">
                         <div class="row">
