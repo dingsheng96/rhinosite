@@ -72,7 +72,7 @@ $(function () {
 
         this.on('sendingmultiple', function (file, xhr, formData) {
 
-            let data = form.serializeArray();
+            let data = form.not('#clone').serializeArray();
 
             $.each(data, function (key, el) {
                 formData.append(el.name, el.value);
@@ -89,8 +89,6 @@ $(function () {
 
             this.removeAllFiles();
 
-            console.log(response);
-
             Swal.fire({
                 icon: response.status ? 'success' : 'error',
                 title: response.message,
@@ -105,9 +103,8 @@ $(function () {
 
         this.on('errormultiple', function (file, response) {
 
-            console.log(response);
-
             let errors = response.errors;
+            let messages = [];
 
             if (errors) {
 
@@ -118,14 +115,29 @@ $(function () {
 
                 $.each(errors, function (name, message) {
 
-                    let el = form.find('[name=' + name + ']');
+                    let array = name.split('.');
+                    let el = null;
 
+                    if(array.length == 0) {
+                        el = form.find('[name="' + name + '"]');
+                    } else {
+
+                        let element = array[0];
+
+                        for(i = 0; i < array.length; i++) {
+                            element += '[' + array[i] + ']';
+                        }
+                        el = form.find('[name="' + array[0] + element + + '"]');
+                    }
+
+                    messages[name] = message;
                     el.addClass('is-invalid');
                     el.parent().append('<span class="invalid-feedback" role="alert"><strong>' + message + '</strong></span>');
                 });
+
             }
 
-            alertHeader(message);
+            alertHeader(messages);
             customAlert(response.message ?? response, 'error');
         });
     }

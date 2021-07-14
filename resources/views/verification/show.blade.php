@@ -146,7 +146,7 @@
                                                         </tr>
                                                         @empty
                                                         <tr>
-                                                            <td colspan="3" class="text-center">{{ __('labels.no_records') }}</td>
+                                                            <td colspan="3" class="text-center">{{ __('messages.no_records') }}</td>
                                                         </tr>
                                                         @endforelse
                                                     </tbody>
@@ -161,7 +161,7 @@
                 </div>
 
                 <div class="card-footer bg-transparent text-md-right text-center">
-                    <a href="{{ route('verifications.index') }}" role="button" class="btn btn-light">
+                    <a href="{{ route('verifications.index') }}" role="button" class="btn btn-light btn-rounded-corner">
                         <i class="fas fa-chevron-left"></i>
                         {{ __('labels.back') }}
                     </a>

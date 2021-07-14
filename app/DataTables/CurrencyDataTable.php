@@ -27,16 +27,15 @@ class CurrencyDataTable extends DataTable
                     'no_action' => $this->no_action ?: null,
                     'view' => [
                         'permission' => 'currency.read',
-                        'route' => route('settings.currencies.show', ['currency' => $data->id])
+                        'route' => route('currencies.show', ['currency' => $data->id])
                     ],
                     'update' => [
                         'permission' => 'currency.update',
-                        'route' => '#updateCurrencyModal',
-                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode(['id' => $data->id, 'name' => $data->name, 'code' => $data->code]) . "'"
+                        'route' => route('currencies.edit', ['currency' => $data->id]),
                     ],
                     'delete' => [
                         'permission' => 'currency.delete',
-                        'route' => route('settings.currencies.destroy', ['currency' => $data->id])
+                        'route' => route('currencies.destroy', ['currency' => $data->id])
                     ]
                 ])->render();
             })
@@ -66,12 +65,13 @@ class CurrencyDataTable extends DataTable
     {
         return $this->builder()
             ->setTableId('currency-table')
-            ->addTableClass('table-hover table-bordered table-head-fixed table-striped')
+            ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(0, 'asc')
             ->responsive(true)
-            ->autoWidth(true);
+            ->autoWidth(true)
+            ->processing(false);
     }
 
     /**
@@ -82,11 +82,11 @@ class CurrencyDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#'),
-            Column::make('name')->title(__('labels.name')),
-            Column::make('code')->title(__('labels.code')),
-            Column::make('created_at')->title(__('labels.datetime')),
-            Column::computed('action', __('labels.action'))
+            Column::computed('DT_RowIndex', '#')->width('5%'),
+            Column::make('name')->title(__('labels.name'))->width('50%'),
+            Column::make('code')->title(__('labels.code'))->width('20%'),
+            Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
+            Column::computed('action', __('labels.action'))->width('10%')
                 ->exportable(false)
                 ->printable(false),
         ];

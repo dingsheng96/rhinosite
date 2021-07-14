@@ -1,10 +1,10 @@
 <?php
 
 use App\Models\Module;
+use App\Models\Permission;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Models\Permission;
 
 class PermissionSeeder extends Seeder
 {

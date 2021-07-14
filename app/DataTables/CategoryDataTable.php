@@ -29,7 +29,7 @@ class CategoryDataTable extends DataTable
                     'no_action' => $this->no_action ?: null,
                     'view' => [
                         'permission' => 'category.create',
-                        'route' => route('settings.categories.show', ['category' => $data->id])
+                        'route' => route('categories.show', ['category' => $data->id])
                     ],
                     'update' => [
                         'permission' => 'category.create',
@@ -38,7 +38,7 @@ class CategoryDataTable extends DataTable
                     ],
                     'delete' => [
                         'permission' => 'category.delete',
-                        'route' => route('settings.categories.destroy', ['category' => $data->id])
+                        'route' => route('categories.destroy', ['category' => $data->id])
                     ]
                 ])->render();
             })
@@ -46,7 +46,7 @@ class CategoryDataTable extends DataTable
                 return $data->created_at->toDateTimeString();
             })
             ->editColumn('description', function ($data) {
-                return Str::limit($data->description);
+                return Str::limit($data->description ?? '-');
             })
             ->rawColumns(['action']);
     }
@@ -71,12 +71,13 @@ class CategoryDataTable extends DataTable
     {
         return $this->builder()
             ->setTableId('category-table')
-            ->addTableClass('table-hover table-bordered table-head-fixed table-striped')
+            ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(0, 'asc')
             ->responsive(true)
-            ->autoWidth(true);
+            ->autoWidth(true)
+            ->processing(false);
     }
 
     /**
@@ -87,11 +88,11 @@ class CategoryDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#'),
-            Column::make('name')->title(__('labels.name')),
-            Column::make('description')->title(__('labels.description')),
-            Column::make('created_at')->title(__('labels.datetime')),
-            Column::computed('action', __('labels.action'))
+            Column::computed('DT_RowIndex', '#')->width('5%'),
+            Column::make('name')->title(__('labels.name'))->width('30%'),
+            Column::make('description')->title(__('labels.description'))->width('40%'),
+            Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
+            Column::computed('action', __('labels.action'))->width('10%')
                 ->exportable(false)
                 ->printable(false),
         ];

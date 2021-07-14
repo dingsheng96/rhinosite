@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Settings;
 
-use Illuminate\Validation\Rule;
 use App\Models\Currency;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;
@@ -28,33 +28,22 @@ class CurrencyRequest extends FormRequest
      */
     public function rules()
     {
-        if ($this->route('currency')) {
-            return [
-                'update.name' => [
-                    'required',
-                    Rule::unique(Currency::class, 'name')
-                        ->ignore($this->route('currency'), 'id')
-                        ->whereNull('deleted_at')
-                ],
-                'update.code' => [
-                    'required',
-                    Rule::unique(Currency::class, 'code')
-                        ->ignore($this->route('currency'), 'id')
-                        ->whereNull(('deleted_at'))
-                ]
-            ];
-        }
-
         return [
-            'create.name' => [
+            'name' => [
                 'required',
                 Rule::unique(Currency::class, 'name')
+                    ->ignore($this->route('currency'), 'id')
                     ->whereNull('deleted_at')
             ],
-            'create.code' => [
+            'code' => [
                 'required',
                 Rule::unique(Currency::class, 'code')
+                    ->ignore($this->route('currency'), 'id')
                     ->whereNull(('deleted_at'))
+            ],
+            'rate.*' => [
+                'required',
+                'numeric'
             ]
         ];
     }
@@ -76,16 +65,10 @@ class CurrencyRequest extends FormRequest
      */
     public function attributes()
     {
-        if ($this->route('currency')) {
-            return [
-                'update.name' => __('validation.attributes.name'),
-                'update.code' => __('validation.attributes.code')
-            ];
-        }
-
         return [
-            'create.name' => __('validation.attributes.name'),
-            'create.code' => __('validation.attributes.code')
+            'name'  =>  __('validation.attributes.name'),
+            'code'  =>  __('validation.attributes.code'),
+            'rate'  =>  __('validation.attributes.rate')
         ];
     }
 }

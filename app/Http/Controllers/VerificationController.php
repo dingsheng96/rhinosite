@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Media;
 use App\Helpers\Status;
 use App\Helpers\Message;
-use App\Models\UserDetails;
+use App\Models\Permission;
+use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Permission;
 use App\DataTables\VerificationDataTable;
 use App\Support\Facades\UserDetailFacade;
 
@@ -62,7 +62,7 @@ class VerificationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(UserDetails $verification)
+    public function show(UserDetail $verification)
     {
         $documents = Media::ssm()
             ->orderBy('created_at', 'asc')
@@ -77,7 +77,7 @@ class VerificationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(UserDetails $verification)
+    public function edit(UserDetail $verification)
     {
         $statuses = $this->statuses;
         $documents = Media::ssm()
@@ -94,7 +94,7 @@ class VerificationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, UserDetails $verification)
+    public function update(Request $request, UserDetail $verification)
     {
         $request->validate([
             'status' => [

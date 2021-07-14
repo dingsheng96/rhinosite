@@ -2,18 +2,19 @@
 
 namespace App\Http\Requests;
 
+use App\Models\City;
 use App\Models\Unit;
 use App\Models\AdsType;
+use App\Models\Country;
 use App\Models\Project;
-use App\Models\Category;
+use App\Models\Currency;
+use App\Models\CountryState;
 use App\Rules\ExistMerchant;
 use Illuminate\Validation\Rule;
+use App\Rules\UniquePriceCurrency;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use App\Models\City;
-use App\Models\Country;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\CountryState;
 
 class ProjectRequest extends FormRequest
 {
@@ -38,35 +39,29 @@ class ProjectRequest extends FormRequest
         $merchant_id = $this->get('merchant') ?? Auth::id();
 
         return [
-            'title_en'          =>  [
+            'title_en' =>  [
                 'required', 'min:3', 'max:100',
                 Rule::unique(Project::class, 'title')
                     ->ignore($this->route('project'), 'id')
                     ->where('user_id', $merchant_id)
                     ->whereNull('deleted_at')
             ],
-            'title_cn'          =>  ['required', 'min:3', 'max:100'],
-            'slug'              =>  [
-                'required', 'min:3', 'max:200',
-                Rule::unique(Project::class, 'slug')
-                    ->ignore($this->route('project'), 'id')
-                    ->where('user_id', $merchant_id)
-                    ->whereNull('deleted_at')
-            ],
-            'unit_price'        =>  ['required', 'numeric'],
-            'unit_value'        =>  ['required', 'numeric'],
-            'unit'              =>  ['required', 'exists:' . Unit::class . ',id'],
-            'thumbnail'         =>  [Rule::requiredIf(empty($this->route('project'))), 'nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2000', 'dimensions:max_height=1024,max_width=1024'],
-            'files'             =>  [Rule::requiredIf(empty($this->route('project'))), 'nullable', 'array'],
-            'files.*'           =>  ['image', 'mimes:jpg,jpeg,png', 'max:2000', 'dimensions:max_height=1024,max_width=1024'],
-            'description'       =>  ['required'],
-            'materials'         =>  ['required'],
-            'services'          =>  ['required'],
-            'address_1'         =>  ['required', 'min:3', 'max:255'],
-            'address_2'         =>  ['nullable'],
-            'country'           =>  ['required', 'exists:' . Country::class . ',id'],
-            'postcode'          =>  ['required', 'digits:5'],
-            'country_state'     =>  [
+            'title_cn' =>  ['required', 'min:3', 'max:100'],
+            'currency'      =>  ['required', 'exists:' . Currency::class . ',id'],
+            'unit_price'    =>  ['numeric'],
+            'unit_value'    =>  ['required', 'numeric'],
+            'unit'          =>  ['required', 'exists:' . Unit::class . ',id'],
+            'thumbnail'     =>  [Rule::requiredIf(empty($this->route('project'))), 'nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2000', 'dimensions:max_height=1024,max_width=1024'],
+            'files'         =>  [Rule::requiredIf(empty($this->route('project'))), 'nullable', 'array'],
+            'files.*'       =>  ['image', 'mimes:jpg,jpeg,png', 'max:2000', 'dimensions:max_height=1024,max_width=1024'],
+            'description'   =>  ['required'],
+            'materials'     =>  ['required'],
+            'services'      =>  ['required'],
+            'address_1'     =>  ['required', 'min:3', 'max:255'],
+            'address_2'     =>  ['nullable'],
+            'country'       =>  ['required', 'exists:' . Country::class . ',id'],
+            'postcode'      =>  ['required', 'digits:5'],
+            'country_state' =>  [
                 'required',
                 Rule::exists(CountryState::class, 'id')
                     ->where('country_id', $this->get('country'))
@@ -115,8 +110,8 @@ class ProjectRequest extends FormRequest
             'city'              =>  __('validation.attributes.city'),
             'ads_type'          =>  __('validation.attributes.ads_type'),
             'boost_ads_date'    =>  __('validation.attributes.boost_ads_date'),
-            'slug'              =>  __('validation.attributes.slug'),
             'unit_price'        =>  __('validation.attributes.unit_price'),
+            'currency'          =>  __('validation.attributes.currency'),
             'unit_value'        =>  __('validation.attributes.unit_value'),
             'unit'              =>  __('validation.attributes.unit'),
         ];

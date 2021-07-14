@@ -3,7 +3,11 @@
 namespace App\Helpers;
 
 use App\Models\User;
-use App\Models\UserDetails;
+use App\Models\Order;
+use App\Models\Package;
+use App\Models\Product;
+use App\Models\UserDetail;
+use App\Models\Transaction;
 
 class Status
 {
@@ -12,40 +16,38 @@ class Status
         return new self();
     }
 
-    public function accountStatus(): array
+    public function activeStatus(): array
     {
         return [
-            User::STATUS_ACTIVE => 'Active',
-            User::STATUS_INACTIVE  => 'Inactive'
+            'active' => __('labels.active'),
+            'inactive'  => __('labels.inactive')
         ];
     }
 
     public function transactionStatus(): array
     {
         return [
-            'pending' => 'Pending',
-            'failed' => 'Failed',
-            'success' => 'Success'
+            Transaction::STATUS_PENDING => __('labels.pending'),
+            Transaction::STATUS_SUCCESS => __('labels.success'),
+            Transaction::STATUS_FAILED => __('labels.failed'),
         ];
     }
 
     public function orderStatus(): array
     {
         return [
-            'pending' => 'Pending',
-            'failed' => 'Failed',
-            'success' => 'Success',
-            'confirmed' => 'Confirmed',
-            'rejected' => 'Rejected'
+            Order::STATUS_PENDING => __('labels.pending'),
+            Order::STATUS_PAID => __('labels.paid'),
+            Order::STATUS_CANCELLED => __('labels.cancelled'),
         ];
     }
 
     public function verificationStatus(): array
     {
         return [
-            UserDetails::STATUS_PENDING => 'Pending',
-            UserDetails::STATUS_APPROVED => 'Approved',
-            UserDetails::STATUS_REJECTED => 'Rejected'
+            UserDetail::STATUS_PENDING => 'Pending',
+            UserDetail::STATUS_APPROVED => 'Approved',
+            UserDetail::STATUS_REJECTED => 'Rejected'
         ];
     }
 
@@ -72,21 +74,45 @@ class Status
                 'text' => __('labels.failed'),
                 'class' => 'badge badge-pill badge-lg badge-danger'
             ],
-            'confirmed' => [
-                'text' => __('labels.confirmed'),
-                'class' => 'badge badge-pill badge-lg badge-primary'
+            'paid' => [
+                'text' => __('labels.paid'),
+                'class' => 'badge badge-pill badge-lg badge-success'
             ],
             'rejected' => [
                 'text' => __('labels.rejected'),
+                'class' => 'badge badge-pill badge-lg badge-danger'
+            ],
+            'cancelled' => [
+                'text' => __('labels.cancelled'),
                 'class' => 'badge badge-pill badge-lg badge-danger'
             ],
             'approved' => [
                 'text' => __('labels.approved'),
                 'class' => 'badge badge-pill badge-lg badge-success'
             ],
-            'publish' => [
+            'published' => [
+                'text' => __('labels.published'),
+                'class' => 'badge badge-pill badge-lg badge-success'
+            ],
+            'expired' => [
+                'text' => __('labels.expired'),
+                'class' => 'badge badge-pill badge-lg badge-danger'
+            ],
+            'boosting' => [
+                'text' => __('labels.boosting'),
+                'class' => 'badge badge-pill badge-lg badge-success'
+            ],
+            'incoming' => [
+                'text' => __('labels.incoming'),
+                'class' => 'badge badge-pill badge-lg badge-warning'
+            ],
+            'availability' => [
+                '0' => [
+                    'text' => __('labels.unavailable'),
+                    'class' => 'badge badge-pill badge-lg badge-danger'
+                ],
                 '1' => [
-                    'text' => __('labels.publishing'),
+                    'text' => __('labels.available'),
                     'class' => 'badge badge-pill badge-lg badge-success'
                 ]
             ]

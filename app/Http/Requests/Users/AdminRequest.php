@@ -48,7 +48,7 @@ class AdminRequest extends FormRequest
             ],
             'create.status' => [
                 'required',
-                Rule::in(array_keys(Status::instance()->accountStatus()))
+                Rule::in(array_keys(Status::instance()->activeStatus()))
             ],
             'create.password' => [
                 'required',

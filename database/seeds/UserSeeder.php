@@ -1,8 +1,9 @@
 <?php
 
-use App\Models\User;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
@@ -14,19 +15,21 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        DB::statement('TRUNCATE TABLE ' . (new User())->getTable());
+
         // create super admin
-        $superadmin = User::updateOrCreate(
-            ['email' => 'superadmin@email.com'],
-            [
-                'name' => 'Super Admin',
-                'mobile_no' => null,
-                'tel_no' => null,
-                'reg_no' => null,
-                'password' => Hash::make('password'),
-                'status' => User::STATUS_ACTIVE,
-            ]
-        );
+        $superadmin = User::create([
+            'name' => 'Super Admin',
+            'phone' => null,
+            'email' => 'superadmin@email.com',
+            'password' => Hash::make('password'),
+            'status' => User::STATUS_ACTIVE,
+            'email_verified_at' => now()
+        ]);
 
         $superadmin->assignRole(Role::ROLE_SUPER_ADMIN);
+
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

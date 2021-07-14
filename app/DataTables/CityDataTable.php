@@ -2,9 +2,9 @@
 
 namespace App\DataTables;
 
+use App\Models\City;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use App\Models\City;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
@@ -28,7 +28,7 @@ class CityDataTable extends DataTable
                     'no_action' => $this->no_action ?: null,
                     'delete' => [
                         'permission' => 'country.delete',
-                        'route' => route('settings.countries.country-states.cities.destroy', ['country' => $this->country_id, 'country_state' => $this->country_state_id, 'city' => $data->id])
+                        'route' => route('countries.country-states.cities.destroy', ['country' => $this->country_id, 'country_state' => $this->country_state_id, 'city' => $data->id])
                     ]
                 ])->render();
             })
@@ -58,12 +58,13 @@ class CityDataTable extends DataTable
     {
         return $this->builder()
             ->setTableId('city-table')
-            ->addTableClass('table-hover table-bordered table-head-fixed table-striped')
+            ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(0, 'asc')
             ->responsive(true)
-            ->autoWidth(true);
+            ->autoWidth(true)
+            ->processing(false);
     }
 
     /**
@@ -74,10 +75,10 @@ class CityDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#'),
-            Column::make('name')->title(__('labels.name')),
-            Column::make('created_at')->title(__('labels.datetime')),
-            Column::computed('action', __('labels.action'))
+            Column::computed('DT_RowIndex', '#')->width('10%'),
+            Column::make('name')->title(__('labels.name'))->width('50%'),
+            Column::make('created_at')->title(__('labels.created_at'))->width('25%'),
+            Column::computed('action', __('labels.action'))->width('15%')
                 ->exportable(false)
                 ->printable(false),
         ];

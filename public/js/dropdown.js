@@ -28,16 +28,16 @@ $(function() {
         });
     }
 
-    if ($(".disabled-date-filter").length > 0) {
-        if ($(".disabled-date-filter").val() != null && $(".disabled-date-filter").val() != "") {
-            getDisableDate($(".disabled-date-filter").val());
+    if($(".sku-filter").length > 0) {
+
+        if($('.sku-filter option:selected').val() != 0) {
+            getSkuFromProduct($('.sku-filter'), $('.sku-filter option:selected').val());
         }
 
-        $(".disabled-date-filter").on("change", function() {
-            getDisableDate($(this).val());
+        $(document).on("change", '.sku-filter', function() {
+            getSkuFromProduct($(this), $(this).val());
         });
     }
-
 });
 
 function getCountryStatesFromCountry(country_id) {
@@ -64,30 +64,15 @@ function getCitiesFromCountryState(country_id, state_id) {
     }
 }
 
-function getDisableDate(source_id) {
-    let datepicker = $(".date-picker");
+function getSkuFromProduct(parent, product_id) {
 
-    let url = datepicker.data("data-disabled-date-route").replace("__REPLACE__", source_id);
+    let dropdown = parent.parents('tr').find('.sku-dropdown');
 
-    if (source_id != null && source_id != "") {
-        $.ajax({
-            url: url,
-            type: "GET",
-            success: xhr => {
+    removeChildOption(dropdown);
 
-                if (xhr.status) {
+    let url = dropdown.data("sku-route").replace("__PRODUCT__", product_id);
 
-                    datepicker.daterangepicker({
-                        isInvalidDate: function (date) {
-                            $.each(xhr.data, function(index, value) {
-                                if(date == value) {
-                                    return true;
-                                }
-                            });
-                        }
-                    });
-                }
-            }
-        });
+    if (product_id != null && product_id != "") {
+        setDataIntoDropdown(url, dropdown, "sku", "id");
     }
 }

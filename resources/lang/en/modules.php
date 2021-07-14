@@ -1,6 +1,7 @@
 <?php
 
 return [
+
     'list' => ':module List',
     'edit' => 'Edit :module',
     'create' => 'Create :module',
@@ -10,26 +11,34 @@ return [
     'add' => 'Add :module',
 
     'login' => 'Login',
+
+    'general' => 'General',
     'dashboard' => 'Dashboard',
-    'profile' => 'Profile',
     'ads' => 'Ads',
     'project' => 'Project|Projects',
+
+    'ecommerce' => 'Ecommerce',
     'order' => 'Order|Orders',
     'product' => 'Product|Products',
-    'setting' => 'Setting|Settings',
-    'user' => 'User|Users',
-    'verification' => 'Verification|Verifications',
+    'package' => 'Package|Packages',
 
-    'submodules' => [
-        'country' => 'Country|Countries',
-        'role' => 'Role|Roles',
-        'currency' => 'Currency|Currencies',
-        'country_state' => 'Country State|Country States',
-        'city' => 'City|Cities',
-        'admin' => 'Admin|Admins',
-        'merchant' => 'Merchant|Merchants',
-        'member' => 'Member|Members',
-        'category' => 'Category|Categories',
-        'activity_logs' => 'Activity Logs'
-    ]
+    'users' => 'Users',
+    'verification' => 'Verification|Verifications',
+    'admin' => 'Admin|Admins',
+    'merchant' => 'Merchant|Merchants',
+    'member' => 'Member|Members',
+
+    'subscription' => 'Subscription|Subscriptions',
+    'cart' => 'Cart',
+    'checkout' => 'Check Out',
+
+    'settings' => 'Settings',
+    'country' => 'Country|Countries',
+    'role' => 'Role|Roles',
+    'currency' => 'Currency|Currencies',
+    'country_state' => 'Country State|Country States',
+    'city' => 'City|Cities',
+    'category' => 'Category|Categories',
+    'activity_logs' => 'Activity Logs',
+
 ];

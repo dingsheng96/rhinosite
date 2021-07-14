@@ -2,9 +2,9 @@
 
 namespace App\DataTables;
 
+use App\Models\Country;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use App\Models\Country;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
@@ -28,15 +28,15 @@ class CountryDataTable extends DataTable
                     'no_action' => $this->no_action ?: null,
                     'view' => [
                         'permission' => 'country.read',
-                        'route' => route('settings.countries.show', ['country' => $data->id])
+                        'route' => route('countries.show', ['country' => $data->id])
                     ],
                     'update' => [
                         'permission' => 'country.update',
-                        'route' => route('settings.countries.edit', ['country' => $data->id])
+                        'route' => route('countries.edit', ['country' => $data->id])
                     ],
                     'delete' => [
                         'permission' => 'country.delete',
-                        'route' => route('settings.countries.destroy', ['country' => $data->id])
+                        'route' => route('countries.destroy', ['country' => $data->id])
                     ]
                 ])->render();
             })
@@ -82,12 +82,13 @@ class CountryDataTable extends DataTable
     {
         return $this->builder()
             ->setTableId('country-table')
-            ->addTableClass('table-hover table-bordered table-head-fixed table-striped')
+            ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(0, 'asc')
             ->responsive(true)
-            ->autoWidth(true);
+            ->autoWidth(true)
+            ->processing(false);
     }
 
     /**
@@ -98,18 +99,18 @@ class CountryDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#'),
-            Column::make('name')->title(__('labels.name')),
-            Column::make('dial_code')->title(__('labels.dial_code')),
-            Column::make('currency')->title(__('labels.currency')),
+            Column::computed('DT_RowIndex', '#')->width('5%'),
+            Column::make('name')->title(__('labels.name'))->width('25%'),
+            Column::make('dial_code')->title(__('labels.dial_code'))->width('10%'),
+            Column::make('currency')->title(__('labels.currency'))->width('15%'),
             Column::make('country_states_count')
                 ->searchable(false)
-                ->title(trans_choice('labels.country_state', 2)),
+                ->title(trans_choice('labels.country_state', 2))->width('10%'),
             Column::make('cities_count')
                 ->searchable(false)
-                ->title(trans_choice('labels.city', 2)),
-            Column::make('created_at')->title(__('labels.datetime')),
-            Column::computed('action', __('labels.action'))
+                ->title(trans_choice('labels.city', 2))->width('10%'),
+            Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
+            Column::computed('action', __('labels.action'))->width('10%')
                 ->exportable(false)
                 ->printable(false),
         ];

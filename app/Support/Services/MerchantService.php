@@ -3,16 +3,9 @@
 namespace App\Support\Services;
 
 use App\Models\User;
-use App\Helpers\Misc;
 use App\Models\Media;
-use App\Models\Address;
-use App\Models\Project;
-use App\Models\Language;
-use App\Models\Translation;
-use App\Models\UserDetails;
-use Illuminate\Support\Str;
+use App\Models\UserDetail;
 use App\Helpers\FileManager;
-use App\Models\Currency;
 
 class MerchantService extends BaseService
 {
@@ -23,16 +16,16 @@ class MerchantService extends BaseService
 
     public function storeData()
     {
-        $this->saveMerchant();
-        $this->saveDetails();
-        $this->saveCategory();
-        $this->saveLocation();
-        $this->saveMedia();
+        $this->storeProfile();
+        $this->storeDetails();
+        $this->storeCategory();
+        $this->storeAddress();
+        $this->storeImage();
 
         return $this;
     }
 
-    public function saveMerchant()
+    public function storeProfile()
     {
         $this->model->name      =  $this->request->get('name');
         $this->model->phone     =  $this->request->get('phone');
@@ -44,64 +37,50 @@ class MerchantService extends BaseService
         }
 
         $this->setModel($this->model);
+
+        return $this;
     }
 
-    public function saveDetails()
+    public function storeDetails()
     {
         $details = $this->model->userDetails()
-            ->approvedDetails()->firstOr(function () {
-                return new UserDetails();
+            ->approvedDetails()
+            ->firstOr(function () {
+                return new UserDetail();
             });
 
-        $details->years_of_experience   =   $this->request->get('experience');
+        $details->industry_since        =   $this->request->get('experience');
         $details->website               =   $this->request->get('website');
         $details->facebook              =   $this->request->get('facebook');
         $details->pic_name              =   $this->request->get('pic_name');
         $details->pic_phone             =   $this->request->get('pic_phone');
         $details->pic_email             =   $this->request->get('pic_email');
 
-        if ($details->exists && $details->isDirty()) {
+        // new details
+        if (!$details->exists) {
+            $details->status = UserDetail::STATUS_PENDING;
+        }
 
-            $details->save();
-        } else {
-            // new details
-            $details->status = UserDetails::STATUS_PENDING;
+        if ($details->isDirty()) {
             $this->model->userDetails()->save($details);
         }
+
+        return $this;
     }
 
-    public function saveLocation()
-    {
-        $address = $this->model->address()
-            ->firstOr(function () {
-                return new Address();
-            });
-
-        $address->address_1 = $this->request->get('address_1');
-        $address->address_2 = $this->request->get('address_2');
-        $address->postcode  = $this->request->get('postcode');
-        $address->city_id   = $this->request->get('city');
-
-        if ($address->exists && $address->isDirty()) {
-            $address->save();
-        } else {
-            $this->model->address()->save($address);
-        }
-    }
-
-    public function saveMedia()
+    public function storeImage()
     {
         if ($this->request->hasFile('logo')) {
 
             $file  =   $this->request->file('logo');
 
             $config = [
-                'save_path' =>   User::STORE_PATH,
-                'type'      =>   Media::TYPE_LOGO,
-                'filemime'  =>   FileManager::instance()->getMimesType($file->getClientOriginalExtension()),
-                'filename'  =>   $file->getClientOriginalName(),
-                'extension' =>   $file->getClientOriginalExtension(),
-                'filesize'  =>   $file->getSize(),
+                'save_path'     =>   User::STORE_PATH,
+                'type'          =>   Media::TYPE_LOGO,
+                'filemime'      =>   FileManager::instance()->getMimesType($file->getClientOriginalExtension()),
+                'filename'      =>   $file->getClientOriginalName(),
+                'extension'     =>   $file->getClientOriginalExtension(),
+                'filesize'      =>   $file->getSize(),
             ];
 
             $media = $this->model->media()->logo()
@@ -109,39 +88,23 @@ class MerchantService extends BaseService
                     return new Media();
                 });
 
-            FileManager::instance()->removeAndStore(
-                $config['save_path'],
-                $file,
-                $media->file_path ?? null,
-                $config['filename']
-            );
-
-            $media->type                =   $config['type'];
-            $media->original_filename   =   $config['filename'];
-            $media->filename            =   $config['filename'];
-            $media->path                =   $config['save_path'];
-            $media->extension           =   $config['extension'];
-            $media->size                =   $config['filesize'];
-            $media->mime                =   $config['filemime'];
-            $media->properties          =   json_encode($config, JSON_UNESCAPED_UNICODE);
-
-            if ($media->exists && $media->isDirty()) {
-                $media->save();
-            } else {
-                $this->model->media()->save($media);
-            }
+            return $this->storeMedia($media, $config, $this->request->file('logo'));
         }
+
+        return $this;
     }
 
-    public function saveCategory()
+    public function storeCategory()
     {
         $category = $this->request->get('category');
 
-        if (is_array($category)) {
+        $this->model->categories()
+            ->sync(
+                is_array($category)
+                    ? $category
+                    : [$category]
+            );
 
-            $this->model->categories()->sync($category);
-        } else {
-            $this->model->categories()->sync([$category]);
-        }
+        return $this;
     }
 }

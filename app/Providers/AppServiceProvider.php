@@ -12,6 +12,16 @@ class AppServiceProvider extends ServiceProvider
         'userDetailFacade' => \App\Support\Services\UserDetailService::class,
         'projectFacade' => \App\Support\Services\ProjectService::class,
         'merchantFacade' => \App\Support\Services\MerchantService::class,
+        'ratingFacade' => \App\Support\Services\RatingService::class,
+        'priceFacade' => \App\Support\Services\PriceService::class,
+        'productFacade' => \App\Support\Services\ProductService::class,
+        'packageFacade' => \App\Support\Services\PackageService::class,
+        'productAttributeFacade' => \App\Support\Services\ProductAttributeService::class,
+        'currencyFacade' => \App\Support\Services\CurrencyService::class,
+        'orderFacade' => \App\Support\Services\OrderService::class,
+        'transactionFacade' => \App\Support\Services\TransactionService::class,
+        'cartFacade' => \App\Support\Services\CartService::class,
+        'accountFacade' => \App\Support\Services\AccountService::class,
     ];
 
     /**
@@ -59,5 +69,6 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\Project::observe(\App\Observers\ProjectObserver::class);
         \App\Models\Country::observe(\App\Observers\CountryObserver::class);
         \App\Models\CountryState::observe(\App\Observers\CountryStateObserver::class);
+        \App\Models\Product::observe(\App\Observers\ProductObserver::class);
     }
 }

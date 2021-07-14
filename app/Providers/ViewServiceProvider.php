@@ -8,7 +8,7 @@ class ViewServiceProvider extends ServiceProvider
 {
     protected $composers = [
         \App\Http\View\Composers\CountryComposer::class => [
-            'projects.create', 'projects.edit', 'users.merchant.edit',
+            'projects.create', 'projects.edit', 'merchant.edit', 'account.merchant'
         ],
         \App\Http\View\Composers\UnitComposer::class => [
             'projects.create', 'projects.edit'
@@ -21,6 +21,12 @@ class ViewServiceProvider extends ServiceProvider
         ],
         \App\Http\View\Composers\DefaultPreviewComposer::class => [
             '*'
+        ],
+        \App\Http\View\Composers\CurrencyComposer::class => [
+            '*'
+        ],
+        \App\Http\View\Composers\CartComposer::class => [
+            'cart.index', 'checkout.index'
         ],
     ];
 

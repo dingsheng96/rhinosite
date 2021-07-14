@@ -4,14 +4,30 @@
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
     </ul>
+
     <ul class="navbar-nav ml-auto">
+
+        {{-- CART --}}
+        @merchant
         <li class="nav-item dropdown">
-            <a data-toggle="dropdown" class="nav-link border-0 bg-transparent" style="cursor: pointer;">
-                <img src="https://ui-avatars.com/api/?background=f6993f&color=ffffff&size=30&rounded=true&name={{ str_replace(' ', '+', Auth::user()->name) }}" alt="user" class="img-circle elevation-2 mr-2">
+            <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="badge badge-danger navbar-badge rounded-circle">{{ Auth::user()->cart_items_count }}</span>
             </a>
-            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <i class="fas fa-sign-out-alt mr-2" style="color: red;"></i>
+        </li>
+        @endmerchant
+
+        <li class="nav-item dropdown">
+            <a data-toggle="dropdown" class="nav-link" href="#">
+                <i class="fas fa-th-large"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a href="{{ route('account.index') }}" class="dropdown-item">
+                    <i class="fas fa-user mr-2 text-cyan"></i>
+                    <span>{{ __('labels.user_account') }}</span>
+                </a>
+                <a href="#" class="dropdown-item" onclick="event.preventDefault(); logoutAlert('{{ __('messages.confirm_question') }}');">
+                    <i class="fas fa-sign-out-alt mr-2 text-red"></i>
                     <span>{{ __('labels.logout') }}</span>
                 </a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

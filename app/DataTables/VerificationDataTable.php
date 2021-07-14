@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\UserDetails;
+use App\Models\UserDetail;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
@@ -49,7 +49,7 @@ class VerificationDataTable extends DataTable
                 return $data->created_at->toDateTimeString();
             })
             ->editColumn('status', function ($data) {
-                return '<h5>' . $data->status_label . '</h5>';
+                return '<span>' . $data->status_label . '</span>';
             })
             ->filterColumn('status', function ($query, $keyword) {
                 $query->where('status', strtolower($keyword));
@@ -75,13 +75,13 @@ class VerificationDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\UserDetails $model
+     * @param \App\Models\UserDetail $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(UserDetails $model)
+    public function query(UserDetail $model)
     {
         return $model->with(['user'])
-            ->where('status', UserDetails::STATUS_PENDING)
+            ->where('status', UserDetail::STATUS_PENDING)
             ->newQuery();
     }
 
@@ -94,12 +94,13 @@ class VerificationDataTable extends DataTable
     {
         return $this->builder()
             ->setTableId('verification-table')
-            ->addTableClass('table-hover table-bordered table-head-fixed table-striped')
+            ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(0, 'asc')
             ->responsive(true)
-            ->autoWidth(true);
+            ->autoWidth(true)
+            ->processing(false);
     }
 
     /**
@@ -110,13 +111,13 @@ class VerificationDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#'),
-            Column::make('name')->title(__('labels.name')),
-            Column::make('email')->title(__('labels.email')),
-            Column::make('phone')->title(__('labels.contact_no')),
-            Column::make('status')->title(__('labels.status')),
-            Column::make('created_at')->title(__('labels.datetime')),
-            Column::computed('action', __('labels.action'))
+            Column::computed('DT_RowIndex', '#')->width('5%'),
+            Column::make('name')->title(__('labels.name'))->width('25%'),
+            Column::make('email')->title(__('labels.email'))->width('20%'),
+            Column::make('phone')->title(__('labels.contact_no'))->width('15%'),
+            Column::make('status')->title(__('labels.status'))->width('10%'),
+            Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
+            Column::computed('action', __('labels.action'))->width('10%')
                 ->exportable(false)
                 ->printable(false),
         ];

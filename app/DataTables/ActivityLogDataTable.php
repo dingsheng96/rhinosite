@@ -64,12 +64,13 @@ class ActivityLogDataTable extends DataTable
     {
         return $this->builder()
             ->setTableId('activity-log-table')
-            ->addTableClass('table-hover table-bordered table-head-fixed table-striped')
+            ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(5, 'desc')
             ->responsive(true)
-            ->autoWidth(true);
+            ->autoWidth(true)
+            ->processing(false);
     }
 
     /**
@@ -80,12 +81,12 @@ class ActivityLogDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#'),
-            Column::make('log_name')->title(__('labels.log_name')),
-            Column::make('subject_to')->title(__('labels.subject_to')),
-            Column::make('caused_by')->title(__('labels.caused_by')),
-            Column::make('description')->title(__('labels.description')),
-            Column::make('created_at')->title(__('labels.datetime'))
+            Column::computed('DT_RowIndex', '#')->width('5%'),
+            Column::make('log_name')->title(__('labels.log_name'))->width('10%'),
+            Column::make('subject_to')->title(__('labels.subject_to'))->width('20%'),
+            Column::make('caused_by')->title(__('labels.caused_by'))->width('20%'),
+            Column::make('description')->title(__('labels.description'))->width('30%'),
+            Column::make('created_at')->title(__('labels.created_at'))->width('15%')
         ];
     }
 

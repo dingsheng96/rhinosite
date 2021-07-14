@@ -17,13 +17,13 @@ class User extends Authenticatable implements MustVerifyEmail
 
     const STATUS_ACTIVE     =   'active';
     const STATUS_INACTIVE   =   'inactive';
-    const STORE_PATH        =   'user';
+    const STORE_PATH        =   '/users';
 
     protected $table = 'users';
 
     protected $fillable = [
         'name', 'phones', 'email', 'password',
-        'remember_token', 'status', 'email_verified_at'
+        'remember_token', 'status', 'last_login_at', 'email_verified_at'
     ];
 
     protected $hidden = [
@@ -32,12 +32,13 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'last_login_at' => 'datetime'
     ];
 
     // Relationships
     public function userDetails()
     {
-        return $this->hasMany(UserDetails::class, 'user_id', 'id');
+        return $this->hasMany(UserDetail::class, 'user_id', 'id');
     }
 
     public function address()
@@ -65,6 +66,31 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Rating::class, 'user_id', 'id');
     }
 
+    public function userSubscriptions()
+    {
+        return $this->hasMany(UserSubscription::class, 'user_id', 'id');
+    }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class, 'user_id', 'id');
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'user_id', 'id');
+    }
+
+    public function userAdsQuotas()
+    {
+        return $this->hasMany(UserAdsQuota::class, 'user_id', 'id');
+    }
+
+    public function userAdsQuotaHistories()
+    {
+        return $this->hasManyThrough(UserAdsQuotaHistory::class, UserAdsQuota::class, 'user_id', 'user_ads_quota_id', 'id', 'id');
+    }
+
     // Scopes
     public function scopeAdmin($query)
     {
@@ -77,6 +103,25 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $query->whereHas('roles', function ($query) {
             $query->where('name', Role::ROLE_MERCHANT);
+        });
+    }
+
+    public function scopeMember($query)
+    {
+        return $query->whereHas('roles', function ($query) {
+            $query->where('name', Role::ROLE_MEMBER);
+        });
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', self::STATUS_ACTIVE);
+    }
+
+    public function scopeHasAdsQuota($query)
+    {
+        return $query->whereHas('userAdsQuotas', function ($query) {
+            $query->where('quantity', '!=', 0);
         });
     }
 
@@ -140,5 +185,27 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getUserCategoryAttribute()
     {
         return $this->categories()->first();
+    }
+
+    public function getCartItemsCountAttribute()
+    {
+        return $this->carts->count() ?? 0;
+    }
+
+    public function getFormattedPhoneNumberAttribute()
+    {
+        $format = chunk_split($this->phone, 4, '-');
+
+        return '+' . rtrim($format, '-');
+    }
+
+    public function getCategoryAttribute()
+    {
+        return $this->categories->first();
+    }
+
+    public function getCurrentSubscriptionAttribute()
+    {
+        return $this->userSubscriptions()->active()->first();
     }
 }

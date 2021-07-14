@@ -3,14 +3,14 @@
 namespace App\Http\View\Composers;
 
 use Illuminate\View\View;
-use App\Models\UserDetails;
+use App\Models\UserDetail;
 
 class VerificationComposer
 {
     /**
      * Create a new categories composer.
      *
-     * @param  CountryRepository $countries
+     * @param  VerificationRespository $verifications
      * @return void
      */
     public function __construct()
@@ -26,6 +26,6 @@ class VerificationComposer
      */
     public function compose(View $view)
     {
-        $view->with('verifications_count', UserDetails::pendingVerifications()->count());
+        $view->with('verifications_count', UserDetail::pendingVerifications()->count() ?? 0);
     }
 }

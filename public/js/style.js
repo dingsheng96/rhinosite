@@ -1,5 +1,16 @@
 $(function() {
 
+    // loader
+    $('form').on('submit', function () {
+        $('.loading').show();
+    });
+
+    $(document).ajaxStart(function () {
+        $('.loading').show();
+    }).ajaxStop(function () {
+        $('.loading').hide();
+    });
+
     // initialize select2
     $(".select2").select2({
         theme: "bootstrap4"
@@ -99,33 +110,64 @@ $(function() {
             .text(fileName);
     });
 
-    // datepicker
-    $('.date-picker').daterangepicker({
-        singleDatePicker: true,
-        timePicker: false,
-        showDropdowns: true,
-        autoApply: true,
-        autoUpdateInput: false,
-        startDate: new Date(),
-        minDate: new Date(),
-    }).on('apply.daterangepicker', function (ev, picker) {
+    // price
+    $('.uprice-input').on('input', function () {
 
-        let date = picker.startDate.format('DD/MM/yyyy');
+        unit_price  =   $(this).val();
+        discount    =   $('.disc-input').val();
 
-        $(this).find('input').val(date);
+        $('.disc-perc-input').val(calcDiscountPercentage(unit_price, discount));
+        $('.sale-price-input').val(calcSellingPrice(unit_price, discount));
     });
 
-    $('.sluggable').on('input', function() {
+    $('.disc-input').on('input', function () {
 
-        let input = $(this).val();
+        discount    = $(this).val();
+        unit_price  = $('.uprice-input').val();
 
-        let slug = input.toString().trim().toLowerCase()
-            .replace(/\s+/g, "-")
-            .replace(/[^\w\-]+/g, "")
-            .replace(/\-\-+/g, "-")
-            .replace(/^-+/, "")
-            .replace(/-+$/, "");
-
-        $('.sluggable-input').val(slug);
+        $('.disc-perc-input').val(calcDiscountPercentage(unit_price, discount));
+        $('.sale-price-input').val(calcSellingPrice(unit_price, discount));
     });
+
+    // carousel
+    if($('.multiple-items-slide').length > 0) {
+
+        $('.multiple-items-slide').slick({
+            infinite: false,
+            slidesToShow: 4,
+            slidesToScroll: 4,
+            arrows: true,
+            prevArrow: '<button type="button" class=" btn btn-light bg-orange rounded-circle slick-prev"><i class="fas fa-chevron-left"></i></button>',
+            nextArrow: '<button type="button" class="btn btn-light bg-orange rounded-circle slick-next"><i class="fas fa-chevron-right"></i></button>',
+            responsive: [
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2,
+                    }
+                },
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                }
+            ]
+        });
+    }
+
+    if($('.btn-decrement').length > 0) {
+        $('.btn-decrement').on('click', function () {
+            cartItemDecrement();
+        });
+    }
+
+    if($('.btn-increment').length > 0) {
+        $('.btn-increment').on('click', function () {
+            cartItemIncrement();
+        });
+    }
 });
+

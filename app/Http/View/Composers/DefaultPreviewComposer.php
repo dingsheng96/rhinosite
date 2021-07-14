@@ -10,7 +10,7 @@ class DefaultPreviewComposer
     /**
      * Create a new categories composer.
      *
-     * @param  CountryRepository $countries
+     * @param  DefaultPreviewRepository $default_previews
      * @return void
      */
     public function __construct()

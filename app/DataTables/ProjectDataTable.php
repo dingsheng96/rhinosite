@@ -2,9 +2,10 @@
 
 namespace App\DataTables;
 
+use App\Models\Project;
+use Illuminate\Support\Arr;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
@@ -25,36 +26,76 @@ class ProjectDataTable extends DataTable
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return view('components.action', [
-                    'no_action' => $this->no_action ?: ($data->name == Role::ROLE_SUPER_ADMIN),
+                    'no_action' => $this->no_action ?: null,
                     'view' => [
-                        'permission' => 'role.read',
-                        'route' => route('settings.roles.show', ['role' => $data->id])
+                        'permission' => 'project.read',
+                        'route' => route('projects.show', ['project' => $data->id])
                     ],
                     'update' => [
-                        'permission' => 'role.update',
-                        'route' => route('settings.roles.edit', ['role' => $data->id]),
+                        'permission' => 'project.update',
+                        'route' => route('projects.edit', ['project' => $data->id]),
                     ],
                     'delete' => [
-                        'permission' => 'role.delete',
-                        'route' => route('settings.roles.destroy', ['role' => $data->id])
+                        'permission' => 'project.delete',
+                        'route' => route('projects.destroy', ['project' => $data->id])
                     ]
                 ])->render();
+            })
+            ->addColumn('status', function ($data) {
+                return '<span>' . $data->status_label . '</span>';
+            })
+            ->addColumn('merchant', function ($data) {
+                return $data->user->name;
+            })
+            ->addColumn('price', function ($data) {
+                return $data->price_with_unit;
+            })
+            ->editColumn('title', function ($data) {
+                return  '<div class="row">
+                <div class="col-6 col-md-2">
+                <img src="' . $data->thumbnail->full_file_path . '" alt="' . $data->thumbnail->filename . '" class="table-img-preview">
+                </div>
+                <div class="col-6 col-md-10">' . $data->english_title . '<br/>' . $data->chinese_title . '</div>
+                </div>';
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
-            ->rawColumns(['action']);
+            ->filterColumn('status', function ($query, $keyword) {
+                $query->when($keyword == 'published', function ($query) {
+                    $query->where('published', true);
+                });
+            })
+            ->filterColumn('merchant', function ($query, $keyword) {
+                $query->whereHas('user', function ($query) use ($keyword) {
+                    $query->where('name', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('title', function ($query, $keyword) {
+                $query->whereHas('translations', function ($query) use ($keyword) {
+                    $query->where('value', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('price', function ($query, $keyword) {
+                $query->orWhere('unit_value', 'like', "%{$keyword}%")
+                    ->orWhereHas('prices', function ($query) use ($keyword) {
+                        $query->defaultPrice()->where('selling_price', 'like', "%{$keyword}%");
+                    });
+            })
+            ->rawColumns(['action', 'status', 'title']);
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Role $model
+     * @param \App\Models\Project $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Role $model)
+    public function query(Project $model)
     {
-        return $model->newQuery();
+        return $model->when(Auth::user()->is_merchant, function ($query) {
+            $query->where('user_id', Auth::id());
+        })->newQuery();
     }
 
     /**
@@ -65,13 +106,14 @@ class ProjectDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('role-table')
-            ->addTableClass('table-hover table-bordered table-head-fixed table-striped')
+            ->setTableId('project-table')
+            ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(0, 'asc')
             ->responsive(true)
-            ->autoWidth(true);
+            ->autoWidth(true)
+            ->processing(false);
     }
 
     /**
@@ -81,15 +123,23 @@ class ProjectDataTable extends DataTable
      */
     protected function getColumns()
     {
-        return [
-            Column::computed('DT_RowIndex', '#'),
-            Column::make('name')->title(__('labels.name')),
-            Column::make('description')->title(__('labels.description')),
-            Column::make('created_at')->title(__('labels.datetime')),
-            Column::computed('action', __('labels.action'))
+        $columns = [
+            Column::computed('DT_RowIndex', '#')->width('5%'),
+            Column::make('title')->title(__('labels.title'))->width('25%'),
+            Column::make('merchant')->title(__('labels.merchant'))->width('20%'),
+            Column::make('price')->title(__('labels.price') . ' / ' . __('labels.unit'))->width('15%'),
+            Column::make('status')->title(__('labels.status'))->width('10%'),
+            Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
+            Column::computed('action', __('labels.action'))->width('10%')
                 ->exportable(false)
                 ->printable(false),
         ];
+
+        if (Auth::user()->is_merchant) {
+            $columns = Arr::except($columns, 2);
+        }
+
+        return $columns;
     }
 
     /**
@@ -99,6 +149,6 @@ class ProjectDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Role_' . date('YmdHis');
+        return 'Project_' . date('YmdHis');
     }
 }

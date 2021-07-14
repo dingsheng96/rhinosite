@@ -1,10 +1,12 @@
 function customAlert(message, status)
 {
+    $('.loading').hide();
+
     Swal.fire({
         icon: status,
         title: message,
         timer: 2000,
-        showConfirmButton: false
+        showConfirmButton: false,
     });
 }
 
@@ -46,6 +48,7 @@ function deleteAlert(title, message, redirectUrl)
                     });
                 },
                 error: (xhl) => {
+
                     Swal.fire({
                         icon: 'error',
                         title: xhl.message,
@@ -71,7 +74,11 @@ function logoutAlert(title)
         buttonsStyling: false,
         reverseButtons: true
     }).then((result) => {
+
         if (result.isConfirmed) {
+
+            $('.loading').show();
+
             $('#logout-form').submit();
         }
     });
@@ -119,6 +126,7 @@ function setSelectedDataIntoDropdown(dropdown) {
 }
 
 function getAssociateArrayData(text, value) {
+
     let str_split = text.split(".");
     let new_value;
 
@@ -168,4 +176,28 @@ function alertHeader(messages)
         + '</div>';
 
     content.prepend(html);
+}
+
+function calcDiscountPercentage(unit_price, discount)
+{
+    let result = ((discount/unit_price) * 100) ?? 0
+
+    return result.toFixed(2);
+}
+
+function calcSellingPrice(unit_price, discount)
+{
+    let result = (unit_price - discount) ?? 0;
+
+    return result.toFixed(2);
+}
+
+function cartItemDecrement()
+{
+    alert('Minus 1');
+}
+
+function cartItemIncrement()
+{
+    alert('Plus 1');
 }

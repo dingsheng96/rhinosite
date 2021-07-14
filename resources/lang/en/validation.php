@@ -177,10 +177,22 @@ return [
         'facebook' => 'facebook',
         'logo' => 'logo',
         'category' => 'category',
-        'years_of_experience' => 'years of experience',
+        'industry_since' => 'years of experience',
         'pic_name' => 'name of person in charge',
         'pic_email' => 'email of person in charge',
         'pic_phone' => 'contact no. of person in charge',
+        'currency' => 'currency',
+        'sku' => 'sku',
+        'stock_type' => 'stock type',
+        'quantity' => 'quantity',
+        'validity' => 'validity',
+        'color' => 'color',
+        'discount' => 'discount',
+        'product' => 'product',
+        'sku' => 'sku',
+        'rate' => 'rate',
+        'item' => 'item',
+        'payment_method' => 'payment method'
     ],
 
 ];

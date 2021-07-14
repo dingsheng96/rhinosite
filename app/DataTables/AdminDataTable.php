@@ -28,24 +28,27 @@ class AdminDataTable extends DataTable
                     'no_action' => $this->no_action ?: $data->id == Auth::id(),
                     'view' => [
                         'permission' => 'admin.read',
-                        'route' => route('users.admins.show', ['admin' => $data->id])
+                        'route' => route('admins.show', ['admin' => $data->id])
                     ],
                     'update' => [
                         'permission' => 'admin.update',
                         'route' => '#updateadminModal',
-                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode(['name' => $data->name, 'code' => $data->code]) . "'" . ' data-route="' . route('users.admins.update', ['admin' => $data->id]) . '"'
+                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode(['name' => $data->name, 'code' => $data->code]) . "'" . ' data-route="' . route('admins.update', ['admin' => $data->id]) . '"'
                     ],
                     'delete' => [
                         'permission' => 'admin.delete',
-                        'route' => route('users.admins.destroy', ['admin' => $data->id])
+                        'route' => route('admins.destroy', ['admin' => $data->id])
                     ]
                 ])->render();
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
+            ->editColumn('last_login_at', function ($data) {
+                return $data->last_login_at->toDateTimeString();
+            })
             ->editColumn('status', function ($data) {
-                return '<h5>' . $data->status_label . '</h5>';
+                return '<span>' . $data->status_label . '</span>';
             })
             ->filterColumn('status', function ($query, $keyword) {
                 $query->where('status', strtolower($keyword));
@@ -73,12 +76,13 @@ class AdminDataTable extends DataTable
     {
         return $this->builder()
             ->setTableId('admin-table')
-            ->addTableClass('table-hover table-bordered table-head-fixed table-striped')
+            ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(0, 'asc')
             ->responsive(true)
-            ->autoWidth(true);
+            ->autoWidth(true)
+            ->processing(false);
     }
 
     /**
@@ -89,14 +93,15 @@ class AdminDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#'),
-            Column::make('name')->title(__('labels.name')),
-            Column::make('email')->title(__('labels.email')),
-            Column::make('status')->title(__('labels.status')),
-            Column::make('created_at')->title(__('labels.datetime')),
-            Column::computed('action', __('labels.action'))
+            Column::computed('DT_RowIndex', '#')->width('5%'),
+            Column::make('name')->title(__('labels.name'))->width('25%'),
+            Column::make('email')->title(__('labels.email'))->width('20%'),
+            Column::make('status')->title(__('labels.status'))->width('10%'),
+            Column::make('last_login_at')->title(__('labels.last_login_at'))->width('15%'),
+            Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
+            Column::computed('action', __('labels.action'))->width('10%')
                 ->exportable(false)
-                ->printable(false),
+                ->printable(false)
         ];
     }
 

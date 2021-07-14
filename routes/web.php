@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\UserDetails;
+use App\Models\UserDetail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Notifications\AccountVerified;
@@ -27,42 +27,66 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
     Route::get('dashboard', 'HomeController@index')->name('dashboard');
 
-    Route::delete('projects/{project}/media/{media}', 'ProjectController@deleteMedia')->name('projects.media.destroy');
-    Route::resource('projects', 'ProjectController');
+    Route::resource('account', 'AccountController');
+
+    Route::resource('ads', 'AdsController');
+
+    Route::resource('carts', 'CartController');
 
     Route::resource('verifications', 'VerificationController');
 
-    Route::group(['prefix' => 'users', 'as' => 'users.', 'namespace' => 'Users'], function () {
-        Route::resource('admins', 'AdminController');
-        Route::resource('members', 'MemberController');
-        Route::resource('merchants', 'MerchantController');
+    Route::delete('projects/{project}/prices/{price}', 'ProjectController@deletePrice')->name('projects.price.destroy');
+    Route::delete('projects/{project}/media/{media}', 'ProjectController@deleteMedia')->name('projects.media.destroy');
+    Route::resource('projects', 'ProjectController');
+
+    Route::post('subscriptions/{subscription}/purchase', 'SubscriptionController@purchase')->name('subscriptions.purchase');
+    Route::resource('subscriptions', 'SubscriptionController');
+
+    Route::get('checkout', 'CheckOutController@index')->name('checkout.index');
+    Route::post('checkout', 'CheckOutController@store')->name('checkout.store');
+
+    Route::resource('activity-logs', 'ActivityLogController');
+
+    Route::resource('admins', 'AdminController');
+
+    Route::resource('members', 'MemberController');
+
+    Route::resource('merchants', 'MerchantController');
+
+    Route::resource('orders', 'OrderController');
+
+    Route::delete('packages/{package}/products/{product}', 'PackageController@deletePackageProduct')->name('packages.products.destroy');
+    Route::resource('packages', 'PackageController');
+
+    Route::delete('products/{product}/media/{media}', 'ProductController@deleteMedia')->name('products.media.destroy');
+    Route::post('products/{product}/attributes/{attribute}/prices', 'ProductAttributeController@storePrice')->name('products.attributes.prices.store');
+    Route::put('products/{product}/attributes/{attribute}/prices/{price}', 'ProductAttributeController@updatePrice')->name('products.attributes.prices.update');
+    Route::delete('products/{product}/attributes/{attribute}/prices/{price}', 'ProductAttributeController@deletePrice')->name('products.attributes.prices.destroy');
+
+    Route::resource('products', 'ProductController');
+    Route::resource('products.attributes', 'ProductAttributeController');
+
+    Route::resource('roles', 'RoleController');
+
+    Route::resource('categories', 'CategoryController');
+
+    Route::resource('currencies', 'CurrencyController');
+
+    Route::resource('countries', 'CountryController');
+
+    Route::resource('countries.country-states', 'CountryStateController');
+
+    Route::resource('countries.country-states.cities', 'CityController');
+
+    Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
+
+        Route::group(['prefix' => 'countries/{country}', 'as' => 'countries.'], function () {
+            Route::get('country-states', 'DataController@getCountryStateFromCountry')->name('country-states');
+            Route::get('country-states/{country_state}/cities', 'DataController@getCityFromCountryState')->name('country-states.cities');
+        });
+
+        Route::get('products/{product}/sku', 'DataController@getSkuFromProduct')->name('products.sku');
+
+        Route::get('ads/{ads}/date', 'DataController@getAdsAvailableDate')->name('ads.date');
     });
-
-    Route::group(['prefix' => 'settings', 'as' => 'settings.', 'namespace' => 'Settings'], function () {
-
-        Route::resource('roles', 'RoleController');
-        Route::resource('categories', 'CategoryController');
-        Route::resource('currencies', 'CurrencyController');
-        Route::resource('countries', 'CountryController');
-        Route::resource('countries.country-states', 'CountryStateController');
-        Route::resource('countries.country-states.cities', 'CityController');
-        Route::resource('activity-logs', 'ActivityLogController');
-    });
-});
-
-Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
-
-    Route::group(['prefix' => 'countries/{country}', 'as' => 'countries.'], function () {
-        Route::get('country-states', 'DataController@getCountryStateFromCountry')->name('country-states');
-        Route::get('country-states/{country_state}/cities', 'DataController@getCityFromCountryState')->name('country-states.cities');
-    });
-
-    Route::get('ads-boosters/{ads}/available-date', 'DateController@getAdsBoosterAvailableDate')->name('ads-boosters.available-date');
-});
-
-Route::get('mail', function () {
-
-    $details = UserDetails::find(2);
-
-    return (new AccountVerified($details))->toMail($details->user);
 });

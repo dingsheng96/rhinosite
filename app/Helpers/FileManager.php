@@ -34,20 +34,16 @@ class FileManager
         return $this;
     }
 
-    public function store(string $store_path, $file, string $filename = null): string
+    private function getStorageDisk()
     {
-        $storage = Storage::disk($this->disk);
-
-        if (empty($filename)) {
-            return $storage->putFile($store_path, new File($file));
-        }
-
-        return $storage->putFileAs($store_path, new File($file), $filename);
+        return Storage::disk($this->disk);
     }
 
-    public function removeAndStore(string $store_path, $new_file, $old_file, string $filename = null): string
+    public function store(string $store_path, $save_file, string $old_file = null, string $filename = null): string
     {
-        if (empty($new_file)) {
+        $storage = $this->getStorageDisk();
+
+        if (empty($save_file)) {
             return $old_file;
         }
 
@@ -55,13 +51,9 @@ class FileManager
             $this->removeFile($old_file);
         }
 
-        return $this->store($store_path, $new_file, $filename);
-    }
-
-    public function putFileContent(string $store_path, $content): void
-    {
-        Storage::disk($this->disk)
-            ->put($store_path, $content);
+        return (empty($filename))
+            ? $storage->putFile($store_path, new File($save_file))
+            : $storage->putFileAs($store_path, new File($save_file), $filename);
     }
 
     public function getMimesType(string $extension): string
@@ -86,15 +78,21 @@ class FileManager
             ->when(!empty($inclusives), function ($collection) use ($inclusives) {
                 return $collection->only($inclusives);
             })
-            ->sort()->toArray();
+            ->sort()
+            ->toArray();
     }
 
-    public function removeFile(string $file_path)
+    public function removeFile(string $file_path): void
     {
-        $storage = Storage::disk($this->disk);
+        $storage = $this->getStorageDisk();
 
         if ($storage->exists($file_path)) {
             $storage->delete($file_path);
         }
+    }
+
+    public function putFileContent(string $store_path, $content): void
+    {
+        $this->getStorageDisk()->put($store_path, $content);
     }
 }
