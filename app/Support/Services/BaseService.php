@@ -54,7 +54,7 @@ class BaseService
                 $config['save_path'],
                 $file,
                 $media->file_path ?? null,
-                $config['filename'] ?? null
+                null
             );
 
         $media->original_filename   =   $config['filename'] ?? null;

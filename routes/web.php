@@ -25,64 +25,68 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::middleware(['auth:web', 'verified'])->group(function () {
+Route::group(['middleware' => ['auth:web', 'verified']], function () {
 
-    Route::get('dashboard', 'HomeController@index')->name('dashboard');
-
-    Route::resource('account', 'AccountController');
-
-    Route::resource('ads', 'AdsController');
-
-    Route::resource('carts', 'CartController');
-
-    Route::get('verifications/notify', 'VerificationController@notify');
+    Route::get('verifications/notify', 'VerificationController@notify')->name('verifications.notify');
 
     Route::resource('verifications', 'VerificationController');
 
-    Route::delete('projects/{project}/prices/{price}', 'ProjectController@deletePrice')->name('projects.price.destroy');
-    Route::delete('projects/{project}/media/{media}', 'ProjectController@deleteMedia')->name('projects.media.destroy');
-    Route::resource('projects', 'ProjectController');
+    Route::group(['middleware' => ['verified_merchant']], function () {
 
-    Route::post('subscriptions/{subscription}/purchase', 'SubscriptionController@purchase')->name('subscriptions.purchase');
-    Route::resource('subscriptions', 'SubscriptionController');
+        Route::get('dashboard', 'HomeController@index')->name('dashboard');
 
-    Route::get('checkout', 'CheckOutController@index')->name('checkout.index');
-    Route::post('checkout', 'CheckOutController@store')->name('checkout.store');
+        Route::resource('account', 'AccountController');
 
-    Route::resource('activity-logs', 'ActivityLogController');
+        Route::resource('carts', 'CartController');
 
-    Route::resource('admins', 'AdminController');
+        Route::resource('subscriptions', 'SubscriptionController')->only(['index', 'show']);
 
-    Route::resource('members', 'MemberController');
+        Route::resource('checkout', 'CheckOutController')->only(['index', 'store']);
 
-    Route::resource('merchants', 'MerchantController');
+        Route::resource('ads', 'AdsController');
 
-    Route::resource('orders', 'OrderController');
+        Route::resource('projects', 'ProjectController');
+        Route::resource('projects.media', 'ProjectMediaController')->only(['destroy']);
 
-    Route::delete('packages/{package}/products/{product}', 'PackageController@deletePackageProduct')->name('packages.products.destroy');
-    Route::resource('packages', 'PackageController');
+        Route::resource('products', 'ProductController');
+        Route::resource('products.media', 'ProductMediaController');
+        Route::resource('products.attributes', 'ProductAttributeController');
 
-    Route::delete('products/{product}/media/{media}', 'ProductController@deleteMedia')->name('products.media.destroy');
-    Route::post('products/{product}/attributes/{attribute}/prices', 'ProductAttributeController@storePrice')->name('products.attributes.prices.store');
-    Route::put('products/{product}/attributes/{attribute}/prices/{price}', 'ProductAttributeController@updatePrice')->name('products.attributes.prices.update');
-    Route::delete('products/{product}/attributes/{attribute}/prices/{price}', 'ProductAttributeController@deletePrice')->name('products.attributes.prices.destroy');
+        Route::resource('packages', 'PackageController');
+        Route::resource('packages.products', 'PackageProductController')->only(['destroy']);
 
-    Route::resource('products', 'ProductController');
-    Route::resource('products.attributes', 'ProductAttributeController');
+        Route::resource('orders', 'OrderController');
 
-    Route::resource('roles', 'RoleController');
+        Route::resource('transactions', 'TransactionController');
 
-    Route::resource('services', 'ServiceController');
+        Route::resource('admins', 'AdminController');
 
-    Route::resource('currencies', 'CurrencyController');
+        Route::resource('members', 'MemberController');
 
-    Route::resource('countries', 'CountryController');
+        Route::resource('merchants', 'MerchantController');
 
-    Route::resource('countries.country-states', 'CountryStateController');
+        Route::resource('roles', 'RoleController');
 
-    Route::resource('countries.country-states.cities', 'CityController');
+        Route::resource('services', 'ServiceController');
 
-    Route::resource('transactions', 'TransactionController');
+        Route::resource('currencies', 'CurrencyController');
+
+        Route::resource('countries', 'CountryController');
+        Route::resource('countries.country-states', 'CountryStateController');
+        Route::resource('countries.country-states.cities', 'CityController');
+
+        Route::resource('activity-logs', 'ActivityLogController');
+    });
+
+    Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
+
+        Route::post('products/{product}/sku', 'DataController@getSkuFromProduct')->name('products.sku');
+        Route::post('ads/{ads}/date', 'DataController@getAdsAvailableDate')->name('ads.date');
+        Route::group(['prefix' => 'countries/{country}', 'as' => 'countries.'], function () {
+            Route::post('country-states', 'DataController@getCountryStateFromCountry')->name('country-states');
+            Route::post('country-states/{country_state}/cities', 'DataController@getCityFromCountryState')->name('country-states.cities');
+        });
+    });
 
     Route::group(['prefix' => 'payment/{trans_no}', 'as' => 'payment.'], function () {
 
@@ -91,33 +95,4 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
         Route::post('backend', 'PaymentController@backendResponse')->name('backend');
         Route::get('status', 'PaymentController@paymentStatus')->name('status');
     });
-
-    Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
-
-        Route::group(['prefix' => 'countries/{country}', 'as' => 'countries.'], function () {
-
-            Route::post('country-states', 'DataController@getCountryStateFromCountry')->name('country-states');
-            Route::post('country-states/{country_state}/cities', 'DataController@getCityFromCountryState')->name('country-states.cities');
-        });
-
-        Route::post('products/{product}/sku', 'DataController@getSkuFromProduct')->name('products.sku');
-
-        Route::post('ads/{ads}/date', 'DataController@getAdsAvailableDate')->name('ads.date');
-    });
 });
-
-Route::get(
-    'payment/{trans_no}/status',
-    function (Request $request, Transaction $trans_no) {
-
-        $status = [
-            0 => 'fail',
-            1 => 'success',
-        ];
-
-        return view('payment.status', [
-            'status' => $status[$request->get('status')],
-            'transaction' => $trans_no
-        ]);
-    }
-);

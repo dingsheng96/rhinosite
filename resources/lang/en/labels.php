@@ -167,9 +167,9 @@ return [
     'change_plan' => 'Change Plan',
     'purchase_order' => 'Purchase Order',
     'order_date' => 'Order Date',
-    'order_id' => 'Order ID',
+    'order_no' => 'Order No.',
     'paid_by' => 'Paid By',
-    'transaction_id' => 'Transaction ID',
+    'transaction_no' => 'Transaction No',
     'pay_now' => 'Pay Now',
     'order_review' => 'Order Review',
     'boosted_at' => 'Boosted At|Boost Date',
@@ -182,5 +182,7 @@ return [
     'ssm_cert' => 'SSM Certificate',
     'verify_in_progress' => 'Verify In Progress',
     'year_of_experience' => 'Year of Experience',
-    'thumbnail' => 'Thumbnail'
+    'thumbnail' => 'Thumbnail',
+    'reg_no' => 'Registration No.',
+    'amount' => 'Amount'
 ];

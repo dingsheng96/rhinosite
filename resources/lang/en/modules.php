@@ -21,6 +21,7 @@ return [
     'order' => 'Order|Orders',
     'product' => 'Product|Products',
     'package' => 'Package|Packages',
+    'transaction' => 'Transaction|Transactions',
 
     'users' => 'Users',
     'verification' => 'Verification|Verifications',

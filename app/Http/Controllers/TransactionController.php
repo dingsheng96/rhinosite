@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\DataTables\TransactionDataTable;
 
 class TransactionController extends Controller
 {
@@ -11,9 +12,9 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(TransactionDataTable $dataTable)
     {
-        //
+        return $dataTable->render('transaction.index');
     }
 
     /**

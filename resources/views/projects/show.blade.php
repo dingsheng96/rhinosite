@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="card-body">
-                Coming soon. Waiting for front end
+                Coming soon...
             </div>
         </div>
     </div>

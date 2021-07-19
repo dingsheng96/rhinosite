@@ -374,7 +374,7 @@
                                                                                 <img src="{{ $image->full_file_path }}" alt="{{ $image->filename }}" class="table-img-preview">
                                                                                 <a href="{{ $image->full_file_path }}" target="_blank" class="ml-2">
                                                                                     <i class="fas fa-external-link-alt"></i>
-                                                                                    {{ $image->filename }}
+                                                                                    {{ $image->original_filename }}
                                                                                 </a>
                                                                             </td>
                                                                             <td>
@@ -387,7 +387,7 @@
                                                                                         {{ __('labels.download') }}
                                                                                     </a>
                                                                                     <a role="button" href="#" class="dropdown-item" title="{{ __('labels.delete') }}" data-toggle="modal"
-                                                                                        onclick="event.preventDefault(); deleteAlert('{{ __('messages.confirm_question') }}', '{{ __('messages.delete_info') }}', '{{ route('projects.media.destroy', ['project' => $project->id, 'media' => $image->id]) }}')">
+                                                                                        onclick="event.preventDefault(); deleteAlert('{{ __('messages.confirm_question') }}', '{{ __('messages.delete_info') }}', '{{ route('projects.media.destroy', ['project' => $project->id, 'medium' => $image->id]) }}')">
                                                                                         <i class="fas fa-trash mr-2 text-red"></i>
                                                                                         {{ __('labels.delete') }}
                                                                                     </a>
@@ -407,6 +407,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
 
                                     <div class="tab-pane fade" id="ads" role="tabpanel" aria-labelledby="ads-tab">
@@ -450,6 +451,7 @@
                                             </div>
                                         </div> --}}
                                     </div>
+
                                 </div>
                             </div>
                         </div>

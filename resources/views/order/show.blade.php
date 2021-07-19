@@ -22,7 +22,7 @@
 
                     <div class="row invoice-info">
                         <div class="col-sm-4 invoice-col">
-                            <strong>{{ __('labels.order_id') . ': ' }}</strong> {{ $order->order_no }}<br>
+                            <strong>{{ __('labels.order_no') . ': ' }}</strong> {{ $order->order_no }}<br>
                             <strong>{{ __('labels.order_date') . ': ' }}</strong> {{ $order->created_at->format('jS M Y') }} <br>
                         </div>
                     </div>

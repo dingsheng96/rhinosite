@@ -25,17 +25,16 @@ class SubscriptionController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->is_merchant) {
+        $user = Auth::user();
 
-            $subscription = Auth::user()
-                ->userSubscriptions()
-                ->active()
+        if ($user->is_merchant) {
+
+            $subscription = $user->userSubscriptions()
                 ->with([
                     'userSubscriptionLogs' => function ($query) {
                         $query->active();
                     }
-                ])
-                ->first();
+                ])->active()->first();
 
             $plans = Package::with(['products'])->orderBy('validity', 'asc')->get();
 
@@ -70,9 +69,32 @@ class SubscriptionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Package $subscription)
     {
-        //
+        try {
+
+            $package = Package::with([
+                'prices' => function ($query) {
+                    $query->defaultPrice();
+                }
+            ])
+                ->where('id', $subscription->id)
+                ->orWhereHas('userSubscriptions', function ($query) {
+                    $query->where('user_id', Auth::id())->inactive();
+                })
+                ->firstOrFail();
+
+            CartFacade::setBuyer(Auth::user())->addToCart($package)->getModel();
+
+            DB::commit();
+
+            return redirect()->route('checkout.index');
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+
+            return redirect()->back()->with('fail', $e->getMessage());
+        }
     }
 
     /**
@@ -107,33 +129,5 @@ class SubscriptionController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function purchase($subscription)
-    {
-        try {
-
-            $package = Package::with([
-                'prices' => function ($query) {
-                    $query->defaultPrice();
-                }
-            ])
-                ->where('id', $subscription)
-                ->orWhereHas('userSubscriptions', function ($query) {
-                    $query->where('user_id', Auth::id())->inactive();
-                })
-                ->firstOrFail();
-
-            CartFacade::setBuyer(Auth::user())->addToCart($package)->getModel();
-
-            DB::commit();
-
-            return redirect()->route('checkout.index');
-        } catch (\Error | \Exception $e) {
-
-            DB::rollBack();
-
-            return redirect()->back()->with('fail', $e->getMessage());
-        }
     }
 }

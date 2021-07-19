@@ -19,6 +19,7 @@
         "cart": 220,
         "ads": 221,
         "service": 222,
+        "media": 223,
         "system": 900
     },
     "actions": {

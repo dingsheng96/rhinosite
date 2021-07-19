@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\DB;
 use App\DataTables\ProductDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ProductRequest;
 use App\Support\Facades\ProductFacade;
 use App\DataTables\ProductAttributeDataTable;
-use App\Http\Requests\ProductRequest;
 
 class ProductController extends Controller
 {

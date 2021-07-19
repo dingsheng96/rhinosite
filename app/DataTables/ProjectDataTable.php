@@ -62,9 +62,7 @@ class ProjectDataTable extends DataTable
                 return $data->created_at->toDateTimeString();
             })
             ->filterColumn('status', function ($query, $keyword) {
-                $query->when($keyword == 'published', function ($query) {
-                    $query->where('published', true);
-                });
+                $query->where('status', 'like', "%{$keyword}%");
             })
             ->filterColumn('merchant', function ($query, $keyword) {
                 $query->whereHas('user', function ($query) use ($keyword) {

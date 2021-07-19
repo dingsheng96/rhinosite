@@ -22,7 +22,7 @@ class VerificationRequest extends FormRequest
     public function authorize()
     {
         return Auth::guard()->check()
-            && Auth::user()->is_member;
+            && Auth::user()->is_merchant;
     }
 
     /**
@@ -38,8 +38,8 @@ class VerificationRequest extends FormRequest
             'facebook'          =>  ['nullable', 'url'],
             'address_1'         =>  ['required', 'min:3', 'max:255'],
             'address_2'         =>  ['nullable'],
-            'country'           =>  ['required', 'exists:' . Country::class . ',id'],
             'postcode'          =>  ['required', 'digits:5'],
+            'country'           =>  ['required', 'exists:' . Country::class . ',id'],
             'country_state'     =>  [
                 'required',
                 Rule::exists(CountryState::class, 'id')
@@ -51,15 +51,15 @@ class VerificationRequest extends FormRequest
                     ->where('country_state_id', $this->get('country_state'))
             ],
             'ssm_cert' => [
-                Rule::requiredIf(empty($this->route('merchant'))),
-                'nullable',
+                'required',
                 'file',
                 'max:2000',
                 'mimes:pdf'
             ],
-            'pic_name'          =>  ['required'],
-            'pic_phone'         =>  ['required', new PhoneFormat],
-            'pic_email'         =>  ['required', 'email'],
+            'reg_no'    =>  ['required'],
+            'pic_name'  =>  ['required'],
+            'pic_phone' =>  ['required', new PhoneFormat],
+            'pic_email' =>  ['required', 'email'],
         ];
     }
 
@@ -95,7 +95,8 @@ class VerificationRequest extends FormRequest
             'postcode'          =>  __('validation.attributes.postcode'),
             'country_state'     =>  __('validation.attributes.country_state'),
             'city'              =>  __('validation.attributes.city'),
-            'ssm_cert'          =>  __('validation.attributes.ssm_cert')
+            'ssm_cert'          =>  __('validation.attributes.ssm_cert'),
+            'reg_no'            =>  __('validation.attributes.reg_no')
         ];
     }
 }

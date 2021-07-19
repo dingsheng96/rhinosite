@@ -46,6 +46,11 @@ class VerificationController extends Controller
      */
     public function create()
     {
+        if (Auth::user()->userDetails()->pendingDetails()->exists()) {
+
+            return redirect()->route('verifications.notify');
+        }
+
         return view('verification.create');
     }
 
@@ -66,10 +71,8 @@ class VerificationController extends Controller
 
         try {
 
-            $user = User::when(Auth::user()->is_member, function ($query) {
+            $user = User::when(Auth::user()->is_merchant, function ($query) {
                 $query->where('id', Auth::id());
-            })->when(Auth::user()->is_admin, function ($query) use ($request) {
-                $query->where('id', $request->get('user'));
             })->firstOrFail();
 
             $verification = MerchantFacade::setModel($user)
@@ -90,7 +93,7 @@ class VerificationController extends Controller
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->action('VerificationController@notify');
+            return redirect()->route('verifications.notify');
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
@@ -216,6 +219,11 @@ class VerificationController extends Controller
 
     public function notify()
     {
-        return view('verification.notify');
+        if (Auth::user()->userDetails()->pendingDetails()->exists()) {
+
+            return view('verification.notify');
+        }
+
+        return redirect()->route('verifications.create');
     }
 }

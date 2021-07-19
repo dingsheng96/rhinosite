@@ -18,17 +18,7 @@
                         </h5>
                     </div>
                 </div>
-
-                <hr>
-
-                <div class="row">
-                    <a href="{{ route('dashboard') }}" role="button" class="btn btn-dark btn-lg col-12 col-md-4 mx-auto">
-                        {{ __('labels.return_dashboard') }}
-                    </a>
-                </div>
-
             </div>
-
         </div>
     </div>
 

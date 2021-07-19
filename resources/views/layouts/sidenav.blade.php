@@ -77,8 +77,16 @@
                 </li>
                 @endcanany
 
+                @canany(['transaction.create', 'transaction.read'. 'transaction.update', 'transaction.delete'])
+                <li class="nav-item">
+                    <a href="{{ route('transactions.index') }}" class="nav-link {{ Nav::hasSegment('transactions', 1, 'active') }}">
+                        <i class="nav-icon fas fa-money-bill-wave"></i>
+                        <p>{{ trans_choice('modules.transaction', 2) }}</p>
+                    </a>
+                </li>
                 @endcanany
 
+                @endcanany
                 {{-- END ECOMMERCE --}}
 
                 {{-- USERS --}}

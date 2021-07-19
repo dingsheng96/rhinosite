@@ -42,7 +42,7 @@
                                     {{ __('labels.current_plan') }}
                                 </span>
                                 @else
-                                <form action="{{ route('subscriptions.purchase', ['subscription' => $plan->id]) }}" method="post" role="form" enctype="multipart/form-data">
+                                <form action="{{ route('subscriptions.show', ['subscription' => $plan->id]) }}" method="post" role="form" enctype="multipart/form-data">
                                     @csrf
                                     <button type="submit" class="btn btn-outline-primary btn-lg btn-block">
                                         {{ __('labels.select') }}

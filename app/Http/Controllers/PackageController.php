@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\DB;
 use App\DataTables\PackageDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Support\Facades\PackageFacade;
 use App\Http\Requests\PackageRequest;
+use App\Support\Facades\PackageFacade;
 
 class PackageController extends Controller
 {
@@ -193,50 +193,6 @@ class PackageController extends Controller
 
             $package->prices()->delete();
             $package->delete();
-
-            $status     =   'success';
-            $message    =   Message::instance()->format($action, $module, $status);
-
-            activity()->useLog('web')
-                ->causedBy(Auth::user())
-                ->performedOn($package)
-                ->log($message);
-        } catch (\Error | \Exception $e) {
-
-            DB::rollBack();
-
-            activity()->useLog('web')
-                ->causedBy(Auth::user())
-                ->performedOn($package)
-                ->log($e->getMessage());
-        }
-
-        return Response::instance()
-            ->withStatusCode('modules.package', 'actions.' . $action . $status)
-            ->withStatus($status)
-            ->withMessage($message, true)
-            ->withData([
-                'redirect_to' => route('packages.edit', ['package' => $package->id])
-            ])
-            ->sendJson();
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function deletePackageProduct(Package $package, ProductAttribute $product)
-    {
-        $action     =   Permission::ACTION_DELETE;
-        $module     =   strtolower(trans_choice('modules.package', 1));
-        $message    =   Message::instance()->format($action, $module);
-        $status     =   'fail';
-
-        try {
-
-            $package->products()->detach($product->id);
 
             $status     =   'success';
             $message    =   Message::instance()->format($action, $module, $status);

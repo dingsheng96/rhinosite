@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Helpers\Status;
+use App\Models\Currency;
+use App\Models\PaymentMethod;
 use App\Support\Facades\PriceFacade;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -63,5 +66,17 @@ class Transaction extends Model
     public function getAmountWithThousandSymbolAttribute()
     {
         return number_format(PriceFacade::convertIntToFloat($this->amount), 2, '.', ',');
+    }
+
+    public function getAmountWithCurrencyCodeAttribute()
+    {
+        return $this->currency->code . ' ' . $this->amount_with_thousand_symbol;
+    }
+
+    public function getStatusLabelAttribute()
+    {
+        $label =  Status::instance()->statusLabel($this->status);
+
+        return '<span class="' . $label['class'] . ' px-3">' . $label['text'] . '</span>';
     }
 }

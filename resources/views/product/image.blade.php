@@ -22,7 +22,7 @@
                 <a role="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{ __('labels.action') }}
                 </a>
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <div class="dropdown-menu dropdown-menu-right">
                     <a role="button" href="{{ $thumbnail->full_file_path }}" class="dropdown-item" download>
                         <i class="fas fa-download mr-2 text-success"></i>
                         {{ __('labels.download') }}
@@ -31,6 +31,7 @@
             </td>
         </tr>
         @forelse ($images as $image)
+
         <tr>
             <td>{{ ($loop->iteration + 1) }}</td>
             <td>{{ $image->type }}</td>
@@ -45,14 +46,14 @@
                 <a role="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{ __('labels.action') }}
                 </a>
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <div class="dropdown-menu dropdown-menu-right">
                     <a role="button" href="{{ $image->full_file_path }}" class="dropdown-item" download>
                         <i class="fas fa-download mr-2 text-success"></i>
                         {{ __('labels.download') }}
                     </a>
                     @can('product.delete')
                     <a role="button" href="#" class="dropdown-item" title="{{ __('labels.delete') }}" data-toggle="modal"
-                        onclick="event.preventDefault(); deleteAlert('{{ __('messages.confirm_question') }}', '{{ __('messages.delete_info') }}', '{{ route('products.media.destroy', ['product' => $product->id, 'media' => $image->id]) }}')">
+                        onclick="event.preventDefault(); deleteAlert('{{ __('messages.confirm_question') }}', '{{ __('messages.delete_info') }}', '{{ route('products.media.destroy', ['product' => $product->id, 'medium' => $image->id]) }}')">
                         <i class="fas fa-trash mr-2 text-red"></i>
                         {{ __('labels.delete') }}
                     </a>
