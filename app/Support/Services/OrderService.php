@@ -53,7 +53,6 @@ class OrderService extends BaseService
 
         $this->storeOrderItems();
         $this->removeCart();
-        $this->createTransaction();
 
         return $this;
     }
@@ -85,27 +84,10 @@ class OrderService extends BaseService
         return $this;
     }
 
-    private function createTransaction()
-    {
-        $transaction = TransactionFacade::setParent($this->model)
-            ->setRequest($this->request)->newTransaction()->getModel();
-
-        if (!empty($transaction)) {
-
-            $this->redirect_gateway_permission = true;
-        }
-    }
-
-    public function getRedirectGatewayPermission()
-    {
-        return $this->redirect_gateway_permission;
-    }
-
     private function removeCart()
     {
         if ($this->model) {
             foreach ($this->cart as $cart) {
-
                 $cart->delete();
             }
         }

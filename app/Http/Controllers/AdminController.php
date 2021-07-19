@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\Users\AdminRequest;
+use App\Http\Requests\AdminRequest;
 
 class AdminController extends Controller
 {

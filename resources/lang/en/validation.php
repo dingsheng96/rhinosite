@@ -177,7 +177,7 @@ return [
         'facebook' => 'facebook',
         'logo' => 'logo',
         'category' => 'category',
-        'industry_since' => 'years of experience',
+        'year_of_experience' => 'years of experience',
         'pic_name' => 'name of person in charge',
         'pic_email' => 'email of person in charge',
         'pic_phone' => 'contact no. of person in charge',
@@ -192,7 +192,9 @@ return [
         'sku' => 'sku',
         'rate' => 'rate',
         'item' => 'item',
-        'payment_method' => 'payment method'
+        'payment_method' => 'payment method',
+        'ssm_cert' => 'ssm certificate',
+        'business_since' => 'business since'
     ],
 
 ];

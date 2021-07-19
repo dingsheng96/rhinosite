@@ -7,6 +7,7 @@ use App\Models\Unit;
 use App\Models\AdsType;
 use App\Models\Country;
 use App\Models\Project;
+use App\Models\Service;
 use App\Models\Currency;
 use App\Models\CountryState;
 use App\Rules\ExistMerchant;
@@ -46,7 +47,7 @@ class ProjectRequest extends FormRequest
                     ->where('user_id', $merchant_id)
                     ->whereNull('deleted_at')
             ],
-            'title_cn' =>  ['required', 'min:3', 'max:100'],
+            'title_cn'      =>  ['required', 'max:100'],
             'currency'      =>  ['required', 'exists:' . Currency::class . ',id'],
             'unit_price'    =>  ['numeric'],
             'unit_value'    =>  ['required', 'numeric'],
@@ -55,8 +56,9 @@ class ProjectRequest extends FormRequest
             'files'         =>  [Rule::requiredIf(empty($this->route('project'))), 'nullable', 'array'],
             'files.*'       =>  ['image', 'mimes:jpg,jpeg,png', 'max:2000', 'dimensions:max_height=1024,max_width=1024'],
             'description'   =>  ['required'],
-            'materials'     =>  ['required'],
-            'services'      =>  ['required'],
+            'materials'     =>  ['nullable'],
+            'services'      =>  ['required', 'array'],
+            'services.*'    =>  ['exists:' . Service::class . ',id'],
             'address_1'     =>  ['required', 'min:3', 'max:255'],
             'address_2'     =>  ['nullable'],
             'country'       =>  ['required', 'exists:' . Country::class . ',id'],
@@ -101,7 +103,7 @@ class ProjectRequest extends FormRequest
             'files.*'           =>  __('validation.attributes.file'),
             'description'       =>  __('validation.attributes.description'),
             'materials'         =>  __('validation.attributes.materials'),
-            'services'          =>  __('validation.attributes.services'),
+            'services.*'        =>  __('validation.attributes.services'),
             'address_1'         =>  __('validation.attributes.address_1'),
             'address_2'         =>  __('validation.attributes.address_2'),
             'country'           =>  __('validation.attributes.country'),

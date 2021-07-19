@@ -97,7 +97,7 @@
                                     <img src="{{ $default_preview }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
                                 </div>
                                 <div class="col-12 col-md-7">
-                                    <ul>{!! trans_choice('messages.upload_file_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG', 'dimension' => '1024x1024']) !!}</ul>
+                                    <ul>{!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG', 'dimension' => '1024x1024']) !!}</ul>
                                 </div>
                             </div>
                         </div>
@@ -116,7 +116,7 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
-                            <ul>{!! trans_choice('messages.upload_file_rules', 2, ['maxsize' => '10mb', 'extensions' => 'JPG,JPEG, PNG', 'maxfiles' => $max_files, 'dimension' => '1024x1024']) !!}</ul>
+                            <ul>{!! trans_choice('messages.upload_image_rules', 2, ['maxsize' => '10mb', 'extensions' => 'JPG,JPEG, PNG', 'maxfiles' => $max_files, 'dimension' => '1024x1024']) !!}</ul>
                         </div>
                         @endif
 

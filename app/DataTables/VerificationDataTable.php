@@ -81,7 +81,7 @@ class VerificationDataTable extends DataTable
     public function query(UserDetail $model)
     {
         return $model->with(['user'])
-            ->where('status', UserDetail::STATUS_PENDING)
+            ->pendingDetails()
             ->newQuery();
     }
 

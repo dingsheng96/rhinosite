@@ -33,9 +33,35 @@ class Transaction extends Model
         return $this->belongsTo(PaymentMethod::class, 'payment_method_id', 'id');
     }
 
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class, 'currency_id', 'id');
+    }
+
+    // Scopes
+    public function scopePending($query)
+    {
+        return $query->where('status', self::STATUS_PENDING);
+    }
+
+    public function scopeFailed($query)
+    {
+        return $query->where('status', self::STATUS_FAILED);
+    }
+
+    public function scopeSuccess($query)
+    {
+        return $query->where('status', self::STATUS_SUCCESS);
+    }
+
     // Attributes
     public function setAmountAttribute($value)
     {
         $this->attributes['amount'] = PriceFacade::convertFloatToInt($value);
+    }
+
+    public function getAmountWithThousandSymbolAttribute()
+    {
+        return number_format(PriceFacade::convertIntToFloat($this->amount), 2, '.', ',');
     }
 }

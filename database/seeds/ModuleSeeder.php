@@ -16,15 +16,15 @@ class ModuleSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         DB::statement('TRUNCATE TABLE ' . (new Module())->getTable());
 
-        $sorted_data = collect($this->getData())->sortBy('name');
-
-        foreach ($sorted_data as $data) {
-            Module::create([
-                'name'          =>  $data['name'],
-                'display'       =>  $data['display'],
-                'description'   =>  $data['description']
-            ]);
-        }
+        collect($this->getData())
+            ->sortBy('name')
+            ->each(function ($data, $key) {
+                Module::create([
+                    'name'          =>  $data['name'],
+                    'display'       =>  $data['display'],
+                    'description'   =>  $data['description']
+                ]);
+            });
 
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
@@ -43,7 +43,7 @@ class ModuleSeeder extends Seeder
             ['name' => 'project', 'display' => 'Project', 'description' => 'Project Module'],
             ['name' => 'ads', 'display' => 'Ads', 'description' => 'Ads Module'],
             ['name' => 'order', 'display' => 'Order', 'description' => 'Order Module'],
-            ['name' => 'category', 'display' => 'Category', 'description' => 'Category Module'],
+            ['name' => 'service', 'display' => 'Service', 'description' => 'Service Module'],
             ['name' => 'activity_log', 'display' => 'Activity Log', 'description' => 'Activity Log Module'],
             ['name' => 'package', 'display' => 'Package', 'description' => 'Package Module'],
             ['name' => 'product', 'display' => 'Product', 'description' => 'Product Module'],

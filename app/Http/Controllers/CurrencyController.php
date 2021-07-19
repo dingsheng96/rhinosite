@@ -12,7 +12,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\DataTables\CurrencyDataTable;
 use App\Support\Facades\CurrencyFacade;
-use App\Http\Requests\Settings\CurrencyRequest;
+use App\Http\Requests\CurrencyRequest;
 
 class CurrencyController extends Controller
 {

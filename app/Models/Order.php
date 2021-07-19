@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\Status;
+use Illuminate\Support\Str;
 use App\Support\Facades\PriceFacade;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -105,5 +106,16 @@ class Order extends Model
     public function getPaidByAttribute()
     {
         return $this->transaction->paymentMethod()->first();
+    }
+
+    public function getConcatItemNameAttribute()
+    {
+        $items = $this->orderItems()
+            ->select('item')
+            ->get()
+            ->pluck('item')
+            ->toArray();
+
+        return Str::limit(implode(',', $items), 90, '...');
     }
 }

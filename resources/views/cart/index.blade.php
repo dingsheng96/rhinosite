@@ -11,6 +11,7 @@
 
         <div>
             <ul class="list-group list-group-flush" id="cart-items-list">
+
                 @forelse ($carts as $item)
 
                 <li class="list-group-item px-0 py-2">
@@ -57,6 +58,7 @@
                 </li>
 
                 @empty
+
                 <li class="list-group-item px-0 py-2">
                     <p class="text-center">{{ __('messages.empty_list', ['list' => strtolower(trans_choice('labels.item', 2))]) }}</p>
                 </li>
@@ -74,7 +76,7 @@
                 <span class="float-right" id="cart-subtotal">{{ $cart_currency . number_format($sub_total ?? 0, 2, '.', '') }}</span>
             </p>
 
-            <a href="#" role="button" class="btn btn-block btn-outline-primary btn-rounded-corner text-center">
+            <a href="{{ route('checkout.index') }}" role="button" class="btn btn-block btn-outline-primary btn-rounded-corner text-center">
                 {{ strtoupper(__('labels.check_out')) }}
             </a>
         </div>

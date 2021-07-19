@@ -9,7 +9,7 @@
             <div class="card card-secondary card-outline">
                 <div class="card-body box-profile">
                     <div class="text-center">
-                        <img class="profile-user-img img-fluid img-circle" src="{{ optional($user->logo)->full_file_path }}" alt="profile">
+                        <img class="profile-user-img img-fluid img-circle" src="{{ optional($user->logo)->full_file_path ?? $default_preview }}" alt="profile">
                         <h3 class="profile-username">{{ $user->name }}</h3>
                         <h5 class="mb-3">{!! $user->status_label !!}</h5>
                     </div>
@@ -20,10 +20,10 @@
                             <p class="text-muted">{{ $user->last_login_at->toDateTimeString() ?? '-' }}</p>
                         </li>
                         @if (!empty($user_details))
-                        <li class="list-group-item">
+                        {{-- <li class="list-group-item">
                             <strong><i class="fas fa-cube mr-1 text-teal"></i> {{ __('labels.category') }}</strong>
-                            <p class="text-muted">{{ $user->category->name }}</p>
-                        </li>
+                        <p class="text-muted">{{ $user->category->name }}</p>
+                        </li> --}}
                         <li class="list-group-item">
                             <strong><i class="fas fa-briefcase mr-1 text-purple"></i> {{ __('labels.years_of_experience') }}</strong>
                             <p class="text-muted">{{ trans_choice('labels.year', $user_details->years_of_experience, ['value' => $user_details->years_of_experience]) }}</p>
@@ -80,7 +80,7 @@
 
                         <div class="card-header">
                             <h5 class="d-inline">
-                                {{ __('labels.ads_booster') }}
+                                {{ __('labels.add_on') }}
                             </h5>
                             <div class="card-tools">
                                 <a href="" role="button" class="btn btn-outline-primary btn-rounded-corner">
@@ -97,7 +97,7 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col" style="width: 10%;">{{ __('#') }}</th>
-                                                <th scope="col" style="width: 70%;">{{ __('labels.ads_booster') }}</th>
+                                                <th scope="col" style="width: 70%;">{{ __('labels.add_on') }}</th>
                                                 <th scope="col" style="width: 20%;">{{ __('labels.remaining') }}</th>
                                             </tr>
                                         </thead>
@@ -119,8 +119,11 @@
 
                         @else
                         <div class="row">
-                            <div class="col-12 text-center">
-                                <a role="button" href="{{ route('subscriptions.index') }}" class="btn btn-outline-primary btn-rounded-corner">
+                            <div class="col-12 text-center py-3">
+
+                                <h4>{{ __('messages.no_subscription') }}</h4>
+
+                                <a role="button" href="{{ route('subscriptions.index') }}" class="btn btn-outline-primary btn-rounded-corner my-3">
                                     {{ __('labels.sign_up_a_plan') }}
                                 </a>
                             </div>
@@ -204,9 +207,9 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="industry_since" class="col-form-label">{{ __('labels.business_since') }} <span class="text-red">*</span></label>
+                                                    <label for="business_since" class="col-form-label">{{ __('labels.year_of_experience') }} <span class="text-red">*</span></label>
                                                     <div class="input-group">
-                                                        <input type="text" name="industry_since" id="industry_since" value="{{ old('industry_since', $user_details->industry_since) }}" class="form-control date-picker @error('industry_since') is-invalid @enderror">
+                                                        <input type="text" name="business_since" id="business_since" value="{{ old('business_since', $user_details->business_since) }}" class="form-control date-picker @error('business_since') is-invalid @enderror">
                                                         @error('experience')
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
@@ -415,7 +418,7 @@
                                                             <div class="custom-file">
                                                                 <input type="file" id="logo" name="logo" class="custom-file-input custom-img-input @error('logo') is-invalid @enderror" accept=".jpg,.jpeg,.png">
                                                                 <label class="custom-file-label" for="logo">Choose file</label>
-                                                                <ul>{!! trans_choice('messages.upload_file_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG', 'dimension' => '1024 x 1024']) !!}</ul>
+                                                                <ul>{!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG', 'dimension' => '1024 x 1024']) !!}</ul>
                                                                 @error('logo')
                                                                 <span class="invalid-feedback" role="alert">
                                                                     <strong>{{ $message }}</strong>
@@ -448,12 +451,3 @@
 </div>
 
 @endsection
-
-@push('scripts')
-<script>
-    let datepicker = new Pikaday({
-        field: $('.date-picker')[0],
-        format: 'YYYY-MM-DD'
-    });
-</script>
-@endpush

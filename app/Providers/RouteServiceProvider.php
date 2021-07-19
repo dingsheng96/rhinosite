@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Transaction;
 use App\Models\ProductCategory;
 use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\Route;
@@ -115,6 +116,24 @@ class RouteServiceProvider extends ServiceProvider
                 ->whereHas('productCategory', function ($query) {
                     $query->where(app(ProductCategory::class)->getTable() . '.name', ProductCategory::TYPE_ADS);
                 })
+                ->firstOrFail();
+        });
+
+        Route::bind('ads', function ($value) {
+            return ProductAttribute::where('id', $value)
+                ->whereHas('productCategory', function ($query) {
+                    $query->where(app(ProductCategory::class)->getTable() . '.name', ProductCategory::TYPE_ADS);
+                })
+                ->firstOrFail();
+        });
+
+        Route::bind('trans_no', function ($value) {
+            return Transaction::with([
+                'currency',
+                'sourceable.user',
+                'paymentMethod'
+            ])
+                ->where('transaction_no', $value)
                 ->firstOrFail();
         });
     }

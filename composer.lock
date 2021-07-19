@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6e6e9de7bc86c7d960be0aa5b51772e6",
+    "content-hash": "3fb4637c1715448ea794436ba2686352",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -6554,17 +6554,20 @@
         },
         {
             "name": "yangyiyi/extra-command",
-            "version": "v0.0.2",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yangyiyi/extra-command.git",
-                "reference": "2fd1bddfb9011f8c5e3f57d08d8216b3ba2ace21"
+                "reference": "500a9adec04c01b89f732f80739e4881afb5064b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yangyiyi/extra-command/zipball/2fd1bddfb9011f8c5e3f57d08d8216b3ba2ace21",
-                "reference": "2fd1bddfb9011f8c5e3f57d08d8216b3ba2ace21",
+                "url": "https://api.github.com/repos/yangyiyi/extra-command/zipball/500a9adec04c01b89f732f80739e4881afb5064b",
+                "reference": "500a9adec04c01b89f732f80739e4881afb5064b",
                 "shasum": ""
+            },
+            "require": {
+                "php": "^7.3|^8.0"
             },
             "type": "library",
             "extra": {
@@ -6592,9 +6595,9 @@
             "description": "Extra command to generate Services and Facades for Laravel project",
             "support": {
                 "issues": "https://github.com/yangyiyi/extra-command/issues",
-                "source": "https://github.com/yangyiyi/extra-command/tree/v0.0.2"
+                "source": "https://github.com/yangyiyi/extra-command/tree/v1.0.3"
             },
-            "time": "2021-07-01T10:00:36+00:00"
+            "time": "2021-07-07T15:36:14+00:00"
         }
     ],
     "packages-dev": [

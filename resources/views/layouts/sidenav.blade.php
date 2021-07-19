@@ -127,8 +127,8 @@
                 {{-- END USERS --}}
 
                 {{-- SETTINGS --}}
-                @canany(['country.create', 'country.read'. 'country.update', 'country.delete', 'currency.create', 'currency.read'. 'currency.update', 'currency.delete', 'role.create', 'role.read'. 'role.update', 'role.delete', 'category.create', 'category.read', 'category.update',
-                'category.delete'])
+                @canany(['country.create', 'country.read'. 'country.update', 'country.delete', 'currency.create', 'currency.read'. 'currency.update', 'currency.delete', 'role.create', 'role.read'. 'role.update', 'role.delete', 'service.create', 'service.read', 'service.update',
+                'service.delete'])
 
                 <li class="nav-header">{{ __('modules.settings') }}</li>
 
@@ -141,11 +141,11 @@
                 </li>
                 @endcanany
 
-                @canany(['category.create', 'category.read'. 'category.update', 'category.delete'])
+                @canany(['service.create', 'service.read'. 'service.update', 'service.delete'])
                 <li class="nav-item">
-                    <a href="{{ route('categories.index') }}" class="nav-link {{ Nav::hasSegment('categories', 1, 'active') }}">
+                    <a href="{{ route('services.index') }}" class="nav-link {{ Nav::hasSegment('services', 1, 'active') }}">
                         <i class="nav-icon fas fa-cube"></i>
-                        <p>{{ trans_choice('modules.category', 2) }}</p>
+                        <p>{{ trans_choice('modules.service', 2) }}</p>
                     </a>
                 </li>
                 @endcanany

@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             UnitSeeder::class,
             CountrySeeder::class,
             ProductCategorySeeder::class,
+            ServiceSeeder::class,
         ]);
     }
 }

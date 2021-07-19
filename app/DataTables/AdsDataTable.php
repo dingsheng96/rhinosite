@@ -2,6 +2,7 @@
 
 namespace App\DataTables;
 
+use App\Models\Project;
 use App\Models\AdsBooster;
 use Illuminate\Support\Arr;
 use Yajra\DataTables\Html\Button;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
+use Illuminate\Database\Eloquent\Builder;
 
 class AdsDataTable extends DataTable
 {
@@ -39,18 +41,19 @@ class AdsDataTable extends DataTable
                 ])->render();
             })
             ->addColumn('project', function ($data) {
+
                 return  '<div class="row">
                 <div class="col-6 col-md-3">
-                <img src="' . $data->boostable->thumbnail->full_file_path . '" alt="' . $data->boostable->thumbnail->filename . '" class="table-img-preview">
+                <img src="' . optional(optional($data->boostable)->thumbnail)->full_file_path . '" alt="' . optional(optional($data->boostable)->thumbnail)->filename . '" class="table-img-preview">
                 </div>
-                <div class="col-6 col-md-9">' . $data->boostable->english_title . '<br/>' . $data->boostable->chinese_title . '</div>
+                <div class="col-6 col-md-9">' . optional($data->boostable)->english_title . '<br/>' . optional($data->boostable)->chinese_title . '</div>
                 </div>';
             })
             ->addColumn('merchant', function ($data) {
-                return $data->boostable->user->name;
+                return optional(optional($data->boostable)->user)->name;
             })
             ->addColumn('ads_type', function ($data) {
-                return $data->productAttribute->product->name;
+                return optional(optional($data->productAttribute)->product)->name;
             })
             ->addColumn('status', function ($data) {
                 return $data->status_label;
@@ -77,14 +80,13 @@ class AdsDataTable extends DataTable
      */
     public function query(AdsBooster $model)
     {
-        return $model->with([
-            'productAttribute.product',
-            'boostable' => function ($query) {
-                $query->when(Auth::user()->is_merchant, function ($query) {
+        return $model->with(['productAttribute.product', 'boostable'])
+            ->when(Auth::user()->is_merchant, function ($query) {
+                $query->whereHasMorph('boostable', Project::class, function (Builder $query) {
                     $query->where('user_id', Auth::id());
                 });
-            }
-        ])->newQuery();
+            })
+            ->newQuery();
     }
 
     /**

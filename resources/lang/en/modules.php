@@ -38,7 +38,7 @@ return [
     'currency' => 'Currency|Currencies',
     'country_state' => 'Country State|Country States',
     'city' => 'City|Cities',
-    'category' => 'Category|Categories',
+    'service' => 'Service|Services',
     'activity_logs' => 'Activity Logs',
 
 ];

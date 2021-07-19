@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\Package;
 use App\Models\Product;
+use App\Models\Project;
 use App\Models\UserDetail;
 use App\Models\Transaction;
 
@@ -48,6 +49,14 @@ class Status
             UserDetail::STATUS_PENDING => 'Pending',
             UserDetail::STATUS_APPROVED => 'Approved',
             UserDetail::STATUS_REJECTED => 'Rejected'
+        ];
+    }
+
+    public function projectStatus(): array
+    {
+        return [
+            Project::STATUS_PUBLISHED => __('labels.published'),
+            Project::STATUS_DRAFT => __('labels.draft'),
         ];
     }
 
@@ -94,6 +103,10 @@ class Status
                 'text' => __('labels.published'),
                 'class' => 'badge badge-pill badge-lg badge-success'
             ],
+            'draft' => [
+                'text' => __('labels.draft'),
+                'class' => 'badge badge-pill badge-lg badge-primay'
+            ],
             'expired' => [
                 'text' => __('labels.expired'),
                 'class' => 'badge badge-pill badge-lg badge-danger'
@@ -105,16 +118,6 @@ class Status
             'incoming' => [
                 'text' => __('labels.incoming'),
                 'class' => 'badge badge-pill badge-lg badge-warning'
-            ],
-            'availability' => [
-                '0' => [
-                    'text' => __('labels.unavailable'),
-                    'class' => 'badge badge-pill badge-lg badge-danger'
-                ],
-                '1' => [
-                    'text' => __('labels.available'),
-                    'class' => 'badge badge-pill badge-lg badge-success'
-                ]
             ]
         ];
 

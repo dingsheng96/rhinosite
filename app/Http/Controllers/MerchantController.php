@@ -3,26 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Media;
 use App\Helpers\Status;
 use App\Helpers\Message;
-use App\Models\Category;
-use App\Helpers\Response;
 use App\Models\Permission;
-use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\DataTables\MerchantDataTable;
+use App\Http\Requests\MerchantRequest;
 use App\Support\Facades\MerchantFacade;
-use App\Http\Requests\Users\MerchantRequest;
 
 class MerchantController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['can:merchant.read']);
+        $this->middleware(['can:merchant.read'])->only(['index', 'show']);
         $this->middleware(['can:merchant.create'])->only(['create', 'store']);
         $this->middleware(['can:merchant.update'])->only(['edit', 'update']);
         $this->middleware(['can:merchant.delete'])->only(['delete']);
@@ -100,9 +96,7 @@ class MerchantController extends Controller
 
         $statuses = Status::instance()->activeStatus();
 
-        $categories = Category::orderBy('name', 'asc')->get();
-
-        return view('merchant.edit', compact('merchant', 'documents', 'user_details', 'categories', 'statuses'));
+        return view('merchant.edit', compact('merchant', 'documents', 'user_details', 'statuses'));
     }
 
     /**

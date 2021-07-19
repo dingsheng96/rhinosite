@@ -53,7 +53,7 @@ class AccountService extends BaseService
             ->approvedDetails()
             ->first();
 
-        $details->industry_since        =   $this->request->get('industry_since');
+        $details->business_since        =   $this->request->get('business_since');
         $details->website               =   $this->request->get('website');
         $details->facebook              =   $this->request->get('facebook');
         $details->pic_name              =   $this->request->get('pic_name');

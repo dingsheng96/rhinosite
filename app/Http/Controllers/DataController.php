@@ -9,7 +9,6 @@ use App\Helpers\Response;
 use App\Models\AdsBooster;
 use App\Models\Permission;
 use App\Models\CountryState;
-use Illuminate\Http\Request;
 use App\Models\ProductAttribute;
 
 class DataController extends Controller
@@ -93,13 +92,8 @@ class DataController extends Controller
                 ->whereBetween('boosted_at', [today(), today()->addMonth()])
                 ->get();
 
-                // filter
-            foreach ($boost_ads_list as $ads) {
-                $ads
-            }
+            // filter
 
-            if ($boost_ads_list->where('')->count() < $total_slots_per_day) {
-            }
         } catch (\Error | \Exception $ex) {
 
             $status = 'fail';

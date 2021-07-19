@@ -4,14 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Media;
 use App\Models\Price;
+use App\Helpers\Status;
 use App\Models\Project;
+use App\Models\Service;
 use App\Helpers\Message;
 use App\Helpers\Response;
 use App\Models\Permission;
 use App\Helpers\FileManager;
-use App\DataTables\PriceDataTable;
 use Illuminate\Support\Facades\DB;
 use App\DataTables\ProjectDataTable;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ProjectRequest;
 use App\Support\Facades\ProjectFacade;
@@ -43,9 +45,13 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        $max_files = Project::MAX_IMAGES;
+        $max_files  =   Project::MAX_IMAGES;
 
-        return view('projects.create', compact('max_files'));
+        $services   =   Service::orderBy('name', 'asc')->get();
+
+        $statuses   =   Status::instance()->projectStatus();
+
+        return view('projects.create', compact('max_files', 'services', 'statuses'));
     }
 
     /**
@@ -127,12 +133,14 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        $thumbnail      =   $project->media()->thumbnail()->first();
-        $media          =   $project->media()->image()->get();
-        $max_files      =   Project::MAX_IMAGES - $media->count();
-        $default_price  =   $project->prices()->defaultPrice()->first();
+        $thumbnail          =   $project->media()->thumbnail()->first();
+        $media              =   $project->media()->image()->get();
+        $max_files          =   Project::MAX_IMAGES - $media->count();
+        $default_price      =   $project->prices()->defaultPrice()->first();
+        $statuses           =   Status::instance()->projectStatus();
+        $services           =   Service::orderBy('name', 'asc')->get();
 
-        return view('projects.edit', compact('project', 'max_files', 'media', 'default_price'));
+        return view('projects.edit', compact('project', 'max_files', 'media', 'default_price', 'statuses', 'services'));
     }
 
     /**

@@ -14,7 +14,7 @@ use App\Http\Controllers\Controller;
 use App\Support\Facades\PriceFacade;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use App\Http\Requests\Ecommerce\CartRequest;
+use App\Http\Requests\CartRequest;
 
 class CartController extends Controller
 {

@@ -73,12 +73,6 @@
                                     <div class="row">
                                         <div class="col-12 col-md-6">
                                             <div class="form-group">
-                                                <label for="category" class="col-form-label">{{ __('labels.category') }}</label>
-                                                <p id="category" class="form-control">{{ $merchant->user_category->name ?? null }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-md-6">
-                                            <div class="form-group">
                                                 <label for="experience" class="col-form-label">{{ __('labels.years_of_experience') }}</label>
                                                 <p id="experience" class="form-control">{{ $user_details->years_of_experience ?? null }}</p>
                                             </div>

@@ -19,6 +19,7 @@ class ProjectService extends BaseService
     public function storeData()
     {
         $this->storeDetails();
+        $this->storeServices();
         $this->storeTitle();
         $this->storeImages();
         $this->storePrice();
@@ -32,18 +33,23 @@ class ProjectService extends BaseService
         $this->model->title         =  $this->request->get('title_en');
         $this->model->description   =  $this->request->get('description');
         $this->model->user_id       =  $this->request->get('merchant') ?? auth()->id();
-        $this->model->services      =  $this->request->get('services');
         $this->model->materials     =  $this->request->get('materials');
         $this->model->unit_id       =  $this->request->get('unit');
         $this->model->unit_value    =  $this->request->get('unit_value');
-        $this->model->published     =  $this->request->has('publish');
-        $this->model->slug          =  Str::slug($this->request->get('title_en'), '-');
+        $this->model->status        =  $this->request->get('status');
 
         if ($this->model->isDirty()) {
             $this->model->save();
         }
 
         $this->setModel($this->model);
+
+        return $this;
+    }
+
+    public function storeServices()
+    {
+        $this->model->services()->sync($this->request->get('services'));
 
         return $this;
     }

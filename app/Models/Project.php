@@ -2,7 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Unit;
+use App\Models\User;
+use App\Models\Media;
+use App\Models\Price;
+use App\Models\Rating;
 use App\Helpers\Status;
+use App\Models\Address;
+use App\Models\Service;
+use App\Models\Language;
+use App\Models\AdsBooster;
+use App\Models\Translation;
+use App\Models\ProjectService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -10,8 +21,10 @@ class Project extends Model
 {
     use SoftDeletes;
 
-    const STORE_PATH    = '/projects';
-    const MAX_IMAGES  = 5;
+    const STORE_PATH        =   '/projects';
+    const STATUS_PUBLISHED  =   'published';
+    const STATUS_DRAFT      =   'draft';
+    const MAX_IMAGES        =   5;
 
     protected $table = 'projects';
 
@@ -61,10 +74,20 @@ class Project extends Model
         return $this->morphMany(AdsBooster::class, 'boostable');
     }
 
-    // Scopes
-    public function scopePublished($query, bool $status = true)
+    public function services()
     {
-        return $query->where('published', $status);
+        return $this->belongsToMany(Service::class, ProjectService::class, 'project_id', 'service_id', 'id', 'id');
+    }
+
+    // Scopes
+    public function scopePublished($query)
+    {
+        return $query->where('status', self::STATUS_PUBLISHED);
+    }
+
+    public function scopeDraft($query)
+    {
+        return $query->where('status', self::STATUS_DRAFT);
     }
 
     // Attributes
@@ -109,14 +132,9 @@ class Project extends Model
 
     public function getStatusLabelAttribute()
     {
-        if ($this->published) {
+        $label =  Status::instance()->statusLabel($this->status);
 
-            $label =  Status::instance()->statusLabel('published');
-
-            return '<span class="' . $label['class'] . ' px-3">' . $label['text'] . '</span>';
-        }
-
-        return;
+        return '<span class="' . $label['class'] . ' px-3">' . $label['text'] . '</span>';
     }
 
     public function getThumbnailAttribute()

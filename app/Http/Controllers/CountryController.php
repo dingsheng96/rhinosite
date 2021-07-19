@@ -12,7 +12,7 @@ use App\DataTables\CountryDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\DataTables\CountryStateDataTable;
-use App\Http\Requests\Settings\Country\CountryRequest;
+use App\Http\Requests\CountryRequest;
 
 class CountryController extends Controller
 {

@@ -5,7 +5,7 @@ function customAlert(message, status)
     Swal.fire({
         icon: status,
         title: message,
-        timer: 2000,
+        timer: 2500,
         showConfirmButton: false,
     });
 }
@@ -87,7 +87,10 @@ function logoutAlert(title)
 function setDataIntoDropdown(url, dropdown, option_text, option_value) {
     $.ajax({
         url: url,
-        type: "GET",
+        type: "post",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         success: xhr => {
             if (xhr.status) {
                 $.each(xhr.data, function(index, value) {

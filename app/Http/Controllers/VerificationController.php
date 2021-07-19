@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Media;
 use App\Helpers\Status;
 use App\Helpers\Message;
@@ -12,8 +13,11 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Support\Facades\MerchantFacade;
 use App\DataTables\VerificationDataTable;
 use App\Support\Facades\UserDetailFacade;
+use Illuminate\Database\Eloquent\Builder;
+use App\Http\Requests\VerificationRequest;
 
 class VerificationController extends Controller
 {
@@ -42,7 +46,7 @@ class VerificationController extends Controller
      */
     public function create()
     {
-        //
+        return view('verification.create');
     }
 
     /**
@@ -51,9 +55,54 @@ class VerificationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(VerificationRequest $request)
     {
-        //
+        DB::beginTransaction();
+
+        $action     =   Permission::ACTION_CREATE;
+        $module     =   strtolower(trans_choice('modules.merchant', 1));
+        $message    =   Message::instance()->format($action, $module);
+        $status     =   'fail';
+
+        try {
+
+            $user = User::when(Auth::user()->is_member, function ($query) {
+                $query->where('id', Auth::id());
+            })->when(Auth::user()->is_admin, function ($query) use ($request) {
+                $query->where('id', $request->get('user'));
+            })->firstOrFail();
+
+            $verification = MerchantFacade::setModel($user)
+                ->setRequest($request)
+                ->storeDetails(true)
+                ->storeSsmCert()
+                ->storeAddress()
+                ->getModel();
+
+            DB::commit();
+
+            $status  = 'success';
+            $message = Message::instance()->format($action, $module, $status);
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($verification)
+                ->withProperties($request->all())
+                ->log($message);
+
+            return redirect()->action('VerificationController@notify');
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn(new UserDetail())
+                ->withProperties($request->all())
+                ->log($e->getMessage());
+
+            return redirect()->back()->withErrors($message)->withInput();
+        }
     }
 
     /**
@@ -65,6 +114,13 @@ class VerificationController extends Controller
     public function show(UserDetail $verification)
     {
         $documents = Media::ssm()
+            ->whereHasMorph(
+                'sourceable',
+                User::class,
+                function (Builder $query) use ($verification) {
+                    $query->where('id', $verification->user_id);
+                }
+            )
             ->orderBy('created_at', 'asc')
             ->get();
 
@@ -81,6 +137,13 @@ class VerificationController extends Controller
     {
         $statuses = $this->statuses;
         $documents = Media::ssm()
+            ->whereHasMorph(
+                'sourceable',
+                User::class,
+                function (Builder $query) use ($verification) {
+                    $query->where('id', $verification->user_id);
+                }
+            )
             ->orderBy('created_at', 'asc')
             ->get();
 
@@ -149,5 +212,10 @@ class VerificationController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function notify()
+    {
+        return view('verification.notify');
     }
 }

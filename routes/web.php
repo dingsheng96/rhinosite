@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\UserDetail;
+use App\Models\Transaction;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Notifications\AccountVerified;
@@ -32,6 +34,8 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::resource('ads', 'AdsController');
 
     Route::resource('carts', 'CartController');
+
+    Route::get('verifications/notify', 'VerificationController@notify');
 
     Route::resource('verifications', 'VerificationController');
 
@@ -68,7 +72,7 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
     Route::resource('roles', 'RoleController');
 
-    Route::resource('categories', 'CategoryController');
+    Route::resource('services', 'ServiceController');
 
     Route::resource('currencies', 'CurrencyController');
 
@@ -78,15 +82,42 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
     Route::resource('countries.country-states.cities', 'CityController');
 
+    Route::resource('transactions', 'TransactionController');
+
+    Route::group(['prefix' => 'payment/{trans_no}', 'as' => 'payment.'], function () {
+
+        Route::get('redirect', 'PaymentController@redirect')->name('redirect');
+        Route::post('response', 'PaymentController@response')->name('response');
+        Route::post('backend', 'PaymentController@backendResponse')->name('backend');
+        Route::get('status', 'PaymentController@paymentStatus')->name('status');
+    });
+
     Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
 
         Route::group(['prefix' => 'countries/{country}', 'as' => 'countries.'], function () {
-            Route::get('country-states', 'DataController@getCountryStateFromCountry')->name('country-states');
-            Route::get('country-states/{country_state}/cities', 'DataController@getCityFromCountryState')->name('country-states.cities');
+
+            Route::post('country-states', 'DataController@getCountryStateFromCountry')->name('country-states');
+            Route::post('country-states/{country_state}/cities', 'DataController@getCityFromCountryState')->name('country-states.cities');
         });
 
-        Route::get('products/{product}/sku', 'DataController@getSkuFromProduct')->name('products.sku');
+        Route::post('products/{product}/sku', 'DataController@getSkuFromProduct')->name('products.sku');
 
-        Route::get('ads/{ads}/date', 'DataController@getAdsAvailableDate')->name('ads.date');
+        Route::post('ads/{ads}/date', 'DataController@getAdsAvailableDate')->name('ads.date');
     });
 });
+
+Route::get(
+    'payment/{trans_no}/status',
+    function (Request $request, Transaction $trans_no) {
+
+        $status = [
+            0 => 'fail',
+            1 => 'success',
+        ];
+
+        return view('payment.status', [
+            'status' => $status[$request->get('status')],
+            'transaction' => $trans_no
+        ]);
+    }
+);

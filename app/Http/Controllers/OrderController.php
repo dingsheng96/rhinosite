@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Support\Facades\OrderFacade;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\Ecommerce\OrderRequest;
+use App\Support\Facades\TransactionFacade;
+use App\Http\Requests\OrderRequest;
 
 class OrderController extends Controller
 {
@@ -56,17 +57,20 @@ class OrderController extends Controller
             $user = User::where('id', Auth::id())->firstOrFail();
 
             // store order
-            $proceed_gateway = OrderFacade::setRequest($request)
+            $order = OrderFacade::setRequest($request)
                 ->setBuyer($user)
                 ->createOrder()
-                ->getRedirectGatewayPermission();
+                ->getModel();
 
-            if ($proceed_gateway) {
-                DB::commit();
+            // create new transaction from order
+            $transaction = TransactionFacade::setParent($order)
+                ->setRequest($request)
+                ->newTransaction()
+                ->getModel();
 
-                // redirect to payment gateway
-                return $proceed_gateway;
-            }
+            DB::commit();
+
+            return redirect()->route('payment.redirect', ['trans_no' => $transaction->transaction_no]);
         } catch (\Error | \Exception $ex) {
 
             DB::rollback();

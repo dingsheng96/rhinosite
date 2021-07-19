@@ -23,6 +23,7 @@ return [
     'add_more' => 'Add More',
     'default' => 'Default',
     'published' => 'Published',
+    'draft' => 'Draft',
     'select' => 'Select',
     'paid' => 'Paid',
     'cancelled' => 'Cancelled',
@@ -45,10 +46,10 @@ return [
     'current_plan' => 'Current Plan',
     'view_all' => 'View All',
     'dropdown_placeholder' => 'Please select :label',
-    'text_placeholder' => 'Enter :label',
     'change_profile_pic' => 'Change Profile Picture',
     'change_logo' => 'Change Logo',
     'sign_up_a_plan' => 'Sign up a plan',
+    'optional' => 'Optional',
 
     'project' => 'Project|Projects',
     'country_state' => 'Country State|Country States',
@@ -174,5 +175,12 @@ return [
     'boosted_at' => 'Boosted At|Boost Date',
     'add_on' => 'Add On',
     'buy_add_on' => 'Buy Add On',
-    'remaining' => 'Remaining'
+    'remaining' => 'Remaining',
+    'transaction_no' => 'Transaction No.',
+    'payment_status' => '{0} Payment Failed|{1} Payment Success',
+    'return_dashboard' => 'Return Dashboard',
+    'ssm_cert' => 'SSM Certificate',
+    'verify_in_progress' => 'Verify In Progress',
+    'year_of_experience' => 'Year of Experience',
+    'thumbnail' => 'Thumbnail'
 ];

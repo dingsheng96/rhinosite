@@ -18,13 +18,13 @@ class UserDetail extends Model
     protected $table = 'user_details';
 
     protected $fillable = [
-        'user_id', 'industry_since', 'website', 'facebook', 'pic_name',
+        'user_id', 'business_since', 'website', 'facebook', 'pic_name',
         'pic_phone', 'pic_email', 'validated_by', 'status', 'validated_at'
     ];
 
     protected $casts = [
         'validated_at' => 'datetime',
-        'industry_since' => 'date'
+        'business_since' => 'date'
     ];
 
     // Relationships
@@ -38,10 +38,7 @@ class UserDetail extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id')
-            ->whereHas('roles', function ($query) {
-                $query->where('name', Role::ROLE_MERCHANT);
-            });
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function address()
@@ -55,7 +52,7 @@ class UserDetail extends Model
     }
 
     // Scopes
-    public function scopePendingVerifications($query)
+    public function scopePendingDetails($query)
     {
         return $query->where('status', self::STATUS_PENDING);
     }
@@ -63,6 +60,11 @@ class UserDetail extends Model
     public function scopeApprovedDetails($query)
     {
         return $query->where('status', self::STATUS_APPROVED);
+    }
+
+    public function scopeRejectedDetails($query)
+    {
+        return $query->where('status', self::STATUS_REJECTED);
     }
 
     // Attributes
@@ -75,6 +77,6 @@ class UserDetail extends Model
 
     public function getYearsOfExperienceAttribute()
     {
-        return now()->diffInYears($this->industry_since);
+        return now()->diffInYears($this->business_since);
     }
 }

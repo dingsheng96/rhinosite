@@ -15,10 +15,10 @@ $(function () {
         });
     }
 
-    let updateCategoryModal = $('#updateCategoryModal');
+    let updateServiceModal = $('#updateServiceModal');
 
-    if(updateCategoryModal.length > 0) {
-        updateCategoryModal.on('show.bs.modal', function (event) {
+    if(updateServiceModal.length > 0) {
+        updateServiceModal.on('show.bs.modal', function (event) {
 
             let obj     =   $(event.relatedTarget).data('object');
             let form    =   $(this).find('form');
@@ -26,7 +26,7 @@ $(function () {
 
             form.attr('action', action.toString().replace('__REPLACE__', obj.id));
             $(this).find('input#update_name').val(obj.name);
-            $(this).find('input#update_description').val(obj.description);
+            $(this).find('textarea#update_description').text(obj.description);
         });
     }
 

@@ -51,11 +51,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->morphMany(Media::class, 'sourceable');
     }
 
-    public function categories()
-    {
-        return $this->belongsToMany(Category::class, UserCategory::class, 'user_id', 'category_id', 'id', 'id');
-    }
-
     public function wishlists()
     {
         return $this->hasMany(Wishlist::class, 'user_id', 'id');
@@ -166,7 +161,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $folders = [
             Role::ROLE_SUPER_ADMIN => 'admin',
-            Role::ROLE_MERCHANT => 'merchant'
+            Role::ROLE_MERCHANT => 'merchant',
+            Role::ROLE_MEMBER => 'member'
         ];
 
         return $folders[$this->roles()->first()->name];
@@ -180,6 +176,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getIsMerchantAttribute()
     {
         return $this->role_name == Role::ROLE_MERCHANT;
+    }
+
+    public function getIsMemberAttribute()
+    {
+        return $this->role_name == Role::ROLE_MEMBER;
     }
 
     public function getUserCategoryAttribute()

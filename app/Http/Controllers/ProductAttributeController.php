@@ -16,8 +16,8 @@ use App\Http\Controllers\Controller;
 use App\Support\Facades\PriceFacade;
 use Illuminate\Support\Facades\Auth;
 use App\Support\Facades\ProductAttributeFacade;
-use App\Http\Requests\Ecommerce\ProductPriceRequest;
-use App\Http\Requests\Ecommerce\ProductAttributeRequest;
+use App\Http\Requests\ProductPriceRequest;
+use App\Http\Requests\ProductAttributeRequest;
 
 class ProductAttributeController extends Controller
 {

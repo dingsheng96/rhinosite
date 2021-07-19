@@ -18,6 +18,7 @@
         "category": 210,
         "cart": 220,
         "ads": 221,
+        "service": 222,
         "system": 900
     },
     "actions": {

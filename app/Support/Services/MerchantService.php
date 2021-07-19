@@ -2,6 +2,7 @@
 
 namespace App\Support\Services;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Media;
 use App\Models\UserDetail;
@@ -18,7 +19,6 @@ class MerchantService extends BaseService
     {
         $this->storeProfile();
         $this->storeDetails();
-        $this->storeCategory();
         $this->storeAddress();
         $this->storeImage();
 
@@ -41,15 +41,20 @@ class MerchantService extends BaseService
         return $this;
     }
 
-    public function storeDetails()
+    public function storeDetails(bool $from_verification = false)
     {
         $details = $this->model->userDetails()
-            ->approvedDetails()
+            ->when($from_verification, function ($query) {
+                $query->pendingDetails();
+            })
+            ->when(!$from_verification, function ($query) {
+                $query->approvedDetails();
+            })
             ->firstOr(function () {
                 return new UserDetail();
             });
 
-        $details->industry_since        =   $this->request->get('experience');
+        $details->business_since        =   $this->request->get('business_since');
         $details->website               =   $this->request->get('website');
         $details->facebook              =   $this->request->get('facebook');
         $details->pic_name              =   $this->request->get('pic_name');
@@ -88,22 +93,34 @@ class MerchantService extends BaseService
                     return new Media();
                 });
 
-            return $this->storeMedia($media, $config, $this->request->file('logo'));
+            return $this->storeMedia($media, $config, $file);
         }
 
         return $this;
     }
 
-    public function storeCategory()
+    public function storeSsmCert()
     {
-        $category = $this->request->get('category');
+        if ($this->request->hasFile('ssm_cert')) {
 
-        $this->model->categories()
-            ->sync(
-                is_array($category)
-                    ? $category
-                    : [$category]
-            );
+            $file = $this->request->file('ssm_cert');
+
+            $config = [
+                'save_path'     =>   User::STORE_PATH,
+                'type'          =>   Media::TYPE_SSM,
+                'filemime'      =>   FileManager::instance()->getMimesType($file->getClientOriginalExtension()),
+                'filename'      =>   $file->getClientOriginalName(),
+                'extension'     =>   $file->getClientOriginalExtension(),
+                'filesize'      =>   $file->getSize(),
+            ];
+
+            $media = $this->model->media()->ssm()
+                ->firstOr(function () {
+                    return new Media();
+                });
+
+            return $this->storeMedia($media, $config, $file);
+        }
 
         return $this;
     }

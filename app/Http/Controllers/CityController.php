@@ -15,7 +15,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\Settings\Country\CityImport;
-use App\Http\Requests\Settings\Country\CityRequest;
+use App\Http\Requests\CityRequest;
 
 class CityController extends Controller
 {

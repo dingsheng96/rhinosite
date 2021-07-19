@@ -15,7 +15,7 @@ use App\DataTables\PackageDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Support\Facades\PackageFacade;
-use App\Http\Requests\Ecommerce\PackageRequest;
+use App\Http\Requests\PackageRequest;
 
 class PackageController extends Controller
 {
