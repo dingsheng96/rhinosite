@@ -1,3 +1,5 @@
+@if (Auth::check() && (!isset($guest_view) || !$guest_view))
+
 <footer class="main-footer d-flex flex-md-row flex-column">
 
     <div class="px-md-2">
@@ -16,3 +18,118 @@
         {!! __('labels.copyright') !!}
     </div>
 </footer>
+
+@else
+
+<div id="mobilefooter" class="navbar navbar-expand-lg navbar-light">
+    <div class="container px-4 py-3">
+        <a class="navbar-brand" href="{{ route('app.home') }}"><img src="{{ asset('storage/logo-footer.png') }}" alt="rhinosite_logo" class="footer-logo"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#footercollapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fa fa-plus"></i>
+        </button>
+    </div>
+    <div class="collapse navbar-collapse" id="footercollapse">
+        <div class="footer-background">
+            <div class="container">
+                <div class="footer-content-container">
+                    <div class="footer-left-content">
+                        <p class="mb-5">Tagline</p>
+                        <p>Social Media</p>
+                        <div class="d-flex">
+                            <img src="{{ asset('storage/facebook.png') }}" alt="facebook_icon" class="footer-social">
+                            <img src="{{ asset('storage/instagram.png') }}" alt="instagram_icon" class="footer-social">
+                        </div>
+                    </div>
+                    <div class="footer-right">
+                        <div class="footer-right-content">
+                            <ul>
+                                <li class="header">About</li>
+                                <li><a href="{{ route('app.about') }}">Our Story</a></li>
+                                <li><a href="{{ route('app.contact') }}">Contact Us</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-right-content">
+                            <ul>
+                                <li class="header">Top Services</li>
+                                <li><a href="{{ route('app.project') }}">Awning</a></li>
+                                <li><a href="{{ route('app.project') }}">Partition</a></li>
+                                <li><a href="{{ route('app.project') }}">Rennovation</a></li>
+                                <li><a href="{{ route('app.project') }}">Flooring Installation</a></li>
+                                <li><a href="{{ route('app.project') }}">Glasswork</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-right-content">
+                            <ul>
+                                <li class="header">Contractor</li>
+                                <li><a href="planpricing.html">The Benefits</a></li>
+                                <li><a href="{{ route('app.partner') }}">Join Now</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="footer">
+    <div class="container-fluid px-0 d-flex">
+        <div class="footer-background">
+            <div class="container">
+                <div class="footer-content-container">
+                    <div class="footer-left-content">
+                        <img src="{{ asset('storage/logo-footer.png') }}" alt="rhinosite-footer_logo" class="footer-logo mb-5">
+                        <p class="mb-5">Tagline</p>
+                        <p>Social Media</p>
+                        <div class="d-flex">
+                            <img src="{{ asset('storage/facebook.png') }}" alt="facebook_icon" class="footer-social">
+                            <img src="{{ asset('storage/instagram.png') }}" alt="instagram_icon" class="footer-social">
+                        </div>
+                    </div>
+                    <div class="footer-right">
+                        <div class="footer-right-content">
+                            <ul>
+                                <li class="header">About</li>
+                                <li><a href="{{ route('app.about') }}">Our Story</a></li>
+                                <li><a href="{{ route('app.contact') }}">Contact Us</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-right-content">
+                            <ul>
+                                <li class="header">Top Services</li>
+                                <li><a href="{{ route('app.project') }}">Awning</a></li>
+                                <li><a href="{{ route('app.project') }}">Partition</a></li>
+                                <li><a href="{{ route('app.project') }}">Rennovation</a></li>
+                                <li><a href="{{ route('app.project') }}">Flooring Installation</a></li>
+                                <li><a href="{{ route('app.project') }}">Glasswork</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-right-content">
+                            <ul>
+                                <li class="header">Contractor</li>
+                                <li><a href="planpricing.html">The Benefits</a></li>
+                                <li><a href="{{ route('app.partner') }}">Join Now</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer-bottom">
+    <div class="container">
+        <div class="d-flex">
+            <ul>
+                <li><a href="{{ route('app.term') }}">{{ __('labels.terms_policy') }}</a></li>
+                <li><a href="{{ route('app.privacy') }}">{{ __('labels.privacy_policy') }}</a></li>
+            </ul>
+            <ul class="ml-auto">
+                <li class="ml-auto">{!! __('labels.copyright') !!}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@endif

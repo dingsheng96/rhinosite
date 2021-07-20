@@ -42,4 +42,17 @@ return [
     'service' => 'Service|Services',
     'activity_logs' => 'Activity Logs',
 
+    'app' => [
+        'home' => 'Home',
+        'merchant' => 'Find a Merchant',
+        'about' => 'About Rhinosite',
+        'partner' => 'Join as Merchant',
+        'contact' => 'Contact Us',
+        'service' => 'Services',
+        'merchant_profile' => 'Merchant Profile',
+        'term_policy' => 'Terms & Policies',
+        'privacy_policy' => 'Privacy Policy',
+        'register' => 'Register'
+    ]
+
 ];

@@ -1,71 +1,115 @@
-@extends('layouts.master', ['title' => __('modules.login'), 'body' => 'login-page'])
+@extends('layouts.master', ['title' => __('modules.login'), 'body' => 'enduser', 'guest_view' => true])
 
 @section('content')
 
-<div class="login-box">
-
-    <div class="login-logo">
-        <a href=""><b>Admin</b>LTE</a>
-    </div>
-
-    <div class="card">
-        <div class="card-body login-card-body">
-            <p class="login-box-msg">{{ __('messages.start_session') }}</p>
-
-            <form action="{{ route('login') }}" method="post" role="form" enctype="multipart/form-data">
-
-                @csrf
-
-                <div class="form-group">
-                    <label for="email">{{ __('labels.email') }}</label>
-                    <div class="input-group mb-3">
-                        <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
-                            </div>
-                        </div>
-                        @error('email')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="password">{{ __('labels.password') }}</label>
-                    <div class="input-group mb-3">
-                        <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
-                        </div>
-                        @error('password')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <div class="col-8">
-                        <div class="icheck-primary">
-                            <input type="checkbox" id="remember" name="remember">
-                            <label for="remember">{{ __('labels.remember_me') }}</label>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <button type="submit" class="btn btn-primary btn-block">{{ __('labels.sign_in') }}</button>
-                    </div>
-                </div>
-
-            </form>
+<div id="subpage-header">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-11">
+                <h1>Login</h1>
+            </div>
         </div>
     </div>
-
 </div>
+
+<div id="login-1">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 d-inline-flex">
+                <div class="login-container">
+                    <!-- Nav tabs -->
+                    <ul class="nav">
+                        <li class="user">
+                            <a class="user active" data-toggle="tab" href="#userlogin">Existing User</a>
+                        </li>
+                        <li class="user">
+                            <a class="user" data-toggle="tab" href="#merchant">Merchant</a>
+                        </li>
+                    </ul>
+                    <p class="login-title">
+                        Welcome to Rhinosite
+                    </p>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="userlogin">
+
+                            <form action="{{ route('login') }}" method="post" role="form" enctype="multipart/form-data">
+                                @csrf
+
+                                <div class="input-group">
+                                    <p class="login-text">{{ __('labels.email') }}</p>
+                                    <input type="email" name="email" id="email" class="@error('email') is-invalid @enderror">
+                                    @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+
+                                <div class="input-group">
+                                    <p class="login-text">{{ __('labels.password') }}</p>
+                                    <input type="password" name="password" id="password" class="@error('password') is-invalid @enderror">
+                                    @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+
+                                <p class="login-text text-right mb-4"><u><a href="#" class="txtgrey">Forgot Password</a></u></p>
+
+                                <button type="submit" class="btn btn-black w-100 ml-0 mb-3">{{ __('labels.sign_in') }}</button>
+                            </form>
+
+                            <a href="#" class="btn btn-blue w-100">Continue with Facebook</a>
+                            <div class="text-center my-3">
+                                <span class="login-text">New Member? </span><a href="{{ route('register') }}" class="login-text text-underline txtorange"><u>Register Now</u></a>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="merchant">
+
+                            <form action="{{ route('login') }}" method="post" role="form" enctype="multipart/form-data">
+                                @csrf
+
+                                <div class="input-group">
+                                    <p class="login-text">{{ __('labels.email') }}</p>
+                                    <input type="email" name="email" id="email" class="@error('email') is-invalid @enderror">
+                                    @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+
+                                <div class="input-group">
+                                    <p class="login-text">{{ __('labels.password') }}</p>
+                                    <input type="password" name="password" id="password" class="@error('password') is-invalid @enderror">
+                                    @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+
+                                <p class="login-text text-right mb-4"><u><a href="#" class="txtgrey">Forgot Password</a></u></p>
+
+                                <button type="submit" class="btn btn-black w-100 ml-0 mb-3">{{ __('labels.sign_in') }}</button>
+                            </form>
+
+                            <div class="text-center">
+                                <span class="login-text">Wish to be a Merchant? </span>
+                                <a href="{{ route('register') }}" class="login-text text-underline txtorange"><u>Join Now</u></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 d-lg-inline-flex px-0 d-none">
+                <img src="{{ asset('storage/assets/home/s3-left.png') }}" alt="login_image" class="res-img">
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @endsection

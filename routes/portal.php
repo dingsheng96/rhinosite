@@ -1,24 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-Route::get('/', function () {
-    return redirect()->route('app.home');
-});
-
-Auth::routes();
 
 Route::group(['middleware' => ['auth:web', 'verified']], function () {
 
@@ -90,17 +73,4 @@ Route::group(['middleware' => ['auth:web', 'verified']], function () {
         Route::post('backend', 'PaymentController@backendResponse')->name('backend');
         Route::get('status', 'PaymentController@paymentStatus')->name('status');
     });
-});
-
-Route::group(['as' => 'app.'], function () {
-
-    Route::get('/', 'AppController@home')->name('home');
-    Route::get('about', 'AppController@about')->name('about');
-    Route::get('partner', 'AppController@partner')->name('partner');
-    Route::get('contact', 'AppController@contact')->name('contact');
-    Route::get('merchant', 'AppController@project')->name('project');
-    Route::get('merchant/details', 'AppController@showProject')->name('project.show');
-    Route::get('merchant/profile', 'AppController@showMerchant')->name('merchant.show');
-    Route::get('terms', 'AppController@termsPolicies')->name('term');
-    Route::get('privacy', 'AppController@privacyPolicies')->name('privacy');
 });

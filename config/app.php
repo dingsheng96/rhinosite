@@ -52,7 +52,9 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://rhinosite.test'),
+
+    'portal_url' => env('APP_PORTAL_URL', 'http://portal.rhinosite.test'),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -67,7 +69,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Kuala_Lumpur',
 
     /*
     |--------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+@if (Auth::check() && (!isset($guest_view) || !$guest_view))
+
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <ul class="navbar-nav">
         <li class="nav-item">
@@ -38,3 +40,34 @@
     </ul>
 
 </nav>
+
+@else
+
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="{{ route('app.home') }}"><img src="{{ asset('storage/logo.png') }}" alt="rhinosite_logo" class="nav-logo"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto align-items-center">
+                <li class="nav-item {{ Nav::hasSegment('home', 1, 'active') }}">
+                    <a href="{{ route('app.home') }}" class="nav-link">{{ __('modules.app.home') }}</a>
+                </li>
+                <li class="nav-item {{ Nav::hasSegment('merchant', 1, 'active') }}">
+                    <a href="{{ route('app.project') }}" class="nav-link">{{ __('modules.app.merchant') }}</a>
+                </li>
+                <li class="nav-item {{ Nav::hasSegment('about', 1, 'active') }}">
+                    <a href="{{ route('app.about') }}" class="nav-link">{{ __('modules.app.about') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('app.partner') }}" class="nav-button">{{ __('modules.app.partner') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('login') }}" class="nav-button">{{ __('modules.login') }}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+@endif
