@@ -33,5 +33,9 @@ class BladeServiceProvider extends ServiceProvider
         Blade::if('merchant', function () {
             return Auth::user()->is_merchant;
         });
+
+        Blade::if('member', function () {
+            return Auth::user()->is_member;
+        });
     }
 }

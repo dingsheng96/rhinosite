@@ -106,10 +106,9 @@ class Project extends Model
     public function getLocationAttribute()
     {
         $city           =   $this->address->city->name ?? '';
-        $country_state  =   $this->address->city->countryState->name ?? '';
-        $country        =   $this->address->city->country->name ?? '';
+        $country_state  =   $this->address->countryState->name ?? '';
 
-        return $city . ', ' . $country_state . ', ' . $country;
+        return $city . ', ' . $country_state;
     }
 
     public function getEnglishTitleAttribute()
@@ -147,5 +146,15 @@ class Project extends Model
     public function getUnitValueAttribute($value)
     {
         return (float) $value;
+    }
+
+    public function getBoostingAttribute()
+    {
+        return $this->adsBoosters()->boosting()->count() > 0;
+    }
+
+    public function getHasActiveHighlightAttribute()
+    {
+        return $this->adsBoosters()->boosting()->categoryHighlight()->exists();
     }
 }

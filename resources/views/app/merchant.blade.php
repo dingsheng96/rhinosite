@@ -13,11 +13,8 @@
     <div id="searchbar">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-xl-10">
-                    <form>
-                        <input type="text" name="search" class="searchbar" placeholder="Search Your Preferences">
-                        <button type="submit" class="searchicon"><i class="fa fa-search"></i></button>
-                    </form>
+                <div class="col-xl-10 position-relative">
+                    @include('app.search')
                 </div>
             </div>
         </div>
@@ -44,39 +41,60 @@
         <div class="row">
             <div class="col">
                 <ol class="breadcrumb bg-transparent pl-0">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item"><a href="#">Services</a></li>
-                    <li class="breadcrumb-item"><a href="#">Contracter</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Magna Klasik</li>
+                    <li class="breadcrumb-item"><a href="{{ route('app.home') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('app.project.index') }}">Services</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ $merchant->name }}</li>
                 </ol>
             </div>
         </div>
         <div class="profile-card">
             <div class="col-lg-7 col-xl-8 align-self-center">
-                <img src="{{ asset('storage/assets/home/1.jpg') }}" alt="merchant_profile_pic" class="profile-img">
-                <span class="profile-name">Magna Klasik</span>
+                <img src="{{ $merchant->logo->full_file_path }}" alt="merchant_profile_pic" class="profile-img">
+                <span class="profile-name">{{ $merchant->name }}</span>
             </div>
             <div class="col-lg-5 col-xl-4 text-right align-self-center">
-                <p>Joined Since : Jan 2021</p>
-                <p>Year in Industry : 10 years</p>
-                <p>
-                    <i class="fa fa-star star"></i>
-                    <i class="fa fa-star star"></i>
-                    <i class="fa fa-star star"></i>
-                    <i class="fa fa-star star"></i>
-                    <i class="fa fa-star-o star"></i>
-                </p>
-                <button type="button" class="btn btn-orange" data-toggle="modal" data-target="#ratemerchant">
+                <p>Joined Since : {{ $merchant->joined_date }}</p>
+                <p>Year in Industry : {{ trans_choice('labels.year', $merchant->userDetails->first()->years_of_experience, ['value' => $merchant->userDetails->first()->years_of_experience]) }}</p>
+                <p>{!! $merchant->rating_stars !!}</p>
+
+                @auth
+                @member
+                <button type="button" class="btn btn-orange" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Rate Merchant
                 </button>
+                <div class="dropdown-menu dropdown-menu-right merchant-rate text-center">
+                    <form action="">
+                        <p class="mb-0">Give us a rate!</p>
+                        <div class="rate">
+                            <input type="radio" id="star5" name="rate" value="5" />
+                            <label for="star5"></label>
+                            <input type="radio" id="star4" name="rate" value="4" />
+                            <label for="star4"></label>
+                            <input type="radio" id="star3" name="rate" value="3" />
+                            <label for="star3"></label>
+                            <input type="radio" id="star2" name="rate" value="2" />
+                            <label for="star2"></label>
+                            <input type="radio" id="star1" name="rate" value="1" />
+                            <label for="star1"></label>
+                        </div>
+                    </form>
+                </div>
+                @endmember
+                @endauth
+
+                @guest
+                <a role="button" href="{{ route('login') }}" class="btn btn-orange" aria-haspopup="true" aria-expanded="false">
+                    Login to Rate
+                </a>
+                @endguest
             </div>
             <div class="profile-line"></div>
             <div class="col-lg-8">
-                <div class="d-flex mb-3 align-items-center"><i class="fa fa-phone profile-icon" aria-hidden="true"></i><span class="ml-3">+6016 8329 8302</span></div>
-                <div class="d-flex mb-3 align-items-center"><i class="fa fa-map-marker profile-icon location" aria-hidden="true"></i><span class="ml-3">No 10-12, Jalan Putra Shed, Kota Kemuning, 39203, Kuala Lumpur, Malaysia</span></div>
+                <div class="d-flex mb-3 align-items-center"><i class="fa fa-phone profile-icon" aria-hidden="true"></i><span class="ml-3">{{ $merchant->formatted_phone_number }}</span></div>
+                <div class="d-flex mb-3 align-items-center"><i class="fa fa-map-marker profile-icon location" aria-hidden="true"></i><span class="ml-3">{{ $merchant->full_address }}</span></div>
             </div>
             <div class="col-lg-4">
-                <div class="d-flex mb-3 align-items-center text-break"><i class="fa fa-envelope profile-icon mail" aria-hidden="true"></i><span class="ml-3">contractor@gmail.com</span></div>
+                <div class="d-flex mb-3 align-items-center text-break"><i class="fa fa-envelope profile-icon mail" aria-hidden="true"></i><span class="ml-3">{{ $merchant->email }}</span></div>
             </div>
         </div>
     </div>
@@ -91,48 +109,37 @@
             <div class="col-12 mb-3">
                 <p class="txtgrey">Services:</p>
             </div>
+
+            @forelse ($merchant->project_services as $service)
             <div class="col-md-6 col-lg-3">
                 <div class="provided-services">
-                    <i class="fa fa-check" aria-hidden="true"></i><span class="ml-3">Awning</span>
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                    <span class="ml-3">{{ $service->name }}</span>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="provided-services">
-                    <i class="fa fa-check" aria-hidden="true"></i><span class="ml-3">Partition</span>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="provided-services">
-                    <i class="fa fa-check" aria-hidden="true"></i><span class="ml-3">TV Mounting</span>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="provided-services">
-                    <i class="fa fa-check" aria-hidden="true"></i><span class="ml-3">Flooring Installation</span>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="provided-services">
-                    <i class="fa fa-check" aria-hidden="true"></i><span class="ml-3">Glasswork</span>
-                </div>
-            </div>
+            @empty
+            @endforelse
+
         </div>
     </div>
 </div>
 
 <div id="profile-3">
     <div class="container">
-        <h4>Magna Klasik Projects</h4>
-        <div class="row justify-content-center">
+        <h4>{{ $merchant->name }}'s Projects</h4>
+        <div class="row justify-content-start">
+
+            @forelse ($projects as $project)
             <div class="col-md-6 col-lg-4 d-inline-flex">
                 <div class="merchant-card">
-                    <a href="merchantservice.html">
+                    <a href="{{ route('projects.show', ['project' => $project->id]) }}">
                         <div class="merchant-image-container">
-                            <img src="{{ asset('storage/assets/home/1.jpg') }}" alt="merchant_1" class="merchant-image">
+                            <img src="{{ $project->thumbnail->full_file_path }}" alt="{{ $project->user->name }}" class="merchant-image">
                         </div>
                         <div class="merchant-body">
-                            <p class="merchant-title">Magna Klasik Sdn. Bhd.</p>
-                            <p class="merchant-subtitle">Magna Klasik</p>
+                            <p class="merchant-title">{{ Str::limit($project->english_title, 20, '...') }}</p>
+                            <p class="merchant-title">{{ Str::limit($project->chinese_title, 20, '...') }}</p>
+                            <p class="merchant-subtitle">{{ $project->user->name }}</p>
                         </div>
                         <div class="merchant-footer">
                             <span class="merchant-footer-left">From RM1,200</span>
@@ -141,90 +148,15 @@
                     </a>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-4 d-inline-flex">
-                <div class="merchant-card">
-                    <a href="merchantservice.html">
-                        <div class="merchant-image-container">
-                            <img src="{{ asset('storage/assets/home/2.jpg') }}" alt="merchant_2" class="merchant-image">
-                        </div>
-                        <div class="merchant-body">
-                            <p class="merchant-title">Zie Global Trading (M) Sdn Bhd</p>
-                            <p class="merchant-subtitle">Zie Global</p>
-                        </div>
-                        <div class="merchant-footer">
-                            <span class="merchant-footer-left">From RM10,000</span>
-                            <span class="merchant-footer-right">Kuala Lumpur</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 d-inline-flex">
-                <div class="merchant-card">
-                    <a href="merchantservice.html">
-                        <div class="merchant-image-container">
-                            <img src="{{ asset('storage/assets/home/3.jpg') }}" alt="merchant_3" class="merchant-image">
-                        </div>
-                        <div class="merchant-body">
-                            <p class="merchant-title">IBZ DAGANG</p>
-                            <p class="merchant-subtitle">IBZ DAGANG</p>
-                        </div>
-                        <div class="merchant-footer">
-                            <span class="merchant-footer-left">From RM1,500</span>
-                            <span class="merchant-footer-right">Kuala Lumpur</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 d-inline-flex">
-                <div class="merchant-card">
-                    <a href="merchantservice.html">
-                        <div class="merchant-image-container">
-                            <img src="{{ asset('storage/assets/home/4.png') }}" alt="merchant_4" class="merchant-image">
-                        </div>
-                        <div class="merchant-body">
-                            <p class="merchant-title">Sansel Business Solutions Sdn. Bhd.</p>
-                            <p class="merchant-subtitle">Sansel Business</p>
-                        </div>
-                        <div class="merchant-footer">
-                            <span class="merchant-footer-left">From RM2,800</span>
-                            <span class="merchant-footer-right">Selangor</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 d-inline-flex">
-                <div class="merchant-card">
-                    <a href="merchantservice.html">
-                        <div class="merchant-image-container">
-                            <img src="{{ asset('storage/assets/home/5.jpg') }}" alt="merchant_5" class="merchant-image">
-                        </div>
-                        <div class="merchant-body">
-                            <p class="merchant-title">ARTSYSTEM (M) SDN. BHD.</p>
-                            <p class="merchant-subtitle">ARTSYSTEM</p>
-                        </div>
-                        <div class="merchant-footer">
-                            <span class="merchant-footer-left">From RM1,500</span>
-                            <span class="merchant-footer-right">Selangor</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 d-inline-flex">
-                <div class="merchant-card">
-                    <a href="merchantservice.html">
-                        <div class="merchant-image-container">
-                            <img src="{{ asset('storage/assets/home/6.png') }}" alt="merchant_6" class="merchant-image">
-                        </div>
-                        <div class="merchant-body">
-                            <p class="merchant-title">Malton Berhad</p>
-                            <p class="merchant-subtitle">Malton</p>
-                        </div>
-                        <div class="merchant-footer">
-                            <span class="merchant-footer-left">From RM2,300</span>
-                            <span class="merchant-footer-right">Kuala Lumpur</span>
-                        </div>
-                    </a>
-                </div>
+            @empty
+            <div class="col-12 d-inline-flex">{{ __('messages.no_records') }}</div>
+            @endforelse
+
+        </div>
+
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                {!! $links !!}
             </div>
         </div>
     </div>

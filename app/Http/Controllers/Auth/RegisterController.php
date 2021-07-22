@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use App\User;
-use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Models\City;
+use App\Models\Country;
+use App\Models\CountryState;
+use App\Rules\PasswordFormat;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
 {
@@ -50,9 +55,24 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role'              =>  ['required', 'in:member,merchant'],
+            'name'              =>  ['required', 'string', 'max:255'],
+            'email'             =>  ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password'          =>  ['required', 'string', new PasswordFormat, 'confirmed'],
+            'address_1'         =>  ['required', 'min:3', 'max:255'],
+            'address_2'         =>  ['nullable'],
+            'country'           =>  ['required', 'exists:' . Country::class . ',id'],
+            'postcode'          =>  ['required', 'digits:5'],
+            'country_state'     =>  [
+                'required',
+                Rule::exists(CountryState::class, 'id')
+                    ->where('country_id', $this->get('country'))
+            ],
+            'city'          =>  [
+                'required',
+                Rule::exists(City::class, 'id')
+                    ->where('country_state_id', $this->get('country_state'))
+            ]
         ]);
     }
 

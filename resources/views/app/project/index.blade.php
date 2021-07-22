@@ -14,10 +14,7 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-xl-10 position-relative">
-                    <form>
-                        <input type="text" name="search" class="searchbar" placeholder="Search Your Preferences">
-                        <button type="submit" class="searchicon"><i class="fa fa-search"></i></button>
-                    </form>
+                    @include('app.search')
                 </div>
             </div>
         </div>
@@ -29,11 +26,10 @@
         <div class="d-flex px-3">
             <span>Top Search Categories</span>
             <ul>
-                <li class="active">Awning</li>
-                <li class="active">Partition</li>
-                <li>Wall Drilling & Mounting</li>
-                <li>Flooring Installation</li>
-                <li>Glasswork</li>
+                @forelse ($top_services as $service)
+                <li class="active"><a class="text-muted" href="{{ route('app.project.index', ['search' => $service]) }}">{{ $service }}</a></li>
+                @empty
+                @endforelse
             </ul>
         </div>
     </div>
@@ -42,7 +38,7 @@
 <div id="merchant-2">
     <div class="container">
         <div class="d-flex">
-            <div class="sidebar">
+            <div class="sidebar mb-5">
                 <ul class="service">
                     <li class="title">Related Services</li>
                     <li>Service 1</li>
@@ -52,350 +48,193 @@
                     <li>Service 5</li>
                     <li class="end">View All</li>
                 </ul>
-                <ul class="range">
-                    <li class="title">Price Range</li>
-                    <li>
-                        <form action="">
+                <form action="{{ route('app.project.index') }}" method="GET" role="form" id="filterForm">
+                    <ul class="range">
+                        <li class="title">Price Range</li>
+                        <li>
                             <input type="text" class="range" placeholder="Min"><span> - </span><input type="text" class="range" placeholder="Max">
-                            <button type="submit"><i class="fa fa-arrow-right"></i></button>
-                        </form>
-                    </li>
-                </ul>
-                <ul class="radio">
-                    <form action="">
+                        </li>
+                    </ul>
+                    <ul class="radio">
                         <li>
-                            <input type="radio" id="rm1000" name="price" value="1000">
+                            <input type="radio" id="rm1000" name="price" value="0-1000">
                             <label for="rm1000">
-                                < RM 1,000 </label> </li> <li>
-                                    <input type="radio" id="rm5000" name="price" value="5000">
-                                    <label for="rm5000">
-                                        < RM 5,000 </label> </li> <li>
-                                            <input type="radio" id="rm10000" name="price" value="10000">
-                                            <label for="rm10000">
-                                                < RM 10,000 </label> </li> <li>
-                                                    <input type="radio" id="rm15000" name="price" value="15000">
-                                                    <label for="rm15000">
-                                                        < RM 15,000 </label> </li> <li>
-                                                            <input type="radio" id="rm20000" name="price" value="20000">
-                                                            <label for="rm20000">
-                                                                < RM 20,000 </label> </li> </form> </ul> <ul class="radio">
+                                &lsaquo; MYR 1,000 </label> </li>
+                        <li>
+                            <input type="radio" id="rm5000" name="price" value="0-5000">
+                            <label for="rm5000">
+                                &lsaquo; MYR 5,000 </label> </li>
+                        <li>
+                            <input type="radio" id="rm10000" name="price" value="0-10000">
+                            <label for="rm10000">
+                                &lsaquo; MYR 10,000 </label> </li>
+                        <li>
+                            <input type="radio" id="rm15000" name="price" value="0-15000">
+                            <label for="rm15000">
+                                &lsaquo; MYR 15,000 </label> </li>
+                        <li>
+                            <input type="radio" id="rm20000" name="price" value="0-20000">
+                            <label for="rm20000">
+                                &lsaquo; MYR 20,000 </label> </li>
+                    </ul>
+                    <ul class="radio">
                         <li class="title">Locations</li>
-                        <form action="">
-                            <li>
-                                <input type="radio" id="kualalumpur" name="location" value="kualalumpur">
-                                <label for="kualalumpur">Kuala Lumpur</label>
-                            </li>
-                            <li>
-                                <input type="radio" id="selangor" name="location" value="selangor">
-                                <label for="selangor">Selangor</label>
-                            </li>
-                            <li>
-                                <input type="radio" id="melaka" name="location" value="melaka">
-                                <label for="melaka">Melaka</label>
-                            </li>
-                            <li>
-                                <input type="radio" id="perak" name="location" value="perak">
-                                <label for="perak">Perak</label>
-                            </li>
-                            <li>
-                                <input type="radio" id="johor" name="location" value="johor">
-                                <label for="johor">Johor</label>
-                            </li>
-                        </form>
-                </ul>
-                <ul class="radio rating">
-                    <li class="title">Rating</li>
-                    <form action="">
+                        @forelse ($areas as $area)
                         <li>
-                            <input type="radio" id="star1" name="rating" value="star1">
-                            <label for="star1">
-                                <i class="fa fa-star"></i>
-                            </label>
+                            <input type="radio" id="{{ $loop->iteration }}" name="location" value="{{ $area->id }}">
+                            <label for="{{ $loop->iteration }}">{{ $area->name . ' (' . $area->addresses_count . ')' }}</label>
                         </li>
-                        <li>
-                            <input type="radio" id="star2" name="rating" value="star2">
-                            <label for="star2">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star pl-2"></i>
-                            </label>
-                        </li>
-                        <li>
-                            <input type="radio" id="star3" name="rating" value="star3">
-                            <label for="star3">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star pl-2"></i>
-                                <i class="fa fa-star pl-2"></i>
-                            </label>
-                        </li>
-                        <li>
-                            <input type="radio" id="star4" name="rating" value="star4">
-                            <label for="star4">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star pl-2"></i>
-                                <i class="fa fa-star pl-2"></i>
-                                <i class="fa fa-star pl-2"></i>
-                            </label>
-                        </li>
-                        <li>
-                            <input type="radio" id="star5" name="rating" value="star5">
-                            <label for="star5">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star pl-2"></i>
-                                <i class="fa fa-star pl-2"></i>
-                                <i class="fa fa-star pl-2"></i>
-                                <i class="fa fa-star pl-2"></i>
-                            </label>
-                        </li>
-                    </form>
-                </ul>
+                        @empty
+                        @endforelse
+                    </ul>
+                    <ul class="radio rating">
+                        <li class="title">Rating</li>
+                        @for ($y = 1; $y <= 5; $y++) <li>
+                            <input type="radio" id="star{{ $y }}" name="rating" value="{{ $y }}">
+                            @for ($x=0; $x < $y; $x++) <label for="star{{ $y }}"><i class="fas fa-star"></i></label>
+                                @endfor
+                                </li>
+                                @endfor
+                    </ul>
+                    <button type="submit" class="btn btn-orange w-100 mx-0 mb-3">Filter</button>
+                    <button type="submit" class="btn btn-black w-100 m-0">Reset Filter</button>
+                </form>
             </div>
+
             <div class="gap"></div>
+
             <div class="content">
                 <div class="container">
-                    <h2>Construction</h2>
+
+                    <h2>{{ str_replace('+', ' ', request()->get('search')) }}</h2>
+
                     <div class="search-filter-result">
-                        <span>50 items found for "Construction"</span>
+                        @if (request()->has('search') && !empty(request()->get('search')))
+                        <span class="h5">{{ trans_choice('app.project_search_items', 2, ['total' => $projects->total(), 'search' => str_replace('+', ' ', request()->get('search'))]) }}</span>
+                        @else
+                        <span class="h5">{{ trans_choice('app.project_search_items', 1, ['total' => $projects->total()]) }}</span>
+                        @endif
                         <button id="compare" name="compare" class="btn btn-orange ml-auto">Compare Merchant</button>
                     </div>
-                    <div class="search-filter-result compare d-none">
-                        <span>Choose 2 contractor to compare now</span>
-                        <span class="ml-auto mr-2">Selected : 2</span>
-                        <a href="#" class="btn btn-black">View Result</a>
+
+                    <div class="row search-filter-result compare" style="display: none;">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <span>Choose 2 contractor to compare now</span>
+                        </div>
+                        <div class="col-md-6 text-md-right">
+                            <span class="ml-auto mr-2">Selected : 2</span>
+                            <a href="compare.html" class="btn btn-black mx-0">View Result</a>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <div class="row justify-content-center">
+                            <div class="row">
+                                @forelse ($projects as $project)
                                 <div class="col-md-6 col-lg-4 d-inline-flex">
-                                    <div class="merchant-card ad-boost">
-                                        <a href="{{ route('app.project.show') }}">
+                                    <div class="merchant-card {{ $project->has_active_highlight ? 'highlight' : null }}">
+                                        <a href="{{ route('app.project.show', ['project' => $project->id]) }}">
                                             <div class="merchant-image-container">
-                                                <img src="{{ asset('storage/assets/home/1.jpg') }}" alt="merchant_1" class="merchant-image">
+                                                <img src="{{ $project->media->first()->full_file_path }}" alt="{{ $project->user->name }}" class="merchant-image">
                                             </div>
                                             <div class="merchant-body">
-                                                <img src="{{ asset('storage/adboost.png') }}" class="ad-boost-img">
-                                                <p class="merchant-title">Magna Klasik Sdn. Bhd.</p>
-                                                <p class="merchant-subtitle">Magna Klasik</p>
+                                                @if ($project->has_active_highlight)
+                                                <img src="{{ asset('storage/adboost.png') }}" class="highlight-img">
+                                                @endif
+                                                <p class="merchant-title">{{ $project->english_title }}</p>
+                                                <p class="merchant-subtitle">{{ $project->chinese_title }}</p>
                                             </div>
                                             <div class="merchant-footer">
-                                                <span class="merchant-footer-left">From RM1,200</span>
-                                                <span class="merchant-footer-right">Kuala Lumpur</span>
+                                                <span class="merchant-footer-left">{{ $project->price_with_unit }}</span>
+                                                <span class="merchant-footer-right">{{ $project->location }}</span>
                                             </div>
                                         </a>
                                         <button class="btn-compare d-none">Add to Compare</button>
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-lg-4 d-inline-flex">
-                                    <div class="merchant-card">
-                                        <a href="{{ route('app.project.show') }}">
-                                            <div class="merchant-image-container">
-                                                <img src="{{ asset('storage/assets/home/2.jpg') }}" alt="merchant_2" class="merchant-image">
-                                            </div>
-                                            <div class="merchant-body">
-                                                <p class="merchant-title">Zie Global Trading (M) Sdn Bhd</p>
-                                                <p class="merchant-subtitle">Zie Global</p>
-                                            </div>
-                                            <div class="merchant-footer">
-                                                <span class="merchant-footer-left">From RM10,000</span>
-                                                <span class="merchant-footer-right">Kuala Lumpur</span>
-                                            </div>
-                                        </a>
-                                        <button class="btn-compare" style="display: none;">Add to Compare</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 d-inline-flex">
-                                    <div class="merchant-card">
-                                        <a href="{{ route('app.project.show') }}">
-                                            <div class="merchant-image-container">
-                                                <img src="{{ asset('storage/assets/home/4.png') }}" alt="merchant_4" class="merchant-image">
-                                            </div>
-                                            <div class="merchant-body">
-                                                <p class="merchant-title">Sansel Business Solutions Sdn. Bhd.</p>
-                                                <p class="merchant-subtitle">Sansel Business</p>
-                                            </div>
-                                            <div class="merchant-footer">
-                                                <span class="merchant-footer-left">From RM2,800</span>
-                                                <span class="merchant-footer-right">Selangor</span>
-                                            </div>
-                                        </a>
-                                        <button class="btn-compare" style="display: none;">Add to Compare</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 d-inline-flex">
-                                    <div class="merchant-card">
-                                        <a href="{{ route('app.project.show') }}">
-                                            <div class="merchant-image-container">
-                                                <img src="{{ asset('storage/assets/home/5.jpg') }}" alt="merchant_5" class="merchant-image">
-                                            </div>
-                                            <div class="merchant-body">
-                                                <p class="merchant-title">ARTSYSTEM (M) SDN. BHD.</p>
-                                                <p class="merchant-subtitle">ARTSYSTEM</p>
-                                            </div>
-                                            <div class="merchant-footer">
-                                                <span class="merchant-footer-left">From RM1,500</span>
-                                                <span class="merchant-footer-right">Selangor</span>
-                                            </div>
-                                        </a>
-                                        <button class="btn-compare" style="display: none;">Add to Compare</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 d-inline-flex">
-                                    <div class="merchant-card">
-                                        <a href="{{ route('app.project.show') }}">
-                                            <div class="merchant-image-container">
-                                                <img src="{{ asset('storage/assets/home/1.jpg') }}" alt="merchant_1" class="merchant-image">
-                                            </div>
-                                            <div class="merchant-body">
-                                                <p class="merchant-title">Magna Klasik Sdn. Bhd.</p>
-                                                <p class="merchant-subtitle">Magna Klasik</p>
-                                            </div>
-                                            <div class="merchant-footer">
-                                                <span class="merchant-footer-left">From RM1,200</span>
-                                                <span class="merchant-footer-right">Kuala Lumpur</span>
-                                            </div>
-                                        </a>
-                                        <button class="btn-compare" style="display: none;">Add to Compare</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 d-inline-flex">
-                                    <div class="merchant-card">
-                                        <a href="{{ route('app.project.show') }}">
-                                            <div class="merchant-image-container">
-                                                <img src="{{ asset('storage/assets/home/4.png') }}" alt="merchant_4" class="merchant-image">
-                                            </div>
-                                            <div class="merchant-body">
-                                                <p class="merchant-title">Sansel Business Solutions Sdn. Bhd.</p>
-                                                <p class="merchant-subtitle">Sansel Business</p>
-                                            </div>
-                                            <div class="merchant-footer">
-                                                <span class="merchant-footer-left">From RM10,000</span>
-                                                <span class="merchant-footer-right">Kuala Lumpur</span>
-                                            </div>
-                                        </a>
-                                        <button class="btn-compare" style="display: none;">Add to Compare</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 d-inline-flex">
-                                    <div class="merchant-card">
-                                        <a href="{{ route('app.project.show') }}">
-                                            <div class="merchant-image-container">
-                                                <img src="{{ asset('storage/assets/home/5.jpg') }}" alt="merchant_5" class="merchant-image">
-                                            </div>
-                                            <div class="merchant-body">
-                                                <p class="merchant-title">ARTSYSTEM (M) SDN. BHD.</p>
-                                                <p class="merchant-subtitle">ARTSYSTEM</p>
-                                            </div>
-                                            <div class="merchant-footer">
-                                                <span class="merchant-footer-left">From RM2,300</span>
-                                                <span class="merchant-footer-right">Kuala Lumpur</span>
-                                            </div>
-                                        </a>
-                                        <button class="btn-compare" style="display: none;">Add to Compare</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 d-inline-flex">
-                                    <div class="merchant-card">
-                                        <a href="{{ route('app.project.show') }}">
-                                            <div class="merchant-image-container">
-                                                <img src="{{ asset('storage/assets/home/1.jpg') }}" alt="merchant_1" class="merchant-image">
-                                            </div>
-                                            <div class="merchant-body">
-                                                <p class="merchant-title">Magna Klasik Sdn. Bhd.</p>
-                                                <p class="merchant-subtitle">Magna Klasik</p>
-                                            </div>
-                                            <div class="merchant-footer">
-                                                <span class="merchant-footer-left">From RM1,500</span>
-                                                <span class="merchant-footer-right">Selangor</span>
-                                            </div>
-                                        </a>
-                                        <button class="btn-compare" style="display: none;">Add to Compare</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 d-inline-flex">
-                                    <div class="merchant-card">
-                                        <a href="{{ route('app.project.show') }}">
-                                            <div class="merchant-image-container">
-                                                <img src="{{ asset('storage/assets/home/2.jpg') }}" alt="merchant_2" class="merchant-image">
-                                            </div>
-                                            <div class="merchant-body">
-                                                <p class="merchant-title">Zie Global Trading (M) Sdn Bhd</p>
-                                                <p class="merchant-subtitle">Zie Global</p>
-                                            </div>
-                                            <div class="merchant-footer">
-                                                <span class="merchant-footer-left">From RM1,200</span>
-                                                <span class="merchant-footer-right">Kuala Lumpur</span>
-                                            </div>
-                                        </a>
-                                        <button class="btn-compare" style="display: none;">Add to Compare</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 d-inline-flex">
-                                    <div class="merchant-card">
-                                        <a href="{{ route('app.project.show') }}">
-                                            <div class="merchant-image-container">
-                                                <img src="{{ asset('storage/assets/home/4.png') }}" alt="merchant_4" class="merchant-image">
-                                            </div>
-                                            <div class="merchant-body">
-                                                <p class="merchant-title">Sansel Business Solutions Sdn. Bhd.</p>
-                                                <p class="merchant-subtitle">Sansel Business</p>
-                                            </div>
-                                            <div class="merchant-footer">
-                                                <span class="merchant-footer-left">From RM2,300</span>
-                                                <span class="merchant-footer-right">Kuala Lumpur</span>
-                                            </div>
-                                        </a>
-                                        <button class="btn-compare" style="display: none;">Add to Compare</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 d-inline-flex">
-                                    <div class="merchant-card">
-                                        <a href="{{ route('app.project.show') }}">
-                                            <div class="merchant-image-container">
-                                                <img src="{{ asset('storage/assets/home/5.jpg') }}" alt="merchant_5" class="merchant-image">
-                                            </div>
-                                            <div class="merchant-body">
-                                                <p class="merchant-title">ARTSYSTEM (M) SDN. BHD.</p>
-                                                <p class="merchant-subtitle">ARTSYSTEM</p>
-                                            </div>
-                                            <div class="merchant-footer">
-                                                <span class="merchant-footer-left">From RM1,200</span>
-                                                <span class="merchant-footer-right">Kuala Lumpur</span>
-                                            </div>
-                                        </a>
-                                        <button class="btn-compare" style="display: none;">Add to Compare</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 d-inline-flex">
-                                    <div class="merchant-card">
-                                        <a href="{{ route('app.project.show') }}">
-                                            <div class="merchant-image-container">
-                                                <img src="{{ asset('storage/assets/home/1.jpg') }}" alt="merchant_1" class="merchant-image">
-                                            </div>
-                                            <div class="merchant-body">
-                                                <p class="merchant-title">Magna Klasik Sdn. Bhd.</p>
-                                                <p class="merchant-subtitle">Magna Klasik</p>
-                                            </div>
-                                            <div class="merchant-footer">
-                                                <span class="merchant-footer-left">From RM10,000</span>
-                                                <span class="merchant-footer-right">Kuala Lumpur</span>
-                                            </div>
-                                        </a>
-                                        <button class="btn-compare" style="display: none;">Add to Compare</button>
-                                    </div>
-                                </div>
+                                @empty
+                                <div class="col-12 d-inline-flex">{{ __('messages.no_records') }}</div>
+                                @endforelse
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12">
-                            <ul class="pagination">
-                                <li class="page-item ml-auto"><a class="page-link arrow" href="#">&laquo;</a></li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item mr-auto"><a class="page-link arrow" href="#">&raquo;</a></li>
-                            </ul>
+                        <div class="col-12 d-flex justify-content-center">
+                            {!! $links !!}
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- mobile filter button -->
+<button class="btn filter-btn d-block d-xl-none">Filter <br><i class="fa fa-filter" aria-hidden="true"></i></button>
+<!-- mobile filter  -->
+<div class="filter-overlay">
+    <div class="container">
+        <button class="closebtn btn">×</button>
+        <div class="sidebar mobile">
+            <ul class="service">
+                <li class="title">Related Services</li>
+                <li>Service 1</li>
+                <li>Service 2</li>
+                <li>Service 3</li>
+                <li>Service 4</li>
+                <li>Service 5</li>
+                <li class="end">View All</li>
+            </ul>
+            <form action="">
+                <ul class="range">
+                    <li class="title">Price Range</li>
+                    <li>
+                        <input type="text" class="range" placeholder="Min"><span> - </span><input type="text" class="range" placeholder="Max">
+                    </li>
+                </ul>
+                <ul class="radio">
+                    <li>
+                        <input type="radio" id="rm1000m" name="price" value="0-1000">
+                        <label for="rm1000m">
+                            &lsaquo; MYR 1,000 </label> </li>
+                    <li>
+                        <input type="radio" id="rm5000m" name="price" value="0-5000">
+                        <label for="rm5000m">
+                            &lsaquo; MYR 5,000 </label> </li>
+                    <li>
+                        <input type="radio" id="rm10000m" name="price" value="0-10000">
+                        <label for="rm10000m">
+                            &lsaquo; MYR 10,000 </label> </li>
+                    <li>
+                        <input type="radio" id="rm15000m" name="price" value="0-15000">
+                        <label for="rm15000m">
+                            &lsaquo; MYR 15,000 </label> </li>
+                    <li>
+                        <input type="radio" id="rm20000m" name="price" value="0-20000">
+                        <label for="rm20000m">
+                            &lsaquo; MYR 20,000 </label> </li>
+                </ul>
+                <ul class="radio">
+                    <li class="title">Locations</li>
+                    @forelse ($areas as $area)
+                    <li>
+                        <input type="radio" id="m{{ $loop->iteration }}" name="location" value="{{ $area->id }}">
+                        <label for="m{{ $loop->iteration }}">{{ $area->name . ' (' . $area->addresses_count . ')' }}</label>
+                    </li>
+                    @empty
+                    @endforelse
+                </ul>
+                <ul class="radio rating">
+                    <li class="title">Rating</li>
+                    @for ($y = 1; $y <= 5; $y++) <li>
+                        <input type="radio" id="mstar{{ $y }}" name="rating" value="{{ $y }}">
+                        @for ($x=0; $x < $y; $x++) <label for="mstar{{ $y }}"><i class="fas fa-star"></i></label>
+                            @endfor
+                            </li>
+                            @endfor
+                </ul>
+                <button type="submit" class="btn btn-orange w-100 mx-0 mb-3">Filter</button>
+                <button type="submit" class="btn btn-black w-100 mx-0 mb-3">Reset Filter</button>
+            </form>
         </div>
     </div>
 </div>

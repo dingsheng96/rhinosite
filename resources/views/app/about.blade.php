@@ -14,10 +14,7 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-xl-10">
-                    <form>
-                        <input type="text" name="search" class="searchbar" placeholder="Search Your Preferences">
-                        <button type="submit" class="searchicon"><i class="fa fa-search"></i></button>
-                    </form>
+                    @include('app.search')
                 </div>
             </div>
         </div>

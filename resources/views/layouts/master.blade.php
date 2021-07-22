@@ -10,8 +10,9 @@
 
     <title>{{ config('app.name') }} @if (!empty($title)) {{ ' | ' . $title }} @endif</title>
 
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css?v=' . time()) }}">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     @include('components.styles')
 
 </head>

@@ -43,10 +43,11 @@ class Product extends Model
     }
 
     // Scopes
-    public function scopeProductCategoryChecker($query, $name)
+    public function scopeFilterCategory($query, $keyword)
     {
-        return $this->join(app(ProductCategory::class)->getTable(), $this->table . '.product_category_id', '=', app(ProductCategory::class)->getTable() . '.id')
-            ->where(app(ProductCategory::class)->getTable() . '.name', $name);
+        return $query->whereHas('productCategory', function ($query) use ($keyword) {
+            $query->where('name', $keyword);
+        });
     }
 
     // Attributes

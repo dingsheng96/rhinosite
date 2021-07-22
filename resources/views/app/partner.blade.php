@@ -20,7 +20,7 @@
             </div>
             <div class="col-md-6 col-lg-5 mx-auto text-center">
                 <h2>Lorem ipsum dolor sit amet sed diam eirmod</h2>
-                <a href="{{ route('register') }}" class="btn btn-orange">Fill In Application Form</a>
+                <a href="{{ route('register', ['role' => 'merchant']) }}" class="btn btn-orange">Fill In Application Form</a>
             </div>
         </div>
     </div>
@@ -98,7 +98,7 @@
     <div class="container">
         <h2>FAQ</h2>
         <div id="accordion">
-            <div class="card">
+            <div class="card card-flat">
                 <div class="card-header" id="heading1">
                     <a class="btn collapsed" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
                         <span>1. Why do you need to submit certain documents prior to registration? </span>

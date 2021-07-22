@@ -73,16 +73,6 @@ Route::group(['middleware' => ['auth:web', 'verified']], function () {
         Route::resource('activity-logs', 'ActivityLogController');
     });
 
-    Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
-
-        Route::post('products/{product}/sku', 'DataController@getSkuFromProduct')->name('products.sku');
-        Route::post('ads/{ads}/date', 'DataController@getAdsAvailableDate')->name('ads.date');
-        Route::group(['prefix' => 'countries/{country}', 'as' => 'countries.'], function () {
-            Route::post('country-states', 'DataController@getCountryStateFromCountry')->name('country-states');
-            Route::post('country-states/{country_state}/cities', 'DataController@getCityFromCountryState')->name('country-states.cities');
-        });
-    });
-
     Route::group(['prefix' => 'payment/{trans_no}', 'as' => 'payment.'], function () {
 
         Route::get('redirect', 'PaymentController@redirect')->name('redirect');
@@ -98,9 +88,24 @@ Route::group(['as' => 'app.'], function () {
     Route::get('about', 'AppController@about')->name('about');
     Route::get('partner', 'AppController@partner')->name('partner');
     Route::get('contact', 'AppController@contact')->name('contact');
-    Route::get('merchant', 'AppController@project')->name('project');
-    Route::get('merchant/details', 'AppController@showProject')->name('project.show');
-    Route::get('merchant/profile', 'AppController@showMerchant')->name('merchant.show');
+    Route::get('merchant', 'AppController@project')->name('project.index');
+    Route::get('merchant/{project}/details', 'AppController@showProject')->name('project.show');
+    Route::get('merchant/{merchant}/profile', 'AppController@showMerchant')->name('merchant.show');
     Route::get('terms', 'AppController@termsPolicies')->name('term');
     Route::get('privacy', 'AppController@privacyPolicies')->name('privacy');
+
+    Route::post('filter', 'AppController@filterProject')->name('project.filter');
+});
+
+Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
+
+    Route::group(['middleware' => ['auth:web', 'verified']], function () {
+        Route::post('products/{product}/sku', 'DataController@getSkuFromProduct')->name('products.sku');
+        Route::post('ads/{ads}/date', 'DataController@getAdsAvailableDate')->name('ads.date');
+    });
+
+    Route::group(['prefix' => 'countries/{country}', 'as' => 'countries.'], function () {
+        Route::post('country-states', 'DataController@getCountryStateFromCountry')->name('country-states');
+        Route::post('country-states/{country_state}/cities', 'DataController@getCityFromCountryState')->name('country-states.cities');
+    });
 });

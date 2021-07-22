@@ -31,9 +31,25 @@ class Price extends Model
     // Scopes
     public function scopeDefaultPrice($query)
     {
-        $default_currency = Currency::defaultCountryCurrency()->first();
+        return $query->with('currency')
+            ->whereHas('currency', function ($query) {
+                $query->defaultCountryCurrency();
+            });
+    }
 
-        return $query->where('currency_id', $default_currency->id);
+    public function scopePriceRange($query, $min, $max)
+    {
+        return $query->whereBetween('selling_price', [
+            PriceFacade::convertFloatToInt($min),
+            PriceFacade::convertFloatToInt($max)
+        ]);
+    }
+
+    public function scopePriceWithDefaultCurrency($query)
+    {
+        return $query->whereHas('currency', function ($query) {
+            $query->defaultCountryCurrency();
+        });
     }
 
     // Attributes

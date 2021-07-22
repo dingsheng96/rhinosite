@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-orange elevation-2">
 
-    <a href="{{ route('dashboard') }}" class="brand-link navbar-orange">
+    <a href="{{ route('app.home') }}" class="brand-link navbar-orange">
         <img src="{{ asset('storage/logo.png') }}" alt="logo" class="brand-text d-block mx-auto my-0" style="max-width: 55%;">
     </a>
 

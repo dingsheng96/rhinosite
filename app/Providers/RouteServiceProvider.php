@@ -52,23 +52,6 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapApiRoutes();
 
         $this->mapWebRoutes();
-
-        // $this->mapPortalRoutes();
-    }
-
-    /**
-     * Define the "portal" routes for the application.
-     *
-     * These routes all receive session state, CSRF protection, etc.
-     *
-     * @return void
-     */
-    protected function mapPortalRoutes()
-    {
-        Route::middleware(['web'])
-            ->namespace($this->namespace)
-            ->domain(config('app.portal_url'))
-            ->group(base_path('routes/portal.php'));
     }
 
     /**
@@ -82,7 +65,6 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::middleware(['web'])
             ->namespace($this->namespace)
-            ->domain(config('app.url'))
             ->group(base_path('routes/web.php'));
     }
 

@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
     $('.slider-for').slick({
         slidesToShow: 1,
         slidesToScroll: 1,
@@ -41,5 +41,29 @@ $(document).ready(function () {
 
         ]
 
+    });
+
+    $('.compare').slick({
+        dots: false,
+        infinite: false,
+        speed: 300,
+        slidesToShow: 3,
+        adaptiveHeight: true,
+        responsive: [{
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 2
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    dots: true,
+                }
+            },
+
+        ]
     });
 });

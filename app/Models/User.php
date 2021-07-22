@@ -2,13 +2,24 @@
 
 namespace App\Models;
 
+use App\Models\Cart;
 use App\Models\Role;
+use App\Models\Media;
+use App\Models\Order;
+use App\Models\Rating;
 use App\Helpers\Status;
+use App\Models\Address;
+use App\Models\Project;
+use App\Models\Service;
+use App\Models\Wishlist;
+use App\Models\UserDetail;
+use App\Models\UserAdsQuota;
+use App\Models\UserSubscription;
+use App\Models\UserAdsQuotaHistory;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -86,6 +97,16 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasManyThrough(UserAdsQuotaHistory::class, UserAdsQuota::class, 'user_id', 'user_ads_quota_id', 'id', 'id');
     }
 
+    public function ratedBy()
+    {
+        return $this->morphMany(Rating::class, 'rateable');
+    }
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'user_id', 'id');
+    }
+
     // Scopes
     public function scopeAdmin($query)
     {
@@ -118,6 +139,17 @@ class User extends Authenticatable implements MustVerifyEmail
         return $query->whereHas('userAdsQuotas', function ($query) {
             $query->where('quantity', '!=', 0);
         });
+    }
+
+    public function scopeFilterGivenRatings($query, $value)
+    {
+        $tbl_rating = app(Rating::class)->getTable();
+
+        return $query->join($tbl_rating, $this->getTable() . '.id', '=', $tbl_rating . '.rateable_id')
+            ->where($tbl_rating . 'rateable_type', Rating::class)
+            ->selectRaw('AVG(' . $tbl_rating . '.scale) AS avg_rating')
+            ->groupBy($this->getTable() . '.id')
+            ->having('avg_rating', $value);
     }
 
     // Attributes
@@ -195,9 +227,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getFormattedPhoneNumberAttribute()
     {
-        $format = chunk_split($this->phone, 4, '-');
+        $format = chunk_split($this->phone, 4, ' ');
 
-        return '+' . rtrim($format, '-');
+        return '+' . rtrim($format, ' ');
     }
 
     public function getCategoryAttribute()
@@ -208,5 +240,55 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getCurrentSubscriptionAttribute()
     {
         return $this->userSubscriptions()->active()->first();
+    }
+
+    public function getRatingAttribute(): int
+    {
+        return round($this->ratedBy()->avg('scale'));
+    }
+
+    public function getJoinedDateAttribute()
+    {
+        return $this->created_at->format('jS M Y');
+    }
+
+    public function getRatingStarsAttribute()
+    {
+        $total_stars    =   null;
+        $max_stars      =   5;
+
+        for ($i = 0; $i < $this->rating; $i++) {
+            $total_stars .= '<i class="fas fa-star star"></i>';
+        }
+
+        for ($y = 0; $y < $max_stars - $this->rating; $y++) {
+            $total_stars .= '<i class="far fa-star star"></i>';
+        }
+
+        return $total_stars;
+    }
+
+    public function getProjectServicesAttribute()
+    {
+        $services = Service::whereHas('projects', function ($query) {
+            $query->where('user_id', $this->id);
+        })->get();
+
+        return $services;
+    }
+
+    public function getMinProjectPriceAttribute()
+    {
+        $project = $this->projects
+            ->sortBy(function ($item, $key) {
+                return $item->prices->first();
+            })->first();
+
+        return $project->prices->first()->currency->code . ' ' . $project->prices->first()->selling_price;
+    }
+
+    public function getLocationWithCityStateAttribute()
+    {
+        return $this->address->city->name . ', ' . $this->address->countryState->name;
     }
 }

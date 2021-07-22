@@ -20,4 +20,14 @@ class CountryState extends Model
     {
         return $this->hasMany(City::class, 'country_state_id', 'id');
     }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id', 'id');
+    }
+
+    public function addresses()
+    {
+        return $this->hasManyThrough(Address::class, City::class, 'country_state_id', 'city_id', 'id', 'id');
+    }
 }

@@ -51,21 +51,30 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto align-items-center">
-                <li class="nav-item {{ Nav::hasSegment('home', 1, 'active') }}">
+                <li class="nav-item {{ Nav::hasSegment('', 1, 'active') }}">
                     <a href="{{ route('app.home') }}" class="nav-link">{{ __('modules.app.home') }}</a>
                 </li>
                 <li class="nav-item {{ Nav::hasSegment('merchant', 1, 'active') }}">
-                    <a href="{{ route('app.project') }}" class="nav-link">{{ __('modules.app.merchant') }}</a>
+                    <a href="{{ route('app.project.index') }}" class="nav-link">{{ __('modules.app.merchant') }}</a>
                 </li>
                 <li class="nav-item {{ Nav::hasSegment('about', 1, 'active') }}">
                     <a href="{{ route('app.about') }}" class="nav-link">{{ __('modules.app.about') }}</a>
                 </li>
+
+                @auth
+                <li class="nav-item">
+                    <a href="{{ route('dashboard') }}" class="nav-button">{{ __('labels.return_dashboard') }}</a>
+                </li>
+                @endauth
+
+                @guest
                 <li class="nav-item">
                     <a href="{{ route('app.partner') }}" class="nav-button">{{ __('modules.app.partner') }}</a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('login') }}" class="nav-button">{{ __('modules.login') }}</a>
                 </li>
+                @endguest
             </ul>
         </div>
     </div>

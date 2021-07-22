@@ -1,11 +1,7 @@
-// Fonts
-@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro&family=Montserrat&family=Roboto&display=swap");
-
 // Variables
 @import "variables";
 
-// Bootstrap
-// @import "~bootstrap/scss/bootstrap";
+// AdminLTE 3
 @import "~admin-lte/dist/css/adminlte.css";
 
 //Import Plugins Here
@@ -20,3 +16,151 @@
 @import "~admin-lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css";
 @import "~admin-lte/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css";
 @import "~admin-lte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css";
+
+// Custom Styles
+body {
+    font-family: "Montserrat", sans-serif;
+}
+
+.btn-rounded-corner {
+    border-radius: 30px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.card-lists {
+    height: 35rem;
+}
+
+.card-img-thumbnail {
+    height: 18rem;
+    width: 100%;
+    object-fit: contain;
+}
+
+.table-img-preview {
+    object-fit: contain;
+    height: 50px;
+    width: 50px;
+    border-radius: 12px;
+    border: rgb(206, 204, 204) solid 0.8px;
+}
+
+.custom-img-preview {
+    object-fit: contain;
+    width: 100%;
+    height: 200px;
+}
+
+.form-control-color {
+    width: 5vw;
+}
+
+.loading {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    background: rgba(240, 238, 238, 0.5) no-repeat center center;
+    z-index: 10000;
+}
+
+.card-loader {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 250px;
+}
+
+@media screen and (max-width: 768px) {
+    .form-control-color {
+        width: 10vw;
+    }
+}
+
+.slick-prev {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    z-index: 10;
+    transform: translateY(-50%);
+}
+
+.slick-next {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    z-index: 10;
+    transform: translateY(-50%);
+}
+
+.disable-spinbox[type="number"]::-webkit-outer-spin-button,
+.disable-spinbox[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.disable-spinbox[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.custom-thumbnail {
+    width: 100%;
+    height: 30vh;
+    object-fit: cover;
+}
+
+.profile-user-img {
+    height: 100px;
+}
+
+ul.package-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+ul.package-list > li.package-list-item {
+    padding-left: 1.5em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+ul.package-list > li.package-list-item::before {
+    font-family: "Font Awesome 5 Free";
+    content: "\f058";
+    display: inline-block;
+    margin-left: -1.5em;
+    width: 1.5em;
+    color: #28a745;
+}
+
+@media screen and (min-width: 768px) {
+    .multiple-items-slide .slick-track {
+        display: flex !important;
+        padding-top: 1em;
+        padding-bottom: 1em;
+    }
+
+    .multiple-items-slide .slick-slide {
+        height: inherit !important;
+    }
+}
+
+.inactive-click {
+    pointer-events: none;
+    cursor: default;
+}
+
+.cart-item-image {
+    object-fit: contain;
+    height: 60px;
+    width: 100%;
+    border-radius: 12px;
+    border: rgb(206, 204, 204) solid 0.8px;
+}

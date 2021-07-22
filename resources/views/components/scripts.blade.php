@@ -12,7 +12,8 @@
 
 @else
 
+<script type="text/javascript" src="{{ asset('js/function.js?v=' . time()) }}"></script>
+<script type="text/javascript" src="{{ asset('js/dropdown.js?v=' . time()) }}"></script>
 <script type="text/javascript" src="{{ asset('js/slick-img.js?v=' . time()) }}"></script>
 <script type="text/javascript" src="{{ asset('js/merchant.js?v=' . time()) }}"></script>
-
 @endif

@@ -12,11 +12,11 @@ class Rating extends Model
     protected $table = 'ratings';
 
     protected $fillable = [
-        'user_id', 'sourceable_type', 'sourceable_id', 'scale'
+        'user_id', 'rateable_type', 'rateable_id', 'scale'
     ];
 
     // Relationships
-    public function sourceable()
+    public function rateable()
     {
         return $this->morphTo();
     }

@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use App\Helpers\Status;
+use App\Models\ProductCategory;
+use App\Models\ProductAttribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AdsBooster extends Model
 {
     use SoftDeletes;
+
+    const CATEGORY_BUMP = 'Category Bump';
+    const CATEGORY_HIGHLIGHT = 'Category Highlight';
 
     protected $table = 'ads_boosters';
 
@@ -30,6 +34,37 @@ class AdsBooster extends Model
     public function productAttribute()
     {
         return $this->belongsTo(ProductAttribute::class, 'product_attribute_id', 'id');
+    }
+
+    public function product()
+    {
+        return $this->hasOneThrough(Product::class, ProductAttribute::class, 'id', 'id', 'product_attribute_id', 'product_id');
+    }
+
+    // Scopes
+    public function scopeBoosting($query)
+    {
+        return $query->whereDate('boosted_at', today()->format('Y-m-d'));
+    }
+
+    public function scopeCategoryBump($query)
+    {
+        return $query->whereHas('productAttribute', function ($query) {
+            $query->whereHas('product', function ($query) {
+                $query->filterCategory(ProductCategory::TYPE_ADS)
+                    ->where('name', self::CATEGORY_BUMP);
+            });
+        });
+    }
+
+    public function scopeCategoryHighlight($query)
+    {
+        return $query->whereHas('productAttribute', function ($query) {
+            $query->whereHas('product', function ($query) {
+                $query->filterCategory(ProductCategory::TYPE_ADS)
+                    ->where('name', self::CATEGORY_HIGHLIGHT);
+            });
+        });
     }
 
     // Attributes
