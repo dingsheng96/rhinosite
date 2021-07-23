@@ -195,7 +195,8 @@ return [
         'payment_method' => 'payment method',
         'ssm_cert' => 'ssm certificate',
         'business_since' => 'business since',
-        'reg_no' => 'registration no.'
+        'reg_no' => 'registration no.',
+        'agree' => 'agreement',
     ],
 
 ];

@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-11">
-                <h1>Join As Merchant</h1>
+                <h1>{{ __('app.partner_title_main') }}</h1>
             </div>
         </div>
     </div>
@@ -20,7 +20,7 @@
             </div>
             <div class="col-md-6 col-lg-5 mx-auto text-center">
                 <h2>Lorem ipsum dolor sit amet sed diam eirmod</h2>
-                <a href="{{ route('register', ['role' => 'merchant']) }}" class="btn btn-orange">Fill In Application Form</a>
+                <a href="{{ route('register', ['role' => 'merchant']) }}" class="btn btn-orange">{{ __('app.partner_btn_application') }}</a>
             </div>
         </div>
     </div>

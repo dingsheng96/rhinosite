@@ -1,8 +1,6 @@
 <?php
 
 return [
-    'logout_success' => 'Logout Successfully!',
-    'login_success' => 'Login Successfully!',
 
     'create' => [
         'success' => 'The :module created successfully!',
@@ -19,6 +17,8 @@ return [
         'fail' => 'The :module unable to delete!',
     ],
 
+    'logout_success' => 'Logout Successfully!',
+    'login_success' => 'Login Successfully!',
     'confirm_question' => 'Are you sure?',
     'empty_list' => "You don't have any :list yet",
     'delete_info' => 'You will not be able to revert this!',
@@ -34,4 +34,6 @@ return [
     'errors_found' => 'Errors found!',
     'upload_file_rules' => '{1} <li>Only :extensions file type allowed.</li><li>Total file size must be not more than :maxsize.</li>|{2,} <li>Only total of :maxfiles files allowed.</li><li>Only :extensions file type allowed</li><li>Total file size must be not more than :maxsize.</li>',
     'no_subscription' => 'You have not subscribe any plan yet.',
+    'register_success' => 'Registration Success! Please verify your email before login.',
+    'contact_support' => 'Errors found! Please contact customer support.',
 ];

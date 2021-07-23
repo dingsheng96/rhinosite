@@ -18,7 +18,7 @@ Route::get('/', function () {
     return redirect()->route('app.home');
 });
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 Route::group(['middleware' => ['auth:web', 'verified']], function () {
 

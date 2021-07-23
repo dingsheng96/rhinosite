@@ -24,15 +24,15 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <p class="category-title">Top Search Categories</p>
+                <p class="category-title">{{ __('app.top_search_services') }}</p>
             </div>
 
-            @forelse ($top_services as $service)
+            @forelse ($top_services->take(4) as $service)
             <div class="col-md-6 col-lg-3 col-xs-12 d-inline-flex">
-                <a href="{{ route('app.project.index', ['search' => $service]) }}" class="category-item">
+                <a href="{{ route('app.project.index', ['q' => $service->name]) }}" class="category-item">
                     <img src="{{ asset('storage/assets/home/icon1.png') }}" alt="shopping_icon" class="category-image">
                     <div class="orange-background"></div>
-                    <span>{{ strtoupper($service) }}</span>
+                    <span>{{ strtoupper($service->name) }}</span>
                 </a>
             </div>
             @empty
@@ -56,15 +56,15 @@
                         <div class="merchant-card">
                             <a href="{{ route('app.merchant.show', ['merchant' => $merchant->id]) }}">
                                 <div class="merchant-image-container">
-                                    <img src="{{ $merchant->media()->logo()->first()->full_file_path ?? $default_preview }}" alt="{{ $merchant->name }}" class="merchant-image">
+                                    <img src="{{ $merchant->logo->full_file_path ?? $default_preview }}" alt="{{ $merchant->name }}" class="merchant-image">
                                 </div>
                                 <div class="merchant-body">
                                     <p class="merchant-title">{{ $merchant->name }}</p>
-                                    {{-- <p class="merchant-subtitle"></p> --}}
-                                    @forelse ($merchant->project_services as $service)
-                                    <span class="badge badge-pill badge-primary">{{ $service->name }}</span>
-                                    @empty
-                                    @endforelse
+                                    <p class="merchant-subtitle">
+                                        @forelse ($merchant->project_services as $service)<span class="badge badge-pill badge-info">{{ $service->name }}</span>
+                                        @empty
+                                        @endforelse
+                                    </p>
                                 </div>
                                 <div class="merchant-footer">
                                     <span class="merchant-footer-left">{{ __('app.price_from') . ' ' . $merchant->min_project_price }}</span>
@@ -108,11 +108,12 @@
             </div>
             <div class="col-lg-10">
                 <div class="row justify-content-center">
-                    <div class="col-6 col-md"><img src="{{ asset('storage/assets/home/1.jpg') }}" alt="partner_image_1" class="home-s4-img"></div>
-                    <div class="col-6 col-md"><img src="{{ asset('storage/assets/home/2.jpg') }}" alt="partner_image_2" class="home-s4-img"></div>
-                    <div class="col-6 col-md"><img src="{{ asset('storage/assets/home/3.jpg') }}" alt="partner_image_3" class="home-s4-img"></div>
-                    <div class="col-6 col-md"><img src="{{ asset('storage/assets/home/4.png') }}" alt="partner_image_4" class="home-s4-img"></div>
-                    <div class="col-6 col-md"><img src="{{ asset('storage/assets/home/5.jpg') }}" alt="partner_image_5" class="home-s4-img"></div>
+                    @forelse ($top_merchants as $merchant)
+                    <div class="col-6 col-md">
+                        <img src="{{ $merchant->logo->full_file_path ?? $default_preview }}" alt="partner_image_1" class="home-s4-img">
+                    </div>
+                    @empty
+                    @endforelse
                 </div>
             </div>
         </div>

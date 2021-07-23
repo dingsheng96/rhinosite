@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-11">
-                <h1>Merchant Profile</h1>
+                <h1>{{ __('app.merchant_title_main') }}</h1>
             </div>
         </div>
     </div>
@@ -24,13 +24,14 @@
 <div id="merchant-category">
     <div class="container">
         <div class="d-flex px-3">
-            <span>Top Search Categories</span>
+            <span>{{ __('app.top_search_services') }}</span>
             <ul>
-                <li class="active">Awning</li>
-                <li class="active">Partition</li>
-                <li>Wall Drilling & Mounting</li>
-                <li>Flooring Installation</li>
-                <li>Glasswork</li>
+                @forelse ($top_services as $service)
+                <li class="active">
+                    <a href="{{ route('app.project.index', ['q' => $service->name]) }}" class="text-muted">{{ $service->name }}</a>
+                </li>
+                @empty
+                @endforelse
             </ul>
         </div>
     </div>
@@ -41,8 +42,8 @@
         <div class="row">
             <div class="col">
                 <ol class="breadcrumb bg-transparent pl-0">
-                    <li class="breadcrumb-item"><a href="{{ route('app.home') }}">Home</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('app.project.index') }}">Services</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('app.home') }}">{{ __('modules.app.home') }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('app.project.index') }}">{{ __('modules.app.merchant') }}</a></li>
                     <li class="breadcrumb-item active" aria-current="page">{{ $merchant->name }}</li>
                 </ol>
             </div>
@@ -60,11 +61,11 @@
                 @auth
                 @member
                 <button type="button" class="btn btn-orange" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Rate Merchant
+                    {{ __('app.merchant_btn_rate_merchant') }}
                 </button>
                 <div class="dropdown-menu dropdown-menu-right merchant-rate text-center">
                     <form action="">
-                        <p class="mb-0">Give us a rate!</p>
+                        <p class="mb-0">{{ __('app.merchant_rate_dropdown_title') }}</p>
                         <div class="rate">
                             <input type="radio" id="star5" name="rate" value="5" />
                             <label for="star5"></label>
@@ -84,7 +85,7 @@
 
                 @guest
                 <a role="button" href="{{ route('login') }}" class="btn btn-orange" aria-haspopup="true" aria-expanded="false">
-                    Login to Rate
+                    {{ __('app.merchant_btn_login_rate') }}
                 </a>
                 @endguest
             </div>
@@ -104,10 +105,10 @@
     <div class="container">
         <div class="row">
             <div class="col-12 text-center">
-                <h2>Provided services:</h2>
+                <h2>{{ __('app.merchant_subtitle_service') }}:</h2>
             </div>
             <div class="col-12 mb-3">
-                <p class="txtgrey">Services:</p>
+                <p class="txtgrey">{{ __('app.merchant_service_title') }}</p>
             </div>
 
             @forelse ($merchant->project_services as $service)
@@ -126,7 +127,7 @@
 
 <div id="profile-3">
     <div class="container">
-        <h4>{{ $merchant->name }}'s Projects</h4>
+        <h4>{{ __('app.merchant_subtitle_projects', ['merchant' => $merchant->name]) }}</h4>
         <div class="row justify-content-start">
 
             @forelse ($projects as $project)
@@ -142,8 +143,8 @@
                             <p class="merchant-subtitle">{{ $project->user->name }}</p>
                         </div>
                         <div class="merchant-footer">
-                            <span class="merchant-footer-left">From RM1,200</span>
-                            <span class="merchant-footer-right">Kuala Lumpur</span>
+                            <span class="merchant-footer-left">{{ $project->price_with_unit }}</span>
+                            <span class="merchant-footer-right">{{ $project->location }}</span>
                         </div>
                     </a>
                 </div>
@@ -156,7 +157,7 @@
 
         <div class="row">
             <div class="col-12 d-flex justify-content-center">
-                {!! $links !!}
+                {!! $projects->fragment('profile-3')->links() !!}
             </div>
         </div>
     </div>

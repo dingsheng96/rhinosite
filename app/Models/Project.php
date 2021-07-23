@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\City;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\Media;
@@ -13,6 +14,7 @@ use App\Models\Service;
 use App\Models\Language;
 use App\Models\AdsBooster;
 use App\Models\Translation;
+use App\Models\CountryState;
 use App\Models\ProjectService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -82,12 +84,78 @@ class Project extends Model
     // Scopes
     public function scopePublished($query)
     {
-        return $query->where('status', self::STATUS_PUBLISHED);
+        return $query->where($this->getTable() . '.status', self::STATUS_PUBLISHED);
     }
 
     public function scopeDraft($query)
     {
         return $query->where('status', self::STATUS_DRAFT);
+    }
+
+    public function scopeFilter($query, $request)
+    {
+        $price      =   $request->get('price');
+        $location   =   $request->get('location');
+        $rating     =   $request->get('rating');
+
+        return $query->when(!empty($price), function ($query) use ($price) {
+
+            $range = explode(',', $price);
+
+            $query->whereHas('prices', function ($query) use ($range) {
+                $query->defaultPrice()->priceRange($range[0], $range[1]);
+            });
+        })->when(!empty($location), function ($query) use ($location) {
+            $query->whereHas('address', function ($query) use ($location) {
+                $query->whereHas('countryState', function ($query) use ($location) {
+
+                    $location = explode(',', $location);
+
+                    $query->whereIn('id', $location);
+                });
+            });
+        })->when(!empty($rating), function ($query) use ($rating) {
+            $query->whereHas('user', function ($query) use ($rating) {
+                $query->filterGivenRatings($rating);
+            });
+        });
+    }
+
+    public function scopeSearchable($query, $keyword)
+    {
+        $keyword = str_replace('+', ' ', $keyword);
+
+        return $query->when(!empty($keyword), function ($query) use ($keyword) {
+            $query->where(function ($query) use ($keyword) {
+                $query->orWhereHas('translations', function ($query) use ($keyword) {
+                    $query->where('value', 'like', "%{$keyword}%");
+                })->orWhereHas('services', function ($query) use ($keyword) {
+                    $query->where(app(Service::class)->getTable() . '.name', 'like', "%{$keyword}%");
+                })->orWhereHas('user', function ($query) use ($keyword) {
+                    $query->where(app(User::class)->getTable() . '.name', 'like', "%{$keyword}%");
+                })->orWhereHas('address', function ($query) use ($keyword) {
+                    $query->where(function ($query) use ($keyword) {
+                        $query->orWhereHas('city', function ($query) use ($keyword) {
+                            $query->where(app(City::class)->getTable() . '.name', 'like', "%{$keyword}%");
+                        })->orWhereHas('countryState', function ($query) use ($keyword) {
+                            $query->where(app(CountryState::class)->getTable() . '.name', 'like', "%{$keyword}%");
+                        });
+                    });
+                });
+            });
+        });
+    }
+
+    public function scopeSortByCategoryBump($query)
+    {
+        return $query->orderByDesc(
+            AdsBooster::select('product_attribute_id')
+                ->whereColumn('boostable_id', $this->getTable() . '.id')
+                ->where('boostable_type', self::class)
+                ->categoryBump()
+                ->boosting()
+                ->limit(1)
+        );
     }
 
     // Attributes
@@ -103,12 +171,21 @@ class Project extends Model
         return $currency . $price . ' / ' . $unit_value . $unit;
     }
 
+    public function getPriceWithoutUnitAttribute()
+    {
+        $default_price = $this->prices()->defaultPrice()->first();
+
+        $currency   =   $default_price->currency->code;
+        $price      =   $default_price->unit_price;
+
+        return $currency . ' ' . $price;
+    }
+
     public function getLocationAttribute()
     {
-        $city           =   $this->address->city->name ?? '';
         $country_state  =   $this->address->countryState->name ?? '';
 
-        return $city . ', ' . $country_state;
+        return $country_state;
     }
 
     public function getEnglishTitleAttribute()
@@ -156,5 +233,10 @@ class Project extends Model
     public function getHasActiveHighlightAttribute()
     {
         return $this->adsBoosters()->boosting()->categoryHighlight()->exists();
+    }
+
+    public function getHasActiveBumpAttribute()
+    {
+        return $this->adsBoosters()->boosting()->categoryBump()->exists();
     }
 }

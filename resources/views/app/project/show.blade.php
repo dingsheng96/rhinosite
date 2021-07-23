@@ -26,11 +26,12 @@
         <div class="d-flex px-3">
             <span>Top Search Categories</span>
             <ul>
-                <li class="active">Awning</li>
-                <li class="active">Partition</li>
-                <li>Wall Drilling & Mounting</li>
-                <li>Flooring Installation</li>
-                <li>Glasswork</li>
+                @forelse ($top_services as $service)
+                <li class="active">
+                    <a href="{{ route('app.project.index', ['q' => $service->name]) }}" class="text-muted">{{ $service->name }}</a>
+                </li>
+                @empty
+                @endforelse
             </ul>
         </div>
     </div>
@@ -68,7 +69,7 @@
                 <div class="container bg-white services-details">
                     <div class="row align-items-center py-4">
                         <div class="col-5 col-md-6">
-                            <img src="{{ $project->user->logo->full_file_path }}" alt="service_brand" class="services-img">
+                            <img src="{{ $project->user->logo->full_file_path ?? $default_preview }}" alt="service_brand" class="services-img">
                         </div>
                         <div class="col-7 col-md-6 btn-right">
                             <a href="{{ route('app.merchant.show', ['merchant' => $project->user->id]) }}" class="btn btn-black">{{ __('app.project_btn_view_merchant') }}</a>
@@ -81,7 +82,7 @@
                         </div>
                         <div class="col-sm-5 text-sm-right">
                             <a role="button" class="btn"><i class="far fa-heart txtorange services-icon" aria-hidden="true" title="Add to wishlist"></i></a>
-                            <a role="button" href="https://wa.me/{{ $project->user->phone }}" class="btn" target="_blank"><i class="fab fa-whatsapp txtgreen services-icon" aria-hidden="true" title="Whatsapp"></i></a>
+                            <a role="button" href="tel:{{ $project->user->phone }}" class="btn" target="_blank"><i class="fas fa-phone txtgreen services-icon" aria-hidden="true" title="Whatsapp"></i></a>
                         </div>
                         <div class="col-12">
                             <p class="services-subtitle">{{ $project->chinese_title }}</p>
@@ -94,7 +95,7 @@
                         <div class="col-sm-6 text-sm-right txtblk">
                             <p>
                                 <span class="services-from">From</span>
-                                <span class="services-price pl-2">{{ $project->price_with_unit }}</span>
+                                <span class="services-price pl-2">{{ $project->price_without_unit }}</span>
                             </p>
                         </div>
                     </div>

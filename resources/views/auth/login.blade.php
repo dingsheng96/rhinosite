@@ -20,7 +20,7 @@
 
                     <ul class="nav">
                         <li class="user">
-                            <a class="user active" data-toggle="tab" href="#userlogin">{{ __('app.login_option_member') }}</a>
+                            <a class="user active" data-toggle="tab" href="#member">{{ __('app.login_option_member') }}</a>
                         </li>
                         <li class="user">
                             <a class="user" data-toggle="tab" href="#merchant">{{ __('app.login_option_merchant') }}</a>
@@ -28,6 +28,12 @@
                     </ul>
 
                     <p class="login-title">{{ __('app.login_form_title') }}</p>
+
+                    @if (Session::has('success'))
+                    <div class="alert alert-success" role="alert">
+                        {{ Session::get('success') }}
+                    </div>
+                    @endif
 
                     <form action="{{ route('login') }}" method="post" role="form" enctype="multipart/form-data">
                         @csrf
@@ -58,7 +64,7 @@
                     </form>
 
                     <div class="tab-content">
-                        <div class="tab-pane active" id="userlogin">
+                        <div class="tab-pane active" id="member">
                             <a href="#" class="btn btn-blue w-100">{{ __('app.login_btn_facebook') }}</a>
                             <div class="text-center my-3">
                                 {!! __('app.login_btn_register_member') !!}

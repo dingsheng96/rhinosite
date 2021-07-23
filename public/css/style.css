@@ -711,7 +711,8 @@ input[type="text"].home-s1-searchbar:focus {
     padding-bottom: 1rem;
 }
 
-.sidebar input[type="text"] {
+.sidebar input[type="text"],
+.sidebar input[type="number"] {
     font-size: 0.9rem;
     border: 1px solid #707070;
     width: 40%;
@@ -1849,7 +1850,8 @@ tr {
         font-size: 18px;
     }
 
-    .sidebar input[type="text"] {
+    .sidebar input[type="text"],
+    .sidebar input[type="number"] {
         padding: 0.25rem;
         font-size: 0.8rem;
     }

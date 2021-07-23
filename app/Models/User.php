@@ -15,6 +15,7 @@ use App\Models\Wishlist;
 use App\Models\UserDetail;
 use App\Models\UserAdsQuota;
 use App\Models\UserSubscription;
+use Illuminate\Support\Facades\DB;
 use App\Models\UserAdsQuotaHistory;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
@@ -152,6 +153,21 @@ class User extends Authenticatable implements MustVerifyEmail
             ->having('avg_rating', $value);
     }
 
+    public function scopeSortMerchantByRating($query)
+    {
+        $tbl_users      =   $this->getTable();
+        $tbl_ratings    =   app(Rating::class)->getTable();
+
+        return $query->select($tbl_users . '.id', $tbl_users . '.name', $tbl_users . '.status', DB::raw('AVG(' . $tbl_ratings . '.scale) AS ratings'))
+            ->join($tbl_ratings, $tbl_users . '.id', '=', $tbl_ratings . '.rateable_id')
+            ->where($tbl_ratings . '.rateable_type', self::class)
+            ->active()
+            ->merchant()
+            ->groupBy($tbl_users . '.id', $tbl_users . '.name', $tbl_users . '.status')
+            ->having('ratings', '>', 0)
+            ->orderBy('ratings', 'desc');
+    }
+
     // Attributes
     public function getFullAddressAttribute()
     {
@@ -279,12 +295,16 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getMinProjectPriceAttribute()
     {
-        $project = $this->projects
-            ->sortBy(function ($item, $key) {
-                return $item->prices->first();
-            })->first();
+        if ($this->projects->count() > 0) {
+            $project = $this->projects
+                ->sortBy(function ($item, $key) {
+                    return $item->prices->first();
+                })->first();
 
-        return $project->prices->first()->currency->code . ' ' . $project->prices->first()->selling_price;
+            return $project->prices->first()->currency->code . ' ' . $project->prices->first()->selling_price;
+        }
+
+        return;
     }
 
     public function getLocationWithCityStateAttribute()

@@ -28,6 +28,9 @@ class ViewServiceProvider extends ServiceProvider
         \App\Http\View\Composers\CartComposer::class => [
             'cart.index', 'checkout.index'
         ],
+        \App\Http\View\Composers\TopServiceComposer::class => [
+            'app.*', 'auth.login', 'auth.register'
+        ],
     ];
 
     /**

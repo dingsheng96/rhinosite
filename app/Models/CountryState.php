@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\City;
+use App\Models\Address;
+use App\Models\Country;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -29,5 +32,13 @@ class CountryState extends Model
     public function addresses()
     {
         return $this->hasManyThrough(Address::class, City::class, 'country_state_id', 'city_id', 'id', 'id');
+    }
+
+    // Scopes
+    public function scopeHasDefaultCountry($query)
+    {
+        return $query->whereHas('country', function ($query) {
+            $query->defaultCountry();
+        });
     }
 }

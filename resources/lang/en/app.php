@@ -11,6 +11,10 @@ return [
     'join_now' => 'Join Now',
     'searchbar' => 'Search Your Preferences',
     'price_from' => 'From',
+    'top_search_services' => 'Top Search Services',
+    'btn_view_all' => 'View All',
+    'min' => 'Min',
+    'max' => 'Max',
 
     'home_title_main' => 'The go-to for valuble audiences.',
     'home_subtitle_main' => "Malaysia's leading business listing directory",
@@ -22,7 +26,12 @@ return [
 
     'project_btn_view_merchant' => 'View Merchant',
     'project_search_items' => 'Total :total items found|Total :total items found for ":search"',
+    'project_title_main' => 'Find Me A Merchant',
+    'project_sidebar_service' => 'Related Services',
+    'project_sidebar_price' => 'Price Range',
 
+    'register_title_main' => 'Register',
+    'register_form_title' => 'Register Form',
     'register_agreement' => 'I agree to the <a target="blank" href="' . route('app.term') . '">terms and condition</a> &amp; <a target="blank" href="' . route('app.privacy') . '">privacy policy</a> of Rhinosite.',
     'register_btn_submit' => 'Register',
 
@@ -34,4 +43,25 @@ return [
     'login_btn_facebook' => 'Continue with Facebook',
     'login_btn_register_member' => '<span class="login-text">New Member? </span><a href="' . route('register', ['role' => 'member']) . '" class="login-text text-underline txtorange"><u>Register Now</u></a>',
     'login_btn_register_merchant' => '<span class="login-text">Wish to be a Merchant? </span><a href="' . route('register', ['role' => 'merchant']) . '" class="login-text text-underline txtorange"><u>Join Now</u></a>',
+
+    'about_title_main' => 'About Rhinosite',
+
+    'contact_title_main' => 'Contact Us',
+    'contact_contact_no_title' => 'Contact No',
+    'contact_address_title' => 'Address',
+    'contact_email_title' => 'Email',
+    'contact_contact_no_value' => '+60 16-303 1808',
+    'contact_address_value' => '104, Jalan Impian Indah 3, Taman Impian Indah, Bukit Jalil, 57000 Kuala Lumpur',
+    'contact_email_value' => 'info@rhinosite.com.my',
+
+    'merchant_title_main' => 'Merchant Profile',
+    'merchant_btn_rate_merchant' => 'Rate Merchant',
+    'merchant_btn_login_rate' => 'Login to Rate',
+    'merchant_rate_dropdown_title' => 'Give us a rate!',
+    'merchant_subtitle_service' => 'Provided Services',
+    'merchant_service_title' => 'Services',
+    'merchant_subtitle_projects' => ":merchant's Projects",
+
+    'partner_title_main' => 'Join As Merchant',
+    'partner_btn_application' => 'Fill In Application Form',
 ];

@@ -41,30 +41,34 @@
                         </div>
                     </div>
                     <div class="footer-right">
+
                         <div class="footer-right-content">
                             <ul>
                                 <li class="header">{{ __('app.about') }}</li>
-                                <li><a href="{{ route('app.about') }}">{{ __('app.out_story') }}</a></li>
+                                <li><a href="{{ route('app.about') }}">{{ __('app.our_story') }}</a></li>
                                 <li><a href="{{ route('app.contact') }}">{{ __('app.contact_us') }}</a></li>
                             </ul>
                         </div>
+
                         <div class="footer-right-content">
+                            @if (isset($top_services))
                             <ul>
                                 <li class="header">{{ __('app.top_services') }}</li>
-                                <li><a href="{{ route('app.project.index') }}">Awning</a></li>
-                                <li><a href="{{ route('app.project.index') }}">Partition</a></li>
-                                <li><a href="{{ route('app.project.index') }}">Rennovation</a></li>
-                                <li><a href="{{ route('app.project.index') }}">Flooring Installation</a></li>
-                                <li><a href="{{ route('app.project.index') }}">Glasswork</a></li>
+                                @forelse ($top_services as $service)
+                                <li><a href="{{ route('app.project.index', ['q' => $service->name]) }}">{{ Str::title($service->name) }}</a></li>
+                                @empty
+                                @endforelse
                             </ul>
+                            @endif
                         </div>
+
                         <div class="footer-right-content">
                             <ul>
                                 <li class="header">{{ __('app.contractor') }}</li>
-                                <li><a href="planpricing.html">The Benefits</a></li>
                                 <li><a href="{{ route('app.partner') }}">{{ __('app.join_now') }}</a></li>
                             </ul>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -79,38 +83,42 @@
                 <div class="footer-content-container">
                     <div class="footer-left-content">
                         <img src="{{ asset('storage/logo-footer.png') }}" alt="rhinosite-footer_logo" class="footer-logo mb-5">
-                        <p class="mb-5">Tagline</p>
-                        <p>Social Media</p>
+                        <p class="mb-5">{{ __('app.tagline') }}</p>
+                        <p>{{ __('app.social_media') }}</p>
                         <div class="d-flex">
                             <img src="{{ asset('storage/facebook.png') }}" alt="facebook_icon" class="footer-social">
                             <img src="{{ asset('storage/instagram.png') }}" alt="instagram_icon" class="footer-social">
                         </div>
                     </div>
                     <div class="footer-right">
+
                         <div class="footer-right-content">
                             <ul>
-                                <li class="header">About</li>
-                                <li><a href="{{ route('app.about') }}">Our Story</a></li>
-                                <li><a href="{{ route('app.contact') }}">Contact Us</a></li>
+                                <li class="header">{{ __('app.about') }}</li>
+                                <li><a href="{{ route('app.about') }}">{{ __('app.our_story') }}</a></li>
+                                <li><a href="{{ route('app.contact') }}">{{ __('app.contact_us') }}</a></li>
                             </ul>
                         </div>
+
+                        <div class="footer-right-content">
+                            @if (isset($top_services))
+                            <ul>
+                                <li class="header">{{ __('app.top_services') }}</li>
+                                @forelse ($top_services as $service)
+                                <li><a href="{{ route('app.project.index', ['q' => $service->name]) }}">{{ Str::title($service->name) }}</a></li>
+                                @empty
+                                @endforelse
+                            </ul>
+                            @endif
+                        </div>
+
                         <div class="footer-right-content">
                             <ul>
-                                <li class="header">Top Services</li>
-                                <li><a href="{{ route('app.project.index') }}">Awning</a></li>
-                                <li><a href="{{ route('app.project.index') }}">Partition</a></li>
-                                <li><a href="{{ route('app.project.index') }}">Rennovation</a></li>
-                                <li><a href="{{ route('app.project.index') }}">Flooring Installation</a></li>
-                                <li><a href="{{ route('app.project.index') }}">Glasswork</a></li>
+                                <li class="header">{{ __('app.contractor') }}</li>
+                                <li><a href="{{ route('app.partner') }}">{{ __('app.join_now') }}</a></li>
                             </ul>
                         </div>
-                        <div class="footer-right-content">
-                            <ul>
-                                <li class="header">Contractor</li>
-                                <li><a href="planpricing.html">The Benefits</a></li>
-                                <li><a href="{{ route('app.partner') }}">Join Now</a></li>
-                            </ul>
-                        </div>
+
                     </div>
                 </div>
             </div>
