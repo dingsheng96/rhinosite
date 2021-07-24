@@ -54,8 +54,8 @@
                 <span class="profile-name">{{ $merchant->name }}</span>
             </div>
             <div class="col-lg-5 col-xl-4 text-right align-self-center">
-                <p>Joined Since : {{ $merchant->joined_date }}</p>
-                <p>Year in Industry : {{ trans_choice('labels.year', $merchant->userDetails->first()->years_of_experience, ['value' => $merchant->userDetails->first()->years_of_experience]) }}</p>
+                <p>{{ __('app.merchant_joined_date', ['date' => $merchant->joined_date]) }}</p>
+                <p>{{ __('app.merchant_industry_year', ['year' => trans_choice('labels.year', $merchant->userDetails->first()->years_of_experience, ['value' => $merchant->userDetails->first()->years_of_experience])]) }}</p>
                 <p>{!! $merchant->rating_stars !!}</p>
 
                 @auth

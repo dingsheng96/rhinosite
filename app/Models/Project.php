@@ -92,35 +92,6 @@ class Project extends Model
         return $query->where('status', self::STATUS_DRAFT);
     }
 
-    public function scopeFilter($query, $request)
-    {
-        $price      =   $request->get('price');
-        $location   =   $request->get('location');
-        $rating     =   $request->get('rating');
-
-        return $query->when(!empty($price), function ($query) use ($price) {
-
-            $range = explode(',', $price);
-
-            $query->whereHas('prices', function ($query) use ($range) {
-                $query->defaultPrice()->priceRange($range[0], $range[1]);
-            });
-        })->when(!empty($location), function ($query) use ($location) {
-            $query->whereHas('address', function ($query) use ($location) {
-                $query->whereHas('countryState', function ($query) use ($location) {
-
-                    $location = explode(',', $location);
-
-                    $query->whereIn('id', $location);
-                });
-            });
-        })->when(!empty($rating), function ($query) use ($rating) {
-            $query->whereHas('user', function ($query) use ($rating) {
-                $query->filterGivenRatings($rating);
-            });
-        });
-    }
-
     public function scopeSearchable($query, $keyword)
     {
         $keyword = str_replace('+', ' ', $keyword);
@@ -142,6 +113,35 @@ class Project extends Model
                         });
                     });
                 });
+            });
+        });
+    }
+
+    public function scopeFilterable($query, $request)
+    {
+        $price      =   $request->get('price');
+        $location   =   $request->get('location');
+        $rating     =   $request->get('rating');
+
+        return $query->when(!empty($price), function ($query) use ($price) {
+
+            $range = explode(',', $price);
+
+            $query->whereHas('prices', function ($query) use ($range) {
+                $query->defaultPrice()->priceRange($range[0], $range[1]);
+            });
+        })->when(!empty($location), function ($query) use ($location) {
+            $query->whereHas('address', function ($query) use ($location) {
+                $query->whereHas('countryState', function ($query) use ($location) {
+
+                    $location = explode(',', $location);
+
+                    $query->whereIn(app(CountryState::class)->getTable() . '.id', $location);
+                });
+            });
+        })->when(!empty($rating), function ($query) use ($rating) {
+            $query->whereHas('user', function ($query) use ($rating) {
+                $query->filterMerchantByRating($rating);
             });
         });
     }

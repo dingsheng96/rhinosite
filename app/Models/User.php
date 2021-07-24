@@ -142,15 +142,16 @@ class User extends Authenticatable implements MustVerifyEmail
         });
     }
 
-    public function scopeFilterGivenRatings($query, $value)
+    public function scopeFilterMerchantByRating($query, $value)
     {
-        $tbl_rating = app(Rating::class)->getTable();
+        $tbl_user   =   $this->getTable();
+        $tbl_rating =   app(Rating::class)->getTable();
 
-        return $query->join($tbl_rating, $this->getTable() . '.id', '=', $tbl_rating . '.rateable_id')
-            ->where($tbl_rating . 'rateable_type', Rating::class)
-            ->selectRaw('AVG(' . $tbl_rating . '.scale) AS avg_rating')
-            ->groupBy($this->getTable() . '.id')
-            ->having('avg_rating', $value);
+        return $query->select($tbl_user . '.id', DB::raw('AVG(' . $tbl_rating . '.scale) AS ratings'))
+            ->join($tbl_rating, $tbl_user . '.id', '=', $tbl_rating . '.rateable_id')
+            ->where($tbl_rating . '.rateable_type', self::class)
+            ->groupBy($tbl_user . '.id')
+            ->having('ratings', 'like', "{$value}%");
     }
 
     public function scopeSortMerchantByRating($query)

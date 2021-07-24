@@ -17,8 +17,8 @@ return [
         'fail' => 'The :module unable to delete!',
     ],
 
-    'logout_success' => 'Logout Successfully!',
-    'login_success' => 'Login Successfully!',
+    'logout_success' => 'You have logged out.',
+    'login_success' => 'You have logged in.',
     'confirm_question' => 'Are you sure?',
     'empty_list' => "You don't have any :list yet",
     'delete_info' => 'You will not be able to revert this!',

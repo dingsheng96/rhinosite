@@ -52,7 +52,8 @@ return [
         'merchant_profile' => 'Merchant Profile',
         'term_policy' => 'Terms & Policies',
         'privacy_policy' => 'Privacy Policy',
-        'register' => 'Register'
+        'register' => 'Register',
+        'project' => 'Project'
     ]
 
 ];

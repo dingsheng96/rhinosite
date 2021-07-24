@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-11">
-                <h1>Services</h1>
+                <h1>{{ __('app.project_details_title_main') }}</h1>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
 <div id="merchant-category">
     <div class="container">
         <div class="d-flex px-3">
-            <span>Top Search Categories</span>
+            <span>{{ __('app.top_search_services') }}</span>
             <ul>
                 @forelse ($top_services as $service)
                 <li class="active">
@@ -42,9 +42,9 @@
         <div class="row">
             <div class="col">
                 <ol class="breadcrumb bg-transparent pl-0">
-                    <li class="breadcrumb-item"><a href="{{ route('app.home') }}">Home</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('app.project.index') }}">Services</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Awning</li>
+                    <li class="breadcrumb-item"><a href="{{ route('app.home') }}">{{ __('modules.app.home') }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('app.project.index') }}">{{ __('modules.app.project') }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ $project->english_title }}</li>
                 </ol>
             </div>
         </div>
@@ -81,8 +81,8 @@
 
                         </div>
                         <div class="col-sm-5 text-sm-right">
-                            <a role="button" class="btn"><i class="far fa-heart txtorange services-icon" aria-hidden="true" title="Add to wishlist"></i></a>
-                            <a role="button" href="tel:{{ $project->user->phone }}" class="btn" target="_blank"><i class="fas fa-phone txtgreen services-icon" aria-hidden="true" title="Whatsapp"></i></a>
+                            <a role="button" class="btn"><i class="far fa-heart txtorange services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_add_wishlist') }}"></i></a>
+                            <a role="button" href="tel:{{ $project->user->phone }}" class="btn" target="_blank"><i class="fas fa-phone txtgreen services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_call') }}"></i></a>
                         </div>
                         <div class="col-12">
                             <p class="services-subtitle">{{ $project->chinese_title }}</p>
@@ -90,18 +90,18 @@
                     </div>
                     <div class="row align-items-center mb-3 mb-sm-2">
                         <div class="col-sm-6">
-                            <p>Price</p>
+                            <p>{{ __('app.project_details_price') }}</p>
                         </div>
                         <div class="col-sm-6 text-sm-right txtblk">
                             <p>
-                                <span class="services-from">From</span>
+                                <span class="services-from">{{ __('app.price_from') }}</span>
                                 <span class="services-price pl-2">{{ $project->price_without_unit }}</span>
                             </p>
                         </div>
                     </div>
                     <div class="row align-items-center mb-3 mb-sm-2">
                         <div class="col-sm-6">
-                            <p>Location</p>
+                            <p>{{ __('app.project_details_location') }}</p>
                         </div>
                         <div class="col-sm-6 txtblk text-sm-right">
                             <p class="font-medium">{{ $project->location }}</p>
@@ -109,7 +109,7 @@
                     </div>
                     <div class="row align-items-center mb-3 mb-sm-2">
                         <div class="col-sm-6">
-                            <p>Contact Contractor</p>
+                            <p>{{ __('app.project_details_merchant') }}</p>
                         </div>
                         <div class="col-sm-6 txtblk text-sm-right">
                             <p>{{ $project->user->formatted_phone_number }}</p>
@@ -123,7 +123,20 @@
 
 <div id="services-2">
     <div class="container">
-        <h3>Services Provided</h3>
+        <h3>{{ __('app.project_details_subtitle_description') }}</h3>
+        <div class="row">
+            <div class="col-12">
+                <p class="paragraph">
+                    {!! $project->description !!}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="services-2">
+    <div class="container">
+        <h3>{{ __('app.project_details_subtitle_service') }}</h3>
         <div class="row">
             @foreach ($project_services as $service)
             <div class="col-md-6 col-lg-3">
@@ -136,11 +149,26 @@
     </div>
 </div>
 
+@if (!empty($project->materials))
+<div id="services-2">
+    <div class="container">
+        <h3>{{ __('app.project_details_subtitle_material') }}</h3>
+        <div class="row">
+            <div class="col-12">
+                <p class="paragraph">
+                    {!! $project->materials !!}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 
 @if (count($similar_projects) > 0)
 <div id="services-5">
     <div class="container">
-        <h3>Similar Projects</h3>
+        <h3>{{ __('app.project_details_subtitle_similar_projects') }}</h3>
         <div class="row">
 
             @foreach ($similar_projects as $project)
@@ -155,7 +183,7 @@
                             <p class="merchant-subtitle">{{ $project->chinese_title }}</p>
                         </div>
                         <div class="merchant-footer">
-                            <span class="merchant-footer-left">From {{ $project->price_with_unit }}</span>
+                            <span class="merchant-footer-left">From {{ $project->price_without_unit }}</span>
                             <span class="merchant-footer-right">{{ $project->location }}</span>
                         </div>
                     </a>

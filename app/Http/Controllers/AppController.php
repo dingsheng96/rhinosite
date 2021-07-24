@@ -58,7 +58,8 @@ class AppController extends Controller
 
     public function project(Request $request)
     {
-        $services = Service::orderBy('name', 'asc')->get();
+
+        $services = Service::select('name')->orderBy('name')->get();
 
         $areas = CountryState::withCount([
             'addresses' => function ($query) {
@@ -81,7 +82,7 @@ class AppController extends Controller
                 $query->boosting();
             }
         ])->published()->sortByCategoryBump()
-            ->searchable($request->get('q'))->filter($request)
+            ->searchable($request->get('q'))->filterable($request)
             ->paginate(15, ['*'], 'page', $request->get('page', 1));
 
         return view('app.project.index', compact('projects', 'areas', 'services'));
@@ -99,7 +100,11 @@ class AppController extends Controller
 
         $project_services = $project->services;
 
-        $similar_projects = Project::published()
+        $similar_projects = Project::with([
+            'prices' => function ($query) {
+                $query->defaultPrice();
+            }
+        ])->published()
             ->where('user_id', '!=', $project->user_id)
             ->whereHas('services', function ($query) use ($project_services) {
                 $query->whereIn('id', $project_services->pluck('id')->toArray());

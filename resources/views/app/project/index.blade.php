@@ -45,68 +45,65 @@
             <div class="sidebar mb-5">
                 <ul class="service">
                     <li class="title">{{ __('app.project_sidebar_service') }}</li>
-                    @forelse ($services->take(5) as $service)
-                    <li>
-                        <a href="{{ route('app.project.index', ['q' => $service->name]) }}" class="text-muted">{{ $service->name }}</a>
-                    </li>
-                    @empty
-                    @endforelse
+                    @foreach ($services as $service)
+                    <li @if($loop->iteration > 5) {!! 'class="more d-none"' !!} @endif><a href="{{ route('app.project.index', ['q' => $service->name]) }}" class="text-muted">{{ $service->name }}</a></li>
+                    @endforeach
                     <li class="end">
-                        <a href="" class="txtorange">{{ __('app.btn_view_all') }}</a>
+                        <a href="#" class="txtorange btn-view-more" data-text-replace="{{ __('app.btn_view_less') }}">{{ __('app.btn_view_more') }}</a>
                     </li>
                 </ul>
-                <form action="{{ route('app.project.index') }}" method="GET" role="form" id="filterForm">
+                <form action="{{ route('app.project.index') }}" method="GET" role="form">
                     <ul class="range">
-                        <li class="title">{{ __('app.project_sidebar_price') }}</li>
-                        <li>
+                        <li class="title">{{ __('app.project_sidebar_price_range') }}</li>
+                        {{-- <li>
                             <input type="number" class="range" placeholder="{{ __('app.min') }}">
-                            <span> - </span>
-                            <input type="number" class="range" placeholder="{{ __('app.max') }}">
-                        </li>
+                        <span> - </span>
+                        <input type="number" class="range" placeholder="{{ __('app.max') }}">
+                        </li> --}}
                     </ul>
                     <ul class="radio">
                         <li>
-                            <input type="radio" id="rm1000" name="price" value="0,1000">
+                            <input type="radio" id="rm1000" name="price" value="0,1000" {{ request()->get('price') == '0,1000' ? 'checked' : null }}>
                             <label for="rm1000">&lsaquo; MYR 1,000 </label>
                         </li>
                         <li>
-                            <input type="radio" id="rm5000" name="price" value="0,5000">
-                            <label for="rm5000">&lsaquo; MYR 5,000 </label>
+                            <input type="radio" id="rm5000" name="price" value="1001,5000" {{ request()->get('price') == '1001,5000' ? 'checked' : null }}>
+                            <label for="rm5000">MYR 1,001 - MYR 5,000 </label>
                         </li>
                         <li>
-                            <input type="radio" id="rm10000" name="price" value="0,10000">
-                            <label for="rm10000">&lsaquo; MYR 10,000 </label>
+                            <input type="radio" id="rm10000" name="price" value="5001,10000" {{ request()->get('price') == '5001,10000' ? 'checked' : null }}>
+                            <label for="rm10000">MYR 5,001 - MYR 10,000 </label>
                         </li>
                         <li>
-                            <input type="radio" id="rm15000" name="price" value="0,15000">
-                            <label for="rm15000">&lsaquo; MYR 15,000 </label>
+                            <input type="radio" id="rm15000" name="price" value="10001,15000" {{ request()->get('price') == '10001,15000' ? 'checked' : null }}>
+                            <label for="rm15000">MYR 10,001 - MYR 15,000 </label>
                         </li>
                         <li>
-                            <input type="radio" id="rm20000" name="price" value="0,20000">
-                            <label for="rm20000">&lsaquo; MYR 20,000 </label>
+                            <input type="radio" id="rm15001" name="price" value="15001," {{ request()->get('price') == '15001,' ? 'checked' : null }}>
+                            <label for="rm15001">&rsaquo; MYR 15,000 </label>
                         </li>
                     </ul>
                     <ul class="radio">
-                        <li class="title">Locations</li>
+                        <li class="title">{{ __('app.project_sidebar_location') }}</li>
                         @forelse ($areas as $area)
                         <li>
-                            <input type="radio" id="{{ $loop->iteration }}" name="location" value="{{ $area->id }}">
+                            <input type="radio" id="{{ $loop->iteration }}" name="location" value="{{ $area->id }}" {{ request()->get('location') == $area->id ? 'checked' : null }}>
                             <label for="{{ $loop->iteration }}">{{ $area->name . ' (' . $area->addresses_count . ')' }}</label>
                         </li>
                         @empty
                         @endforelse
                     </ul>
                     <ul class="radio rating">
-                        <li class="title">Rating</li>
+                        <li class="title">{{ __('app.project_sidebar_rating') }}</li>
                         @for ($y = 1; $y <= 5; $y++) <li>
-                            <input type="radio" id="star{{ $y }}" name="rating" value="{{ $y }}">
+                            <input type="radio" id="star{{ $y }}" name="rating" value="{{ $y }}" {{ request()->get('rating') == $y ? 'checked' : null }}>
                             @for ($x=0; $x < $y; $x++) <label for="star{{ $y }}"><i class="fas fa-star"></i></label>
                                 @endfor
                                 </li>
                                 @endfor
                     </ul>
-                    <button type="submit" class="btn btn-orange w-100 mx-0 mb-3">Filter</button>
-                    <button type="submit" class="btn btn-black w-100 m-0">Reset Filter</button>
+                    <button type="submit" class="btn btn-orange w-100 mx-0 mb-3">{{ __('app.project_sidebar_btn_filter') }}</button>
+                    <button type="button" class="btn btn-black w-100 m-0 btn-reset-filter">{{ __('app.project_sidebar_btn_reset') }}</button>
                 </form>
             </div>
 
@@ -123,7 +120,7 @@
                         @else
                         <span class="h5">{{ trans_choice('app.project_search_items', 1, ['total' => $projects->total()]) }}</span>
                         @endif
-                        <button id="compare" name="compare" class="btn btn-orange ml-auto">Compare Merchant</button>
+                        <button id="compare" name="compare" class="btn btn-orange ml-auto">{{ __('app.project_btn_compare') }}</button>
                     </div>
 
                     <div class="row search-filter-result compare" style="display: none;">
@@ -153,7 +150,7 @@
                                                 <p class="merchant-subtitle">{{ $project->chinese_title }}</p>
                                             </div>
                                             <div class="merchant-footer">
-                                                <span class="merchant-footer-left">From {{ $project->price_without_unit }}</span>
+                                                <span class="merchant-footer-left">{{ __('app.price_from') . ' ' .$project->price_without_unit }}</span>
                                                 <span class="merchant-footer-right">{{ $project->location }}</span>
                                             </div>
                                         </a>
@@ -186,68 +183,65 @@
         <div class="sidebar mobile">
             <ul class="service">
                 <li class="title">{{ __('app.project_sidebar_service') }}</li>
-                @forelse ($services->take(5) as $service)
-                <li>
-                    <a href="{{ route('app.project.index', ['q' => $service->name]) }}" class="text-muted">{{ $service->name }}</a>
-                </li>
-                @empty
-                @endforelse
+                @foreach ($services as $service)
+                <li @if($loop->iteration > 5) {!! 'class="more d-none"' !!} @endif><a href="{{ route('app.project.index', ['q' => $service->name]) }}" class="text-muted">{{ $service->name }}</a></li>
+                @endforeach
                 <li class="end">
-                    <a href="" class="txtorange">{{ __('app.btn_view_all') }}</a>
+                    <a href="#" class="txtorange btn-view-more" data-text-replace="{{ __('app.btn_view_less') }}">{{ __('app.btn_view_more') }}</a>
                 </li>
             </ul>
             <form action="">
                 <ul class="range">
-                    <li class="title">Price Range</li>
-                    <li>
+                    <li class="title">{{ __('app.project_sidebar_price_range') }}</li>
+                    {{-- <li>
                         <input type="number" class="range" placeholder="{{ __('app.min') }}">
-                        <span> - </span>
-                        <input type="number" class="range" placeholder="{{ __('app.max') }}">
+                    <span> - </span>
+                    <input type="number" class="range" placeholder="{{ __('app.max') }}">
+                    </li> --}}
+                </ul>
+                <ul class="radio">
+                    <li>
+                        <input type="radio" id="rm1000m" name="price" value="0,1000" {{ request()->get('price') == '0,1000' ? 'checked' : null }}>
+                        <label for="rm1000m">&lsaquo; MYR 1,000 </label>
+                    </li>
+                    <li>
+                        <input type="radio" id="rm5000m" name="price" value="1001,5000" {{ request()->get('price') == '1001,5000' ? 'checked' : null }}>
+                        <label for="rm5000m">MYR 1,001 - MYR 5,000 </label>
+                    </li>
+                    <li>
+                        <input type="radio" id="rm10000m" name="price" value="5001,10000" {{ request()->get('price') == '5001,10000' ? 'checked' : null }}>
+                        <label for="rm10000m">MYR 5,001 - MYR 10,000 </label>
+                    </li>
+                    <li>
+                        <input type="radio" id="rm15000m" name="price" value="10001,15000" {{ request()->get('price') == '10001,15000' ? 'checked' : null }}>
+                        <label for="rm15000m">MYR 10,001 - MYR 15,000 </label>
+                    </li>
+                    <li>
+                        <input type="radio" id="rm15001m" name="price" value="15001," {{ request()->get('price') == '15001,' ? 'checked' : null }}>
+                        <label for="rm15001m">&rsaquo; MYR 15,000 </label>
                     </li>
                 </ul>
                 <ul class="radio">
-                    <li>
-                        <input type="radio" id="rm1000m" name="price" value="0,1000">
-                        <label for="rm1000m">
-                            &lsaquo; MYR 1,000 </label> </li>
-                    <li>
-                        <input type="radio" id="rm5000m" name="price" value="0,5000">
-                        <label for="rm5000m">
-                            &lsaquo; MYR 5,000 </label> </li>
-                    <li>
-                        <input type="radio" id="rm10000m" name="price" value="0,10000">
-                        <label for="rm10000m">
-                            &lsaquo; MYR 10,000 </label> </li>
-                    <li>
-                        <input type="radio" id="rm15000m" name="price" value="0,15000">
-                        <label for="rm15000m">
-                            &lsaquo; MYR 15,000 </label> </li>
-                    <li>
-                        <input type="radio" id="rm20000m" name="price" value="0,20000">
-                        <label for="rm20000m">
-                            &lsaquo; MYR 20,000 </label> </li>
-                </ul>
-                <ul class="radio">
-                    <li class="title">Locations</li>
+                    <li class="title">{{ __('app.project_sidebar_location') }}</li>
                     @forelse ($areas as $area)
                     <li>
-                        <input type="radio" id="m{{ $loop->iteration }}" name="location" value="{{ $area->id }}">
+                        <input type="radio" id="m{{ $loop->iteration }}" name="location" value="{{ $area->id }}" {{ request()->get('location') == $area->id ? 'checked' : null }}>
                         <label for="m{{ $loop->iteration }}">{{ $area->name . ' (' . $area->addresses_count . ')' }}</label>
                     </li>
                     @empty
                     @endforelse
                 </ul>
                 <ul class="radio rating">
-                    <li class="title">Rating</li>
+                    <li class="title">{{ __('app.project_sidebar_rating') }}</li>
                     @for ($y = 1; $y <= 5; $y++) <li>
-                        <input type="radio" id="mstar{{ $y }}" name="rating" value="{{ $y }}">
+                        <input type="radio" id="mstar{{ $y }}" name="rating" value="{{ $y }}" {{ request()->get('rating') == $y ? 'checked' : null }}>
                         @for ($x=0; $x < $y; $x++) <label for="mstar{{ $y }}"><i class="fas fa-star"></i></label>
                             @endfor
                             </li>
                             @endfor
                 </ul>
-                <button type="submit" class="btn btn-orange w-100 mx-0 mb-3">Filter</button>
-                <button type="submit" class="btn btn-black w-100 mx-0 mb-3">Reset Filter</button>
+                <button type="submit" class="btn btn-orange w-100 mx-0 mb-3">{{ __('app.project_sidebar_btn_filter') }}</button>
+                <button type="button" class="btn btn-black w-100 m-0 btn-reset-filter">{{ __('app.project_sidebar_btn_reset') }}</button>
             </form>
         </div>
     </div>

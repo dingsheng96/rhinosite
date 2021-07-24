@@ -37,12 +37,18 @@ class Price extends Model
             });
     }
 
-    public function scopePriceRange($query, $min, $max)
+    public function scopePriceRange($query, $min, $max = null)
     {
-        return $query->whereBetween('selling_price', [
-            PriceFacade::convertFloatToInt($min),
-            PriceFacade::convertFloatToInt($max)
-        ]);
+        $min = PriceFacade::convertFloatToInt($min);
+        $max = empty($max) ? null : PriceFacade::convertFloatToInt($max);
+
+        return $query->where(function ($query) use ($min, $max) {
+            $query->when(empty($max), function ($query) use ($min) {
+                $query->where('selling_price', '>=', $min);
+            })->when(!empty($max), function ($query) use ($min, $max) {
+                $query->whereBetween('selling_price', [$min, $max]);
+            });
+        });
     }
 
     public function scopePriceWithDefaultCurrency($query)
