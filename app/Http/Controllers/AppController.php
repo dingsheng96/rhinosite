@@ -7,38 +7,41 @@ use App\Models\User;
 use App\Models\Rating;
 use App\Models\Project;
 use App\Models\Service;
+use App\Helpers\Message;
+use App\Helpers\Response;
 use App\Models\AdsBooster;
+use App\Models\Permission;
 use App\Models\CountryState;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Http\View\Composers\TopRecordsComposer;
 
 class AppController extends Controller
 {
     public function home()
     {
-        $top_merchants = User::with([
-            'address' => function ($query) {
-                $query->with(['city', 'countryState']);
-            },
+        $merchants = User::with([
             'media' => function ($query) {
                 $query->logo();
             },
-            'projects' => function ($query) {
-                $query->with([
-                    'prices' => function ($query) {
-                        $query->priceWithDefaultCurrency();
-                    },
-                    'services'
-                ]);
-            }
-        ])
-            // ->sortMerchantByRating()
-            ->merchant()->active()->inRandomOrder()
-            ->limit(6)->get();
+        ])->merchant()->active()->inRandomOrder()->limit(6)->get();
 
-        return view('app.home', compact('top_merchants'));
+        $projects = Project::with([
+            'user.ratedBy', 'translations', 'address', 'unit', 'services',
+            'prices' => function ($query) {
+                $query->defaultPrice();
+            },
+            'media' => function ($query) {
+                $query->thumbnail();
+            },
+            'adsBoosters' => function ($query) {
+                $query->boosting();
+            }
+        ])->published()->inRandomOrder()->limit(6)->get();
+
+        return view('app.home', compact('projects', 'merchants'));
     }
 
     public function about()
@@ -58,9 +61,6 @@ class AppController extends Controller
 
     public function project(Request $request)
     {
-
-        $services = Service::select('name')->orderBy('name')->get();
-
         $areas = CountryState::withCount([
             'addresses' => function ($query) {
                 $query->whereHasMorph('sourceable', Project::class);
@@ -71,7 +71,7 @@ class AppController extends Controller
             });
 
         $projects = Project::with([
-            'user.ratedBy', 'translations', 'address', 'unit',
+            'user.ratedBy', 'translations', 'address', 'unit', 'services',
             'prices' => function ($query) {
                 $query->defaultPrice();
             },
@@ -83,9 +83,9 @@ class AppController extends Controller
             }
         ])->published()->sortByCategoryBump()
             ->searchable($request->get('q'))->filterable($request)
-            ->paginate(15, ['*'], 'page', $request->get('page', 1));
+            ->paginate(12, ['*'], 'page', $request->get('page', 1));
 
-        return view('app.project.index', compact('projects', 'areas', 'services'));
+        return view('app.project.index', compact('projects', 'areas'));
     }
 
     public function showProject(Project $project)
@@ -101,9 +101,10 @@ class AppController extends Controller
         $project_services = $project->services;
 
         $similar_projects = Project::with([
+            'services',
             'prices' => function ($query) {
                 $query->defaultPrice();
-            }
+            },
         ])->published()
             ->where('user_id', '!=', $project->user_id)
             ->whereHas('services', function ($query) use ($project_services) {
@@ -123,7 +124,7 @@ class AppController extends Controller
         ]);
 
         $projects = Project::with([
-            'user.ratedBy', 'translations', 'address', 'unit',
+            'user.ratedBy', 'translations', 'address', 'unit', 'services',
             'prices' => function ($query) {
                 $query->defaultPrice();
             },
@@ -145,5 +146,57 @@ class AppController extends Controller
     public function privacyPolicies()
     {
         return view('app.privacy');
+    }
+
+    public function compareList()
+    {
+
+        return view('app.compare');
+    }
+
+    public function addToCompareList(Request $request)
+    {
+        $request->validate([
+            'target' => 'required|in:project',
+            'target_id' => 'required|exists:' . Project::class . ',id'
+        ]);
+
+        $action     =   Permission::ACTION_UPDATE;
+        $module     =   strtolower(trans_choice('modules.project', 1));
+        $status     =   'fail';
+        $message    =   Message::instance()->format($action, $module);
+        $count = 0;
+
+        DB::beginTransaction();
+
+        try {
+
+            $project = Project::findOrFail($request->get('target_id'));
+
+            $compare_lists = Auth::user()->comparisons();
+
+            throw_if($compare_lists->count() >= 3, new \Exception(__('messages.compare_list_reached_limit')));
+
+            $compare_lists->sync([$project->id]);
+
+            $compare_lists->fresh();
+
+            $count = $compare_lists->count();
+
+            DB::commit();
+        } catch (\Error | \Exception $ex) {
+
+            DB::rollBack();
+
+            $message = $ex->getMessage();
+            $status = false;
+        }
+
+        return Response::instance()
+            ->withStatusCode('modules.project', 'actions.' . $action . $status)
+            ->withStatus($status)
+            ->withMessage($message, true)
+            ->withData(['projects_count' => $count])
+            ->sendJson();
     }
 }

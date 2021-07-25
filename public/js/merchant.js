@@ -45,4 +45,34 @@ $(function () {
             form.submit();
         });
     }
+
+    $(".btn-collapse").on('click', function(){
+
+        $(".compare.collapse, .btn-compare.collapse").collapse('toggle');
+    });
+
+    $('body').on('click', '.btn-compare', function (e) {
+
+        e.preventDefault();
+
+        let form = $(this).next('form[name="compare_form"]');
+
+        let data = form.serializeArray();
+
+        let action = form.attr('action');
+
+        $.ajax({
+            url: action,
+            type: "POST",
+            data: data,
+            success: (xhl) => {
+
+                let res = xhl.data;
+
+                if(xhl.status) {
+
+                }
+            }
+        });
+    });
 });

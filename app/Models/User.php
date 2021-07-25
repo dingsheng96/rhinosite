@@ -25,7 +25,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use SoftDeletes, HasRoles, Notifiable;
+    use Notifiable, SoftDeletes, HasRoles;
 
     const STATUS_ACTIVE     =   'active';
     const STATUS_INACTIVE   =   'inactive';
@@ -34,7 +34,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $table = 'users';
 
     protected $fillable = [
-        'name', 'phones', 'email', 'password',
+        'name', 'phone', 'email', 'password',
         'remember_token', 'status', 'last_login_at', 'email_verified_at'
     ];
 
@@ -106,6 +106,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function projects()
     {
         return $this->hasMany(Project::class, 'user_id', 'id');
+    }
+
+    public function comparisons()
+    {
+        return $this->morphedByMany(Project::class, 'comparable');
     }
 
     // Scopes
@@ -310,6 +315,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getLocationWithCityStateAttribute()
     {
+        if (!$this->address) {
+            return null;
+        }
+
         return $this->address->city->name . ', ' . $this->address->countryState->name;
     }
 }

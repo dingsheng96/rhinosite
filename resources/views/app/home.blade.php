@@ -7,8 +7,9 @@
         <div class="row justify-content-center">
             <div class="col-lg-10 col-xl-8 col-xs-12 text-center">
                 <h1>
-                    {{ __('app.home_title_main') }}<br>
-                    <span class="home-s1-subtitle">{{ __('app.home_subtitle_main') }}</span>
+                    {{ __('app.home_title_main') }}
+                    <br>
+                    <span class="home-s1-subtitle text-white">{{ __('app.home_subtitle_main') }}</span>
                 </h1>
             </div>
         </div>
@@ -27,7 +28,7 @@
                 <p class="category-title">{{ __('app.top_search_services') }}</p>
             </div>
 
-            @forelse ($top_services->take(4) as $service)
+            @forelse ($services->take(4) as $service)
             <div class="col-md-6 col-lg-3 col-xs-12 d-inline-flex">
                 <a href="{{ route('app.project.index', ['q' => $service->name]) }}" class="category-item">
                     <img src="{{ asset('storage/assets/home/icon1.png') }}" alt="shopping_icon" class="category-image">
@@ -36,6 +37,7 @@
                 </a>
             </div>
             @empty
+            <div class="col-12 d-inline-flex">&nbsp;</div>
             @endforelse
 
         </div>
@@ -49,26 +51,27 @@
                 <h2>{{ __('app.home_subtitle_merchant') }}</h2>
             </div>
             <div class="col-12">
-                <div class="row justify-content-start">
-
-                    @forelse ($top_merchants as $merchant)
+                <div class="row justify-content-center">
+                    @forelse ($projects as $project)
                     <div class="col-md-6 col-lg-4 d-inline-flex">
                         <div class="merchant-card">
-                            <a href="{{ route('app.merchant.show', ['merchant' => $merchant->id]) }}">
+                            <a href="{{ route('app.project.show', ['project' => $project->id]) }}">
                                 <div class="merchant-image-container">
-                                    <img src="{{ $merchant->logo->full_file_path ?? $default_preview }}" alt="{{ $merchant->name }}" class="merchant-image">
+                                    <img src="{{ $project->thumbnail->full_file_path }}" alt="{{ $project->original_file_name }}" class="merchant-image">
                                 </div>
                                 <div class="merchant-body">
-                                    <p class="merchant-title">{{ $merchant->name }}</p>
+                                    <p class="merchant-title">{{ $project->english_title }}</p>
+                                    {{-- <p class="merchant-subtitle">{{ $project->chinese_title }}</p> --}}
+                                    <p class="merchant-subtitle">{{ $project->user->name }}</p>
                                     <p class="merchant-subtitle">
-                                        @forelse ($merchant->project_services as $service)<span class="badge badge-pill badge-info">{{ $service->name }}</span>
-                                        @empty
-                                        @endforelse
+                                        @foreach ($project->services as $service)
+                                        <span class="badge badge-pill badge-info">{{ $service->name }}</span>
+                                        @endforeach
                                     </p>
                                 </div>
                                 <div class="merchant-footer">
-                                    <span class="merchant-footer-left">{{ __('app.price_from') . ' ' . $merchant->min_project_price }}</span>
-                                    <span class="merchant-footer-right">{{ $merchant->location_with_city_state }}</span>
+                                    {{-- <span class="merchant-footer-left">{{ __('app.price_from') . ' '. $project->price_without_unit }}</span> --}}
+                                    <span class="merchant-footer-right">{{ $project->location }}</span>
                                 </div>
                             </a>
                         </div>
@@ -79,18 +82,19 @@
                 </div>
             </div>
         </div>
-
-        <div class="row">
-            <div class="col text-center">
-                <a href="{{ route('app.project.index') }}" class="btn btn-orange">{{ __('app.home_btn_more_service') }}</a>
-            </div>
-        </div>
-
     </div>
+
+    <div class="row">
+        <div class="col text-center">
+            <a href="{{ route('app.project.index') }}" class="btn btn-orange">{{ __('app.btn_view_more') }}</a>
+        </div>
+    </div>
+
+</div>
 </div>
 
 <div id="home-s3">
-    <img src="{{ asset('storage/assets/home/s3-left.png') }}" alt="s3_image" class="home-s3-left">
+    <img src="{{ asset('storage/assets/home/s3-left-update.jpg') }}" alt="s3_image" class="home-s3-left">
     <div class="home-s3-right">
         <p>{{ __('app.home_text_join_merchant') }}</p>
         <a href="{{ route('app.partner') }}" class="btn btn-orange">{{ __('app.home_btn_join_merchant') }}</a>
@@ -104,11 +108,16 @@
                 <h2 class="text-center">{{ __('app.home_subtitle_partner') }}</h2>
             </div>
             <div class="col-lg-8">
-                <p class="paragraph">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam</p>
+                <p class="paragraph">
+                    Rhinosite team will has a due diligence process to ensure that only reliable and quality
+                    contractors are able to be listed on our platform. Rhinosite will investigate thoroughly on
+                    those Contractors whom received poor ratings/ feedback. The Contractor will be
+                    terminated if the issue remains unsolved.
+                </p>
             </div>
             <div class="col-lg-10">
                 <div class="row justify-content-center">
-                    @forelse ($top_merchants as $merchant)
+                    @forelse ($merchants as $merchant)
                     <div class="col-6 col-md">
                         <img src="{{ $merchant->logo->full_file_path ?? $default_preview }}" alt="partner_image_1" class="home-s4-img">
                     </div>

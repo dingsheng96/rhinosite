@@ -41,7 +41,9 @@ class MerchantController extends Controller
      */
     public function create()
     {
-        //
+        $statuses = Status::instance()->activeStatus();
+
+        return view('merchant.create', compact('statuses'));
     }
 
     /**
@@ -50,9 +52,43 @@ class MerchantController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MerchantRequest $request)
     {
-        //
+        DB::beginTransaction();
+
+        $action     =   Permission::ACTION_UPDATE;
+        $module     =   strtolower(trans_choice('modules.merchant', 1));
+        $message    =   Message::instance()->format($action, $module);
+        $status     =   'fail';
+
+        try {
+
+            $merchant = MerchantFacade::setRequest($request)->storeData()->getModel();
+
+            DB::commit();
+
+            $status  = 'success';
+            $message = Message::instance()->format($action, $module, $status);
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($merchant)
+                ->withProperties($request->all())
+                ->log($message);
+
+            return redirect()->route('merchants.index')->withSuccess($message);
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn(new User())
+                ->withProperties($request->all())
+                ->log($e->getMessage());
+
+            return redirect()->back()->withErrors($message)->withInput();
+        }
     }
 
     /**

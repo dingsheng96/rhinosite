@@ -120,7 +120,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="address_1" class="col-form-label">{{ __('labels.address_1') }} <span class="text-red">*</span></label>
-                                <input type="text" name="address_1" id="address_1" class="form-control @error('address_1') is-invalid @enderror" value="{{ old('address_1') }}">
+                                <input type="text" name="address_1" id="address_1" class="form-control @error('address_1') is-invalid @enderror" value="{{ old('address_1', Auth::user()->address->address_1) }}">
                                 @error('address_1')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -134,7 +134,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="address_2" class="col-form-label">{{ __('labels.address_2') }}</label>
-                                <input type="text" name="address_2" id="address_2" class="form-control @error('address_2') is-invalid @enderror" value="{{ old('address_2') }}" placeholder="{{ __('labels.optional') }}">
+                                <input type="text" name="address_2" id="address_2" class="form-control @error('address_2') is-invalid @enderror" value="{{ old('address_2', Auth::user()->address->address_2) }}" placeholder="{{ __('labels.optional') }}">
                                 @error('address_2')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -148,10 +148,10 @@
                         <div class="col-md-6 col-12">
                             <div class="form-group">
                                 <label for="country" class="col-form-label">{{ trans_choice('labels.country', 1) }} <span class="text-red">*</span></label>
-                                <select name="country" id="country" class="form-control select2 @error('country') is-invalid @enderror country-state-filter">
+                                <select name="country" id="country" class="form-control @error('country') is-invalid @enderror country-state-filter">
                                     <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.country', 1))]) }} ---</option>
                                     @foreach ($countries as $country)
-                                    <option value="{{ $country->id }}" {{ old('country') == $country->id ? 'selected' : null }}>{{ $country->name }}</option>
+                                    <option value="{{ $country->id }}" {{ old('country') == $country->id || $country->set_default ? 'selected' : null }}>{{ $country->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('country')

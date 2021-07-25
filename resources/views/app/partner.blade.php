@@ -16,10 +16,13 @@
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col-md-6 px-0">
-                <img src="{{ asset('storage/assets/joinus/join-1.PNG') }}" alt="join_1_image" class="res-img">
+                <img src="{{ asset('storage/assets/joinus/join-1.jpg') }}" alt="join_1_image" class="res-img">
             </div>
             <div class="col-md-6 col-lg-5 mx-auto text-center">
-                <h2>Lorem ipsum dolor sit amet sed diam eirmod</h2>
+                <h2>
+                    With the advance technology in today’s world, listing with Rhinosite enables you to
+                    increase your exposure and presence online.
+                </h2>
                 <a href="{{ route('register', ['role' => 'merchant']) }}" class="btn btn-orange">{{ __('app.partner_btn_application') }}</a>
             </div>
         </div>
@@ -31,16 +34,16 @@
         <h2>Why Join Us?</h2>
         <div class="row">
             <div class="col-md-4">
-                <img src="{{ asset('storage/assets/joinus/join-2.PNG') }}" alt="join_2_image_1" class="res-img mb-md-3 px-3">
-                <p class="paragraph">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod</p>
+                <img src="{{ asset('storage/assets/joinus/join-2.jpg') }}" alt="join_2_image_1" class="res-img mb-md-3 px-3">
+                <p class="paragraph">1. Increase your exposure and presence online</p>
             </div>
             <div class="col-md-4">
-                <img src="{{ asset('storage/assets/joinus/join-2.PNG') }}" alt="join_2_image_1" class="res-img mb-md-3 px-3">
-                <p class="paragraph">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod</p>
+                <img src="{{ asset('storage/assets/joinus/join-3.jpg') }}" alt="join_2_image_1" class="res-img mb-md-3 px-3">
+                <p class="paragraph">2. Convenient & Time-Efficient </p>
             </div>
             <div class="col-md-4">
-                <img src="{{ asset('storage/assets/joinus/join-2.PNG') }}" alt="join_2_image_1" class="res-img mb-md-3 px-3">
-                <p class="paragraph">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod</p>
+                <img src="{{ asset('storage/assets/joinus/join-4.jpg') }}" alt="join_2_image_1" class="res-img mb-md-3 px-3">
+                <p class="paragraph">3. Build a Long-Term Relationship with your Users/ Grow your Business</p>
             </div>
         </div>
     </div>
@@ -51,20 +54,44 @@
         <h2>What is Required</h2>
         <div class="row">
             <div class="col-md-3">
-                <img src="{{ asset('storage/assets/home/partner1.png') }}" alt="join_light_bulb" class="join-icon">
-                <p class="paragraph">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod</p>
+                <img src="{{ asset('storage/assets/joinus/join-5.png') }}" alt="join_light_bulb" class="join-icon">
+                <p class="paragraph">1. Fill in an <a href="{{ route('register', ['role' => 'merchant']) }}">Electronic Application form</a></p>
             </div>
             <div class="col-md-3">
-                <img src="{{ asset('storage/assets/home/partner1.png') }}" alt="join_light_bulb" class="join-icon">
-                <p class="paragraph">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod</p>
+                <img src="{{ asset('storage/assets/joinus/join-6.png') }}" alt="join_light_bulb" class="join-icon">
+                <p class="paragraph">
+                    2. Our team will take approximately 5-7 working days to process your application. (This is
+                    a Rhinosite due-diligence process to ensure that our contractors are trustable and
+                    reliable for their potential customers)
+                </p>
             </div>
             <div class="col-md-3">
-                <img src="{{ asset('storage/assets/home/partner1.png') }}" alt="join_light_bulb" class="join-icon">
-                <p class="paragraph">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod</p>
+                <img src="{{ asset('storage/assets/joinus/join-7.png') }}" alt="join_light_bulb" class="join-icon">
+                <p class="paragraph">
+                    3. You’ll be receiving an email on logging into your admin dashboard and complete your
+                    purchase on the listing packages.
+                </p>
             </div>
             <div class="col-md-3">
-                <img src="{{ asset('storage/assets/home/partner1.png') }}" alt="join_light_bulb" class="join-icon">
-                <p class="paragraph">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod</p>
+                <img src="{{ asset('storage/assets/joinus/join-8.png') }}" alt="join_light_bulb" class="join-icon">
+                <p class="paragraph">
+                    4. You are all set! You can start to edit your profile and upload your projects and start
+                    receiving enquiries from your potential customers.
+                </p>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-12">
+                <p class="paragraph">
+                    * Note: You may also read up on our FAQ and Terms & Conditions incorporated herein to
+                    understand our operation better.
+                    <br>
+                    If in any circumstances that you are still in doubt, we do have a support team to further
+                    assist you with your queries.
+                    <br>
+                    Please drop us an email at info@rhinosite.com.my or call us
+                    at 016-303 1808.
+                </p>
             </div>
         </div>
     </div>
@@ -200,63 +227,81 @@
                 <div class="card-header" id="heading7">
                     <h5 class="mb-0">
                         <a class="btn collapsed" data-toggle="collapse" data-target="#collapse7" aria-expanded="false" aria-controls="collapse7">
-                            <span>7. What is Category Bumping? </span>
+                            <span>7. What is Listing Category? </span>
                             <i class="fa fa-chevron-down" aria-hidden="true"></i>
                         </a>
                     </h5>
                 </div>
                 <div id="collapse7" class="collapse" aria-labelledby="heading7" data-parent="#accordion">
                     <div class="card-body">
-                        The profile of the Contractor will be displayed on the first page and first row on Rhinosite, which lasts for seven (7) consecutive days for each ‘Category Bumping’ purchased.
+                        Our fellow contractors are listed according to their area of services/speciality. For example, flooring, painting, wiring, gate, alarm & security etc.
                         <br>
-                        Each ‘Category Bump’ is limited to a maximum of three (3) Contractors per week. Contractors may select the date for their profile to be bumped on priority basis.
+                        Your company details, past projects and other accreditations will also be displayed & available to create a transparent & time-efficient process for the end users.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="heading7">
+                    <h5 class="mb-0">
+                        <a class="btn collapsed" data-toggle="collapse" data-target="#collapse8" aria-expanded="false" aria-controls="collapse8">
+                            <span>8. What is Category Bumping? </span>
+                            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                        </a>
+                    </h5>
+                </div>
+                <div id="collapse8" class="collapse" aria-labelledby="heading7" data-parent="#accordion">
+                    <div class="card-body">
+                        Contractors are able to bump up their company's listing to the first top 3 listing in first page of the Listing Category.
+                        There are three (3) Category Bump slots available each week, so book an secure your slots in advance.
+                        <a href="{{ route('register', ['role' => 'merchant']) }}"> Click here</a>
                     </div>
                 </div>
             </div>
             <div class="card">
                 <div class="card-header" id="heading8">
                     <h5 class="mb-0">
-                        <a class="btn collapsed" data-toggle="collapse" data-target="#collapse8" aria-expanded="false" aria-controls="collapse8">
-                            <span>8. What is Category Highlight? </span>
+                        <a class="btn collapsed" data-toggle="collapse" data-target="#collapse9" aria-expanded="false" aria-controls="collapse9">
+                            <span>9. What is Category Highlight? </span>
                             <i class="fa fa-chevron-down" aria-hidden="true"></i>
                         </a>
                     </h5>
                 </div>
-                <div id="collapse8" class="collapse" aria-labelledby="heading8" data-parent="#accordion">
+                <div id="collapse9" class="collapse" aria-labelledby="heading8" data-parent="#accordion">
                     <div class="card-body">
-                        The profile of the Contractor will be displayed on the first page and highlighted on Rhinosite, which lasts for seven (7) consecutive days for each ‘Category Highlight’ purchased.
-                        <br>
-                        Each ‘Category Highlight’ is limited to a maximum of three (3) Contractors per week. Contractor may select the date for their profile to be highlighted on priority basis.
+                        In addition to the above, Category highlight allows contractors to move up their company listing onto the first page of the Listing Category.
+                        However, do keep in mind that these Category Highlights are arranged in random sequence (unlike the Category Bump). Simlarly, there are three (3) Category Highlights slots available each week,
+                        so book and secure your slots as well!
+                        <a href="{{ route('register', ['role' => 'merchant']) }}"> Click here</a>
                     </div>
                 </div>
             </div>
             <div class="card">
                 <div class="card-header" id="heading9">
                     <h5 class="mb-0">
-                        <a class="btn collapsed" data-toggle="collapse" data-target="#collapse9" aria-expanded="false" aria-controls="collapse9">
-                            <span>9. What is Banner Advertisement? </span>
+                        <a class="btn collapsed" data-toggle="collapse" data-target="#collapse10" aria-expanded="false" aria-controls="collapse10">
+                            <span>10. What is Banner Advertisement? </span>
                             <i class="fa fa-chevron-down" aria-hidden="true"></i>
                         </a>
                     </h5>
                 </div>
-                <div id="collapse9" class="collapse" aria-labelledby="heading9" data-parent="#accordion">
+                <div id="collapse10" class="collapse" aria-labelledby="heading9" data-parent="#accordion">
                     <div class="card-body">
-                        Contractors may advertise their company and services in the form of banner advertisement on Rhinosite, which lasts for seven (7) consecutive days for each ‘Banner Advertisement’ purchased.
-                        <br>
-                        Each ‘Banner Advertisement is limited to a maximum of eight (8) Contractors per week. Contractor may select the date for the said Banner Advertisement to be published on Rhinosite.
+                        Banner Advertisement allows Contractors to advertise their company and services on Rhinosite to increase their visibility.
+                        There are eight (8) slots available each week, so book and secure your slots as soon as possible!
+                        <a href="{{ route('register', ['role' => 'merchant']) }}"> Click here</a>
                     </div>
                 </div>
             </div>
             <div class="card">
                 <div class="card-header" id="heading10">
                     <h5 class="mb-0">
-                        <a class="btn collapsed" data-toggle="collapse" data-target="#collapse10" aria-expanded="false" aria-controls="collapse10">
-                            <span>10. How does Contractor subscribe or renew their subscription with Rhinosite? </span>
+                        <a class="btn collapsed" data-toggle="collapse" data-target="#collapse11" aria-expanded="false" aria-controls="collapse11">
+                            <span>11. How does Contractor subscribe or renew their subscription with Rhinosite? </span>
                             <i class="fa fa-chevron-down" aria-hidden="true"></i>
                         </a>
                     </h5>
                 </div>
-                <div id="collapse10" class="collapse" aria-labelledby="heading10" data-parent="#accordion">
+                <div id="collapse11" class="collapse" aria-labelledby="heading10" data-parent="#accordion">
                     <div class="card-body">
                         All fee for subscription and renewal can be made using various payment methods available, subject to the Terms & Conditions. The said subscription payment shall be auto debited monthly based on the chosen Subscription plan and shall be due and payable from the commencement
                         date of the Subscription Term.
@@ -266,13 +311,13 @@
             <div class="card">
                 <div class="card-header" id="heading11">
                     <h5 class="mb-0">
-                        <a class="btn collapsed" data-toggle="collapse" data-target="#collapse11" aria-expanded="false" aria-controls="collapse11">
-                            <span>11. Can a Contractor get their refund upon paying my subscription and Add-Ons? </span>
+                        <a class="btn collapsed" data-toggle="collapse" data-target="#collapse12" aria-expanded="false" aria-controls="collapse12">
+                            <span>12. Can a Contractor get their refund upon paying my subscription and Add-Ons? </span>
                             <i class="fa fa-chevron-down" aria-hidden="true"></i>
                         </a>
                     </h5>
                 </div>
-                <div id="collapse11" class="collapse" aria-labelledby="heading11" data-parent="#accordion">
+                <div id="collapse12" class="collapse" aria-labelledby="heading11" data-parent="#accordion">
                     <div class="card-body">
                         You may apply for a refund of the Subscription Fee and/or fee paid for the Add-Ons by writing to us in the event En Vivo fails to provide you with the Services or the Add-Ons in accordance with these Terms. Any amount to be refunded to the Contractor and manner of such refund
                         is subject to the approval and discretion of En Vivo.
@@ -282,13 +327,13 @@
             <div class="card">
                 <div class="card-header" id="heading12">
                     <h5 class="mb-0">
-                        <a class="btn collapsed" data-toggle="collapse" data-target="#collapse12" aria-expanded="false" aria-controls="collapse12">
-                            <span>12. What type of services do Rhinosite provide? </span>
+                        <a class="btn collapsed" data-toggle="collapse" data-target="#collapse13" aria-expanded="false" aria-controls="collapse13">
+                            <span>13. What type of services do Rhinosite provide? </span>
                             <i class="fa fa-chevron-down" aria-hidden="true"></i>
                         </a>
                     </h5>
                 </div>
-                <div id="collapse12" class="collapse" aria-labelledby="heading12" data-parent="#accordion">
+                <div id="collapse13" class="collapse" aria-labelledby="heading12" data-parent="#accordion">
                     <div class="card-body">
                         Rhinosite allows Contractors to list their services based on their areas of specialties up to <span class="text-danger">XX (to insert CIDB code if got)</span>. Contractors hereby expressly agrees, covenants and undertakes that it shall at all times, use their best endeavours
                         to prepare and complete all relevant building works required by the End users.
@@ -300,13 +345,13 @@
             <div class="card">
                 <div class="card-header" id="heading13">
                     <h5 class="mb-0">
-                        <a class="btn collapsed" data-toggle="collapse" data-target="#collapse13" aria-expanded="false" aria-controls="collapse13">
-                            <span>13. After my subscription has expired, how do the Contractor terminate their account? </span>
+                        <a class="btn collapsed" data-toggle="collapse" data-target="#collapse14" aria-expanded="false" aria-controls="collapse14">
+                            <span>14. After my subscription has expired, how do the Contractor terminate their account? </span>
                             <i class="fa fa-chevron-down" aria-hidden="true"></i>
                         </a>
                     </h5>
                 </div>
-                <div id="collapse13" class="collapse" aria-labelledby="heading13" data-parent="#accordion">
+                <div id="collapse14" class="collapse" aria-labelledby="heading13" data-parent="#accordion">
                     <div class="card-body">
                         The Contractors can always write to us if they wish to terminate their account when their subscription is nearing expiry. Upon termination, your content on Rhinosite will be removed from the platform.
                     </div>
@@ -315,13 +360,13 @@
             <div class="card">
                 <div class="card-header" id="heading14">
                     <h5 class="mb-0">
-                        <a class="btn collapsed" data-toggle="collapse" data-target="#collapse14" aria-expanded="false" aria-controls="collapse14">
-                            <span>14. What if a Contractor intend to terminate my account right after they have subscribed to a Subscription plan? </span>
+                        <a class="btn collapsed" data-toggle="collapse" data-target="#collapse15" aria-expanded="false" aria-controls="collapse15">
+                            <span>15. What if a Contractor intend to terminate my account right after they have subscribed to a Subscription plan? </span>
                             <i class="fa fa-chevron-down" aria-hidden="true"></i>
                         </a>
                     </h5>
                 </div>
-                <div id="collapse14" class="collapse" aria-labelledby="heading14" data-parent="#accordion">
+                <div id="collapse15" class="collapse" aria-labelledby="heading14" data-parent="#accordion">
                     <div class="card-body">
                         The Contractors can always write to us if they wish to terminate their account when their subscription is nearing expiry. Upon termination, your content on Rhinosite will be removed from the platform. However the Contractor shall pay to En Vivo the Subscription Fee for the
                         entire Subscription Term (which for the avoidance of doubt, includes the remaining months in the Subscription Term and payable in a lump sum.)
@@ -333,13 +378,13 @@
             <div class="card">
                 <div class="card-header" id="heading15">
                     <h5 class="mb-0">
-                        <a class="btn collapsed" data-toggle="collapse" data-target="#collapse15" aria-expanded="false" aria-controls="collapse15">
-                            <span>15. What can a Contractor post as content and what should not? </span>
+                        <a class="btn collapsed" data-toggle="collapse" data-target="#collapse16" aria-expanded="false" aria-controls="collapse16">
+                            <span>16. What can a Contractor post as content and what should not? </span>
                             <i class="fa fa-chevron-down" aria-hidden="true"></i>
                         </a>
                     </h5>
                 </div>
-                <div id="collapse15" class="collapse" aria-labelledby="heading15" data-parent="#accordion">
+                <div id="collapse16" class="collapse" aria-labelledby="heading15" data-parent="#accordion">
                     <div class="card-body">
                         You shall not post, display or disclose any materials which may infringe the Terms and/ or the law. Rhinosite may unilaterally and immediately terminate your use of the platform if you are found in breach of these Terms. For more information on content restriction, kindly
                         find more on <a href="tnc.html">Section 8 of the Terms of Service</a> for the Contractors.

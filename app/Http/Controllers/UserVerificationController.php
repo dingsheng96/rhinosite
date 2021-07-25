@@ -19,7 +19,7 @@ use App\Support\Facades\UserDetailFacade;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Requests\VerificationRequest;
 
-class VerificationController extends Controller
+class UserVerificationController extends Controller
 {
     public $statuses;
 

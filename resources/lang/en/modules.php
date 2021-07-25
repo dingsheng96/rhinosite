@@ -44,12 +44,12 @@ return [
 
     'app' => [
         'home' => 'Home',
-        'merchant' => 'Find a Merchant',
+        'merchant' => 'Explore Services',
         'about' => 'About Rhinosite',
-        'partner' => 'Join as Merchant',
+        'partner' => 'Join as Contractor',
         'contact' => 'Contact Us',
         'service' => 'Services',
-        'merchant_profile' => 'Merchant Profile',
+        'merchant_profile' => 'Contractor Profile',
         'term_policy' => 'Terms & Policies',
         'privacy_policy' => 'Privacy Policy',
         'register' => 'Register',

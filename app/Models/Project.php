@@ -81,6 +81,11 @@ class Project extends Model
         return $this->belongsToMany(Service::class, ProjectService::class, 'project_id', 'service_id', 'id', 'id');
     }
 
+    public function userComparisons()
+    {
+        return $this->morphToMany(User::class, 'comparable');
+    }
+
     // Scopes
     public function scopePublished($query)
     {

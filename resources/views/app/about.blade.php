@@ -83,7 +83,7 @@
                 </div>
             </div>
             <div class="col-lg-4 d-lg-block d-none">
-                <img src="{{ asset('storage/assets/about/about-2.PNG') }}" alt="services_2_image" class="res-img px-4">
+                <img src="{{ asset('storage/assets/about/about-3.jpg') }}" alt="services_2_image" class="res-img px-4">
             </div>
             <div class="col-lg-4 mx-auto">
                 <div class="row align-items-center mb-4">

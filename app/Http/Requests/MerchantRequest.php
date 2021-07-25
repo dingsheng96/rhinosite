@@ -6,8 +6,10 @@ use App\Models\City;
 use App\Helpers\Status;
 use App\Models\Country;
 use App\Models\Category;
+use App\Models\UserDetail;
 use App\Rules\PhoneFormat;
 use App\Models\CountryState;
+use App\Rules\PasswordFormat;
 use App\Rules\UniqueMerchant;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -38,6 +40,7 @@ class MerchantRequest extends FormRequest
             'name'              =>  ['required', 'min:3', 'max:255', new UniqueMerchant('name', $this->route('merchant'))],
             'phone'             =>  ['required', new PhoneFormat],
             'email'             =>  ['required', 'email', new UniqueMerchant('email', $this->route('merchant'))],
+            'reg_no'            =>  ['required', 'string', Rule::unique(UserDetail::class, 'reg_no')->ignore($this->route('merchant'), 'user_id')->whereNull('deleted_at')],
             'status'            =>  ['required', Rule::in(array_keys(Status::instance()->activeStatus()))],
             'website'           =>  ['nullable', 'url'],
             'facebook'          =>  ['nullable', 'url'],
@@ -60,7 +63,8 @@ class MerchantRequest extends FormRequest
                 'required',
                 Rule::exists(City::class, 'id')
                     ->where('country_state_id', $this->get('country_state'))
-            ]
+            ],
+            'password' => [Rule::requiredIf(empty($this->route('merchant'))), 'nullable', new PasswordFormat, 'confirmed']
         ];
     }
 
@@ -99,6 +103,7 @@ class MerchantRequest extends FormRequest
             'postcode'          =>  __('validation.attributes.postcode'),
             'country_state'     =>  __('validation.attributes.country_state'),
             'city'              =>  __('validation.attributes.city'),
+            'reg_no'            =>  __('validation.attributes.reg_no'),
         ];
     }
 }

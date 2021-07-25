@@ -65,6 +65,14 @@
                 <li class="nav-item">
                     <a href="{{ route('dashboard') }}" class="nav-button">{{ __('labels.return_dashboard') }}</a>
                 </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-button" onclick="event.preventDefault(); document.getElementById('logout-form').submit()">
+                        {{ __('labels.logout') }}
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                </li>
                 @endauth
 
                 @guest

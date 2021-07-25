@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Media;
 use App\Models\UserDetail;
 use App\Helpers\FileManager;
+use Illuminate\Support\Facades\Hash;
 
 class MerchantService extends BaseService
 {
@@ -32,11 +33,17 @@ class MerchantService extends BaseService
         $this->model->email     =  $this->request->get('email');
         $this->model->status    =  $this->request->get('status');
 
+        if ($this->request->has('password')) {
+            $this->model->password = Hash::make($this->request->get('password'));
+        }
+
         if ($this->model->isDirty()) {
             $this->model->save();
         }
 
         $this->setModel($this->model);
+
+        $this->model->syncRoles([Role::ROLE_MERCHANT]);
 
         return $this;
     }
@@ -46,9 +53,6 @@ class MerchantService extends BaseService
         $details = $this->model->userDetails()
             ->when($from_verification, function ($query) {
                 $query->pendingDetails();
-            })
-            ->when(!$from_verification, function ($query) {
-                $query->approvedDetails();
             })
             ->firstOr(function () {
                 return new UserDetail();
@@ -64,12 +68,10 @@ class MerchantService extends BaseService
 
         // new details
         if (!$details->exists) {
-            $details->status = UserDetail::STATUS_PENDING;
+            $details->status = UserDetail::STATUS_APPROVED;
         }
 
-        if ($details->isDirty()) {
-            $this->model->userDetails()->save($details);
-        }
+        $this->model->userDetails()->save($details);
 
         return $this;
     }

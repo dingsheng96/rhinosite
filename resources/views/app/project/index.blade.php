@@ -26,7 +26,7 @@
         <div class="d-flex px-3">
             <span>{{ __('app.top_search_services') }}</span>
             <ul>
-                @forelse ($top_services as $service)
+                @forelse ($services->take(6) as $service)
                 <li class="active">
                     <a class="text-muted" href="{{ route('app.project.index', ['q' => $service->name]) }}">
                         {{ Str::title($service->name) }}
@@ -43,15 +43,22 @@
     <div class="container">
         <div class="d-flex">
             <div class="sidebar mb-5">
+                @isset($services)
                 <ul class="service">
                     <li class="title">{{ __('app.project_sidebar_service') }}</li>
-                    @foreach ($services as $service)
-                    <li @if($loop->iteration > 5) {!! 'class="more d-none"' !!} @endif><a href="{{ route('app.project.index', ['q' => $service->name]) }}" class="text-muted">{{ $service->name }}</a></li>
+                    @foreach ($services->sortBy('name') as $service)
+                    <li @if($loop->iteration > 5) {!! 'class="more d-none"' !!} @endif>
+                        <a href="{{ route('app.project.index', ['q' => $service->name]) }}" class="text-muted">
+                            {{ $service->name_with_project_count }}
+                        </a>
+                    </li>
                     @endforeach
                     <li class="end">
                         <a href="#" class="txtorange btn-view-more" data-text-replace="{{ __('app.btn_view_less') }}">{{ __('app.btn_view_more') }}</a>
                     </li>
                 </ul>
+                @endisset
+
                 <form action="{{ route('app.project.index') }}" method="GET" role="form">
                     <ul class="range">
                         <li class="title">{{ __('app.project_sidebar_price_range') }}</li>
@@ -120,10 +127,17 @@
                         @else
                         <span class="h5">{{ trans_choice('app.project_search_items', 1, ['total' => $projects->total()]) }}</span>
                         @endif
-                        <button id="compare" name="compare" class="btn btn-orange ml-auto">{{ __('app.project_btn_compare') }}</button>
+
+                        {{-- @auth
+                        <button id="compare" name="compare" class="btn btn-orange ml-auto btn-collapse">
+                            {{ __('app.project_btn_compare') }}
+                        </button>
+                        @else
+                        <a role="button" href="{{ route('login') }}" class="btn btn-orange ml-auto">{{ __('app.project_btn_login_to_compare') }}</a>
+                        @endauth --}}
                     </div>
 
-                    <div class="row search-filter-result compare" style="display: none;">
+                    <div class="row search-filter-result compare collapse">
                         <div class="col-md-6 mb-3 mb-md-0">
                             <span>Choose 2 contractor to compare now</span>
                         </div>
@@ -132,6 +146,7 @@
                             <a href="compare.html" class="btn btn-black mx-0">View Result</a>
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="col-12">
                             <div class="row">
@@ -147,14 +162,25 @@
                                                 <img src="{{ asset('storage/adboost.png') }}" class="highlight-img">
                                                 @endif
                                                 <p class="merchant-title">{{ $project->english_title }}</p>
-                                                <p class="merchant-subtitle">{{ $project->chinese_title }}</p>
+                                                {{-- <p class="merchant-subtitle">{{ $project->chinese_title }}</p> --}}
+                                                <p class="merchant-subtitle">{{ $project->user->name }}</p>
+                                                <p class="merchant-subtitle">
+                                                    @foreach ($project->services as $service)
+                                                    <span class="badge badge-pill badge-info">{{ $service->name }}</span>
+                                                    @endforeach
+                                                </p>
                                             </div>
                                             <div class="merchant-footer">
-                                                <span class="merchant-footer-left">{{ __('app.price_from') . ' ' .$project->price_without_unit }}</span>
+                                                {{-- <span class="merchant-footer-left">{{ __('app.price_from') . ' ' .$project->price_without_unit }}</span> --}}
                                                 <span class="merchant-footer-right">{{ $project->location }}</span>
                                             </div>
                                         </a>
-                                        <button class="btn-compare d-none">Add to Compare</button>
+                                        <button class="btn btn-compare collapse">{{ __('app.project_btn_add_compare') }}</button>
+                                        <form action="{{ route('app.comparisons.store') }}" method="POST" role="form" class="d-none" name="compare_form">
+                                            @csrf
+                                            <input type="hidden" name="target" value="{{ strtolower(class_basename(get_class($project))) }}">
+                                            <input type="hidden" name="target_id" value="{{ $project->id }}">
+                                        </form>
                                     </div>
                                 </div>
                                 @empty
@@ -175,7 +201,7 @@
 </div>
 
 <!-- mobile filter button -->
-<button class="btn filter-btn d-block d-xl-none">Filter <br><i class="fa fa-filter" aria-hidden="true"></i></button>
+<button class="btn filter-btn d-block d-xl-none">{{ __('app.project_mobile_sidebar_toggle_title') }} <br><i class="fa fa-filter" aria-hidden="true"></i></button>
 <!-- mobile filter  -->
 <div class="filter-overlay">
     <div class="container">

@@ -26,7 +26,7 @@
         <div class="d-flex px-3">
             <span>{{ __('app.top_search_services') }}</span>
             <ul>
-                @forelse ($top_services as $service)
+                @forelse ($services as $service)
                 <li class="active">
                     <a href="{{ route('app.project.index', ['q' => $service->name]) }}" class="text-muted">{{ $service->name }}</a>
                 </li>
@@ -91,11 +91,11 @@
             </div>
             <div class="profile-line"></div>
             <div class="col-lg-8">
-                <div class="d-flex mb-3 align-items-center"><i class="fa fa-phone profile-icon" aria-hidden="true"></i><span class="ml-3">{{ $merchant->formatted_phone_number }}</span></div>
-                <div class="d-flex mb-3 align-items-center"><i class="fa fa-map-marker profile-icon location" aria-hidden="true"></i><span class="ml-3">{{ $merchant->full_address }}</span></div>
+                <div class="d-flex mb-3 align-items-center"><i class="fas fa-phone profile-icon" aria-hidden="true"></i><span class="ml-3">{{ $merchant->formatted_phone_number }}</span></div>
+                <div class="d-flex mb-3 align-items-center"><i class="fas fa-map-marker-alt profile-icon location" aria-hidden="true"></i><span class="ml-3">{{ $merchant->full_address }}</span></div>
             </div>
             <div class="col-lg-4">
-                <div class="d-flex mb-3 align-items-center text-break"><i class="fa fa-envelope profile-icon mail" aria-hidden="true"></i><span class="ml-3">{{ $merchant->email }}</span></div>
+                <div class="d-flex mb-3 align-items-center text-break"><i class="fas fa-envelope profile-icon mail" aria-hidden="true"></i><span class="ml-3">{{ $merchant->email }}</span></div>
             </div>
         </div>
     </div>
@@ -133,17 +133,22 @@
             @forelse ($projects as $project)
             <div class="col-md-6 col-lg-4 d-inline-flex">
                 <div class="merchant-card">
-                    <a href="{{ route('projects.show', ['project' => $project->id]) }}">
+                    <a href="{{ route('app.project.show', ['project' => $project->id]) }}">
                         <div class="merchant-image-container">
                             <img src="{{ $project->thumbnail->full_file_path }}" alt="{{ $project->user->name }}" class="merchant-image">
                         </div>
                         <div class="merchant-body">
-                            <p class="merchant-title">{{ Str::limit($project->english_title, 20, '...') }}</p>
-                            <p class="merchant-title">{{ Str::limit($project->chinese_title, 20, '...') }}</p>
+                            <p class="merchant-title">{{ $project->english_title }}</p>
+                            {{-- <p class="merchant-title">{{ $project->chinese_title }}</p> --}}
                             <p class="merchant-subtitle">{{ $project->user->name }}</p>
+                            <p class="merchant-subtitle">
+                                @foreach ($project->services as $service)
+                                <span class="badge badge-pill badge-info">{{ $service->name }}</span>
+                                @endforeach
+                            </p>
                         </div>
                         <div class="merchant-footer">
-                            <span class="merchant-footer-left">{{ $project->price_with_unit }}</span>
+                            {{-- <span class="merchant-footer-left">{{ __('app.price_from') . ' ' . $project->price_without_unit }}</span> --}}
                             <span class="merchant-footer-right">{{ $project->location }}</span>
                         </div>
                     </a>

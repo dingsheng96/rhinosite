@@ -190,7 +190,7 @@ body.enduser h4 {
     height: 100%;
     -webkit-filter: brightness(50%);
     filter: brightness(50%);
-    background-image: url("../storage/assets/home/header2.png");
+    background-image: url("../storage/assets/home/footer-2.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
@@ -2919,7 +2919,7 @@ tr {
         height: 430px;
         bottom: 0;
         top: unset;
-        background-image: url("../storage/assets/footer.png");
+        background-image: url("../storage/assets/footer-2.jpg");
     }
 
     .footer-left-content {

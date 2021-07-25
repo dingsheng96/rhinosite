@@ -43,7 +43,7 @@ $(function () {
 
     });
 
-    $('.compare').slick({
+    $('.slider.compare').slick({
         dots: false,
         infinite: false,
         speed: 300,

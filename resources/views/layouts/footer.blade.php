@@ -51,11 +51,11 @@
                         </div>
 
                         <div class="footer-right-content">
-                            @if (isset($top_services))
+                            @if (isset($services))
                             <ul>
                                 <li class="header">{{ __('app.top_services') }}</li>
-                                @forelse ($top_services as $service)
-                                <li><a href="{{ route('app.project.index', ['q' => $service->name]) }}">{{ Str::title($service->name) }}</a></li>
+                                @forelse ($services->take(6) as $service)
+                                <li><a href="{{ route('app.project.index', ['q' => $service->name]) }}">{{ $service->name }}</a></li>
                                 @empty
                                 @endforelse
                             </ul>
@@ -101,11 +101,11 @@
                         </div>
 
                         <div class="footer-right-content">
-                            @if (isset($top_services))
+                            @if (isset($services))
                             <ul>
                                 <li class="header">{{ __('app.top_services') }}</li>
-                                @forelse ($top_services as $service)
-                                <li><a href="{{ route('app.project.index', ['q' => $service->name]) }}">{{ Str::title($service->name) }}</a></li>
+                                @forelse ($services->take(6) as $service)
+                                <li><a href="{{ route('app.project.index', ['q' => $service->name]) }}">{{ $service->name }}</a></li>
                                 @empty
                                 @endforelse
                             </ul>

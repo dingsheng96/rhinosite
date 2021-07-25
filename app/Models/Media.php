@@ -9,12 +9,14 @@ class Media extends Model
 {
     use SoftDeletes;
 
-    const TYPE_THUMBNAIL    =   'thumbnail';
-    const TYPE_PROFILE      =   'profile';
-    const TYPE_IMAGE        =   'image';
-    const TYPE_SSM          =   'ssm';
-    const TYPE_LOGO         =   'logo';
-    const DEFAULT_IMAGE     =   'nopreview.png';
+    const TYPE_THUMBNAIL        =   'thumbnail';
+    const TYPE_PROFILE          =   'profile';
+    const TYPE_IMAGE            =   'image';
+    const TYPE_SSM              =   'ssm';
+    const TYPE_LOGO             =   'logo';
+    const DEFAULT_IMAGE         =   'nopreview.png';
+
+    const MAX_PROJECT_IMAGES    =   10;
 
     protected $table = 'media';
 

@@ -28,7 +28,7 @@ return [
     'boosts_ads_preference_text' => 'You may choose to boost this project',
     'select_prefer_boosts_ads_days' => 'Select your preferred day to boost ads.',
     'password_format' => 'Minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter and 1 number',
-    'upload_image_rules' => '{1} <li>Only :extensions file type allowed.</li><li>Total file size must be not more than :maxsize.</li><li>Recommend file dimension: :dimension px.</li>|{2,} <li>Only total of :maxfiles files allowed.</li><li>Only :extensions file type allowed</li><li>Total file size must be not more than :maxsize.</li><li>Recommend file dimension: :dimension px.</li>',
+    'upload_image_rules' => '{1} <li>Only :extensions file type allowed.</li><li>Total file size must be not more than :maxsize.</li><li>Maximum file dimension: :dimension px.</li>|{2,} <li>Only total of :maxfiles files allowed.</li><li>Only :extensions file type allowed</li><li>Total file size must be not more than :maxsize.</li><li>Maximum file dimension: :dimension px.</li>',
     'start_session' => 'Sign in to start your session',
     'no_records' => 'No records found.',
     'errors_found' => 'Errors found!',
@@ -36,4 +36,5 @@ return [
     'no_subscription' => 'You have not subscribe any plan yet.',
     'register_success' => 'Registration Success! Please verify your email before login.',
     'contact_support' => 'Errors found! Please contact customer support.',
+    'compare_list_reached_limit' => 'Compare list has reached the maximum limit.'
 ];

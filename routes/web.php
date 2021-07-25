@@ -20,11 +20,11 @@ Route::get('/', function () {
 
 Auth::routes(['verify' => true]);
 
-Route::group(['middleware' => ['auth:web', 'verified']], function () {
+Route::group(['middleware' => ['auth', 'verified']], function () {
 
-    Route::get('verifications/notify', 'VerificationController@notify')->name('verifications.notify');
+    Route::get('verifications/notify', 'UserVerificationController@notify')->name('verifications.notify');
 
-    Route::resource('verifications', 'VerificationController');
+    Route::resource('verifications', 'UserVerificationController');
 
     Route::group(['middleware' => ['verified_merchant']], function () {
 
@@ -88,13 +88,19 @@ Route::group(['as' => 'app.'], function () {
     Route::get('about', 'AppController@about')->name('about');
     Route::get('partner', 'AppController@partner')->name('partner');
     Route::get('contact', 'AppController@contact')->name('contact');
-    Route::get('merchant', 'AppController@project')->name('project.index');
-    Route::get('merchant/{project}/details', 'AppController@showProject')->name('project.show');
-    Route::get('merchant/{merchant}/profile', 'AppController@showMerchant')->name('merchant.show');
     Route::get('terms', 'AppController@termsPolicies')->name('term');
     Route::get('privacy', 'AppController@privacyPolicies')->name('privacy');
 
-    Route::post('filter', 'AppController@filterProject')->name('project.filter');
+    Route::get('merchant', 'AppController@project')->name('project.index');
+    Route::get('merchant/{project}/details', 'AppController@showProject')->name('project.show');
+    Route::get('merchant/{merchant}/profile', 'AppController@showMerchant')->name('merchant.show');
+
+    Route::group(['middleware' => ['auth:web', 'verified']], function () {
+
+        Route::get('comparisons', 'AppController@compareList')->name('comparisons.index');
+        Route::post('comparisons', 'AppController@addToCompareList')->name('comparisons.store');
+        Route::post('rating', 'AppController@rateUser')->name('ratings.store');
+    });
 });
 
 Route::group(['prefix' => 'data', 'as' => 'data.'], function () {

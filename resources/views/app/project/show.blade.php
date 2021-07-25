@@ -26,7 +26,7 @@
         <div class="d-flex px-3">
             <span>{{ __('app.top_search_services') }}</span>
             <ul>
-                @forelse ($top_services as $service)
+                @forelse ($services as $service)
                 <li class="active">
                     <a href="{{ route('app.project.index', ['q' => $service->name]) }}" class="text-muted">{{ $service->name }}</a>
                 </li>
@@ -78,47 +78,48 @@
                     <div class="row">
                         <div class="col-sm-7">
                             <p class="services-title">{{ $project->english_title }}</p>
-
                         </div>
                         <div class="col-sm-5 text-sm-right">
                             <a role="button" class="btn"><i class="far fa-heart txtorange services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_add_wishlist') }}"></i></a>
-                            <a role="button" href="tel:{{ $project->user->phone }}" class="btn" target="_blank"><i class="fas fa-phone txtgreen services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_call') }}"></i></a>
+                            <a role="button" href="https://api.whatsapp.com/send?phone={{ $project->user->phone }}" class="btn" target="_blank"><i class="fab fa-whatsapp txtgreen services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_call') }}"></i></a>
                         </div>
                         <div class="col-12">
-                            <p class="services-subtitle">{{ $project->chinese_title }}</p>
+                            {{-- <p class="services-subtitle">{{ $project->chinese_title }}</p> --}}
+
+                            <p class="services-subtitle">{{ $project->user->name }}</p>
                         </div>
                     </div>
-                    <div class="row align-items-center mb-3 mb-sm-2">
+                    {{-- <div class="row align-items-center mb-3 mb-sm-2">
                         <div class="col-sm-6">
                             <p>{{ __('app.project_details_price') }}</p>
-                        </div>
-                        <div class="col-sm-6 text-sm-right txtblk">
-                            <p>
-                                <span class="services-from">{{ __('app.price_from') }}</span>
-                                <span class="services-price pl-2">{{ $project->price_without_unit }}</span>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="row align-items-center mb-3 mb-sm-2">
-                        <div class="col-sm-6">
-                            <p>{{ __('app.project_details_location') }}</p>
-                        </div>
-                        <div class="col-sm-6 txtblk text-sm-right">
-                            <p class="font-medium">{{ $project->location }}</p>
-                        </div>
-                    </div>
-                    <div class="row align-items-center mb-3 mb-sm-2">
-                        <div class="col-sm-6">
-                            <p>{{ __('app.project_details_merchant') }}</p>
-                        </div>
-                        <div class="col-sm-6 txtblk text-sm-right">
-                            <p>{{ $project->user->formatted_phone_number }}</p>
-                        </div>
-                    </div>
+                </div>
+                <div class="col-sm-6 text-sm-right txtblk">
+                    <p>
+                        <span class="services-from">{{ __('app.price_from') }}</span>
+                        <span class="services-price pl-2">{{ $project->price_without_unit }}</span>
+                    </p>
+                </div>
+            </div> --}}
+            <div class="row align-items-center mb-3 mb-sm-2">
+                <div class="col-sm-6">
+                    <p>{{ __('app.project_details_location') }}</p>
+                </div>
+                <div class="col-sm-6 txtblk text-sm-right">
+                    <p class="font-medium">{{ $project->location }}</p>
+                </div>
+            </div>
+            <div class="row align-items-center mb-3 mb-sm-2">
+                <div class="col-sm-6">
+                    <p>{{ __('app.project_details_merchant') }}</p>
+                </div>
+                <div class="col-sm-6 txtblk text-sm-right">
+                    <p>{{ $project->user->formatted_phone_number }}</p>
                 </div>
             </div>
         </div>
     </div>
+</div>
+</div>
 </div>
 
 <div id="services-2">
@@ -127,7 +128,7 @@
         <div class="row">
             <div class="col-12">
                 <p class="paragraph">
-                    {!! $project->description !!}
+                    {!! nl2br($project->description) !!}
                 </p>
             </div>
         </div>
@@ -141,7 +142,7 @@
             @foreach ($project_services as $service)
             <div class="col-md-6 col-lg-3">
                 <div class="provided-services">
-                    <i class="fa fa-check" aria-hidden="true"></i><span class="ml-3">{{ $service->name }}</span>
+                    <i class="fa fa-check" aria-hidden="true"></i><span class="ml-3 text-break">{{ $service->name }}</span>
                 </div>
             </div>
             @endforeach
@@ -180,10 +181,16 @@
                         </div>
                         <div class="merchant-body">
                             <p class="merchant-title">{{ $project->english_title }}</p>
-                            <p class="merchant-subtitle">{{ $project->chinese_title }}</p>
+                            {{-- <p class="merchant-subtitle">{{ $project->chinese_title }}</p> --}}
+                            <p class="merchant-subtitle">{{ $project->user->name }}</p>
+                            <p class="merchant-subtitle">
+                                @foreach ($project->services as $service)
+                                <span class="badge badge-pill badge-info">{{ $service->name }}</span>
+                                @endforeach
+                            </p>
                         </div>
                         <div class="merchant-footer">
-                            <span class="merchant-footer-left">From {{ $project->price_without_unit }}</span>
+                            {{-- <span class="merchant-footer-left">From {{ $project->price_without_unit }}</span> --}}
                             <span class="merchant-footer-right">{{ $project->location }}</span>
                         </div>
                     </a>
