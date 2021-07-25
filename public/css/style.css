@@ -222,12 +222,12 @@ body.enduser h4 {
     padding-left: 20px;
 }
 
-.footer-right-content > ul > li {
+.footer-right-content>ul>li {
     list-style: none;
     padding-bottom: 1rem;
 }
 
-.footer-right-content > ul > li.header {
+.footer-right-content>ul>li.header {
     font-weight: 700;
     text-decoration: underline;
 }
@@ -237,7 +237,7 @@ body.enduser h4 {
     padding: 1rem 0;
 }
 
-.footer-bottom ul > li,
+.footer-bottom ul>li,
 .footer-bottom ul {
     font-size: 14px;
     display: inline-block;
@@ -246,11 +246,11 @@ body.enduser h4 {
     padding-left: 0;
 }
 
-.footer-bottom ul > li:not(:first-child) {
+.footer-bottom ul>li:not(:first-child) {
     margin-left: 10px;
 }
 
-.footer-bottom ul > li > a {
+.footer-bottom ul>li>a {
     color: #000;
 }
 
@@ -1036,7 +1036,7 @@ ul.pagination li:last-child {
     color: #000;
 }
 
-.breadcrumb-item + .breadcrumb-item::before {
+.breadcrumb-item+.breadcrumb-item::before {
     color: #000000;
     content: ">";
 }
@@ -1052,8 +1052,9 @@ ul.pagination li:last-child {
     width: auto;
     height: 500px;
     margin-bottom: 50px;
-    object-fit: cover;
+    object-fit: scale-down;
     object-position: center bottom;
+    background-color: #FFF;
 }
 
 .services-icon {
@@ -1089,9 +1090,6 @@ ul.pagination li:last-child {
 .services-subtitle {
     font-size: 18px;
     color: #9f9f9f;
-    padding-bottom: 1.2rem;
-    margin-bottom: 1.2rem;
-    border-bottom: 1px #9f9f9f solid;
 }
 
 .services-details {
@@ -1289,12 +1287,12 @@ ul.pagination li:last-child {
     width: 100%;
 }
 
-.rate:not(:checked) > input {
+.rate:not(:checked)>input {
     position: absolute;
     top: -9999px;
 }
 
-.rate:not(:checked) > label {
+.rate:not(:checked)>label {
     float: right;
     width: 1em;
     overflow: hidden;
@@ -1304,24 +1302,24 @@ ul.pagination li:last-child {
     color: #ccc;
 }
 
-.rate:not(:checked) > label:before {
+.rate:not(:checked)>label:before {
     content: "★ ";
 }
 
-.rate > input:checked ~ label {
+.rate>input:checked~label {
     color: #ffbc05;
 }
 
-.rate:not(:checked) > label:hover,
-.rate:not(:checked) > label:hover ~ label {
+.rate:not(:checked)>label:hover,
+.rate:not(:checked)>label:hover~label {
     color: #ffbc05;
 }
 
-.rate > input:checked + label:hover,
-.rate > input:checked + label:hover ~ label,
-.rate > input:checked ~ label:hover,
-.rate > input:checked ~ label:hover ~ label,
-.rate > label:hover ~ input:checked ~ label {
+.rate>input:checked+label:hover,
+.rate>input:checked+label:hover~label,
+.rate>input:checked~label:hover,
+.rate>input:checked~label:hover~label,
+.rate>label:hover~input:checked~label {
     color: #ffbc05;
 }
 
@@ -1412,9 +1410,7 @@ ul.pagination li:last-child {
 }
 
 .join-bar {
-    background: transparent
-        linear-gradient(90deg, #ff8c08 0%, #f9cb7d 31%, #fdca00 100%) 0% 0%
-        no-repeat padding-box;
+    background: transparent linear-gradient(90deg, #ff8c08 0%, #f9cb7d 31%, #fdca00 100%) 0% 0% no-repeat padding-box;
     padding-top: 30px;
     width: 95%;
     margin-left: auto;
@@ -1575,11 +1571,11 @@ textarea {
     margin-bottom: 3rem;
 }
 
-#privacy-1 ol > li > ol {
+#privacy-1 ol>li>ol {
     margin-top: 1.5rem;
 }
 
-#privacy-1 ol > li > ol > li {
+#privacy-1 ol>li>ol>li {
     margin-bottom: 1.5rem;
 }
 
@@ -1598,11 +1594,11 @@ textarea {
     margin-bottom: 3rem;
 }
 
-#terms-1 ol > li > ol {
+#terms-1 ol>li>ol {
     margin-top: 1.5rem;
 }
 
-#terms-1 ol > li > ol > li {
+#terms-1 ol>li>ol>li {
     margin-bottom: 1.5rem;
 }
 
@@ -1807,6 +1803,7 @@ tr {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 1200px) and (max-width: 1439px) {
+
     /* navbar and footer */
     body.enduser {
         padding-top: 80px;
@@ -1822,7 +1819,7 @@ tr {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li {
+    .footer-bottom ul>li {
         font-size: 0.8rem;
     }
 
@@ -1996,6 +1993,7 @@ tr {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
+
     /* additional */
     body.enduser h1 {
         font-size: 35px;
@@ -2024,7 +2022,7 @@ tr {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li {
+    .footer-bottom ul>li {
         font-size: 0.8rem;
     }
 
@@ -2144,6 +2142,7 @@ tr {
 ----------------------------------------------------- */
 
 @media only screen and (max-width: 1199px) {
+
     #user .sidebar,
     #user {
         background-color: #fff;
@@ -2233,7 +2232,7 @@ tr {
         display: none;
     }
 
-    #merchant-category ul > li,
+    #merchant-category ul>li,
     #merchant-category span {
         padding-left: 0;
         margin-bottom: 20px;
@@ -2346,7 +2345,7 @@ tr {
         font-size: 25px;
     }
 
-    .services-3-price > span {
+    .services-3-price>span {
         display: block;
     }
 
@@ -2406,6 +2405,7 @@ tr {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 767px) and (max-width: 991px) {
+
     /* additional */
     body.enduser h1 {
         font-size: 35px;
@@ -2447,7 +2447,7 @@ tr {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li {
+    .footer-bottom ul>li {
         font-size: 0.7rem;
     }
 
@@ -2512,6 +2512,7 @@ tr {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 600px) and (max-width: 766px) {
+
     /* additional */
     body.enduser h1 {
         font-size: 32px;
@@ -2550,7 +2551,7 @@ tr {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li {
+    .footer-bottom ul>li {
         font-size: 0.7rem;
     }
 
@@ -2581,7 +2582,7 @@ tr {
         margin-bottom: 70px;
     }
 
-    .footer-right-content > ul {
+    .footer-right-content>ul {
         padding-left: 0;
     }
 
@@ -2827,8 +2828,6 @@ tr {
         width: auto;
         height: 300px;
         margin-bottom: 25px;
-        object-fit: cover;
-        object-position: center bottom;
     }
 
     .profile-name {
@@ -2841,6 +2840,7 @@ tr {
 ----------------------------------------------------- */
 
 @media only screen and (max-width: 599px) {
+
     /* additional */
     body.enduser h1 {
         font-size: 28px;
@@ -2897,7 +2897,7 @@ tr {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li,
+    .footer-bottom ul>li,
     .footer-background {
         font-size: 0.7rem;
     }
@@ -2930,7 +2930,7 @@ tr {
         margin-bottom: 70px;
     }
 
-    .footer-right-content > ul {
+    .footer-right-content>ul {
         padding-left: 0;
     }
 
@@ -2946,7 +2946,7 @@ tr {
         margin-bottom: 2rem !important;
     }
 
-    .footer-right-content > ul > li {
+    .footer-right-content>ul>li {
         list-style: none;
         padding-bottom: 0.7rem;
     }
@@ -3305,8 +3305,6 @@ tr {
         width: auto;
         height: 300px;
         margin-bottom: 25px;
-        object-fit: cover;
-        object-position: center bottom;
     }
 
     #profile-1 .col-lg-5,

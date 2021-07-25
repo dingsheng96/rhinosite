@@ -75,18 +75,14 @@
                             <a href="{{ route('app.merchant.show', ['merchant' => $project->user->id]) }}" class="btn btn-black">{{ __('app.project_btn_view_merchant') }}</a>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row border-bottom mb-4 pb-4">
                         <div class="col-sm-7">
                             <p class="services-title">{{ $project->english_title }}</p>
+                            <p class="services-subtitle mb-md-0">{{ $project->user->name }}</p>
                         </div>
                         <div class="col-sm-5 text-sm-right">
                             <a role="button" class="btn"><i class="far fa-heart txtorange services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_add_wishlist') }}"></i></a>
                             <a role="button" href="https://api.whatsapp.com/send?phone={{ $project->user->phone }}" class="btn" target="_blank"><i class="fab fa-whatsapp txtgreen services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_call') }}"></i></a>
-                        </div>
-                        <div class="col-12">
-                            {{-- <p class="services-subtitle">{{ $project->chinese_title }}</p> --}}
-
-                            <p class="services-subtitle">{{ $project->user->name }}</p>
                         </div>
                     </div>
                     {{-- <div class="row align-items-center mb-3 mb-sm-2">
