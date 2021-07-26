@@ -18,12 +18,12 @@ class CheckVerifiedMerchant
     {
         $user = Auth::user();
 
-        if (!$user->is_merchant || $user->userDetails()->approvedDetails()->exists()) { // user is not merchant or merchant user has verified details
+        if (!$user->is_merchant || $user->userDetail()->approvedDetails()->exists()) { // user is not merchant or merchant user has verified details
 
             return $next($request);
         }
 
-        if ($user->userDetails()->pendingDetails()->exists()) {
+        if ($user->userDetail()->pendingDetails()->exists()) {
 
             return redirect()->route('verifications.notify');
         }

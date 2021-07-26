@@ -5,9 +5,11 @@ namespace App\Support\Services;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Media;
+use App\Models\Country;
 use App\Models\UserDetail;
 use App\Helpers\FileManager;
 use Illuminate\Support\Facades\Hash;
+use App\Support\Services\BaseService;
 
 class MerchantService extends BaseService
 {
@@ -31,7 +33,7 @@ class MerchantService extends BaseService
         $this->model->name      =  $this->request->get('name');
         $this->model->phone     =  $this->request->get('phone');
         $this->model->email     =  $this->request->get('email');
-        $this->model->status    =  $this->request->get('status');
+        $this->model->status    =  $this->request->get('status', User::STATUS_ACTIVE);
 
         if ($this->request->has('password')) {
             $this->model->password = Hash::make($this->request->get('password'));
@@ -50,9 +52,15 @@ class MerchantService extends BaseService
 
     public function storeDetails(bool $from_verification = false)
     {
-        $details = $this->model->userDetails()
+        $details = $this->model->userDetail()
             ->when($from_verification, function ($query) {
-                $query->pendingDetails();
+                $query->pendingDetails()
+                    ->orWhere(function ($query) {
+                        $query->rejectedDetails();
+                    });
+            })
+            ->when(!$from_verification, function ($query) {
+                $query->approvedDetails();
             })
             ->firstOr(function () {
                 return new UserDetail();
@@ -65,13 +73,11 @@ class MerchantService extends BaseService
         $details->pic_name          =   $this->request->get('pic_name');
         $details->pic_phone         =   $this->request->get('pic_phone');
         $details->pic_email         =   $this->request->get('pic_email');
+        $details->status            =   (!$details->exists || !$from_verification) // if new details or from verification page, set approved, else set pending
+            ? UserDetail::STATUS_APPROVED
+            : UserDetail::STATUS_PENDING;
 
-        // new details
-        if (!$details->exists) {
-            $details->status = UserDetail::STATUS_APPROVED;
-        }
-
-        $this->model->userDetails()->save($details);
+        $this->model->userDetail()->save($details);
 
         return $this;
     }

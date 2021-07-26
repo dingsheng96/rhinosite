@@ -26,7 +26,6 @@ class Project extends Model
     const STORE_PATH        =   '/projects';
     const STATUS_PUBLISHED  =   'published';
     const STATUS_DRAFT      =   'draft';
-    const MAX_IMAGES        =   5;
 
     protected $table = 'projects';
 

@@ -11,6 +11,7 @@ return [
     'add' => 'Add :module',
 
     'login' => 'Login',
+    'verify_email' => 'Verify Email',
 
     'general' => 'General',
     'dashboard' => 'Dashboard',

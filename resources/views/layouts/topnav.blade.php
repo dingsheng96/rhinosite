@@ -54,7 +54,7 @@
                 <li class="nav-item {{ Nav::hasSegment('', 1, 'active') }}">
                     <a href="{{ route('app.home') }}" class="nav-link">{{ __('modules.app.home') }}</a>
                 </li>
-                <li class="nav-item {{ Nav::hasSegment('merchant', 1, 'active') }}">
+                <li class="nav-item {{ Nav::hasSegment('project', 1, 'active') }}">
                     <a href="{{ route('app.project.index') }}" class="nav-link">{{ __('modules.app.merchant') }}</a>
                 </li>
                 <li class="nav-item {{ Nav::hasSegment('about', 1, 'active') }}">
@@ -62,9 +62,12 @@
                 </li>
 
                 @auth
+
+                @if (Auth::user()->hasVerifiedEmail() && Auth::user()->has_approved_details)
                 <li class="nav-item">
                     <a href="{{ route('dashboard') }}" class="nav-button">{{ __('labels.return_dashboard') }}</a>
                 </li>
+                @else
                 <li class="nav-item">
                     <a href="#" class="nav-button" onclick="event.preventDefault(); document.getElementById('logout-form').submit()">
                         {{ __('labels.logout') }}
@@ -73,6 +76,8 @@
                         @csrf
                     </form>
                 </li>
+                @endif
+
                 @endauth
 
                 @guest

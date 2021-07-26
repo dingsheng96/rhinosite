@@ -36,4 +36,10 @@ class Country extends Model
     {
         return $this->where('set_default', true);
     }
+
+    // Attributes
+    public function getDialCodeAttribute($value)
+    {
+        return explode(',', $value);
+    }
 }

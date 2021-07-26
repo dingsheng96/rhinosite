@@ -25,13 +25,6 @@ class UserDetailService extends BaseService
             $this->model->validated_at  =   now();
             $this->model->save();
 
-            if ($status == UserDetail::STATUS_APPROVED) {
-
-                $role = Role::where('name', Role::ROLE_MERCHANT)->firstOrFail();
-
-                $this->model->user->syncRoles($role);
-            }
-
             // send email notification
             $this->model->user->notify(new AccountVerified($this->model));
         }

@@ -45,7 +45,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        $max_files  =   Project::MAX_IMAGES;
+        $max_files  =   Media::MAX_IMAGE_PROJECT;
 
         $services   =   Service::orderBy('name', 'asc')->get();
 
@@ -135,7 +135,7 @@ class ProjectController extends Controller
     {
         $thumbnail          =   $project->media()->thumbnail()->first();
         $media              =   $project->media()->image()->get();
-        $max_files          =   Project::MAX_IMAGES - $media->count();
+        $max_files          =   Media::MAX_IMAGE_PROJECT - $media->count();
         $default_price      =   $project->prices()->defaultPrice()->first();
         $statuses           =   Status::instance()->projectStatus();
         $services           =   Service::orderBy('name', 'asc')->get();

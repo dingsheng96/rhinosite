@@ -40,16 +40,8 @@ class MerchantRequest extends FormRequest
             'name'              =>  ['required', 'min:3', 'max:255', new UniqueMerchant('name', $this->route('merchant'))],
             'phone'             =>  ['required', new PhoneFormat],
             'email'             =>  ['required', 'email', new UniqueMerchant('email', $this->route('merchant'))],
-            'reg_no'            =>  ['required', 'string', Rule::unique(UserDetail::class, 'reg_no')->ignore($this->route('merchant'), 'user_id')->whereNull('deleted_at')],
-            'status'            =>  ['required', Rule::in(array_keys(Status::instance()->activeStatus()))],
-            'website'           =>  ['nullable', 'url'],
-            'facebook'          =>  ['nullable', 'url'],
-            'category'          =>  ['nullable', 'exists:' . Category::class . ',id'],
-            'business_since'    =>  ['required', 'date_format:Y-m-d'],
-            'logo'              =>  [Rule::requiredIf(empty($this->route('merchant'))), 'nullable', 'image', 'max:2000', 'mimes:jpg,jpeg,png', 'dimensions:max_height=1024,max_width=1024'],
-            'pic_name'          =>  ['required'],
-            'pic_phone'         =>  ['required', new PhoneFormat],
-            'pic_email'         =>  ['required', 'email'],
+            'password'          =>  [Rule::requiredIf(empty($this->route('merchant'))), 'nullable', new PasswordFormat, 'confirmed'],
+
             'address_1'         =>  ['required', 'min:3', 'max:255'],
             'address_2'         =>  ['nullable'],
             'country'           =>  ['required', 'exists:' . Country::class . ',id'],
@@ -64,7 +56,17 @@ class MerchantRequest extends FormRequest
                 Rule::exists(City::class, 'id')
                     ->where('country_state_id', $this->get('country_state'))
             ],
-            'password' => [Rule::requiredIf(empty($this->route('merchant'))), 'nullable', new PasswordFormat, 'confirmed']
+
+            'reg_no'            =>  ['required', Rule::unique(UserDetail::class, 'reg_no')->ignore($this->route('merchant')->id, 'user_id')->whereNull('deleted_at')],
+            'status'            =>  ['required', Rule::in(array_keys(Status::instance()->activeStatus()))],
+            'website'           =>  ['nullable', 'url'],
+            'facebook'          =>  ['nullable', 'url'],
+            'business_since'    =>  ['required', 'date_format:Y-m-d'],
+            'logo'              =>  [Rule::requiredIf(empty($this->route('merchant'))), 'nullable', 'image', 'max:2000', 'mimes:jpg,jpeg,png', 'dimensions:max_height=1024,max_width=1024'],
+            'pic_name'          =>  ['required'],
+            'pic_phone'         =>  ['required', new PhoneFormat],
+            'pic_email'         =>  ['required', 'email'],
+
         ];
     }
 

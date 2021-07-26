@@ -31,7 +31,7 @@
 
                     @if (Session::has('success'))
                     <div class="alert alert-success" role="alert">
-                        {{ Session::get('success') }}
+                        <small>{!! Session::get('success') !!}</small>
                     </div>
                     @endif
 
@@ -60,7 +60,7 @@
 
                         <p class="login-text text-right mb-4"><u><a href="#" class="txtgrey">{{ __('app.login_btn_forgot_password') }}</a></u></p>
 
-                        <button type="submit" class="btn btn-black w-100 ml-0 mb-3">{{ __('labels.sign_in') }}</button>
+                        <button type="submit" class="btn btn-orange w-100 ml-0 mb-3">{{ __('labels.sign_in') }}</button>
                     </form>
 
                     <div class="tab-content">

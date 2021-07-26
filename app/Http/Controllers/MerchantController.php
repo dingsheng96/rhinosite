@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Helpers\Status;
 use App\Helpers\Message;
+use App\Helpers\Response;
 use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -99,7 +100,7 @@ class MerchantController extends Controller
      */
     public function show(User $merchant)
     {
-        $user_details = $merchant->userDetails()
+        $user_details = $merchant->userDetail()
             ->approvedDetails()
             ->with(['media'])
             ->first();
@@ -120,7 +121,7 @@ class MerchantController extends Controller
      */
     public function edit(User $merchant)
     {
-        $user_details = $merchant->userDetails()
+        $user_details = $merchant->userDetail()
             ->approvedDetails()
             ->with(['media'])
             ->first();
@@ -190,8 +191,41 @@ class MerchantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $merchant)
     {
-        //
+        $action     =   Permission::ACTION_DELETE;
+        $module     =   strtolower(trans_choice('modules.merchant', 1));
+        $status     =   'fail';
+        $message    =   Message::instance()->format($action, $module);
+
+        try {
+
+            $merchant->delete();
+
+            $message = Message::instance()->format($action, $module, 'success');
+            $status = 'success';
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($merchant)
+                ->log($message);
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($merchant)
+                ->log($e->getMessage());
+        }
+
+        return Response::instance()
+            ->withStatusCode('modules.merchant', 'actions.' . $action . $status)
+            ->withStatus($status)
+            ->withMessage($message, true)
+            ->withData([
+                'redirect_to' => route('merchants.index')
+            ])
+            ->sendJson();
     }
 }

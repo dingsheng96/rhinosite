@@ -15,6 +15,7 @@ use App\Models\Wishlist;
 use App\Models\UserDetail;
 use App\Models\UserAdsQuota;
 use App\Models\UserSubscription;
+use App\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\DB;
 use App\Models\UserAdsQuotaHistory;
 use Spatie\Permission\Traits\HasRoles;
@@ -48,9 +49,9 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     // Relationships
-    public function userDetails()
+    public function userDetail()
     {
-        return $this->hasMany(UserDetail::class, 'user_id', 'id');
+        return $this->hasOne(UserDetail::class, 'user_id', 'id');
     }
 
     public function address()
@@ -171,10 +172,24 @@ class User extends Authenticatable implements MustVerifyEmail
             ->merchant()
             ->groupBy($tbl_users . '.id', $tbl_users . '.name', $tbl_users . '.status')
             ->having('ratings', '>', 0)
-            ->orderBy('ratings', 'desc');
+            ->orderByDesc('ratings');
     }
 
     // Attributes
+    public function setPhoneAttribute($value)
+    {
+        $value = preg_replace('/\+\-/', '', $value);
+
+        $country = Country::defaultCountry()->first();
+
+        if (!in_array(substr($value, 0, 2), $country->dial_code)) {
+
+            $value = $country->dial_code[0] . ltrim($value, '0');
+        }
+
+        $this->attributes['phone'] = $value;
+    }
+
     public function getFullAddressAttribute()
     {
         if ($this->address) {
@@ -235,11 +250,6 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getIsMemberAttribute()
     {
         return $this->role_name == Role::ROLE_MEMBER;
-    }
-
-    public function getUserCategoryAttribute()
-    {
-        return $this->categories()->first();
     }
 
     public function getCartItemsCountAttribute()
@@ -320,5 +330,38 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return $this->address->city->name . ', ' . $this->address->countryState->name;
+    }
+
+    public function getHasApprovedDetailsAttribute()
+    {
+        if ($this->userDetail()->approvedDetails()->exists()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getHasPendingDetailsAttribute()
+    {
+        if ($this->userDetail()->pendingDetails()->exists()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getProfileStatusLabelAttribute()
+    {
+        if ($this->has_approved_details) {
+            return '<span class="badge badge-primary badge-pill px-3">' . __('labels.verified') . '</span>';
+        }
+
+        return '<span class="badge badge-danger badge-pill px-3">' . __('labels.unverified') . '</span>';
+    }
+
+    // Functions
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail);
     }
 }

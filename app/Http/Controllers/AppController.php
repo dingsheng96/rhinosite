@@ -2,21 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\City;
 use App\Models\User;
-use App\Models\Rating;
 use App\Models\Project;
-use App\Models\Service;
 use App\Helpers\Message;
 use App\Helpers\Response;
-use App\Models\AdsBooster;
 use App\Models\Permission;
 use App\Models\CountryState;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\View\Composers\TopRecordsComposer;
 
 class AppController extends Controller
 {
@@ -71,7 +66,7 @@ class AppController extends Controller
             });
 
         $projects = Project::with([
-            'user.ratedBy', 'translations', 'address', 'unit', 'services',
+            'translations', 'address', 'unit', 'services', 'user.ratedBy',
             'prices' => function ($query) {
                 $query->defaultPrice();
             },
@@ -81,7 +76,9 @@ class AppController extends Controller
             'adsBoosters' => function ($query) {
                 $query->boosting();
             }
-        ])->published()->sortByCategoryBump()
+        ])->whereHas('user', function ($query) {
+            $query->merchant()->active();
+        })->published()->sortByCategoryBump()
             ->searchable($request->get('q'))->filterable($request)
             ->paginate(12, ['*'], 'page', $request->get('page', 1));
 
@@ -109,6 +106,9 @@ class AppController extends Controller
             ->where('user_id', '!=', $project->user_id)
             ->whereHas('services', function ($query) use ($project_services) {
                 $query->whereIn('id', $project_services->pluck('id')->toArray());
+            })
+            ->whereHas('user', function ($query) {
+                $query->merchant()->active();
             })->inRandomOrder()->take(3)->get();
 
         return view('app.project.show', compact('project', 'similar_projects', 'project_services'));
@@ -118,7 +118,7 @@ class AppController extends Controller
     {
         $merchant = $merchant->load([
             'projects.services',
-            'userDetails' => function ($query) {
+            'userDetail' => function ($query) {
                 $query->approvedDetails();
             }
         ]);

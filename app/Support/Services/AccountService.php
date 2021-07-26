@@ -49,7 +49,7 @@ class AccountService extends BaseService
 
     public function storeDetails()
     {
-        $details = $this->model->userDetails()
+        $details = $this->model->userDetail()
             ->approvedDetails()
             ->first();
 
@@ -61,7 +61,7 @@ class AccountService extends BaseService
         $details->pic_email             =   $this->request->get('pic_email');
 
         if ($details->isDirty()) {
-            $this->model->userDetails()->save($details);
+            $this->model->userDetail()->save($details);
         }
 
         return $this;

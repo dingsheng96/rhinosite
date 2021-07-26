@@ -32,7 +32,12 @@ class VerificationRequest extends FormRequest
      */
     public function rules()
     {
+        $user = Auth::user();
+
         return [
+            'name'              =>  ['required', 'string', 'max:255'],
+            'phone'             =>  ['required', 'string', new PhoneFormat],
+            'email'             =>  ['required', 'email', Rule::unique(User::class, 'email')->ignore($user->id, 'id')->whereNull('deleted_at')],
             'business_since'    =>  ['required', 'date_format:Y-m-d'],
             'website'           =>  ['nullable', 'url'],
             'facebook'          =>  ['nullable', 'url'],

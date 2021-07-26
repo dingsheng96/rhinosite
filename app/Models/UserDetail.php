@@ -68,6 +68,20 @@ class UserDetail extends Model
     }
 
     // Attributes
+    public function setPicPhoneAttribute($value)
+    {
+        $value = preg_replace('/[^0-9]/', '', $value);
+
+        $country = Country::defaultCountry()->first();
+
+        if (!in_array(substr($value, 0, 2), $country->dial_code)) {
+
+            $value = $country->dial_code[0] . ltrim($value, '0');
+        }
+
+        $this->attributes['pic_phone'] = $value;
+    }
+
     public function getStatusLabelAttribute()
     {
         $label = Status::instance()->statusLabel($this->status);

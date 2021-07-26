@@ -15,8 +15,7 @@ class Media extends Model
     const TYPE_SSM              =   'ssm';
     const TYPE_LOGO             =   'logo';
     const DEFAULT_IMAGE         =   'nopreview.png';
-
-    const MAX_PROJECT_IMAGES    =   10;
+    const MAX_IMAGE_PROJECT     =   10;
 
     protected $table = 'media';
 

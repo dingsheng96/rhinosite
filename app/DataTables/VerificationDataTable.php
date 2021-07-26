@@ -2,6 +2,7 @@
 
 namespace App\DataTables;
 
+use App\Models\User;
 use App\Models\UserDetail;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
@@ -25,7 +26,7 @@ class VerificationDataTable extends DataTable
             ->addColumn('action', function ($data) {
 
                 return view('components.action', [
-                    'no_action' => $this->no_action ?: null,
+                    'no_action' =>  !$data->userDetail,
                     'view' => [
                         'permission' => 'merchant.create',
                         'route' => route('verifications.show', ['verification' => $data->id])
@@ -36,40 +37,25 @@ class VerificationDataTable extends DataTable
                     ]
                 ])->render();
             })
-            ->addColumn('name', function ($data) {
-                return $data->user->name;
-            })
-            ->addColumn('email', function ($data) {
-                return $data->user->email;
-            })
-            ->addColumn('phone', function ($data) {
-                return $data->user->phone;
-            })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
-            ->editColumn('status', function ($data) {
-                return '<span>' . $data->status_label . '</span>';
+            ->addColumn('profile', function ($data) {
+                return $data->userDetail->status_label ?? '<span class="badge badge-info badge-pill px-3">' . __('labels.not_submit') . '</span>';
             })
-            ->filterColumn('status', function ($query, $keyword) {
-                $query->where('status', strtolower($keyword));
-            })
-            ->filterColumn('name', function ($query, $keyword) {
-                $query->whereHas('user', function ($query) use ($keyword) {
-                    $query->where('name', 'like', "%{$keyword}%");
+            ->filterColumn('profile', function ($query, $keyword) {
+
+                $keyword = strtolower($keyword);
+
+                $query->when($keyword == 'not submit', function ($query) {
+                    $query->doesntHave('userDetail');
+                })->when($keyword != 'not submit', function ($query) use ($keyword) {
+                    $query->whereHas('userDetail', function ($query) use ($keyword) {
+                        $query->where('status', $keyword);
+                    });
                 });
             })
-            ->filterColumn('email', function ($query, $keyword) {
-                $query->whereHas('user', function ($query) use ($keyword) {
-                    $query->where('email', 'like', "%{$keyword}%");
-                });
-            })
-            ->filterColumn('phone', function ($query, $keyword) {
-                $query->whereHas('user', function ($query) use ($keyword) {
-                    $query->where('phone', 'like', "%{$keyword}%");
-                });
-            })
-            ->rawColumns(['action', 'status']);
+            ->rawColumns(['action', 'profile']);
     }
 
     /**
@@ -78,11 +64,18 @@ class VerificationDataTable extends DataTable
      * @param \App\Models\UserDetail $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(UserDetail $model)
+    public function query(User $model)
     {
-        return $model->with(['user'])
-            ->pendingDetails()
-            ->newQuery();
+        // Get merchants with not submitted user details, pending or rejected details
+
+        return $model->with(['userDetail'])->merchant()
+            ->doesntHave('userDetail')
+            ->orWhereHas('userDetail', function ($query) {
+                $query->pendingDetails()
+                    ->orWhere(function ($query) {
+                        $query->rejectedDetails();
+                    });
+            })->newQuery();
     }
 
     /**
@@ -115,7 +108,7 @@ class VerificationDataTable extends DataTable
             Column::make('name')->title(__('labels.name'))->width('25%'),
             Column::make('email')->title(__('labels.email'))->width('20%'),
             Column::make('phone')->title(__('labels.contact_no'))->width('15%'),
-            Column::make('status')->title(__('labels.status'))->width('10%'),
+            Column::make('profile')->title(__('labels.profile'))->width('10%'),
             Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
             Column::computed('action', __('labels.action'))->width('10%')
                 ->exportable(false)

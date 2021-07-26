@@ -2,8 +2,8 @@
 
 namespace App\Http\View\Composers;
 
+use App\Models\User;
 use Illuminate\View\View;
-use App\Models\UserDetail;
 
 class VerificationComposer
 {
@@ -26,6 +26,14 @@ class VerificationComposer
      */
     public function compose(View $view)
     {
-        $view->with('verifications_count', UserDetail::pendingDetails()->count() ?? 0);
+        $view->with(
+            'verifications_count',
+            User::doesntHave('userDetail')
+                ->with('userDetail')
+                ->orWhereHas('userDetail', function ($query) {
+                    $query->pendingDetails()
+                        ->rejectedDetails();
+                })->count()
+        );
     }
 }

@@ -23,7 +23,7 @@ Auth::routes(['verify' => true]);
 Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::get('verifications/notify', 'UserVerificationController@notify')->name('verifications.notify');
-
+    Route::get('verifications/resubmit', 'UserVerificationController@resubmit')->name('verifications.resubmit');
     Route::resource('verifications', 'UserVerificationController');
 
     Route::group(['middleware' => ['verified_merchant']], function () {
@@ -91,9 +91,9 @@ Route::group(['as' => 'app.'], function () {
     Route::get('terms', 'AppController@termsPolicies')->name('term');
     Route::get('privacy', 'AppController@privacyPolicies')->name('privacy');
 
-    Route::get('projects', 'AppController@project')->name('project.index');
-    Route::get('projects/{project}/details', 'AppController@showProject')->name('project.show');
-    Route::get('merchants/{merchant}/profile', 'AppController@showMerchant')->name('merchant.show');
+    Route::get('project', 'AppController@project')->name('project.index');
+    Route::get('project/{project}/details', 'AppController@showProject')->name('project.show');
+    Route::get('project/{merchant}/profile', 'AppController@showMerchant')->name('merchant.show');
 
     Route::group(['middleware' => ['auth:web', 'verified']], function () {
         Route::get('comparisons', 'AppController@compareList')->name('comparisons.index');

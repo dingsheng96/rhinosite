@@ -30,6 +30,10 @@ return [
     'expired' => 'Expired',
     'boosting' => 'Boosting',
     'incoming' => 'In Coming',
+    'completed' => 'Completed',
+    'not_submit' => 'Not Submit',
+    'verified' => 'Verified',
+    'unverified' => 'Unverified',
 
     'copyright' => '&copy ' . config('app.name') . ' ' . date('Y'),
     'terms_policy' => 'Terms & Policies',
@@ -180,9 +184,8 @@ return [
     'payment_status' => '{0} Payment Failed|{1} Payment Success',
     'return_dashboard' => 'Return Dashboard',
     'ssm_cert' => 'SSM Certificate',
-    'verify_in_progress' => 'Verify In Progress',
     'year_of_experience' => 'Year of Experience',
     'thumbnail' => 'Thumbnail',
     'reg_no' => 'Registration No.',
-    'amount' => 'Amount'
+    'amount' => 'Amount',
 ];

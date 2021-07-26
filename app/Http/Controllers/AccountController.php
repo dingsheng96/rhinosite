@@ -22,7 +22,7 @@ class AccountController extends Controller
     {
         $user = Auth::user();
 
-        $user_details = $user->userDetails()->approvedDetails()->first();
+        $user_details = $user->userDetail()->approvedDetails()->first();
 
         return view('account.' . Auth::user()->folder_name, compact('user', 'user_details'));
     }

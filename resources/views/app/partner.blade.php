@@ -49,73 +49,85 @@
     </div>
 </div>
 
-<div id="join-3">
+{{-- <div id="join-3">
     <div class="container">
         <h2>What is Required</h2>
         <div class="row">
             <div class="col-md-3">
                 <img src="{{ asset('storage/assets/joinus/join-5.png') }}" alt="join_light_bulb" class="join-icon">
-                <p class="paragraph">1. Fill in an <a href="{{ route('register', ['role' => 'merchant']) }}">Electronic Application form</a></p>
-            </div>
-            <div class="col-md-3">
-                <img src="{{ asset('storage/assets/joinus/join-6.png') }}" alt="join_light_bulb" class="join-icon">
-                <p class="paragraph">
-                    2. Our team will take approximately 5-7 working days to process your application. (This is
-                    a Rhinosite due-diligence process to ensure that our contractors are trustable and
-                    reliable for their potential customers)
-                </p>
-            </div>
-            <div class="col-md-3">
-                <img src="{{ asset('storage/assets/joinus/join-7.png') }}" alt="join_light_bulb" class="join-icon">
-                <p class="paragraph">
-                    3. You’ll be receiving an email on logging into your admin dashboard and complete your
-                    purchase on the listing packages.
-                </p>
-            </div>
-            <div class="col-md-3">
-                <img src="{{ asset('storage/assets/joinus/join-8.png') }}" alt="join_light_bulb" class="join-icon">
-                <p class="paragraph">
-                    4. You are all set! You can start to edit your profile and upload your projects and start
-                    receiving enquiries from your potential customers.
-                </p>
-            </div>
-        </div>
-        <div class="row mt-5">
-            <div class="col-12">
-                <p class="paragraph">
-                    * Note: You may also read up on our FAQ and Terms & Conditions incorporated herein to
-                    understand our operation better.
-                    <br>
-                    If in any circumstances that you are still in doubt, we do have a support team to further
-                    assist you with your queries.
-                    <br>
-                    Please drop us an email at info@rhinosite.com.my or call us
-                    at 016-303 1808.
-                </p>
-            </div>
-        </div>
+<p class="paragraph">1. Fill in an <a href="{{ route('register', ['role' => 'merchant']) }}">Electronic Application form</a></p>
+</div>
+<div class="col-md-3">
+    <img src="{{ asset('storage/assets/joinus/join-6.png') }}" alt="join_light_bulb" class="join-icon">
+    <p class="paragraph">
+        2. Our team will take approximately 5-7 working days to process your application. (This is
+        a Rhinosite due-diligence process to ensure that our contractors are trustable and
+        reliable for their potential customers)
+    </p>
+</div>
+<div class="col-md-3">
+    <img src="{{ asset('storage/assets/joinus/join-7.png') }}" alt="join_light_bulb" class="join-icon">
+    <p class="paragraph">
+        3. You’ll be receiving an email on logging into your admin dashboard and complete your
+        purchase on the listing packages.
+    </p>
+</div>
+<div class="col-md-3">
+    <img src="{{ asset('storage/assets/joinus/join-8.png') }}" alt="join_light_bulb" class="join-icon">
+    <p class="paragraph">
+        4. You are all set! You can start to edit your profile and upload your projects and start
+        receiving enquiries from your potential customers.
+    </p>
+</div>
+</div>
+<div class="row mt-5">
+    <div class="col-12">
+        <p class="paragraph">
+            * Note: You may also read up on our FAQ and Terms & Conditions incorporated herein to
+            understand our operation better.
+            <br>
+            If in any circumstances that you are still in doubt, we do have a support team to further
+            assist you with your queries.
+            <br>
+            Please drop us an email at info@rhinosite.com.my or call us
+            at 016-303 1808.
+        </p>
     </div>
 </div>
+</div>
+</div> --}}
 
 <div id="join-4">
     <div class="container">
-        <h2>Steps to Register / Sign-Up</h2>
+        <h2>Contractors Application Process Overview</h2>
         <div class="join-bar"></div>
         <div class="row text-xl-center text-left">
             <div class="col-12 col-xl">
-                <p class="paragraph">1. If you are new to Rhinosite, you may be thinking “How does Rhinosite work?” and “Where do I sign up?”. </p>
+                <p class="paragraph">
+                    1. Fill in an <a href="{{ route('register', ['role' => 'merchant']) }}">Electronic Application Form</a> and verify your email address.
+                </p>
             </div>
             <div class="col-12 col-xl">
-                <p class="paragraph">2. Well, once you have decided to join our platform, there is an application form here for you to fill in your details and our team will take approximately 5-7 working days to process your application. </p>
+                <p class="paragraph">
+                    2. Log in to your dashboard, complete your profile by filling in mandatory fields and upload all required documents to avoid any issues/delay in your applications.
+                    (This is a Rhinosite due-diligence process to ensure that our contractors are trustable and reliable for their potential customers)
+                </p>
             </div>
             <div class="col-12 col-xl">
-                <p class="paragraph">3. This is a Rhinosite due-diligence process to ensure that our contractors are trustable and reliable for their potential customers.</p>
+                <p class="paragraph">
+                    3. Our team will take approximately 5-7 working days to process your application and once your application is approved, you can log into your contractor’s dashboard to proceed to subscription payment.
+                </p>
             </div>
             <div class="col-12 col-xl">
-                <p class="paragraph">4. You may also read up on our <a href="#join-5">FAQ</a> and <a href="tnc.html" target="blank">Terms & Conditions</a> incorporated herein to understand our operation better. </p>
+                <p class="paragraph">
+                    4. You are all set! You can now create projects and start receiving enquiries from your potential customers.
+                    You may also read up on our <a href="#join-5">FAQ</a> and <a href="{{ route('app.term') }}" target="blank">Terms & Conditions</a> incorporated herein to understand our operation better.
+                </p>
             </div>
             <div class="col-12 col-xl">
-                <p class="paragraph">5. If in any circumstances that you are still in doubt, we do have a support team to further assist you with your queries. Please drop us an email at info@rhinosite.com.my or call us at 016-303 1808. </p>
+                <p class="paragraph">
+                    5. If in any circumstances that you are still in doubt, we do have a support team to further assist you with your queries. Please drop us an email at info@rhinosite.com.my or call us at 016-303 1808.
+                </p>
             </div>
         </div>
     </div>

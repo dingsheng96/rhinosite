@@ -10,6 +10,8 @@
 
 @else
 
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
 <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('slick/slick-theme.css') }}" />
 <link rel="stylesheet" type="text/css" href="{{ asset('slick/slick.css') }}" />

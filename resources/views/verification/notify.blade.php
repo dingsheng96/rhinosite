@@ -2,26 +2,49 @@
 
 @section('content')
 
-<div class="container">
-    <div class="row">
-        <div class="col-12">
+<div class="d-flex justify-content-center align-items-center three-quarter-height">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card card-body">
+                    @if ($user->userDetail->status == 'pending')
 
-            <div class="card card-body">
-                <img src="{{ asset('storage/verification.png') }}" alt="" class="card-img-top img-size-64 img-fluid mx-auto">
-
-                <div class="row py-3">
-                    <div class="col-12 text-center">
-                        <h3>{{ __('labels.verify_in_progress') }}...</h3>
-
-                        <h5 class="text-muted">
-                            Thank you for submitting your company profile. Our admin will go through the details. <br> You may start posting once your account is being verified.
-                        </h5>
+                    <img src="{{ asset('storage/verification.png') }}" alt="" class="card-img-top img-fluid mx-auto" style="height: auto; width: 100px;">
+                    <div class="row pt-4 pb-3">
+                        <div class="col-12 text-center">
+                            <h3>{{ __('app.verify_in_progress_title') }}...</h3>
+                            <br>
+                            <div class="row justify-content-center">
+                                <p class="col-md-10">{!! __('app.verify_in_progress_message') !!}</p>
+                            </div>
+                        </div>
                     </div>
+
+                    @elseif($user->userDetail->status == 'rejected')
+
+                    <img src="{{ asset('storage/error.png') }}" alt="" class="card-img-top img-fluid mx-auto" style="height: auto; width: 100px;">
+                    <div class="row pt-4 pb-3">
+                        <div class="col-12 text-center">
+                            <h3>{{ __('app.verify_rejected_title') }}</h3>
+                            <br>
+                            <div class="row justify-content-center">
+                                <p class="col-md-10">{!! __('app.verify_rejected_message') !!}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer bg-transparent d-flex justify-content-center">
+                        <a href="{{ route('verifications.resubmit') }}" role="button" class="btn btn-dark btn-lg">
+                            {{ strtoupper(__('app.verify_rejected_btn_update')) }}
+                        </a>
+                    </div>
+
+                    @endif
                 </div>
             </div>
         </div>
     </div>
-
 </div>
+
 
 @endsection

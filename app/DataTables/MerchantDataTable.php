@@ -43,12 +43,29 @@ class MerchantDataTable extends DataTable
                 return $data->created_at->toDateTimeString();
             })
             ->editColumn('status', function ($data) {
-                return '<span>' . $data->status_label . '</span>';
+                return  $data->status_label . '<br>' . $data->profile_status_label;
             })
             ->filterColumn('status', function ($query, $keyword) {
-                $query->where('status', strtolower($keyword));
+                $keyword = strtolower($keyword);
+                $query->where('status', $keyword)
+                    ->orWhere(function ($query) use ($keyword) {
+                        $query->when($keyword == 'verified', function ($query) {
+                            $query->whereHas('userDetail', function ($query) {
+                                $query->approvedDetails();
+                            });
+                        })->when($keyword == 'unverified', function ($query) {
+                            $query->doesntHave('userDetail')
+                                ->orWhereHas('userDetail', function ($query) {
+                                    $query->where(function ($query) {
+                                        $query->pendingDetails();
+                                    })->orWhere(function ($query) {
+                                        $query->rejectedDetails();
+                                    });
+                                });
+                        });
+                    });
             })
-            ->rawColumns(['action', 'status']);
+            ->rawColumns(['action', 'status', 'profile']);
     }
 
     /**
@@ -59,7 +76,13 @@ class MerchantDataTable extends DataTable
      */
     public function query(User $model)
     {
-        return $model->merchant()->newQuery();
+        // Get merchant with approved completed user details
+
+        return $model->with(['userDetail'])->merchant()
+            ->whereHas('userDetail', function ($query) {
+                $query->approvedDetails();
+            })
+            ->newQuery();
     }
 
     /**

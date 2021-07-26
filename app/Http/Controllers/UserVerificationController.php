@@ -46,12 +46,19 @@ class UserVerificationController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->userDetails()->pendingDetails()->exists()) {
+        $user = Auth::user();
+
+        if ($user->userDetail()->approvedDetails()->exists()) {
+
+            return redirect()->route('dashboard');
+        }
+
+        if ($user->userDetail()->pendingDetails()->exists()) {
 
             return redirect()->route('verifications.notify');
         }
 
-        return view('verification.create');
+        return view('verification.create', compact('user'));
     }
 
     /**
@@ -77,6 +84,7 @@ class UserVerificationController extends Controller
 
             $verification = MerchantFacade::setModel($user)
                 ->setRequest($request)
+                ->storeProfile()
                 ->storeDetails(true)
                 ->storeSsmCert()
                 ->storeAddress()
@@ -114,20 +122,17 @@ class UserVerificationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(UserDetail $verification)
+    public function show(User $verification)
     {
-        $documents = Media::ssm()
-            ->whereHasMorph(
-                'sourceable',
-                User::class,
-                function (Builder $query) use ($verification) {
-                    $query->where('id', $verification->user_id);
-                }
-            )
-            ->orderBy('created_at', 'asc')
-            ->get();
+        $verification->load([
+            'media' => function ($query) {
+                $query->ssm();
+            },
+            'userDetail',
+            'address'
+        ]);
 
-        return view('verification.show', compact('verification', 'documents'));
+        return view('verification.show', compact('verification'));
     }
 
     /**
@@ -136,21 +141,19 @@ class UserVerificationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(UserDetail $verification)
+    public function edit(User $verification)
     {
         $statuses = $this->statuses;
-        $documents = Media::ssm()
-            ->whereHasMorph(
-                'sourceable',
-                User::class,
-                function (Builder $query) use ($verification) {
-                    $query->where('id', $verification->user_id);
-                }
-            )
-            ->orderBy('created_at', 'asc')
-            ->get();
 
-        return view('verification.edit', compact('verification', 'statuses', 'documents'));
+        $verification->load([
+            'media' => function ($query) {
+                $query->ssm();
+            },
+            'userDetail',
+            'address'
+        ]);
+
+        return view('verification.edit', compact('verification', 'statuses'));
     }
 
     /**
@@ -160,7 +163,7 @@ class UserVerificationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, UserDetail $verification)
+    public function update(Request $request, User $verification)
     {
         $request->validate([
             'status' => [
@@ -176,10 +179,11 @@ class UserVerificationController extends Controller
         $message    =   Message::instance()->format($action, $module);
 
         try {
+
+            $verification = $verification->load('userDetail');
+
             // verification in user details service
-            $verification = UserDetailFacade::setModel($verification)
-                ->setRequest($request)
-                ->verify();
+            $verification = UserDetailFacade::setModel($verification->userDetail)->setRequest($request)->verify();
 
             DB::commit();
 
@@ -219,11 +223,30 @@ class UserVerificationController extends Controller
 
     public function notify()
     {
-        if (Auth::user()->userDetails()->pendingDetails()->exists()) {
+        $user = Auth::user()->load(['userDetail']);
 
-            return view('verification.notify');
+        if ($user->userDetail->where(function ($query) {
+            $query->pendingDetails();
+        })->orWhere(function ($query) {
+            $query->rejectedDetails();
+        })->exists()) {
+
+            return view('verification.notify', compact('user'));
         }
 
         return redirect()->route('verifications.create');
+    }
+
+    public function resubmit()
+    {
+        $user = Auth::user()->load([
+            'media' => function ($query) {
+                $query->ssm();
+            },
+            'userDetail',
+            'address'
+        ]);
+
+        return view('verification.create', compact('user'));
     }
 }

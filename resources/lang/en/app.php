@@ -49,8 +49,8 @@ return [
     'project_details_btn_add_wishlist' => 'Add to wishlist',
     'project_details_btn_call' => 'Make a call',
 
-    'register_title_main' => 'Register',
-    'register_form_title' => 'Register Form',
+    'register_title_main' => 'Application',
+    'register_form_title' => 'Application Form',
     'register_agreement' => 'I agree to the <a target="blank" href="' . route('app.term') . '">terms and condition</a> &amp; <a target="blank" href="' . route('app.privacy') . '">privacy policy</a> of Rhinosite.',
     'register_btn_submit' => 'Register',
 
@@ -84,5 +84,25 @@ return [
     'merchant_industry_year' => 'Year in Industry : :year',
 
     'partner_title_main' => 'Join As Contractor',
-    'partner_btn_application' => 'Find out More',
+    'partner_btn_application' => 'Apply Now',
+
+    'user_dashboard_sidebar_title' => 'Main Menu',
+    'user_dashboard_sidebar_profile' => 'My Profile',
+    'user_dashboard_sidebar_wishlist' => 'My Wishlist',
+    'user_dashboard_sidebar_reset_password' => 'Change Password',
+
+    'verify_email_address' => 'Please Verify Your Email Address',
+    'fresh_verification_link' => 'A fresh verification link has been sent to your email address.',
+    'verification_message' => 'Before proceeding, please check your email for a verification link.',
+    'resend_verification_email_message' => 'If you did not receive the email, please click the resend button to request another.',
+    'btn_resend_verification_email' => 'Resend',
+
+    'complete_profile_title' => 'Complete Company Information As Below',
+    'complete_profile_subtitle' => 'Fill in the form as below. You may always change your info in your profile in the future if there is any changes.',
+
+    'verify_in_progress_title' => 'Verification in Progress',
+    'verify_in_progress_message' => 'Congratulations! You are one step closer to being listed in the No.1 Contractor Platform in Malaysia. Our team will take approximately 5-7 working days to process your application. Kindly check your email on the status of your application. <br><br> If you need assistance, please contact us at info@rhinosite.com.my or call us at 016-303 1808.',
+    'verify_rejected_title' => 'Verification Rejected',
+    'verify_rejected_message' => 'We are sorry to inform that your application is rejected by us. You may update and resubmit your application by clicking the update button. Our team will take approximately 5-7 working days to process your application.<br><br> If you need assistance, please contact us at info@rhinosite.com.my or call us at 016-303 1808.',
+    'verify_rejected_btn_update' => 'Update Application',
 ];
