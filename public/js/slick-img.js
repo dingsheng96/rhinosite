@@ -14,7 +14,7 @@ $(function () {
         dots: false,
         centerMode: false,
         focusOnSelect: true,
-        infinite: true,
+        infinite: false,
         centerPadding: '0px',
         responsive: [{
                 breakpoint: 1400,

@@ -21,23 +21,7 @@
     </div>
 </div>
 
-<div id="merchant-category">
-    <div class="container">
-        <div class="d-flex px-3">
-            <span>{{ __('app.top_search_services') }}</span>
-            <ul>
-                @forelse ($services->take(6) as $service)
-                <li class="active">
-                    <a class="text-muted" href="{{ route('app.project.index', ['q' => $service->name]) }}">
-                        {{ Str::title($service->name) }}
-                    </a>
-                </li>
-                @empty
-                @endforelse
-            </ul>
-        </div>
-    </div>
-</div>
+@include('app.topservice')
 
 <div id="merchant-2">
     <div class="container">

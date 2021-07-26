@@ -91,12 +91,11 @@ Route::group(['as' => 'app.'], function () {
     Route::get('terms', 'AppController@termsPolicies')->name('term');
     Route::get('privacy', 'AppController@privacyPolicies')->name('privacy');
 
-    Route::get('merchant', 'AppController@project')->name('project.index');
-    Route::get('merchant/{project}/details', 'AppController@showProject')->name('project.show');
-    Route::get('merchant/{merchant}/profile', 'AppController@showMerchant')->name('merchant.show');
+    Route::get('projects', 'AppController@project')->name('project.index');
+    Route::get('projects/{project}/details', 'AppController@showProject')->name('project.show');
+    Route::get('merchants/{merchant}/profile', 'AppController@showMerchant')->name('merchant.show');
 
     Route::group(['middleware' => ['auth:web', 'verified']], function () {
-
         Route::get('comparisons', 'AppController@compareList')->name('comparisons.index');
         Route::post('comparisons', 'AppController@addToCompareList')->name('comparisons.store');
         Route::post('rating', 'AppController@rateUser')->name('ratings.store');
