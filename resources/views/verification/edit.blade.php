@@ -61,7 +61,7 @@
                             <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="business_since" class="col-form-label">{{ __('labels.business_since') }}</label>
-                                    <p class="form-control" id="business_since">{{ $verification->userDetail->business_since->toDateString() ?? null }}</p>
+                                    <p class="form-control" id="business_since">{{ $verification->userDetail->business_since ?? null }}</p>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
@@ -126,7 +126,8 @@
                                         <thead>
                                             <tr>
                                                 <th style="width: 10%;">{{ __('#') }}</th>
-                                                <th style="width: 70%;">{{ __('labels.filename') }}</th>
+                                                <th style="width: 15%;">{{ __('labels.type') }}</th>
+                                                <th style="width: 55%;">{{ __('labels.filename') }}</th>
                                                 <th style="width: 20%">{{ __('labels.action') }}</th>
                                             </tr>
                                         </thead>
@@ -134,6 +135,7 @@
                                             @forelse ($verification->media as $document)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
+                                                <td>{{ strtoupper($document->type) }}</td>
                                                 <td>
                                                     <a href="{{ $document->full_file_path }}" target="_blank">
                                                         <i class="fas fa-external-link-alt"></i>
@@ -141,15 +143,17 @@
                                                     </a>
                                                 </td>
                                                 <td>
-                                                    <a href="{{ $document->full_file_path }}" class="btn btn-link" download>
-                                                        <i class="fas fa-download"></i>
-                                                        {{ __('labels.download') }}
-                                                    </a>
+                                                    @include('components.action', [
+                                                    'download' => [
+                                                    'route' => $document->full_file_path,
+                                                    'attribute' => 'download'
+                                                    ]
+                                                    ])
                                                 </td>
                                             </tr>
                                             @empty
                                             <tr>
-                                                <td colspan="3" class="text-center">{{ __('messages.no_records') }}</td>
+                                                <td colspan="4" class="text-center">{{ __('messages.no_records') }}</td>
                                             </tr>
                                             @endforelse
                                         </tbody>

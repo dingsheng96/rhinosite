@@ -18,12 +18,13 @@ class MerchantService extends BaseService
         parent::__construct(User::class);
     }
 
-    public function storeData()
+    public function storeData(bool $from_verification = false)
     {
         $this->storeProfile();
-        $this->storeDetails();
+        $this->storeDetails($from_verification);
         $this->storeAddress();
         $this->storeImage();
+        $this->storeSsmCert();
 
         return $this;
     }

@@ -36,7 +36,7 @@
 
                         <div class="input-group mb-3">
                             <p class="login-text">{{ __('labels.contact_no') }} <span class="text-danger">*</span></p>
-                            <input type="text" name="phone" id="phone" value="{{ old('phone') }}" class="@error('phone') is-invalid @enderror" placeholder="Eg: 60123456789">
+                            <input type="text" name="phone" id="phone" value="+{{ old('phone') }}" class="@error('phone') is-invalid @enderror" placeholder="Eg: 60123456789">
                             @error('phone')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>

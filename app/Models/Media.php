@@ -10,12 +10,12 @@ class Media extends Model
     use SoftDeletes;
 
     const TYPE_THUMBNAIL        =   'thumbnail';
-    const TYPE_PROFILE          =   'profile';
     const TYPE_IMAGE            =   'image';
     const TYPE_SSM              =   'ssm';
     const TYPE_LOGO             =   'logo';
     const DEFAULT_IMAGE         =   'nopreview.png';
     const MAX_IMAGE_PROJECT     =   10;
+    const MAX_IMAGE_PRODUCT     =   10;
 
     protected $table = 'media';
 
@@ -44,11 +44,6 @@ class Media extends Model
     public function scopeLogo($query)
     {
         return $query->where('type', self::TYPE_LOGO);
-    }
-
-    public function scopeProfileImage($query)
-    {
-        return $query->where('type', self::TYPE_PROFILE);
     }
 
     public function scopeImage($query)

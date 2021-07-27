@@ -106,7 +106,7 @@
     </div>
 
     {{-- LATEST 4 PROJECTS LISTING --}}
-    @if ($projects_list->count() > 0)
+    @if ($projects->count() > 0)
     <hr>
     <div class="row">
         <div class="col-12 my-3">
@@ -116,7 +116,7 @@
 
         <div class="col-12 my-md-3 my-0">
             <div class="card-deck">
-                @foreach ($projects_list as $project)
+                @foreach ($projects as $project)
                 <div class="card">
                     <img src="" alt="image" class="card-img-top">
                     <div class="card-body">

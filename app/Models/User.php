@@ -114,6 +114,12 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->morphedByMany(Project::class, 'comparable');
     }
 
+    // Functions
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail);
+    }
+
     // Scopes
     public function scopeAdmin($query)
     {
@@ -178,7 +184,7 @@ class User extends Authenticatable implements MustVerifyEmail
     // Attributes
     public function setPhoneAttribute($value)
     {
-        $value = preg_replace('/\+\-/', '', $value);
+        $value = preg_replace('/[^0-9]/', '', $value);
 
         $country = Country::defaultCountry()->first();
 
@@ -214,11 +220,6 @@ class User extends Authenticatable implements MustVerifyEmail
         $label = Status::instance()->statusLabel($this->status);
 
         return '<span class="' . $label['class'] . ' px-3">' . $label['text'] . '</span>';
-    }
-
-    public function getProfileImageAttribute()
-    {
-        return $this->media()->profile_image()->first();
     }
 
     public function getLogoAttribute()
@@ -259,6 +260,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getFormattedPhoneNumberAttribute()
     {
+        if (empty($this->phone)) {
+            return null;
+        }
+
         $format = chunk_split($this->phone, 4, ' ');
 
         return '+' . rtrim($format, ' ');
@@ -357,11 +362,5 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return '<span class="badge badge-danger badge-pill px-3">' . __('labels.unverified') . '</span>';
-    }
-
-    // Functions
-    public function sendEmailVerificationNotification()
-    {
-        $this->notify(new VerifyEmail);
     }
 }

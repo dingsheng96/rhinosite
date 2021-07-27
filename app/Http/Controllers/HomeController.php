@@ -2,27 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
 use App\Models\Project;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
     public function index()
     {
+        $user = Auth::user()->load([
+            'userDetail', 'address',
+            'media' => function ($query) {
+                $query->when(Auth::user()->is_member, function ($query) {
+                    $query->logo();
+                })->when(Auth::user()->is_merchant, function ($query) {
+                    $query->logo();
+                });
+            }
+        ]);
+
         $projects = Project::published()
-            ->with(['translations'])
-            ->when(Auth::user()->role_name != Role::ROLE_SUPER_ADMIN, function ($query) {
+            ->with(['translations', 'user.userDetail'])
+            ->whereHas('user', function ($query) {
+                $query->merchant()->active();
+            })
+            ->when(Auth::user()->is_merchant, function ($query) {
                 $query->where('user_id', Auth::user()->id);
             })
-            ->orderBy('created_at', 'desc');
+            ->when(Auth::user()->is_member, function ($query) {
+                $query->whereHas('wishlists', function ($query) {
+                    $query->where('user_id', Auth::id());
+                });
+            })
+            ->orderByDesc('created_at')
+            ->limit(6)
+            ->get();
 
-        $projects_count =   (clone $projects)->count();
-        $projects_list  =   (clone $projects)->take(4);
-
-        $data = compact('projects_count', 'projects_list');
-
-        return view('dashboard.' . Auth::user()->folder_name, $data);
+        return view('dashboard.' . Auth::user()->folder_name, compact('user', 'projects'));
     }
 }

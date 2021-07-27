@@ -73,8 +73,16 @@
                                     <div class="row">
                                         <div class="col-12 col-md-6">
                                             <div class="form-group">
-                                                <label for="experience" class="col-form-label">{{ __('labels.years_of_experience') }}</label>
-                                                <p id="experience" class="form-control">{{ $user_details->years_of_experience ?? null }}</p>
+                                                <label for="experience" class="col-form-label">{{ __('labels.business_since') }}</label>
+                                                <p id="experience" class="form-control">{{ $user_details->business_since ?? null }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="address" class="col-form-label">{{ __('labels.address') }}</label>
+                                                <textarea id="address" cols="100" rows="5" class="form-control bg-white" disabled>{{ $merchant->full_address ?? null }}</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -83,12 +91,6 @@
                                             <div class="form-group">
                                                 <label for="logo" class="col-form-label">{{ __('labels.logo') }}</label>
                                                 <img src="{{ $merchant->logo->full_file_path ?? $default_preview }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-md-6">
-                                            <div class="form-group">
-                                                <label for="address" class="col-form-label">{{ __('labels.address') }}</label>
-                                                <textarea id="address" cols="30" rows="8" class="form-control bg-white" disabled>{{ $merchant->full_address ?? null }}</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -124,6 +126,8 @@
                                         </div>
                                     </div>
 
+                                    <hr>
+
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="form-group table-responsive">
@@ -132,7 +136,8 @@
                                                     <thead>
                                                         <tr>
                                                             <th style="width: 10%;">{{ __('#') }}</th>
-                                                            <th style="width: 70%;">{{ __('labels.filename') }}</th>
+                                                            <th style="width: 15%;">{{ __('labels.type') }}</th>
+                                                            <th style="width: 55%;">{{ __('labels.filename') }}</th>
                                                             <th style="width: 20%">{{ __('labels.action') }}</th>
                                                         </tr>
                                                     </thead>
@@ -140,22 +145,25 @@
                                                         @forelse ($documents as $document)
                                                         <tr>
                                                             <td>{{ $loop->iteration }}</td>
+                                                            <td>{{ strtoupper($document->type) }}</td>
                                                             <td>
                                                                 <a href="{{ $document->full_file_path }}" target="_blank">
                                                                     <i class="fas fa-external-link-alt"></i>
-                                                                    {{ $document->filename }}
+                                                                    {{ $document->original_filename }}
                                                                 </a>
                                                             </td>
                                                             <td>
-                                                                <a href="{{ $document->full_file_path }}" class="btn btn-link" download>
-                                                                    <i class="fas fa-download"></i>
-                                                                    {{ __('labels.download') }}
-                                                                </a>
+                                                                @include('components.action', [
+                                                                'download' => [
+                                                                'route' => $document->full_file_path,
+                                                                'attribute' => 'download'
+                                                                ]
+                                                                ])
                                                             </td>
                                                         </tr>
                                                         @empty
                                                         <tr>
-                                                            <td colspan="3" class="text-center">{{ __('messages.no_records') }}</td>
+                                                            <td colspan="4" class="text-center">{{ __('messages.no_records') }}</td>
                                                         </tr>
                                                         @endforelse
                                                     </tbody>

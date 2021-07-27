@@ -16,14 +16,18 @@ class CheckVerifiedMerchant
      */
     public function handle($request, Closure $next)
     {
-        $user = Auth::user();
+        $user = Auth::user()->load(['userDetail']);
 
         if (!$user->is_merchant || $user->userDetail()->approvedDetails()->exists()) { // user is not merchant or merchant user has verified details
 
             return $next($request);
         }
 
-        if ($user->userDetail()->pendingDetails()->exists()) {
+        if ($user->userDetail()->where(function ($query) { // merchant with pending or rejected details
+            $query->pendingDetails();
+        })->orWhere(function ($query) {
+            $query->rejectedDetails();
+        })->exists()) {
 
             return redirect()->route('verifications.notify');
         }

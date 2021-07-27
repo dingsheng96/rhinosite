@@ -143,30 +143,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="form-group">
-                                                    <label for="logo" class="col-form-label">{{ __('labels.change_logo') }}</label>
-                                                    <div class="row">
-                                                        <div class="col-12 col-md-3">
-                                                            <img src="{{ $merchant->logo->full_file_path ?? $default_preview }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
-                                                        </div>
-                                                        <div class="col-12 col-md-9">
-                                                            <div class="custom-file">
-                                                                <input type="file" id="logo" name="logo" class="custom-file-input custom-img-input @error('logo') is-invalid @enderror" accept=".jpg,.jpeg,.png">
-                                                                <label class="custom-file-label" for="logo">Choose file</label>
-                                                                <ul>{!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG']) !!}</ul>
-                                                                @error('logo')
-                                                                <span class="invalid-feedback" role="alert">
-                                                                    <strong>{{ $message }}</strong>
-                                                                </span>
-                                                                @enderror
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+
                                     </div>
 
                                     <div class="tab-pane text-left fade show" id="vert-tabs-details" role="tabpanel" aria-labelledby="vert-tabs-details-tab">
@@ -214,15 +191,50 @@
                                             </div>
                                         </div>
 
+                                        <hr>
+
                                         <div class="row">
-                                            <div class="col-12">
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="logo" class="col-form-label">{{ __('labels.change_logo') }}</label>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <input type="file" id="logo" name="logo" class="form-control-file custom-img-input @error('logo') is-invalid @enderror" accept=".jpg,.jpeg,.png">
+                                                            @error('logo')
+                                                            <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                            @enderror
+                                                            <ul class="pl-3 mt-3">{!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG', 'dimension' => '1024x1024']) !!}</ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-2">
+                                                        <div class="col-12 col-md-6">
+                                                            <img src="{{ $merchant->logo->full_file_path ?? $default_preview }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="file" class="col-form-label">{{ __('labels.ssm_cert') }} <span class="text-red">*</span></label>
+                                                    <input type="file" name="ssm_cert" id="ssm_cert" value="{{ old('ssm_cert') }}" class="form-control-file @error('ssm_cert') is-invalid @enderror" accept="application/pdf">
+                                                    @error('ssm_cert')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                    <ul class="pl-3 mt-3">{!! trans_choice('messages.upload_file_rules', 1, ['maxsize' => '2mb', 'extensions' => 'PDF']) !!}</ul>
+                                                </div>
                                                 <div class="form-group table-responsive">
                                                     <label for="media">{{ trans_choice('labels.document', 2) }}</label>
                                                     <table class="table table-bordered table-hover">
                                                         <thead>
                                                             <tr>
                                                                 <th style="width: 10%;">{{ __('#') }}</th>
-                                                                <th style="width: 70%;">{{ __('labels.filename') }}</th>
+                                                                <th style="width: 15%;">{{ __('labels.type') }}</th>
+                                                                <th style="width: 55%;">{{ __('labels.filename') }}</th>
                                                                 <th style="width: 20%">{{ __('labels.action') }}</th>
                                                             </tr>
                                                         </thead>
@@ -230,22 +242,25 @@
                                                             @forelse ($documents as $document)
                                                             <tr>
                                                                 <td>{{ $loop->iteration }}</td>
+                                                                <td>{{ strtoupper($document->type) }}</td>
                                                                 <td>
                                                                     <a href="{{ $document->full_file_path }}" target="_blank">
                                                                         <i class="fas fa-external-link-alt"></i>
-                                                                        {{ $document->filename }}
+                                                                        {{ $document->original_filename }}
                                                                     </a>
                                                                 </td>
                                                                 <td>
-                                                                    <a href="{{ $document->full_file_path }}" class="btn btn-link" download>
-                                                                        <i class="fas fa-download"></i>
-                                                                        {{ __('labels.download') }}
-                                                                    </a>
+                                                                    @include('components.action', [
+                                                                    'download' => [
+                                                                    'route' => $document->full_file_path,
+                                                                    'attribute' => 'download'
+                                                                    ]
+                                                                    ])
                                                                 </td>
                                                             </tr>
                                                             @empty
                                                             <tr>
-                                                                <td colspan="3" class="text-center">{{ __('messages.no_records') }}</td>
+                                                                <td colspan="4" class="text-center">{{ __('messages.no_records') }}</td>
                                                             </tr>
                                                             @endforelse
                                                         </tbody>

@@ -57,7 +57,7 @@
                         <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label for="business_since" class="col-form-label">{{ __('labels.business_since') }}</label>
-                                <p class="form-control" id="business_since">{{ $verification->userDetail->business_since->toDateString() ?? null }}</p>
+                                <p class="form-control" id="business_since">{{ $verification->userDetail->business_since ?? null }}</p>
                             </div>
                         </div>
                     </div>

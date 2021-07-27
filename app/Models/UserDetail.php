@@ -93,4 +93,9 @@ class UserDetail extends Model
     {
         return now()->diffInYears($this->business_since);
     }
+
+    public function getBusinessSinceAttribute($value)
+    {
+        return date('Y-m-d', strtotime($value));
+    }
 }

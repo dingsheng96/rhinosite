@@ -43,7 +43,10 @@ class MerchantDataTable extends DataTable
                 return $data->created_at->toDateTimeString();
             })
             ->editColumn('status', function ($data) {
-                return  $data->status_label . '<br>' . $data->profile_status_label;
+                return $data->status_label . '<br>' . $data->profile_status_label;
+            })
+            ->editColumn('phone', function ($data) {
+                return $data->formatted_phone_number;
             })
             ->filterColumn('status', function ($query, $keyword) {
                 $keyword = strtolower($keyword);
@@ -97,7 +100,7 @@ class MerchantDataTable extends DataTable
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(0, 'asc')
+            ->orderBy(5, 'desc')
             ->responsive(true)
             ->autoWidth(true)
             ->processing(false);

@@ -993,11 +993,12 @@ ul.pagination li:last-child {
 }
 
 .user-img {
-    width: 100%;
-    height: auto;
-    /* max-width: 250px; */
+    width: 8rem;
+    height: 8rem;
+    object-fit: cover;
+    margin-left: auto;
+    margin-right: auto;
     display: block;
-    margin: 0 auto;
 }
 
 #user-profile h3 {

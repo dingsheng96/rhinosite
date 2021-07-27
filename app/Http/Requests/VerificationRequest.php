@@ -55,12 +55,8 @@ class VerificationRequest extends FormRequest
                 Rule::exists(City::class, 'id')
                     ->where('country_state_id', $this->get('country_state'))
             ],
-            'ssm_cert' => [
-                'required',
-                'file',
-                'max:2000',
-                'mimes:pdf'
-            ],
+            'ssm_cert'  =>  ['required', 'file', 'max:2000', 'mimes:pdf'],
+            'logo'      =>  ['required', 'image', 'mimes:jpg,jpeg,png', 'max:2000'],
             'reg_no'    =>  ['required'],
             'pic_name'  =>  ['required'],
             'pic_phone' =>  ['required', new PhoneFormat],

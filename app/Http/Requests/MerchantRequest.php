@@ -57,7 +57,7 @@ class MerchantRequest extends FormRequest
                     ->where('country_state_id', $this->get('country_state'))
             ],
 
-            'reg_no'            =>  ['required', Rule::unique(UserDetail::class, 'reg_no')->ignore($this->route('merchant')->id, 'user_id')->whereNull('deleted_at')],
+            'reg_no'            =>  ['required', Rule::unique(UserDetail::class, 'reg_no')->ignore($this->route('merchant')->id ?? $this->route('merchant'), 'user_id')->whereNull('deleted_at')],
             'status'            =>  ['required', Rule::in(array_keys(Status::instance()->activeStatus()))],
             'website'           =>  ['nullable', 'url'],
             'facebook'          =>  ['nullable', 'url'],
@@ -66,6 +66,7 @@ class MerchantRequest extends FormRequest
             'pic_name'          =>  ['required'],
             'pic_phone'         =>  ['required', new PhoneFormat],
             'pic_email'         =>  ['required', 'email'],
+            'ssm_cert'          =>  [Rule::requiredIf(empty($this->route('merchant'))), 'nullable', 'file', 'max:2000', 'mimes:pdf'],
 
         ];
     }

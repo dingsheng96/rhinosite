@@ -75,4 +75,16 @@ $(function () {
             }
         });
     });
+
+    $(".custom-img-input").on("change", function(e) {
+        let file = e.target.files[0];
+
+        if (file) {
+            let reader = new FileReader();
+            reader.onload = function() {
+                $(".custom-img-preview").attr("src", reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 });

@@ -94,6 +94,7 @@ return [
     'services' => 'Services',
     'upload_thumbnail' => 'Upload Thumbnail',
     'upload_image' => 'Upload Image|Upload Images',
+    'upload_profile_image' => 'Upload Profile Image',
     'ads_type' => 'Ads Type',
     'boosts_ads_date' => 'Boosts Ads Date',
     'slug' => 'Slug',
@@ -188,4 +189,9 @@ return [
     'thumbnail' => 'Thumbnail',
     'reg_no' => 'Registration No.',
     'amount' => 'Amount',
+    'slot' => 'Slot',
+    'per_day' => 'per day',
+    'per_week' => 'per week',
+    'per_month' => 'per month'
+
 ];

@@ -54,47 +54,13 @@
                 </ul>
             </div>
             <div class="content">
-                <div id="user-credential">
-                    <div class="row">
-                        <div class="col-12">
-                            <h2>{{ __('modules.dashboard') }}</h2>
-                        </div>
-                    </div>
-                    <div class="row align-items-top mb-5 pb-4 border-bottom">
-                        <div class="col-md-3 col-xl-2">
-                            <img src="{{ $user->logo->full_file_path ?? $default_preview }}" class="user-img rounded-circle img-thumbnail">
-                        </div>
-                        <div class="col-md-9 col-xl-10">
-                            <div class="row my-3 my-sm-0">
-                                <div class="col-sm-4 col-lg-3">
-                                    <p>{{ __('labels.name') }}:
-                                </div>
-                                <div class="col-sm-8 col-lg-9">
-                                    <p>{{ $user->name }}</p>
-                                </div>
-                            </div>
-                            <div class="row mb-3 mb-sm-0">
-                                <div class="col-sm-4 col-lg-3">
-                                    <p>{{ __('labels.email') }}:</p>
-                                </div>
-                                <div class="col-sm-8 col-lg-9">
-                                    <p>{{ $user->email }}</p>
-                                </div>
-                            </div>
-                            <div class="row mb-3 mb-sm-0">
-                                <div class="col-sm-4 col-lg-3">
-                                    <p>{{ __('labels.contact_no') }}:</p>
-                                </div>
-                                <div class="col-sm-8 col-lg-9">{{ $user->formatted_phone_number }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <div id="user-profile">
-                    <div class="mb-5">
-                        <h3 class="d-inline">{{ __('app.user_dashboard_wishlist') }}</h3>
-                        <a href="{{ route('wishlist.index') }}" class="float-md-right">{{ __('app.btn_view_more') }} &raquo;</a>
+
+                    <div class="row align-items-end mt-md-4 mb-4">
+                        <div class="col-md-8">
+                            <h3>{{ __('app.user_dashboard_wishlist') }}</h3>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -128,12 +94,20 @@
                                     </div>
                                 </div>
                                 @empty
-                                <div class="col-12 d-inline-flex justify-content-center">{{ __('messages.wishlist_empty') }}</div>
+                                <div class="col-12 d-flex justify-content-center">
+                                    {{ __('messages.wishlist_empty') }}
+                                </div>
                                 <div class="col-12 d-flex justify-content-center my-5">
                                     <a href="{{ route('app.project.index') }}" class="btn btn-orange">{{ __('app.user_dashboard_wishlist_btn_explore_service') }}</a>
                                 </div>
                                 @endforelse
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            {!! $projects->withQueryString()->links() !!}
                         </div>
                     </div>
                 </div>

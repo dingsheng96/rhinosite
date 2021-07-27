@@ -35,6 +35,14 @@
     @endcan
     @endisset
 
+    {{-- download button --}}
+    @isset($download)
+    <a role="button" href="{{ $download['route'] ?? '#' }}" class="dropdown-item" @isset($download['attribute']) {!! $download['attribute'] !!} @endisset>
+        <i class="fas fa-download mr-2 text-cyan"></i>
+        {{ __('labels.download') }}
+    </a>
+    @endisset
+
 </div>
 
 @endif

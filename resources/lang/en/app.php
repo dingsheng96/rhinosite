@@ -87,9 +87,14 @@ return [
     'partner_btn_application' => 'Apply Now',
 
     'user_dashboard_sidebar_title' => 'Main Menu',
+    'user_dashboard_sidebar_dashboard' => 'Dashboard',
     'user_dashboard_sidebar_profile' => 'My Profile',
     'user_dashboard_sidebar_wishlist' => 'My Wishlist',
-    'user_dashboard_sidebar_reset_password' => 'Change Password',
+    'user_dashboard_main_title' => 'Welcome!',
+    'user_dashboard_wishlist' => 'My Wishlist',
+    'user_dashboard_profile_subtitle' => 'Please fill in following personal information',
+    'user_dashboard_profile_btn_update' => 'Update Profile',
+    'user_dashboard_wishlist_btn_explore_service' => 'Explore Services Now',
 
     'verify_email_address' => 'Please Verify Your Email Address',
     'fresh_verification_link' => 'A fresh verification link has been sent to your email address.',

@@ -25,7 +25,11 @@ class PasswordFormat implements Rule
      */
     public function passes($attribute, $value)
     {
-        return preg_match_all("%^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$%", $value);
+        // Minimum 8 characters with at least 1 uppercase letter, 1 lowercase letter and 1 number
+        // return preg_match_all("%^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$%", $value);
+
+        // Minimum 8 characters with at least 1 uppercase letter, 1 number and 1 special character
+        return preg_match_all("/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/", $value);
     }
 
     /**

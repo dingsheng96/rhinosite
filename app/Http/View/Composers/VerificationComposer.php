@@ -30,9 +30,12 @@ class VerificationComposer
             'verifications_count',
             User::doesntHave('userDetail')
                 ->with('userDetail')
+                ->merchant()
                 ->orWhereHas('userDetail', function ($query) {
                     $query->pendingDetails()
-                        ->rejectedDetails();
+                        ->orWhere(function ($query) {
+                            $query->rejectedDetails();
+                        });
                 })->count()
         );
     }

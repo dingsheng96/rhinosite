@@ -25,6 +25,15 @@ class AccountService extends BaseService
             $this->storeDetails();
             $this->storeAddress();
             $this->storeImage();
+
+            return $this;
+        }
+
+        if (Auth::user()->is_member) {
+            $this->storeAddress();
+            $this->storeImage();
+
+            return $this;
         }
 
         return $this;

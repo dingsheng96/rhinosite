@@ -71,6 +71,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::resource('countries.country-states.cities', 'CityController');
 
         Route::resource('activity-logs', 'ActivityLogController');
+
+        Route::resource('wishlist', 'WishlistController');
     });
 
     Route::group(['prefix' => 'payment/{trans_no}', 'as' => 'payment.'], function () {

@@ -20,11 +20,17 @@ class AccountController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
+        $user = Auth::user()->load([
+            'address',
+            'userDetail' => function ($query) {
+                $query->approvedDetails();
+            }
+        ]);
 
-        $user_details = $user->userDetail()->approvedDetails()->first();
+        $address = $user->address;
+        $user_details = $user->userDetail;
 
-        return view('account.' . Auth::user()->folder_name, compact('user', 'user_details'));
+        return view('account.' . Auth::user()->folder_name, compact('user', 'user_details', 'address'));
     }
 
     /**
@@ -47,7 +53,7 @@ class AccountController extends Controller
     {
         DB::beginTransaction();
 
-        $user       =   User::where('id', Auth::id())->firstOrFail();
+        $user       =   User::findOrFail(Auth::id());
         $action     =   Permission::ACTION_UPDATE;
         $module     =   strtolower(__('labels.user_account'));
         $status     =   'fail';

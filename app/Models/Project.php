@@ -85,6 +85,11 @@ class Project extends Model
         return $this->morphToMany(User::class, 'comparable');
     }
 
+    public function wishlists()
+    {
+        return $this->morphMany(Wishlist::class, 'sourceable');
+    }
+
     // Scopes
     public function scopePublished($query)
     {

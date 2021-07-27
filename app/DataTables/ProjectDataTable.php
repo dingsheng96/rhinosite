@@ -52,10 +52,10 @@ class ProjectDataTable extends DataTable
             })
             ->editColumn('title', function ($data) {
                 return  '<div class="row">
-                <div class="col-6 col-md-2">
+                <div class="col-12 col-xl-3">
                 <img src="' . $data->thumbnail->full_file_path . '" alt="' . $data->thumbnail->filename . '" class="table-img-preview">
                 </div>
-                <div class="col-6 col-md-10">' . $data->english_title . '<br/>' . $data->chinese_title . '</div>
+                <div class="col-12 col-xl-9">' . $data->english_title . '<br/>' . $data->chinese_title . '</div>
                 </div>';
             })
             ->editColumn('created_at', function ($data) {
@@ -108,7 +108,7 @@ class ProjectDataTable extends DataTable
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(0, 'asc')
+            ->orderBy(5, 'desc')
             ->responsive(true)
             ->autoWidth(true)
             ->processing(false);

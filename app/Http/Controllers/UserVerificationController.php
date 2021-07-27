@@ -46,7 +46,7 @@ class UserVerificationController extends Controller
      */
     public function create()
     {
-        $user = Auth::user();
+        $user = Auth::user()->load(['userDetail']);
 
         if ($user->userDetail()->approvedDetails()->exists()) {
 
@@ -84,10 +84,7 @@ class UserVerificationController extends Controller
 
             $verification = MerchantFacade::setModel($user)
                 ->setRequest($request)
-                ->storeProfile()
-                ->storeDetails(true)
-                ->storeSsmCert()
-                ->storeAddress()
+                ->storeData(true)
                 ->getModel();
 
             DB::commit();
@@ -126,7 +123,9 @@ class UserVerificationController extends Controller
     {
         $verification->load([
             'media' => function ($query) {
-                $query->ssm();
+                $query->ssm()->orWhere(function ($query) {
+                    $query->logo();
+                });
             },
             'userDetail',
             'address'
@@ -147,7 +146,9 @@ class UserVerificationController extends Controller
 
         $verification->load([
             'media' => function ($query) {
-                $query->ssm();
+                $query->ssm()->orWhere(function ($query) {
+                    $query->logo();
+                });
             },
             'userDetail',
             'address'
@@ -225,7 +226,7 @@ class UserVerificationController extends Controller
     {
         $user = Auth::user()->load(['userDetail']);
 
-        if ($user->userDetail->where(function ($query) {
+        if ($user->userDetail()->where(function ($query) {
             $query->pendingDetails();
         })->orWhere(function ($query) {
             $query->rejectedDetails();

@@ -40,6 +40,9 @@ class VerificationDataTable extends DataTable
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
+            ->editColumn('phone', function ($data) {
+                return $data->formatted_phone_number;
+            })
             ->addColumn('profile', function ($data) {
                 return $data->userDetail->status_label ?? '<span class="badge badge-info badge-pill px-3">' . __('labels.not_submit') . '</span>';
             })
@@ -90,7 +93,7 @@ class VerificationDataTable extends DataTable
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(0, 'asc')
+            ->orderBy(5, 'desc')
             ->responsive(true)
             ->autoWidth(true)
             ->processing(false);
