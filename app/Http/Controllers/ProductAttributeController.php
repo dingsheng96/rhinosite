@@ -21,12 +21,13 @@ use App\Support\Facades\ProductAttributeFacade;
 
 class ProductAttributeController extends Controller
 {
-    public $stock_types, $statuses;
+    public $stock_types, $statuses, $slot_types;
 
     public function __construct()
     {
         $this->stock_types = [ProductAttribute::STOCK_TYPE_FINITE, ProductAttribute::STOCK_TYPE_INFINITE];
         $this->statuses = Status::instance()->activeStatus();
+        $this->slot_types =  Status::instance()->adsSlotType();
     }
 
     /**
@@ -49,7 +50,8 @@ class ProductAttributeController extends Controller
         return view('product.attribute.create', [
             'product' => $product,
             'stock_types' => $this->stock_types,
-            'statuses' => $this->statuses
+            'statuses' => $this->statuses,
+            'slot_types' => $this->slot_types
         ]);
     }
 
@@ -70,7 +72,7 @@ class ProductAttributeController extends Controller
 
         try {
 
-            $attribute = ProductAttributeFacade::setParentModel($product)
+            $attribute = ProductAttributeFacade::setParent($product)
                 ->setRequest($request)
                 ->storeData()
                 ->getModel();

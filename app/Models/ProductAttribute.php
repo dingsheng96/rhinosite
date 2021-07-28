@@ -15,6 +15,10 @@ class ProductAttribute extends Model
     const STATUS_ACTIVE = 'active';
     const STATUS_INACTIVE = 'inactive';
 
+    const SLOT_TYPE_DAILY = 'daily';
+    const SLOT_TYPE_WEEKLY = 'weekly';
+    const SLOT_TYPE_MONTHLY = 'monthly';
+
     protected $table = 'product_attributes';
 
     protected $fillable = [
@@ -76,5 +80,21 @@ class ProductAttribute extends Model
     public function getDefaultPriceAttribute()
     {
         return $this->prices()->defaultPrice()->first();
+    }
+
+    public function getSlotWithTypeAttribute()
+    {
+        $postfix = [
+            self::SLOT_TYPE_DAILY => __('labels.per_day'),
+            self::SLOT_TYPE_WEEKLY => __('labels.per_week'),
+            self::SLOT_TYPE_MONTHLY => __('labels.per_month'),
+        ];
+
+        if (!empty($this->slot) && !empty($this->slot_type)) {
+
+            return $this->slot . ' ' . $postfix[$this->slot_type];
+        }
+
+        return;
     }
 }

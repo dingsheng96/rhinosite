@@ -49,7 +49,6 @@ class ProductRequest extends FormRequest
             ],
             'description' => ['nullable'],
             'thumbnail' => [
-                Rule::requiredIf(empty($this->route('product'))),
                 'nullable',
                 'image',
                 'mimes:jpg,jpeg,png',
@@ -57,36 +56,11 @@ class ProductRequest extends FormRequest
                 'dimensions:max_height=1024,max_width=1024'
             ],
             'files.*' => [
-                Rule::requiredIf(empty($this->route('product'))),
                 'nullable',
                 'image',
                 'mimes:jpg,jpeg,png',
                 'max:10000'
             ],
-            'attributes' => [
-                Rule::requiredIf(empty($this->route('product'))),
-                'nullable',
-                'array'
-            ],
-            'attributes.*.sku' => [
-                'distinct',
-                Rule::unique(ProductAttribute::class, 'sku')->whereNull('deleted_at')
-            ],
-            'attributes.*.stock_type' => [
-                'in:' . ProductAttribute::STOCK_TYPE_FINITE . ',' . ProductAttribute::STOCK_TYPE_INFINITE
-            ],
-            'attributes.*.quantity' => [
-                'integer',
-                'min:0'
-            ],
-            'attributes.*.validity' => [
-                'nullable',
-                'integer',
-                'min:0'
-            ],
-            'attributes.*.color' => [
-                'nullable',
-            ]
         ];
     }
 
@@ -113,11 +87,6 @@ class ProductRequest extends FormRequest
             'description'               =>  __('validation.attributes.description'),
             'thumbnail'                 =>  __('validation.attributes.thumbnail'),
             'files.*'                   =>  __('validation.attributes.file'),
-            'attributes.*.sku'          =>  __('validation.attributes.sku'),
-            'attributes.*.stock_type'   =>  __('validation.attributes.stock_type'),
-            'attributes.*.quantity'     =>  __('validation.attributes.quantity'),
-            'attributes.*.validity'     =>  __('validation.attributes.validity'),
-            'attributes.*.color'        =>  __('validation.attributes.color'),
         ];
     }
 }

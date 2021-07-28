@@ -50,6 +50,9 @@ class ProductAttributeDataTable extends DataTable
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
+            ->editColumn('slot', function ($data) {
+                return $data->slot_with_type;
+            })
             ->filterColumn('status', function ($query, $keyword) {
                 return $query->when($keyword == 'available', function ($query) {
                     $query->where('is_available', true);
@@ -97,10 +100,11 @@ class ProductAttributeDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#')->width('10%'),
-            Column::make('sku')->title(__('labels.sku'))->width('25%'),
-            Column::make('quantity')->title(__('labels.quantity'))->width('15%'),
-            Column::make('status')->title(__('labels.status'))->width('15%'),
+            Column::computed('DT_RowIndex', '#')->width('5%'),
+            Column::make('sku')->title(__('labels.sku'))->width('15%'),
+            Column::make('quantity')->title(__('labels.quantity'))->width('10%'),
+            Column::make('slot')->title(__('labels.slot'))->width('20%'),
+            Column::make('status')->title(__('labels.status'))->width('10%'),
             Column::make('created_at')->title(__('labels.created_at'))->width('20%'),
             Column::computed('action', __('labels.action'))->width('15%')
                 ->exportable(false)

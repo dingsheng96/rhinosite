@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Project;
 use App\Models\UserDetail;
 use App\Models\Transaction;
+use App\Models\ProductAttribute;
 
 class Status
 {
@@ -57,6 +58,15 @@ class Status
         return [
             Project::STATUS_PUBLISHED => __('labels.published'),
             Project::STATUS_DRAFT => __('labels.draft'),
+        ];
+    }
+
+    public function adsSlotType(): array
+    {
+        return [
+            ProductAttribute::SLOT_TYPE_DAILY,
+            ProductAttribute::SLOT_TYPE_WEEKLY,
+            ProductAttribute::SLOT_TYPE_MONTHLY
         ];
     }
 

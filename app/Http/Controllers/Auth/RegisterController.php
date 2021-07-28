@@ -59,10 +59,9 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-
         return Validator::make($data, [
             'role'          =>  ['required', 'in:member,merchant'],
-            'name'          =>  ['required', 'string', 'max:255'],
+            'name'          =>  ['required', 'string', 'max:255', Rule::unique(User::class, 'name')->whereNull('deleted_at')],
             'email'         =>  ['required', 'string', 'email', 'max:255', Rule::unique(User::class, 'email')->whereNull('deleted_at')],
             'phone'         =>  ['required', 'string', new PhoneFormat],
             'password'      =>  ['required', 'string', new PasswordFormat, 'confirmed'],

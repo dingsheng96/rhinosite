@@ -35,6 +35,12 @@
                     </div>
                     @endif
 
+                    @if (Session::has('info'))
+                    <div class="alert alert-info" role="alert">
+                        <small>{!! Session::get('info') !!}</small>
+                    </div>
+                    @endif
+
                     <form action="{{ route('login') }}" method="post" role="form" enctype="multipart/form-data">
                         @csrf
 

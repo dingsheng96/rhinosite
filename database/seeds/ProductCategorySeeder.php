@@ -30,7 +30,7 @@ class ProductCategorySeeder extends Seeder
     public function getData()
     {
         return [
-            ['name' => ProductCategory::TYPE_ADS, 'description' => 'Ads'],
+            ['name' => ProductCategory::TYPE_ADS, 'description' => 'Ads', 'enable_slot' => true],
         ];
     }
 }

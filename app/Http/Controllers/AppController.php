@@ -18,10 +18,17 @@ class AppController extends Controller
     public function home()
     {
         $merchants = User::with([
+            'userDetail',
             'media' => function ($query) {
                 $query->logo();
             },
-        ])->merchant()->active()->inRandomOrder()->limit(6)->get();
+        ])->merchant()->active()
+            ->whereHas('userDetail', function ($query) {
+                $query->approvedDetails();
+            })
+            ->whereHas('media', function ($query) {
+                $query->logo();
+            })->inRandomOrder()->limit(6)->get();
 
         $projects = Project::with([
             'user.ratedBy', 'translations', 'address', 'unit', 'services',
@@ -77,7 +84,10 @@ class AppController extends Controller
                 $query->boosting();
             }
         ])->whereHas('user', function ($query) {
-            $query->merchant()->active();
+            $query->merchant()->active()
+                ->whereHas('userDetail', function ($query) {
+                    $query->approvedDetails();
+                });
         })->published()->sortByCategoryBump()
             ->searchable($request->get('q'))->filterable($request)
             ->paginate(12, ['*'], 'page', $request->get('page', 1));

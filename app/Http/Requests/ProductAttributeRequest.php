@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Helpers\Status;
+use App\Models\Currency;
 use Illuminate\Validation\Rule;
 use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +30,10 @@ class ProductAttributeRequest extends FormRequest
      */
     public function rules()
     {
+        $product = $this->route('product')->load(['productCategory']);
+
+        $enable_slot = (bool) $product->productCategory->enable_slot;
+
         return [
             'sku' => [
                 'required',
@@ -49,9 +55,12 @@ class ProductAttributeRequest extends FormRequest
                 'integer',
                 'min:0'
             ],
-            'color' => ['nullable'],
-            'price' => ['nullable', 'array'],
-            ''
+            'currency' => ['required', Rule::exists(Currency::class, 'id')],
+            'unit_price' => ['required', 'numeric'],
+            'discount' => ['required', 'numeric'],
+            'total_slots_per_day' => [Rule::requiredIf($enable_slot), 'nullable', 'integer', 'min:0'],
+            'slot_type' => [Rule::requiredIf($enable_slot), Rule::in(Status::instance()->adsSlotType())],
+            'slot' => [Rule::requiredIf($enable_slot), 'nullable', 'integer', 'min:0']
         ];
     }
 

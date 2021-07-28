@@ -10,7 +10,6 @@ class Product extends Model
 {
     use SoftDeletes;
 
-    const MAX_IMAGES = 5;
     const STORE_PATH = '/products';
     const STATUS_ACTIVE = 'active';
     const STATUS_INACTIVE = 'inactive';
@@ -56,5 +55,15 @@ class Product extends Model
         $label = Status::instance()->statusLabel($this->status);
 
         return '<span class="' . $label['class'] . ' px-3">' . $label['text'] . '</span>';
+    }
+
+    public function getThumbnailAttribute()
+    {
+        return $this->media()->thumbnail()->first();
+    }
+
+    public function getImagesAttribute()
+    {
+        return $this->media()->image()->get();
     }
 }

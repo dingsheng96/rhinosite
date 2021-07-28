@@ -53,6 +53,7 @@ class MerchantService extends BaseService
 
     public function storeDetails(bool $from_verification = false)
     {
+
         $details = $this->model->userDetail()
             ->when($from_verification, function ($query) {
                 $query->pendingDetails()
@@ -74,9 +75,9 @@ class MerchantService extends BaseService
         $details->pic_name          =   $this->request->get('pic_name');
         $details->pic_phone         =   $this->request->get('pic_phone');
         $details->pic_email         =   $this->request->get('pic_email');
-        $details->status            =   (!$details->exists || !$from_verification) // if new details or from verification page, set approved, else set pending
-            ? UserDetail::STATUS_APPROVED
-            : UserDetail::STATUS_PENDING;
+        $details->status            =   (!$details->exists || $from_verification) // if new details or from verification page, set pending, else set approved
+            ? UserDetail::STATUS_PENDING
+            : UserDetail::STATUS_APPROVED;
 
         $this->model->userDetail()->save($details);
 

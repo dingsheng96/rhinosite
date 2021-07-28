@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Media;
 use App\Helpers\Status;
 use App\Models\Product;
 use App\Helpers\Message;
@@ -49,12 +50,12 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $max_files      =   Product::MAX_IMAGES;
+        $max_files      =   Media::MAX_IMAGE_PRODUCT;
         $statuses       =   $this->statuses;
         $stock_types    =   $this->stock_types;
         $categories     =   $this->categories;
 
-        return view('product.create', compact('categories', 'max_files', 'statuses', 'stock_types'));
+        return view('product.create', compact('categories', 'max_files', 'statuses', 'stock_types', 'slot_types'));
     }
 
     /**
@@ -107,11 +108,13 @@ class ProductController extends Controller
                 ->withProperties($request->all())
                 ->log($e->getMessage());
 
-            return Response::instance()
+            return ($request->ajax())
+                ? Response::instance()
                 ->withStatusCode('modules.product', 'actions.' . $action . $status)
                 ->withStatus($status)
                 ->withMessage($message, true)
-                ->sendJson();
+                ->sendJson()
+                : redirect()->back()->with('fail', $message);
         }
     }
 
@@ -123,9 +126,19 @@ class ProductController extends Controller
      */
     public function show(Product $product, ProductAttributeDataTable $dataTable)
     {
-        $attributes     =   $product->productAttributes()->get();
-        $thumbnail      =   $product->media()->thumbnail()->first();
-        $images         =   $product->media()->image()->get();
+        $product->load([
+            'productAttributes',
+            'media' => function ($query) {
+                $query->thumbnail()
+                    ->orWhere(function ($query) {
+                        $query->image();
+                    });
+            }
+        ]);
+
+        $attributes     =   $product->productAttributes;
+        $thumbnail      =   $product->thumbnail;
+        $images         =   $product->images;
 
         return $dataTable->with(['product_id' => $product->id])
             ->render('product.show', compact('product', 'attributes', 'thumbnail', 'images'));
@@ -139,19 +152,33 @@ class ProductController extends Controller
      */
     public function edit(Product $product, ProductAttributeDataTable $dataTable)
     {
-        $attributes     =   $product->productAttributes()->get();
-        $thumbnail      =   $product->media()->thumbnail()->first();
-        $images         =   $product->media()->image()->get();
-        $max_files      =   Product::MAX_IMAGES - $images->count();
+        $product->load([
+            'productAttributes',
+            'media' => function ($query) {
+                $query->thumbnail()
+                    ->orWhere(function ($query) {
+                        $query->image();
+                    });
+            }
+        ]);
+
+        $attributes     =   $product->productAttributes;
+        $thumbnail      =   $product->thumbnail;
+        $images         =   $product->images;
+
+        $max_files      =   Media::MAX_IMAGE_PRODUCT - $product->images->count();
         $statuses       =   $this->statuses;
         $stock_types    =   $this->stock_types;
         $categories     =   $this->categories;
 
+        $slot_types     =   [
+            ProductAttribute::SLOT_TYPE_DAILY,
+            ProductAttribute::SLOT_TYPE_WEEKLY,
+            ProductAttribute::SLOT_TYPE_MONTHLY
+        ];
+
         return $dataTable->with(['product_id' => $product->id])
-            ->render(
-                'product.edit',
-                compact('product', 'max_files', 'statuses', 'stock_types', 'categories', 'thumbnail', 'images', 'attributes')
-            );
+            ->render('product.edit', compact('product', 'max_files', 'statuses', 'stock_types', 'categories', 'thumbnail', 'images', 'attributes', 'slot_types'));
     }
 
     /**

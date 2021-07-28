@@ -137,7 +137,7 @@ $(function () {
 
             }
 
-            alertHeader(messages);
+            // alertHeader(messages);
             customAlert(response.message ?? response, 'error');
         });
     }

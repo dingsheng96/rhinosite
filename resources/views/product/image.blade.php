@@ -8,6 +8,8 @@
         </tr>
     </thead>
     <tbody>
+
+        @if ($thumbnail)
         <tr>
             <td>1</td>
             <td>{{ $thumbnail->type }}</td>
@@ -30,8 +32,9 @@
                 </div>
             </td>
         </tr>
-        @forelse ($images as $image)
+        @endif
 
+        @forelse ($images as $image)
         <tr>
             <td>{{ ($loop->iteration + 1) }}</td>
             <td>{{ $image->type }}</td>
@@ -43,27 +46,22 @@
                 </a>
             </td>
             <td>
-                <a role="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ __('labels.action') }}
-                </a>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <a role="button" href="{{ $image->full_file_path }}" class="dropdown-item" download>
-                        <i class="fas fa-download mr-2 text-success"></i>
-                        {{ __('labels.download') }}
-                    </a>
-                    @can('product.delete')
-                    <a role="button" href="#" class="dropdown-item" title="{{ __('labels.delete') }}" data-toggle="modal"
-                        onclick="event.preventDefault(); deleteAlert('{{ __('messages.confirm_question') }}', '{{ __('messages.delete_info') }}', '{{ route('products.media.destroy', ['product' => $product->id, 'medium' => $image->id]) }}')">
-                        <i class="fas fa-trash mr-2 text-red"></i>
-                        {{ __('labels.delete') }}
-                    </a>
-                    @endcan
-                </div>
+                @include('components.action', [
+                'download' => [
+                'route' => $image->full_file_path,
+                'attribute' => 'download'
+                ],
+                'delete' => [
+                'permission' => 'product.delete',
+                'route' => route('products.media.destroy', ['product' => $product->id, 'medium' => $image->id])
+                ]
+                ])
+
             </td>
         </tr>
         @empty
         <tr>
-            <td colspan="3" class="text-center">{{ __('messages.no_records') }}</td>
+            <td colspan="4" class="text-center">{{ __('messages.no_records') }}</td>
         </tr>
         @endforelse
     </tbody>

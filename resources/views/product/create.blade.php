@@ -68,8 +68,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="description" class="col-form-label">{{ __('labels.description') }}</label>
-                                    <textarea name="description" id="description" cols="100" rows="5" placeholder="{{ __('labels.text_placeholder', ['label' => strtolower(__('labels.description'))]) }}"
-                                        class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
+                                    <textarea name="description" id="description" cols="100" rows="5" class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
                                     @error('description')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -80,26 +79,21 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12 col-md-6">
                                 <div class="form-group">
-                                    <label for="thumbnail" class="col-form-label">{{ __('labels.upload_thumbnail') }} <span class="text-red">*</span></label>
-
-                                    <div class="custom-file">
-                                        <input type="file" id="thumbnail" name="thumbnail" class="custom-file-input custom-img-input @error('thumbnail') is-invalid @enderror" required accept=".jpg,.jpeg,.png">
-                                        <label class="custom-file-label" for="thumbnail">Choose file</label>
-                                        @error('thumbnail')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-
-                                    <div class="row my-3">
-                                        <div class="col-12 col-md-3">
+                                    <label for="thumbnail" class="col-form-label">{{ __('labels.upload_thumbnail') }}</label>
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
                                             <img src="{{ $default_preview }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
                                         </div>
-                                        <div class="col-12 col-md-9">
-                                            <ul>{!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG', 'dimension' => '1024x1024']) !!}</ul>
+                                        <div class="col-md-6 col-12">
+                                            <input type="file" id="thumbnail" name="thumbnail" class="form-control-file custom-img-input @error('thumbnail') is-invalid @enderror" required accept=".jpg,.jpeg,.png">
+                                            @error('thumbnail')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                            <ul class="pl-3">{!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG', 'dimension' => '1024x1024']) !!}</ul>
                                         </div>
                                     </div>
                                 </div>
@@ -111,10 +105,11 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="files" class="col-form-label">{{ trans_choice('labels.upload_image', 2) }}</label>
-                                    <div class="dropzone" id="myDropzone" data-max-files="{{ $max_files }}" data-accepted-files=".jpg,.jpeg,.png">
+                                    <div class="dropzone" id="myDropzone" data-max-files="{{ $max_files }}" data-accepted-files=".jpg,.jpeg,.png" data-action="update">
                                         <div class="dz-default dz-message">
                                             <h1><i class="fas fa-cloud-upload-alt"></i></h1>
                                             <h4>{{ __('messages.drag_and_drop') }}</h4>
+                                            <ul class="list-unstyled">{!! trans_choice('messages.upload_image_rules', 2, ['maxsize' => '10mb', 'extensions' => 'JPG,JPEG, PNG', 'maxfiles' => $max_files, 'dimension' => '1024x1024']) !!}</ul>
                                         </div>
                                     </div>
                                     @error('files')
@@ -122,7 +117,6 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
-                                    <ul>{!! trans_choice('messages.upload_image_rules', 2, ['maxsize' => '10mb', 'extensions' => 'JPG,JPEG, PNG', 'maxfiles' => $max_files, 'dimension' => '1024x1024']) !!}</ul>
                                 </div>
                             </div>
                         </div>

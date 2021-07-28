@@ -190,6 +190,9 @@ return [
     'reg_no' => 'Registration No.',
     'amount' => 'Amount',
     'slot' => 'Slot',
+    'slot_type' => 'Slot Type',
+    'daily_shows_slots' => 'Daily Listed Slots',
+    'total_listed_slots_per_slot_type' => 'Total Listed Slots per Slot Type',
     'per_day' => 'per day',
     'per_week' => 'per week',
     'per_month' => 'per month'
