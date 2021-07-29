@@ -8,20 +8,18 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class AccountVerified extends Notification
+class VerifyUserDetail extends Notification
 {
     use Queueable;
-
-    public $user_details;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(UserDetail $user_details)
+    public function __construct()
     {
-        $this->user_details = $user_details;
+        //
     }
 
     /**
@@ -43,11 +41,29 @@ class AccountVerified extends Notification
      */
     public function toMail($notifiable)
     {
+        $notifiable->load(['userDetail']);
+
+        $lang       =   'mail.company_verified';
+
+        $userDetail =   $notifiable->userDetail;
+        $status     =   $userDetail->status;
+
+        $greeting   =   __('mail.greeting', ['name' => $notifiable->name]);
+        $subject    =   __($lang . '.subject', ['status' => __('labels.' . $status)]);
+        $line_1     =   __($lang . $status . '.line_1');
+        $line_2     =   __($lang . $status . '.line_2');
+        $line_3     =   __($lang . $status . '.line_3');
+        $line_4     =   __($lang . $status . '.line_4');
+        $line_5     =   __($lang . $status . '.line_5');
+
         return (new MailMessage)
-            ->subject(__('mail.merchant_verified.subject', ['status' => __('labels.' . $this->user_details->status)]))
-            ->greeting(__('mail.merchant_verified.greetings', ['name' => $notifiable->name]))
-            ->line(__('mail.merchant_verified.' . $this->user_details->status))
-            ->action(__('mail.merchant_verified.action'), route('dashboard'));
+            ->subject($subject)
+            ->greeting($greeting)
+            ->line($line_1)
+            ->line($line_2)
+            ->line($line_3)
+            ->line($line_4)
+            ->line($line_5);
     }
 
     /**

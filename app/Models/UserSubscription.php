@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\User;
+use App\Helpers\Status;
+use App\Models\ProductAttribute;
+use App\Models\UserSubscriptionLog;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -15,7 +19,13 @@ class UserSubscription extends Model
     protected $table = 'user_subscriptions';
 
     protected $fillable = [
-        'user_id', 'package_id', 'status', 'auto_billing'
+        'user_id', 'subscribable_type', 'subscribable_id',
+        'status', 'recurring', 'next_billing_at', 'activated_at'
+    ];
+
+    protected $casts = [
+        'next_billing_at' => 'datetime',
+        'activated_at' => 'datetime'
     ];
 
     // Relationships
@@ -24,9 +34,14 @@ class UserSubscription extends Model
         return $this->hasMany(UserSubscriptionLog::class, 'user_subscription_id', 'id');
     }
 
-    public function package()
+    public function subscribable()
     {
-        return $this->belongsTo(Package::class, 'package_id', 'id');
+        return $this->morphTo();
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     // Scopes
@@ -35,9 +50,9 @@ class UserSubscription extends Model
         return $query->where('status', self::STATUS_ACTIVE);
     }
 
-    public function scopeAutoBilling($query)
+    public function scopeRecurring($query)
     {
-        return $query->where('auto_billing', true);
+        return $query->where('recurring', true);
     }
 
     public function scopeInactive($query)
@@ -46,23 +61,61 @@ class UserSubscription extends Model
     }
 
     // Attributes
+    public function setNextBillingAtAttribute($value)
+    {
+        $this->attributes['next_billing_at'] = $value->startOfDay();
+    }
+
     public function getSubscriptionDateAttribute()
     {
         return $this->created_at->format('jS M Y') ?? null;
     }
 
-    public function getValidityInMonthAttribute()
+    public function getNameAttribute()
     {
-        return $this->validity / 30;
+        if ($this->subscribable) {
+            if ($this->subscribable_type == ProductAttribute::class) {
+
+                return $this->subscribable->product->name;
+            }
+
+            return $this->subscribable->name;
+        }
+
+        return null;
     }
 
-    public function getActiveSubscriptionLogAttribute()
+    public function getNextBillingAtAttribute($value)
     {
-        return $this->userSubscriptionLogs()->active()->first();
+        if ($value) {
+            return date('Y-m-d', strtotime($value));
+        }
+
+        return '-';
     }
 
-    public function getExpiredDateAttribute()
+    public function getExpiredAtAttribute()
     {
-        return $this->active_subscription_log->expired_at->format('jS M Y');
+        if ($this->active_user_subscription_log) {
+            return $this->active_user_subscription_log->expired_at->toDateString();
+        }
+
+        return '-';
+    }
+
+    public function getActivatedAtAttribute($value)
+    {
+        if ($value) {
+            return date('Y-m-d', strtotime($value));
+        }
+
+        return '-';
+    }
+
+    public function getStatusLabelAttribute()
+    {
+        $label =  Status::instance()->statusLabel($this->status);
+
+        return '<span class="' . $label['class'] . ' px-3">' . $label['text'] . '</span>';
     }
 }

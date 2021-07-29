@@ -55,7 +55,7 @@ class ProductController extends Controller
         $stock_types    =   $this->stock_types;
         $categories     =   $this->categories;
 
-        return view('product.create', compact('categories', 'max_files', 'statuses', 'stock_types', 'slot_types'));
+        return view('product.create', compact('categories', 'max_files', 'statuses', 'stock_types'));
     }
 
     /**

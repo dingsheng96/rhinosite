@@ -1,11 +1,13 @@
-<table class="table table-hover w-100" id="packageItemDynamicForm">
+<table class="table table-hover w-100 table-bordered" id="packageItemDynamicForm">
 
     <thead>
         <tr>
             <th scope="col" style="width: 35%;">{{ trans_choice('labels.product', 1) }}</th>
             <th scope="col" style="width: 35%;">{{ __('labels.sku') }}</th>
             <th scope="col" style="width: 20%;">{{ __('labels.quantity') }}</th>
+            @if(!$no_action)
             <th scope="col" style="width: 10%;">{{ __('labels.action') }}</th>
+            @endif
         </tr>
     </thead>
 
@@ -17,15 +19,18 @@
             <td>{{ $item->product->name }}</td>
             <td>{{ $item->sku }}</td>
             <td>{{ $item->pivot->quantity }}</td>
+            @if(!$no_action)
             <td>
                 <a role="button" href="#" class="btn btn-danger" onclick="event.preventDefault(); deleteAlert('{{ __('messages.confirm_question') }}', '{{ __('messages.delete_info') }}', '{{ route('packages.products.destroy', ['package' => $package->id, 'product' => $item->id]) }}')">
                     <i class="fas fa-trash"></i>
                 </a>
             </td>
+            @endif
         </tr>
         @endforeach
         @endif
 
+        @if(!$no_action)
         @forelse ((array) old('items') as $index => $item)
         <tr>
             <td>
@@ -78,7 +83,6 @@
         @endif
         @endforelse
 
-
         <tr id="packageItemCloneTemplate" aria-hidden="true" hidden="true">
             <td>
                 <select name="items[__REPLACE__][product]" id="product__REPLACE__" class="form-control select2 sku-filter" disabled>
@@ -102,8 +106,11 @@
                 </button>
             </td>
         </tr>
+        @endif
 
     </tbody>
+
+    @if(!$no_action)
     <tfoot>
         <tr>
             <td colspan="4">
@@ -114,4 +121,6 @@
             </td>
         </tr>
     </tfoot>
+    @endif
+
 </table>

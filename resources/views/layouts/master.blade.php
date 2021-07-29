@@ -42,11 +42,11 @@
 
     @else
 
-    @include('layouts.topnav')
+    @includeWhen(empty($blank), 'layouts.topnav')
 
     @yield('content')
 
-    @include('layouts.footer')
+    @includeWhen(empty($blank), 'layouts.footer')
 
     @endif
 

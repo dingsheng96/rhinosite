@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Currency;
 use App\Support\Facades\PriceFacade;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -96,5 +97,25 @@ class Price extends Model
         }
 
         return;
+    }
+
+    public function getUnitPriceWithCurrencyAttribute()
+    {
+        return $this->currency->code . ' ' . $this->unit_price;
+    }
+
+    public function getDiscountWithCurrencyAttribute()
+    {
+        return $this->currency->code . ' ' . $this->discount;
+    }
+
+    public function getSellingPriceWithCurrencyAttribute()
+    {
+        return $this->currency->code . ' ' . $this->selling_price;
+    }
+
+    public function getDiscountWithPercentageAttribute()
+    {
+        return $this->discount_percentage . '%';
     }
 }

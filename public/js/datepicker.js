@@ -2,10 +2,11 @@ $(function () {
 
     if($('.date-picker').length > 0) {
 
-        let datepicker = new Pikaday({
-            field: $('.date-picker')[0],
+        let datepicker_input = $('.date-picker');
+
+        datepicker_input.pikaday({
             format: 'YYYY-MM-DD',
-            yearRange: [1900, new Date().getFullYear()]
+            yearRange: [1900, new Date().getFullYear()],
         });
     }
 

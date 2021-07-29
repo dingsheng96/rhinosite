@@ -2,32 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Misc;
 use App\Models\Price;
 use App\Helpers\Status;
 use App\Models\Product;
 use App\Helpers\Message;
 use App\Helpers\Response;
 use App\Models\Permission;
-use Illuminate\Http\Request;
 use App\Models\ProductAttribute;
 use App\DataTables\PriceDataTable;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Support\Facades\PriceFacade;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\ProductPriceRequest;
 use App\Http\Requests\ProductAttributeRequest;
 use App\Support\Facades\ProductAttributeFacade;
 
 class ProductAttributeController extends Controller
 {
-    public $stock_types, $statuses, $slot_types;
+    public $stock_types, $statuses, $slot_types, $validity_types;
 
     public function __construct()
     {
-        $this->stock_types = [ProductAttribute::STOCK_TYPE_FINITE, ProductAttribute::STOCK_TYPE_INFINITE];
-        $this->statuses = Status::instance()->activeStatus();
-        $this->slot_types =  Status::instance()->adsSlotType();
+        $this->stock_types      =   Misc::instance()->productStockTypes();
+        $this->slot_types       =   Misc::instance()->adsSlotType();
+        $this->validity_types   =   Misc::instance()->validityType();
+        $this->statuses         =   Status::instance()->activeStatus();
     }
 
     /**
@@ -51,7 +50,8 @@ class ProductAttributeController extends Controller
             'product' => $product,
             'stock_types' => $this->stock_types,
             'statuses' => $this->statuses,
-            'slot_types' => $this->slot_types
+            'slot_types' => $this->slot_types,
+            'validity_types' => $this->validity_types
         ]);
     }
 
@@ -110,15 +110,17 @@ class ProductAttributeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product, ProductAttribute $attribute, PriceDataTable $dataTable)
+    public function show(Product $product, ProductAttribute $attribute)
     {
-        return $dataTable->with([
-            'parent_class' => ProductAttribute::class,
-            'parent_id' => $attribute->id,
-            'delete_permission' => 'product.delete',
-            'update_permission' => 'product.update',
-            'delete_route' => route('products.attributes.prices.destroy', ['product' => $product->id, 'attribute' => $attribute->id, 'price' => '__REPLACE__'])
-        ])->render('product.attribute.show', compact('product', 'attribute'));
+        $attribute->load([
+            'prices' => function ($query) {
+                $query->with(['currency.countries'])->defaultPrice();
+            }
+        ]);
+
+        $default_price = $attribute->prices->first();
+
+        return view('product.attribute.show', compact('product', 'attribute', 'default_price'));
     }
 
     /**
@@ -127,19 +129,24 @@ class ProductAttributeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product, ProductAttribute $attribute, PriceDataTable $dataTable)
+    public function edit(Product $product, ProductAttribute $attribute)
     {
-        $default_price = $attribute->prices()->defaultPrice()->first();
+        $attribute->load([
+            'prices' => function ($query) {
+                $query->defaultPrice();
+            }
+        ]);
 
-        return $dataTable->with([
-            'parent_class' => ProductAttribute::class,
-            'parent_id' => $attribute->id,
-        ])->render('product.attribute.edit', [
+        $default_price = $attribute->prices->first();
+
+        return view('product.attribute.edit', [
             'product' => $product,
             'attribute' => $attribute,
             'statuses' => $this->statuses,
             'stock_types' => $this->stock_types,
-            'default_price' => $default_price
+            'default_price' => $default_price,
+            'slot_types' => $this->slot_types,
+            'validity_types' => $this->validity_types
         ]);
     }
 
@@ -161,7 +168,10 @@ class ProductAttributeController extends Controller
 
         try {
 
-            $attribute = ProductAttributeFacade::setModel($attribute)
+            $product->load(['productAttributes.prices']);
+
+            $attribute = ProductAttributeFacade::setParent($product)
+                ->setModel($attribute)
                 ->setRequest($request)
                 ->storeData()
                 ->getModel();

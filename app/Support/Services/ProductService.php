@@ -17,7 +17,6 @@ class ProductService extends BaseService
     public function storeData()
     {
         $this->storeDetails();
-        $this->storeAttributes();
         $this->storeImages();
 
         return $this;
@@ -39,29 +38,6 @@ class ProductService extends BaseService
         return $this;
     }
 
-    public function storeAttributes()
-    {
-        if (!empty($this->request->get('attributes'))) {
-
-            $data = $this->request->get('attributes');
-
-            foreach ($data as $value) {
-
-                $attributes = new ProductAttribute();
-
-                $attributes->sku            =   $value['sku'];
-                $attributes->stock_type     =   $value['stock_type'];
-                $attributes->quantity       =   $value['quantity'];
-                $attributes->is_available   =   array_key_exists('is_available', $value);
-                $attributes->validity       =   $value['validity'];
-                $attributes->color          =   $value['color'];
-
-                $this->model->productAttributes()->save($attributes);
-            }
-        }
-
-        return $this;
-    }
 
     public function storeImages()
     {

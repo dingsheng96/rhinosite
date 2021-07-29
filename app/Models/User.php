@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\Rating;
 use App\Helpers\Status;
 use App\Models\Address;
+use App\Models\Country;
 use App\Models\Project;
 use App\Models\Service;
 use App\Models\Wishlist;
@@ -181,6 +182,13 @@ class User extends Authenticatable implements MustVerifyEmail
             ->orderByDesc('ratings');
     }
 
+    public function scopeActiveSubscription($query)
+    {
+        return $query->whereHas('userSubscriptions', function ($query) {
+            $query->active();
+        });
+    }
+
     // Attributes
     public function setPhoneAttribute($value)
     {
@@ -274,11 +282,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->categories->first();
     }
 
-    public function getCurrentSubscriptionAttribute()
-    {
-        return $this->userSubscriptions()->active()->first();
-    }
-
     public function getRatingAttribute(): int
     {
         return round($this->ratedBy()->avg('scale'));
@@ -362,5 +365,18 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return '<span class="badge badge-danger badge-pill px-3">' . __('labels.unverified') . '</span>';
+    }
+
+    public function getActiveSubscriptionAttribute()
+    {
+        return $this->userSubscriptions()->active()->first();
+    }
+
+    public function getActiveSubscriptionLatestLogAttribute()
+    {
+        return $this->active_subscription
+            ->userSubscriptionLogs()
+            ->orderByDesc('renewed_at')
+            ->first();
     }
 }

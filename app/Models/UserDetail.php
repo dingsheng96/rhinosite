@@ -3,7 +3,11 @@
 namespace App\Models;
 
 use App\Models\Role;
+use App\Models\User;
+use App\Models\Media;
 use App\Helpers\Status;
+use App\Models\Address;
+use App\Models\Country;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -97,5 +101,16 @@ class UserDetail extends Model
     public function getBusinessSinceAttribute($value)
     {
         return date('Y-m-d', strtotime($value));
+    }
+
+    public function getFormattedPicPhoneAttribute()
+    {
+        if (empty($this->pic_phone)) {
+            return null;
+        }
+
+        $format = chunk_split($this->pic_phone, 4, ' ');
+
+        return '+' . rtrim($format, ' ');
     }
 }

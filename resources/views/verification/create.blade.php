@@ -2,15 +2,14 @@
 
 @section('content')
 
-<div class="container" style="padding-top: 8rem; padding-bottom: 5rem;">
+<div class="container" style="padding-top: 7rem; padding-bottom: 5rem;">
 
     <form action="{{ route('verifications.store') }}" method="post" role="form" enctype="multipart/form-data">
-
         @csrf
 
-        <div class="row">
+        <div class="row mt-3">
             <div class="col-12 ">
-                <div class="card card-body">
+                <div class="card card-body shadow">
 
                     <h5 class="font-weight-bold">{{ __('app.complete_profile_title') }}</h5>
                     <p class="text-muted">{{ __('app.complete_profile_subtitle') }}</p>

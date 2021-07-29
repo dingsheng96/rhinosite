@@ -129,35 +129,6 @@ $(function() {
         $('.sale-price-input').val(calcSellingPrice(unit_price, discount));
     });
 
-    // carousel
-    if($('.multiple-items-slide').length > 0) {
-
-        $('.multiple-items-slide').slick({
-            infinite: false,
-            slidesToShow: 4,
-            slidesToScroll: 4,
-            arrows: true,
-            prevArrow: '<button type="button" class=" btn btn-light bg-orange rounded-circle slick-prev"><i class="fas fa-chevron-left"></i></button>',
-            nextArrow: '<button type="button" class="btn btn-light bg-orange rounded-circle slick-next"><i class="fas fa-chevron-right"></i></button>',
-            responsive: [
-                {
-                    breakpoint: 1024,
-                    settings: {
-                        slidesToShow: 2,
-                        slidesToScroll: 2,
-                    }
-                },
-                {
-                    breakpoint: 768,
-                    settings: {
-                        slidesToShow: 1,
-                        slidesToScroll: 1
-                    }
-                }
-            ]
-        });
-    }
-
     if($('.btn-decrement').length > 0) {
         $('.btn-decrement').on('click', function () {
             cartItemDecrement();

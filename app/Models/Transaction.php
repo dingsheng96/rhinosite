@@ -63,14 +63,19 @@ class Transaction extends Model
         $this->attributes['amount'] = PriceFacade::convertFloatToInt($value);
     }
 
-    public function getAmountWithThousandSymbolAttribute()
+    public function getFormattedAmount(bool $thousand_symbol = false)
     {
-        return number_format(PriceFacade::convertIntToFloat($this->amount), 2, '.', ',');
+        if ($thousand_symbol) {
+
+            return number_format(PriceFacade::convertIntToFloat($this->amount), 2, '.', ',');
+        }
+
+        return number_format(PriceFacade::convertIntToFloat($this->amount), 2, '.', '');
     }
 
     public function getAmountWithCurrencyCodeAttribute()
     {
-        return $this->currency->code . ' ' . $this->amount_with_thousand_symbol;
+        return $this->currency->code . ' ' . $this->getFormattedAmount(true);
     }
 
     public function getStatusLabelAttribute()

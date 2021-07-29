@@ -26,7 +26,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-12 col-md-12">
+                            <div class="col-12">
                                 <div class="form-group">
                                     <label for="sku" class="col-form-label">{{ __('labels.sku') }} <span class="text-red">*</span></label>
                                     <input type="text" name="sku" id="sku" class="form-control @error('sku') is-invalid @enderror" value="{{ old('sku') }}">
@@ -43,7 +43,7 @@
                             <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="stock_type" class="col-form-label">{{ __('labels.stock_type') }} <span class="text-red">*</span></label>
-                                    <select name="stock_type" id="stock_type" class="form-control select2 @error('stock_type') is-invalid @enderror">
+                                    <select name="stock_type" id="stock_type" class="form-control @error('stock_type') is-invalid @enderror">
                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.stock_type'))]) }} ---</option>
                                         @foreach ($stock_types as $type)
                                         <option value="{{ $type }}" {{ old('stock_type') == $type ? 'selected' : null }}>{{ Str::title($type) }}</option>
@@ -73,11 +73,11 @@
                         <div class="row">
                             <div class="col-12 col-md-6">
                                 <div class="form-group">
-                                    <label for="status" class="col-form-label">{{ __('labels.status') }} <span class="text-red">*</span></label>
-                                    <select name="status" id="status" class="form-control select2 @error('status') is-invalid @enderror">
-                                        <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.status'))]) }} ---</option>
-                                        @foreach ($statuses as $status => $text)
-                                        <option value="{{ $status }}" {{ old('status', 'active') == $status ? 'selected' : null }}>{{ $text }}</option>
+                                    <label for="validity_type" class="col-form-label">{{ __('labels.validity_type') }}</label>
+                                    <select name="validity_type" id="validity_type" class="form-control @error('validity_type') is-invalid @enderror">
+                                        <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.validity_type'))]) }} ---</option>
+                                        @foreach ($validity_types as $type)
+                                        <option value="{{ $type }}" {{ old('validity_type') == $type ? 'selected' : null }}>{{ Str::title($type) }}</option>
                                         @endforeach
                                     </select>
                                     @error('status')
@@ -89,9 +89,28 @@
                             </div>
                             <div class="col-12 col-md-6">
                                 <div class="form-group">
-                                    <label for="validity" class="col-form-label">{{ __('labels.validity') . ' (' . trans_choice('labels.day', 2) . ')' }}</label>
+                                    <label for="validity" class="col-form-label">{{ __('labels.validity_in_validity_type') }}</label>
                                     <input type="number" name="validity" id="validity" class="form-control @error('validity') is-invalid @enderror" value="{{ old('validity') }}" step="1">
                                     @error('validity')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="status" class="col-form-label">{{ __('labels.status') }} <span class="text-red">*</span></label>
+                                    <select name="status" id="status" class="form-control @error('status') is-invalid @enderror">
+                                        <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.status'))]) }} ---</option>
+                                        @foreach ($statuses as $status => $text)
+                                        <option value="{{ $status }}" {{ old('status', 'active') == $status ? 'selected' : null }}>{{ Str::title($text) }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('status')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -106,7 +125,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="currency" class="col-form-label">{{ __('labels.currency') }} <span class="text-red">*</span></label>
-                                    <select name="currency" id="currency" class="form-control select2 @error('currency') is-invalid @enderror">
+                                    <select name="currency" id="currency" class="form-control @error('currency') is-invalid @enderror">
                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.currency'))]) }} ---</option>
                                         @foreach ($currencies as $currency)
                                         <option value="{{ $currency->id }}" {{ old('currency') == $currency->id ? 'selected' : null }}>{{ $currency->name_with_code }}</option>
@@ -163,25 +182,12 @@
 
                         @if ($product->productCategory->enable_slot)
                         <hr>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="total_slots_per_day">{{ __('labels.daily_shows_slots') }}</label>
-                                    <input type="number" name="total_slots_per_day" id="total_slots_per_day" value="{{ old('total_slots_per_day', 0) }}" class="form-control @error('total_slots_per_day') is-invalid @enderror">
-                                    @error('total_slots_per_day')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="row">
                             <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="slot_type">{{ __('labels.slot_type') }}</label>
-                                    <select name="slot_type" id="slot_type" class="form-control select2 @error('slot_type') is-invalid @enderror">
+                                    <select name="slot_type" id="slot_type" class="form-control @error('slot_type') is-invalid @enderror">
                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.slot_type'))]) }} ---</option>
                                         @foreach ($slot_types as $type)
                                         <option value="{{ $type }}" {{ old('slot_type') == $type ? 'selected' : null }}>{{ Str::title($type) }}</option>

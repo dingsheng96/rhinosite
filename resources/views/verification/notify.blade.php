@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card card-body">
+                <div class="card card-body shadow">
                     @if ($user->userDetail->status == 'pending')
 
                     <img src="{{ asset('storage/verification.png') }}" alt="" class="card-img-top img-fluid mx-auto" style="height: auto; width: 100px;">
@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="card-footer bg-transparent d-flex justify-content-center">
-                        <a href="{{ route('verifications.resubmit') }}" role="button" class="btn btn-dark btn-lg">
+                        <a href="{{ route('verifications.resubmit') }}" role="button" class="btn btn-orange btn-lg">
                             {{ strtoupper(__('app.verify_rejected_btn_update')) }}
                         </a>
                     </div>

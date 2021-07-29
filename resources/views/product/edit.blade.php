@@ -80,8 +80,7 @@
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     <label for="description" class="col-form-label">{{ __('labels.description') }}</label>
-                                                    <textarea name="description" id="description" cols="100" rows="5" placeholder="{{ __('labels.text_placeholder', ['label' => strtolower(__('labels.description'))]) }}"
-                                                        class="form-control @error('description') is-invalid @enderror">{{ old('description', $product->description) }}</textarea>
+                                                    <textarea name="description" id="description" cols="100" rows="5" class="form-control @error('description') is-invalid @enderror">{{ old('description', $product->description) }}</textarea>
                                                     @error('description')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>

@@ -67,41 +67,4 @@ class AccountRequest extends FormRequest
             'logo' =>  ['nullable', 'image', 'max:2000', 'mimes:jpg,jpeg,png', 'dimensions:max_height=1024,max_width=1024'],
         ];
     }
-
-    /**
-     * Get custom messages for validator errors.
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [];
-    }
-
-    /**
-     * Get custom attributes for validator errors.
-     *
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            'name'              =>  __('validation.attributes.name'),
-            'phone'             =>  __('validation.attributes.phone'),
-            'email'             =>  __('validation.attributes.email'),
-            'website'           =>  __('validation.attributes.website'),
-            'facebook'          =>  __('validation.attributes.facebook'),
-            'business_since'    =>  __('validation.attributes.year_of_experience'),
-            'logo'              =>  __('validation.attributes.logo'),
-            'pic_name'          =>  __('validation.attributes.pic_name'),
-            'pic_email'         =>  __('validation.attributes.pic_email'),
-            'pic_phone'         =>  __('validation.attributes.pic_phone'),
-            'address_1'         =>  __('validation.attributes.address_1'),
-            'address_2'         =>  __('validation.attributes.address_2'),
-            'country'           =>  __('validation.attributes.country'),
-            'postcode'          =>  __('validation.attributes.postcode'),
-            'country_state'     =>  __('validation.attributes.country_state'),
-            'city'              =>  __('validation.attributes.city'),
-        ];
-    }
 }

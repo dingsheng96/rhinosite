@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\UserAdsQuota;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -9,7 +10,7 @@ class UserAdsQuotaHistory extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'user_ads_quotas';
+    protected $table = 'user_ads_quota_histories';
 
     protected $fillable = [
         'user_ads_quota_id', 'initial_quantity', 'process_quantity', 'remaining_quantity',

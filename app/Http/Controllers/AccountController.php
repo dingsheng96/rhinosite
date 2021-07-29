@@ -7,6 +7,7 @@ use App\Helpers\Message;
 use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AccountRequest;
 use App\Support\Facades\AccountFacade;
@@ -22,8 +23,18 @@ class AccountController extends Controller
     {
         $user = Auth::user()->load([
             'address',
+            'userAdsQuotas' => function ($query) {
+                $query->orderBy('product_attribute_id');
+            },
             'userDetail' => function ($query) {
                 $query->approvedDetails();
+            },
+            'userSubscriptions' => function ($query) {
+                $query->with([
+                    'userSubscriptionLogs' => function ($query) {
+                        $query->orderByDesc('renewed_at');
+                    }
+                ])->active();
             }
         ]);
 
@@ -64,6 +75,10 @@ class AccountController extends Controller
             $account = AccountFacade::setModel($user)->setRequest($request)->storeData()->getModel();
 
             DB::commit();
+
+            if ($request->get('new_password')) {
+                Auth::guard('web')->login($account);
+            }
 
             $message =  Message::instance()->format($action, $module, 'success');
             $status  =  'success';

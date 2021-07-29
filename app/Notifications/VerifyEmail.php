@@ -54,7 +54,7 @@ class VerifyEmail extends NotificationsVerifyEmail
 
         return (new MailMessage)
             ->subject(__($lang . 'subject'))
-            ->greeting(__($lang . 'greeting', ['name' => $notifiable->name . ',']))
+            ->greeting(__('mail.greeting', ['name' => $notifiable->name . ',']))
             ->line(__($lang . $subnode . '.line_1'))
             ->action(__($lang . 'action'), $verificationUrl)
             ->line(__($lang . $subnode . '.line_2'))

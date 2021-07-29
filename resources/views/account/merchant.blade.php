@@ -6,7 +6,7 @@
 
     <div class="row">
         <div class="col-12 col-md-4">
-            <div class="card card-secondary card-outline">
+            <div class="card shadow">
                 <div class="card-body box-profile">
                     <div class="text-center">
                         <img class="profile-user-img img-fluid img-circle" src="{{ optional($user->logo)->full_file_path ?? $default_preview }}" alt="profile">
@@ -20,10 +20,6 @@
                             <p class="text-muted">{{ $user->last_login_at->toDateTimeString() ?? '-' }}</p>
                         </li>
                         @if (!empty($user_details))
-                        {{-- <li class="list-group-item">
-                            <strong><i class="fas fa-cube mr-1 text-teal"></i> {{ __('labels.category') }}</strong>
-                        <p class="text-muted">{{ $user->category->name }}</p>
-                        </li> --}}
                         <li class="list-group-item">
                             <strong><i class="fas fa-briefcase mr-1 text-purple"></i> {{ __('labels.years_of_experience') }}</strong>
                             <p class="text-muted">{{ trans_choice('labels.year', $user_details->years_of_experience, ['value' => $user_details->years_of_experience]) }}</p>
@@ -40,7 +36,7 @@
                             <strong><i class="fas fa-user mr-1 text-secondary"></i> {{ __('labels.person_in_charge') }}</strong>
                             <p class="text-muted">
                                 {{ $user_details->pic_name }} <br />
-                                {{ $user_details->pic_phone }} <br />
+                                {{ $user_details->formatted_pic_phone }} <br />
                                 {{ $user_details->pic_email }}
                             </p>
                         </li>
@@ -54,88 +50,72 @@
 
             <div class="row">
                 <div class="col-12">
-                    <div class="card card-secondary card-outline card-body">
-                        @if ($user->current_subscription)
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="alert alert-primary">
-
-
-                                    <h5>
-                                        {{ __('labels.current_plan') }}
-                                        <a href="{{ route('subscriptions.index') }}" role="button" class="btn btn-link float-right">
-                                            {{ __('labels.change_plan') }}
-                                        </a>
-                                    </h5>
-                                    <h2>{{ $user->current_subscription->package->name }}</h2>
-                                    <p>
-                                        {{ trans_choice('labels.subscribed_at', 2, ['date' => $user->current_subscription->subscription_date]) }}
-                                        <br>
-                                        {{ trans_choice('labels.expired_at', 2, ['date' => $user->current_subscription->expired_date]) }}
-                                    </p>
-
+                    @if ($user->active_subscription)
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="alert alert-info shadow">
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <h6 class="alert-heading">
+                                            {{ __('labels.current_plan') . ':' }}
+                                        </h6>
+                                        <h3 class="alert-heading">{{ $user->active_subscription->name }}</h3>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <p class="alert-heading text-md-right">
+                                            <a href="{{ route('subscriptions.index') }}" role="button">
+                                                {{ __('labels.change_plan') }}
+                                            </a>
+                                        </p>
+                                        <p class="alert-heading text-md-right">
+                                            <a href="" role="button">
+                                                {{ __('labels.buy_add_on') }}
+                                            </a>
+                                        </p>
+                                    </div>
                                 </div>
+                                <hr>
+                                <p>{{ trans_choice('labels.subscribed_at', 2, ['date' => $user->active_subscription->activated_at]) }}</p>
+                                <p>{{ trans_choice('labels.expired_at', 2, ['date' => $user->active_subscription_latest_log->expired_at]) }}</p>
+                                <p>{{ trans_choice('labels.renewed_at', 2, ['date' => $user->active_subscription_latest_log->renewed_at]) }}</p>
+                                <p>{{ trans_choice('labels.next_billing_at', 2, ['date' => $user->active_subscription->next_billing_at]) }}</p>
                             </div>
                         </div>
-
-                        <div class="card-header">
-                            <h5 class="d-inline">
-                                {{ __('labels.add_on') }}
-                            </h5>
-                            <div class="card-tools">
-                                <a href="" role="button" class="btn btn-outline-primary btn-rounded-corner">
-                                    <i class="fas fa-plus"></i>
-                                    {{ __('labels.buy_add_on') }}
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col" style="width: 10%;">{{ __('#') }}</th>
-                                                <th scope="col" style="width: 70%;">{{ __('labels.add_on') }}</th>
-                                                <th scope="col" style="width: 20%;">{{ __('labels.remaining') }}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @forelse ($user->userAdsQuotas()->get() as $quota)
-                                            <tr>
-                                                <th scope="row">{{ $loop->iteration }}</th>
-                                                <td>{{ $quota->product->name }}</td>
-                                                <td>{{ $quota->quantity }}</td>
-                                            </tr>
-                                            @empty
-
-                                            @endforelse
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-
-                        @else
-                        <div class="row">
-                            <div class="col-12 text-center py-3">
-
-                                <h4>{{ __('messages.no_subscription') }}</h4>
-
-                                <a role="button" href="{{ route('subscriptions.index') }}" class="btn btn-outline-primary btn-rounded-corner my-3">
-                                    {{ __('labels.sign_up_a_plan') }}
-                                </a>
-                            </div>
-                        </div>
-                        @endif
                     </div>
+                    @else
+                    <div class="row">
+                        <div class="col-12 text-center py-3">
+
+                            <h4>{{ __('messages.no_subscription') }}</h4>
+
+                            <a role="button" href="{{ route('subscriptions.index') }}" class="btn btn-outline-primary btn-rounded-corner my-3">
+                                {{ __('labels.sign_up_a_plan') }}
+                            </a>
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
 
+            @if (!empty($user->userAdsQuotas))
+            <div class="row">
+                @forelse ($user->userAdsQuotas as $quota)
+                <div class="col-12 col-md-4">
+                    <div class="small-box bg-white shadow">
+                        <div class="inner">
+                            <h3>{{ $quota->quantity }}</h3>
+                            <p>{{ $quota->product->name }}</p>
+                        </div>
+                    </div>
+                </div>
+                @empty
+                @endforelse
+            </div>
+            @endif
+
             <div class="row">
                 <div class="col-12">
-                    <div class="card card-outline card-secondary">
+                    <div class="card shadow">
                         <div class="card-header bg-transparent p-2">
                             <ul class="nav nav-pills">
                                 <li class="nav-item"><a class="nav-link active" href="#profile" data-toggle="tab">{{ __('labels.profile') }}</a></li>

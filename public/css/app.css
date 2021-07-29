@@ -52970,22 +52970,6 @@ body {
   }
 }
 
-.slick-prev {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  z-index: 10;
-  transform: translateY(-50%);
-}
-
-.slick-next {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  z-index: 10;
-  transform: translateY(-50%);
-}
-
 .disable-spinbox[type=number]::-webkit-outer-spin-button,
 .disable-spinbox[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;

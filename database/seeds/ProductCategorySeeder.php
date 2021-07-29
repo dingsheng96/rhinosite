@@ -21,6 +21,7 @@ class ProductCategorySeeder extends Seeder
             ProductCategory::create([
                 'name'          => $data['name'],
                 'description'   => $data['description'],
+                'enable_slot'   => $data['enable_slot'],
             ],);
         }
 
@@ -30,7 +31,8 @@ class ProductCategorySeeder extends Seeder
     public function getData()
     {
         return [
-            ['name' => ProductCategory::TYPE_ADS, 'description' => 'Ads', 'enable_slot' => true],
+            ['name' => ProductCategory::TYPE_ADS, 'description' => 'Add On Ads', 'enable_slot' => true],
+            ['name' => ProductCategory::TYPE_SUBSCRIPTION, 'description' => 'Monthly Subscription', 'enable_slot' => false],
         ];
     }
 }

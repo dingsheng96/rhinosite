@@ -27,7 +27,8 @@ return [
     'drag_and_drop' => 'Drag and drop files here to upload',
     'boosts_ads_preference_text' => 'You may choose to boost this project',
     'select_prefer_boosts_ads_days' => 'Select your preferred day to boost ads.',
-    'password_format' => 'Minimum 8 characters with at least 1 uppercase letter[A-Z], 1 number[0-9] and 1 special character[@$!%*#?&].',
+    // 'password_format' => 'Minimum 8 characters with at least 1 uppercase letter[A-Z], 1 number[0-9] and 1 special character[@$!%*#?&].',
+    'password_format' => 'Minimum 8 characters with at least 1 uppercase letter[A-Z], 1 lowercase letter [a-z] and 1 number[0-9].',
     'upload_image_rules' => '{1} <li>Only :extensions file type allowed.</li><li>Total file size must be &le; :maxsize.</li><li>Maximum file dimension: :dimension px.</li>|{2,} <li>Only total of :maxfiles files allowed.</li><li>Only :extensions file type allowed</li><li>Total file size must be &le; :maxsize.</li><li>Maximum file dimension: :dimension px.</li>',
     'start_session' => 'Sign in to start your session',
     'no_records' => 'No records found.',
@@ -38,5 +39,9 @@ return [
     'contact_support' => 'Errors found! Please contact customer support.',
     'compare_list_reached_limit' => 'Compare list has reached the maximum limit.',
     'wishlist_empty' => 'Your wishlist is empty',
-    'session_expired' => 'Your session is expired. Please login again.'
+    'session_expired' => 'Your session is expired. Please login again.',
+    'in_using' => 'This :item is in using.',
+    'fill_in_recurring_form' => "Please fill in following details for recurring payment.",
+    'fill_in_credit_card_details' => "Please fill in credit card details for recurring payment.",
+    'order_cancelled' => 'Order has been cancelled',
 ];

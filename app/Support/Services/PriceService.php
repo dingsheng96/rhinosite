@@ -33,6 +33,10 @@ class PriceService extends BaseService
 
     public function calcDiscountPercentage($discount, $price): float
     {
+        if ($price == 0 || $discount == 0) {
+            return 0;
+        }
+
         return (float) ($discount / $price) * 100;
     }
 

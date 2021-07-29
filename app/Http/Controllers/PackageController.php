@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Misc;
 use App\Helpers\Status;
 use App\Models\Package;
 use App\Models\Product;
 use App\Helpers\Message;
 use App\Helpers\Response;
 use App\Models\Permission;
-use Illuminate\Http\Request;
-use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\DB;
 use App\DataTables\PackageDataTable;
 use App\Http\Controllers\Controller;
@@ -23,8 +22,8 @@ class PackageController extends Controller
 
     public function __construct()
     {
-        $this->products     =   Product::orderBy('name', 'asc')->get();
-        $this->stock_types  =   [Package::STOCK_TYPE_FINITE, Package::STOCK_TYPE_INFINITE];
+        $this->products     =   Product::with(['productAttributes.prices'])->orderBy('name', 'asc')->get();
+        $this->stock_types  =   Misc::instance()->packageStockTypes();
         $this->statuses     =   Status::instance()->activeStatus();
     }
 
@@ -103,9 +102,23 @@ class PackageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Package $package)
     {
-        //
+        $package->load([
+            'products',
+            'prices' => function ($query) {
+                $query->defaultPrice();
+            }
+        ]);
+
+        $price = $package->prices->first();
+        $items = $package->products;
+
+        return view('package.show', [
+            'package' => $package,
+            'price' => $price,
+            'items' => $items,
+        ]);
     }
 
     /**
@@ -116,9 +129,15 @@ class PackageController extends Controller
      */
     public function edit(Package $package)
     {
-        $price = $package->prices()->defaultPrice()->first();
+        $package->load([
+            'products',
+            'prices' => function ($query) {
+                $query->defaultPrice();
+            }
+        ]);
 
-        $items = $package->products()->get();
+        $price = $package->prices->first();
+        $items = $package->products;
 
         return view('package.edit', [
             'package' => $package,
@@ -191,7 +210,13 @@ class PackageController extends Controller
 
         try {
 
+            throw_if(
+                $package->userSubscriptions()->active()->count() > 0,
+                new \Exception(__('messages.in_using', ['item' => $module]))
+            );
+
             $package->prices()->delete();
+            $package->carts()->delete();
             $package->delete();
 
             $status     =   'success';
@@ -205,6 +230,8 @@ class PackageController extends Controller
 
             DB::rollBack();
 
+            $message = $e->getMessage();
+
             activity()->useLog('web')
                 ->causedBy(Auth::user())
                 ->performedOn($package)
@@ -216,7 +243,7 @@ class PackageController extends Controller
             ->withStatus($status)
             ->withMessage($message, true)
             ->withData([
-                'redirect_to' => route('packages.edit', ['package' => $package->id])
+                'redirect_to' => route('packages.index')
             ])
             ->sendJson();
     }

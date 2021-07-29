@@ -3,20 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Media;
 use App\Helpers\Status;
+use App\Models\Package;
 use App\Helpers\Message;
 use App\Models\Permission;
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
+use App\Models\ProductCategory;
 use Illuminate\Validation\Rule;
+use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Support\Facades\MerchantFacade;
 use App\DataTables\VerificationDataTable;
 use App\Support\Facades\UserDetailFacade;
-use Illuminate\Database\Eloquent\Builder;
 use App\Http\Requests\VerificationRequest;
 
 class UserVerificationController extends Controller
@@ -154,7 +155,24 @@ class UserVerificationController extends Controller
             'address'
         ]);
 
-        return view('verification.edit', compact('verification', 'statuses'));
+        // temporarily
+        $plans = ProductAttribute::whereHas('product', function ($query) {
+            $query->filterCategory(ProductCategory::TYPE_SUBSCRIPTION);
+        })->whereDoesntHave('userSubscriptions', function ($query) use ($verification) {
+            $query->where('user_id', $verification->id)->active();
+        })->get();
+
+        $packages = Package::with(['userSubscriptions'])
+            ->whereDoesntHave('userSubscriptions', function ($query) use ($verification) {
+                $query->where('user_id', $verification->id)->active(); // exlucde current merchant's active plan
+            })
+            ->get();
+
+        foreach ($packages as $package) {
+            $plans->push($package);
+        }
+
+        return view('verification.edit', compact('verification', 'statuses', 'plans'));
     }
 
     /**

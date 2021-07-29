@@ -12,6 +12,7 @@ use App\Helpers\Status;
 use App\Models\Address;
 use App\Models\Service;
 use App\Models\Language;
+use App\Models\Wishlist;
 use App\Models\AdsBooster;
 use App\Models\Translation;
 use App\Models\CountryState;

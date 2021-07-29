@@ -1,4 +1,3 @@
-{{-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" /> --}}
 <link rel="stylesheet" type="text/css" href="{{ asset('slick/slick-theme.css') }}" />
 <link rel="stylesheet" type="text/css" href="{{ asset('slick/slick.css') }}" />
 <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css?ver=5.8" media="all" />
@@ -10,11 +9,9 @@
 
 @else
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
 <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('slick/slick-theme.css') }}" />
-<link rel="stylesheet" type="text/css" href="{{ asset('slick/slick.css') }}" />
 <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css?v=' . time()) }}">
 
 @endif

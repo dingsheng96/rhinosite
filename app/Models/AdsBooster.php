@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\Status;
+use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductAttribute;
 use Illuminate\Database\Eloquent\Model;

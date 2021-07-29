@@ -22,6 +22,7 @@
                                     <a class="nav-link active" id="vert-tabs-general-tab" data-toggle="pill" href="#vert-tabs-general" role="tab" aria-controls="vert-tabs-general" aria-selected="true">{{ __('labels.general') }}</a>
                                     <a class="nav-link" id="vert-tabs-details-tab" data-toggle="pill" href="#vert-tabs-details" role="tab" aria-controls="vert-tabs-details" aria-selected="false">{{ __('labels.details') }}</a>
                                     <a class="nav-link" id="vert-tabs-location-tab" data-toggle="pill" href="#vert-tabs-location" role="tab" aria-controls="vert-tabs-location" aria-selected="false">{{ __('labels.location') }}</a>
+                                    <a class="nav-link" id="vert-tabs-subscription-tab" data-toggle="pill" href="#vert-tabs-subscription" role="tab" aria-controls="vert-tabs-subscription" aria-selected="false">{{ __('labels.subscription') }}</a>
                                 </div>
                             </div>
                             <div class="col-7 col-md-9">
@@ -194,11 +195,14 @@
                                         <hr>
 
                                         <div class="row">
-                                            <div class="col-12 col-md-6">
+                                            <div class="col-12">
                                                 <div class="form-group">
                                                     <label for="logo" class="col-form-label">{{ __('labels.change_logo') }}</label>
                                                     <div class="row">
-                                                        <div class="col-12">
+                                                        <div class="col-12 col-md-3">
+                                                            <img src="{{ $merchant->logo->full_file_path ?? $default_preview }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
+                                                        </div>
+                                                        <div class="col-12 col-md-9">
                                                             <input type="file" id="logo" name="logo" class="form-control-file custom-img-input @error('logo') is-invalid @enderror" accept=".jpg,.jpeg,.png">
                                                             @error('logo')
                                                             <span class="invalid-feedback" role="alert">
@@ -208,17 +212,16 @@
                                                             <ul class="pl-3 mt-3">{!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG', 'dimension' => '1024x1024']) !!}</ul>
                                                         </div>
                                                     </div>
-                                                    <div class="row mt-2">
-                                                        <div class="col-12 col-md-6">
-                                                            <img src="{{ $merchant->logo->full_file_path ?? $default_preview }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
+                                        </div>
 
-                                            <div class="col-12 col-md-6">
+                                        <hr>
+
+                                        <div class="row">
+                                            <div class="col-12 col-md-3">
                                                 <div class="form-group">
-                                                    <label for="file" class="col-form-label">{{ __('labels.ssm_cert') }} <span class="text-red">*</span></label>
+                                                    <label for="file" class="col-form-label">{{ __('labels.ssm_cert') }}</label>
                                                     <input type="file" name="ssm_cert" id="ssm_cert" value="{{ old('ssm_cert') }}" class="form-control-file @error('ssm_cert') is-invalid @enderror" accept="application/pdf">
                                                     @error('ssm_cert')
                                                     <span class="invalid-feedback" role="alert">
@@ -227,8 +230,9 @@
                                                     @enderror
                                                     <ul class="pl-3 mt-3">{!! trans_choice('messages.upload_file_rules', 1, ['maxsize' => '2mb', 'extensions' => 'PDF']) !!}</ul>
                                                 </div>
+                                            </div>
+                                            <div class="col-12 col-md-9">
                                                 <div class="form-group table-responsive">
-                                                    <label for="media">{{ trans_choice('labels.document', 2) }}</label>
                                                     <table class="table table-bordered table-hover">
                                                         <thead>
                                                             <tr>
@@ -271,24 +275,33 @@
                                     </div>
 
                                     <div class="tab-pane text-left fade show" id="vert-tabs-location" role="tabpanel" aria-labelledby="vert-tabs-location-tab">
-                                        <div class="form-group">
-                                            <label for="address_1" class="col-form-label">{{ __('labels.address_1') }} <span class="text-red">*</span></label>
-                                            <input type="text" name="address_1" id="address_1" class="form-control @error('address_1') is-invalid @enderror" value="{{ old('address_1', $merchant->address->address_1 ?? null) }}">
-                                            @error('address_1')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label for="address_1" class="col-form-label">{{ __('labels.address_1') }} <span class="text-red">*</span></label>
+                                                    <input type="text" name="address_1" id="address_1" class="form-control @error('address_1') is-invalid @enderror" value="{{ old('address_1', $merchant->address->address_1 ?? null) }}">
+                                                    @error('address_1')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
                                         </div>
 
-                                        <div class="form-group">
-                                            <label for="address_2" class="col-form-label">{{ __('labels.address_2') }}</label>
-                                            <input type="text" name="address_2" id="address_2" class="form-control @error('address_2') is-invalid @enderror" value="{{ old('address_2', $merchant->address->address_2 ?? null) }}">
-                                            @error('address_2')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label for="address_2" class="col-form-label">{{ __('labels.address_2') }}</label>
+                                                    <input type="text" name="address_2" id="address_2" class="form-control @error('address_2') is-invalid @enderror" value="{{ old('address_2', $merchant->address->address_2 ?? null) }}">
+                                                    @error('address_2')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <div class="row">
@@ -353,6 +366,80 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="tab-pane text-left fade show" id="vert-tabs-subscription" role="tabpanel" aria-labelledby="vert-tabs-subscription-tab">
+                                        @if (!empty($subscription))
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="alert alert-info">
+                                                    <h6 class="alert-heading">{{ __('labels.current_plan') . ':' }}</h6>
+                                                    <h3 class="alert-heading">{{ $subscription->name }}</h3>
+                                                    <hr>
+                                                    <p>{{ trans_choice('labels.subscribed_at', 2, ['date' => $subscription->activated_at]) }}</p>
+                                                    <p>{{ trans_choice('labels.expired_at', 2, ['date' => $subscription->expired_at]) }}</p>
+                                                    <p>{{ trans_choice('labels.next_billing_at', 2, ['date' => $subscription->next_billing_at]) }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endif
+
+                                        <div class="row">
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="new_plan">{{ __('labels.change_plan') }}</label>
+                                                    <select name="new_plan" id="new_plan" class="form-control select2 @error('new_plan') is-invalid @enderror">
+                                                        <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.plan'))]) }} ---</option>
+                                                        @foreach ($plans as $plan)
+                                                        <option value="{{ json_encode(['id' => $plan->id, 'class' => get_class($plan)]) }}" {{ old('new_plan') == json_encode(['id' => $plan->id, 'class' => get_class($plan)]) ? 'selected' : null }}>{{ $plan->name ?? $plan->product->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('new_plan')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="activate_at">{{ __('labels.activation_date') }}</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="activate_at" id="activate_at" value="{{ old('activate_at') }}" class="form-control date-picker @error('activated_at') is-invalid @enderror bg-white" readonly>
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text bg-white"><i class="fas fa-calendar"></i></span>
+                                                        </div>
+                                                    </div>
+                                                    @error('new_plan')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <div class="icheck-primary">
+                                                        <input type="checkbox" name="recurring" id="recurring" {{ old('recurring') ? 'checked' : null }}>
+                                                        <label for="recurring">{{ __('labels.recurring') }}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        <div class="row">
+                                            <div class="col-12">
+                                                {!! $dataTable->table() !!}
+                                            </div>
+                                        </div>
+
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -376,3 +463,8 @@
 </div>
 
 @endsection
+
+@push('scripts')
+{!! $dataTable->scripts() !!}
+
+@endpush

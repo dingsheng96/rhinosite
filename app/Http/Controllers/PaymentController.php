@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class PaymentController extends Controller
 {
@@ -18,39 +19,20 @@ class PaymentController extends Controller
         $this->merchant_code    =   config('payment.merchant_code');
     }
 
-    public function redirect(Transaction $trans_no)
+    public function redirect(Request $request, Transaction $trans_no)
     {
         $this->ref_no   =   $trans_no->transaction_no;
         $this->currency =   $trans_no->currency->code;
         $this->amount   =   $trans_no->amount;
 
-        // temp status
-        $this->payment_url = route('payment.backend', ['trans_no' => $this->ref_no]);
-        $this->payment_id = 5;
-        $this->status = 1;
+        $is_recurring   =   (bool) $request->get('recurring', false);
 
-        $credentials = [
-            'merchant_code'     =>  $this->merchant_code,
-            'ref_no'            =>  $this->ref_no,
-            'currency'          =>  $this->currency,
-            'amount'            =>  $trans_no->amount_with_thousand_symbol,
-            'prod_desc'         =>  $trans_no->sourceable->concat_item_name,
-            'user_name'         =>  $trans_no->sourceable->user->name,
-            'user_email'        =>  $trans_no->sourceable->user->email,
-            'user_contact'      =>  $trans_no->sourceable->user->phone,
-            'remark'            =>  '',
-            'payment_id'        =>  '5',
-            'lang'              =>  'UTF-8',
-            'signature_type'    =>  'SHA256',
-            'signature'         =>  $this->generateSignature(true),
-            'response_url'      =>  route('payment.response', ['trans_no' => $this->ref_no]),
-            'backend_url'       =>  route('payment.backend', ['trans_no' => $this->ref_no])
-        ];
+        if ($is_recurring) {
 
-        return view('payment.index', [
-            'credentials'   =>  $credentials,
-            'redirect_url'  =>  $this->payment_url
-        ]);
+            $this->setupRecurringPayment($trans_no);
+        }
+
+        $this->setupOneTimePayment($trans_no);
     }
 
     public function response(Request $request, Transaction $trans_no)
@@ -106,8 +88,11 @@ class PaymentController extends Controller
         return view('payment.status', ['transaction' => $trans_no, 'status' => $request->get('status')]);
     }
 
-    private function generateSignature(bool $backend_response = false)
+    private function generateSignature(bool $backend_response = false, bool $recurring = false)
     {
+        if ($recurring) {
+        }
+
         $signature = [
             $this->merchant_key,
             $this->merchant_code,
@@ -123,5 +108,40 @@ class PaymentController extends Controller
         }
 
         return hash('sha256', implode('', $signature));
+    }
+
+    private function setupRecurringPayment($trans_no)
+    {
+    }
+
+    private function setupOneTimePayment($trans_no)
+    {
+        // temp status
+        $this->payment_url = route('payment.backend', ['trans_no' => $this->ref_no]);
+        $this->payment_id = 5;
+        $this->status = 1;
+
+        $credentials = [
+            'MerchantCode'  =>  $this->merchant_code,
+            'RefNo'         =>  $this->ref_no,
+            'Currency'      =>  $this->currency,
+            'Amount'        =>  $trans_no->getFormattedAmount(true),
+            'ProdDesc'      =>  $trans_no->sourceable->concat_item_name,
+            'UserName'      =>  $trans_no->sourceable->user->name,
+            'UserEmail'     =>  $trans_no->sourceable->user->email,
+            'UserContact'   =>  $trans_no->sourceable->user->phone,
+            'Remark'        =>  '',
+            'PaymentId'     =>  '',
+            'Lang'          =>  'UTF-8',
+            'SignatureType' =>  'SHA256',
+            'Signature'     =>  $this->generateSignature(true),
+            'ResponseURL'   =>  route('payment.response', ['trans_no' => $this->ref_no]),
+            'ResponseURL'   =>  route('payment.backend', ['trans_no' => $this->ref_no])
+        ];
+
+        return view('payment.index', [
+            'credentials'   =>  $credentials,
+            'redirect_url'  =>  $this->payment_url
+        ]);
     }
 }

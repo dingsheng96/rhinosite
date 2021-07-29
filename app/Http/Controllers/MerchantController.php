@@ -4,16 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Helpers\Status;
+use App\Models\Package;
+use App\Models\Product;
 use App\Helpers\Message;
 use App\Helpers\Response;
 use App\Models\Permission;
-use Illuminate\Http\Request;
+use App\Models\ProductCategory;
+use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\DataTables\MerchantDataTable;
 use App\Http\Requests\MerchantRequest;
 use App\Support\Facades\MerchantFacade;
+use App\DataTables\SubscriptionLogsDataTable;
 
 class MerchantController extends Controller
 {
@@ -119,21 +123,42 @@ class MerchantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $merchant)
+    public function edit(User $merchant, SubscriptionLogsDataTable $dataTable)
     {
-        $user_details = $merchant->userDetail()
-            ->approvedDetails()
-            ->with(['media'])
-            ->first();
+        $merchant->load([
+            'media',
+            'userDetail' => function ($query) {
+                $query->approvedDetails();
+            },
+            'userSubscriptions' => function ($query) {
+                $query->with(['userSubscriptionLogs'])->active();
+            }
+        ]);
 
-        $documents = $merchant->media()
-            ->ssm()
-            ->orderBy('created_at', 'asc')
+        $user_details   =   $merchant->userDetail;
+        $logo           =   $merchant->media()->logo()->first();
+        $documents      =   $merchant->media()->ssm()->get();
+        $subscription   =   $merchant->userSubscriptions->first();
+        $statuses       =   Status::instance()->activeStatus();
+
+        $plans = ProductAttribute::whereHas('product', function ($query) {
+            $query->filterCategory(ProductCategory::TYPE_SUBSCRIPTION);
+        })->whereDoesntHave('userSubscriptions', function ($query) use ($merchant) {
+            $query->where('user_id', $merchant->id)->active();
+        })->get();
+
+        $packages = Package::with(['userSubscriptions'])
+            ->whereDoesntHave('userSubscriptions', function ($query) use ($merchant) {
+                $query->where('user_id', $merchant->id)->active(); // exlucde current merchant's active plan
+            })
             ->get();
 
-        $statuses = Status::instance()->activeStatus();
+        foreach ($packages as $package) {
+            $plans->push($package);
+        }
 
-        return view('merchant.edit', compact('merchant', 'documents', 'user_details', 'statuses'));
+        return $dataTable->with(['merchant_id', $merchant->id])
+            ->render('merchant.edit', compact('merchant', 'documents', 'user_details', 'statuses', 'logo', 'subscription', 'plans'));
     }
 
     /**
@@ -153,6 +178,16 @@ class MerchantController extends Controller
         $status     =   'fail';
 
         try {
+
+            $merchant->load([
+                'media', 'address',
+                'userDetail' => function ($query) {
+                    $query->approvedDetails();
+                },
+                'userSubscriptions' => function ($query) {
+                    $query->active();
+                }
+            ]);
 
             $merchant = MerchantFacade::setModel($merchant)
                 ->setRequest($request)

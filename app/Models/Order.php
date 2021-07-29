@@ -2,7 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use App\Helpers\Status;
+use App\Models\Currency;
+use App\Models\OrderItem;
+use App\Models\Transaction;
 use Illuminate\Support\Str;
 use App\Support\Facades\PriceFacade;
 use Illuminate\Database\Eloquent\Model;

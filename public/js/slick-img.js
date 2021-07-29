@@ -16,7 +16,8 @@ $(function () {
         focusOnSelect: true,
         infinite: false,
         centerPadding: '0px',
-        responsive: [{
+        responsive: [
+            {
                 breakpoint: 1400,
                 settings: {
                     slidesToShow: 3,
@@ -64,6 +65,30 @@ $(function () {
                 }
             },
 
+        ]
+    });
+
+    $('.slider-subscription').slick({
+        slidesToShow: 3,
+        slidesToScroll: 3,
+        dots: true,
+        infinite: true,
+        centerMode: true,
+        responsive: [
+            {
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 2
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    dots: true,
+                }
+            },
         ]
     });
 });

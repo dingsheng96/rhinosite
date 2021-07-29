@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Helpers\Misc;
 use App\Helpers\Status;
 use App\Models\Currency;
 use Illuminate\Validation\Rule;
@@ -35,32 +36,16 @@ class ProductAttributeRequest extends FormRequest
         $enable_slot = (bool) $product->productCategory->enable_slot;
 
         return [
-            'sku' => [
-                'required',
-                Rule::unique(ProductAttribute::class, 'sku')
-                    ->ignore($this->route('attribute'), 'id')
-                    ->whereNull('deleted_at')
-            ],
-            'stock_type' => [
-                'required',
-                'in:' . ProductAttribute::STOCK_TYPE_FINITE . ',' . ProductAttribute::STOCK_TYPE_INFINITE
-            ],
-            'quantity' => [
-                'required',
-                'integer',
-                'min:0'
-            ],
-            'validity' => [
-                'nullable',
-                'integer',
-                'min:0'
-            ],
-            'currency' => ['required', Rule::exists(Currency::class, 'id')],
-            'unit_price' => ['required', 'numeric'],
-            'discount' => ['required', 'numeric'],
-            'total_slots_per_day' => [Rule::requiredIf($enable_slot), 'nullable', 'integer', 'min:0'],
-            'slot_type' => [Rule::requiredIf($enable_slot), Rule::in(Status::instance()->adsSlotType())],
-            'slot' => [Rule::requiredIf($enable_slot), 'nullable', 'integer', 'min:0']
+            'sku'           => ['required', Rule::unique(ProductAttribute::class, 'sku')->ignore($this->route('attribute'), 'id')->whereNull('deleted_at')],
+            'stock_type'    => ['required', Rule::in(Misc::instance()->productStockTypes())],
+            'quantity'      => ['required', 'integer', 'min:0'],
+            'validity'      => ['nullable', 'integer', 'min:0'],
+            'validity_type' => ['nullable', Rule::in(Misc::instance()->validityType())],
+            'currency'      => ['required', Rule::exists(Currency::class, 'id')],
+            'unit_price'    => ['required', 'numeric'],
+            'discount'      => ['required', 'numeric'],
+            'slot_type'     => [Rule::requiredIf($enable_slot), Rule::in(Misc::instance()->adsSlotType())],
+            'slot'          => [Rule::requiredIf($enable_slot), 'nullable', 'integer', 'min:0']
         ];
     }
 

@@ -4,7 +4,9 @@ namespace App\Support\Services;
 
 use App\Models\Cart;
 use App\Models\Package;
+use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\Auth;
+use App\Support\Services\BaseService;
 use Illuminate\Database\Eloquent\Model;
 
 class CartService extends BaseService
@@ -32,12 +34,20 @@ class CartService extends BaseService
             new \Exception(__('messages.out_of_stock'))
         );
 
-        // delete the package item in cart when item is package
-        if (get_class($item) == Package::class) {
+        $item->load([
+            'prices' => function ($query) {
+                $query->defaultPrice();
+            }
+        ]);
 
-            Cart::where('user_id', $this->buyer->id)
-                ->where('cartable_type', Package::class)
-                ->delete();
+        // delete item which will be charged by recurring
+        if ($this->buyer->carts()
+            ->whereHasMorph('cartable', [Package::class, ProductAttribute::class], function ($query) {
+                $query->where('recurring', true);
+            })->exists()
+        ) {
+
+            $this->buyer->cart()->delete();
         }
 
         // create new cart if not exists
@@ -123,17 +133,15 @@ class CartService extends BaseService
             'cartable.prices' => function ($query) {
                 $query->defaultPrice();
             }
-        ])
-            ->where('user_id', Auth::id())
-            ->get()
+        ])->where('user_id', Auth::id())->get()
             ->map(function ($cart, $key) {
                 return [
-                    'id' => $cart->id,
-                    'name' => $cart->cartable->item_name,
-                    'quantity' => $cart->quantity,
-                    'price' => $cart->cartable->price->selling_price,
-                    'currency' => $cart->cartable->price->currency->code,
-                    'enable_quantity_input' => $cart->enable_quantity_input
+                    'id'                    =>  $cart->id,
+                    'name'                  =>  $cart->cartable->name ?? $cart->cartable->product->name,
+                    'quantity'              =>  $cart->quantity,
+                    'price'                 =>  $cart->cartable->prices->first()->selling_price,
+                    'currency'              =>  $cart->cartable->prices->first()->currency->code,
+                    'enable_quantity_input' =>  $cart->enable_quantity_input
                 ];
             });
 

@@ -26,6 +26,14 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('verifications/resubmit', 'UserVerificationController@resubmit')->name('verifications.resubmit');
     Route::resource('verifications', 'UserVerificationController');
 
+    Route::group(['prefix' => 'checkout', 'as' => 'checkout.'], function () {
+        Route::get('/', 'CheckOutController@index')->name('index');
+        Route::post('/', 'CheckOutController@store')->name('store');
+        Route::post('/recurring', 'CheckOutController@recurring')->name('recurring');
+    });
+
+    Route::resource('subscriptions', 'SubscriptionController');
+
     Route::group(['middleware' => ['verified_merchant']], function () {
 
         Route::get('dashboard', 'HomeController@index')->name('dashboard');
@@ -33,10 +41,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::resource('account', 'AccountController');
 
         Route::resource('carts', 'CartController');
-
-        Route::resource('subscriptions', 'SubscriptionController')->only(['index', 'show']);
-
-        Route::resource('checkout', 'CheckOutController')->only(['index', 'store']);
 
         Route::resource('ads', 'AdsController');
 
@@ -71,16 +75,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::resource('countries.country-states.cities', 'CityController');
 
         Route::resource('activity-logs', 'ActivityLogController');
-
-        Route::resource('wishlist', 'WishlistController');
-    });
-
-    Route::group(['prefix' => 'payment/{trans_no}', 'as' => 'payment.'], function () {
-
-        Route::get('redirect', 'PaymentController@redirect')->name('redirect');
-        Route::post('response', 'PaymentController@response')->name('response');
-        Route::post('backend', 'PaymentController@backendResponse')->name('backend');
-        Route::get('status', 'PaymentController@paymentStatus')->name('status');
     });
 });
 
@@ -98,9 +92,13 @@ Route::group(['as' => 'app.'], function () {
     Route::get('project/{merchant}/profile', 'AppController@showMerchant')->name('merchant.show');
 
     Route::group(['middleware' => ['auth:web', 'verified']], function () {
+
         Route::get('comparisons', 'AppController@compareList')->name('comparisons.index');
         Route::post('comparisons', 'AppController@addToCompareList')->name('comparisons.store');
+
         Route::post('rating', 'AppController@rateUser')->name('ratings.store');
+
+        Route::resource('wishlist', 'WishlistController');
     });
 });
 
@@ -115,4 +113,12 @@ Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
         Route::post('country-states', 'DataController@getCountryStateFromCountry')->name('country-states');
         Route::post('country-states/{country_state}/cities', 'DataController@getCityFromCountryState')->name('country-states.cities');
     });
+});
+
+Route::group(['prefix' => 'payment/{trans_no}', 'as' => 'payment.'], function () {
+
+    Route::get('redirect', 'PaymentController@redirect')->name('redirect');
+    Route::post('response', 'PaymentController@response')->name('response');
+    Route::post('backend', 'PaymentController@backendResponse')->name('backend');
+    Route::get('status', 'PaymentController@paymentStatus')->name('status');
 });

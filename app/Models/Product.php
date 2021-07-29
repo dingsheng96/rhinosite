@@ -2,7 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Media;
 use App\Helpers\Status;
+use App\Models\UserAdsQuota;
+use App\Models\ProductCategory;
+use App\Models\ProductAttribute;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -17,7 +22,8 @@ class Product extends Model
     protected $table = 'products';
 
     protected $fillable = [
-        'name', 'description', 'status', 'product_category_id'
+        'name', 'description', 'status', 'product_category_id',
+        'recurring', 'purchase_limit'
     ];
 
     // Relationships

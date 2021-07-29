@@ -90124,6 +90124,67 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
 /***/ }),
 
+/***/ "./node_modules/pikaday/plugins/pikaday.jquery.js":
+/*!********************************************************!*\
+  !*** ./node_modules/pikaday/plugins/pikaday.jquery.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * Pikaday jQuery plugin.
+ *
+ * Copyright © 2013 David Bushell | BSD & MIT license | https://github.com/Pikaday/Pikaday
+ */
+
+(function (root, factory)
+{
+    'use strict';
+
+    if (true) {
+        // CommonJS module
+        factory(__webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"), __webpack_require__(/*! pikaday */ "./node_modules/pikaday/pikaday.js"));
+    } else {}
+}(this, function ($, Pikaday)
+{
+    'use strict';
+
+    $.fn.pikaday = function()
+    {
+        var args = arguments;
+
+        if (!args || !args.length) {
+            args = [{ }];
+        }
+
+        return this.each(function()
+        {
+            var self   = $(this),
+                plugin = self.data('pikaday');
+
+            if (!(plugin instanceof Pikaday)) {
+                if (typeof args[0] === 'object') {
+                    var options = $.extend({}, args[0]);
+                    options.field = self[0];
+                    self.data('pikaday', new Pikaday(options));
+                }
+            } else {
+                if (typeof args[0] === 'string' && typeof plugin[args[0]] === 'function') {
+                    plugin[args[0]].apply(plugin, Array.prototype.slice.call(args,1));
+
+                    if (args[0] === 'destroy') {
+                        self.removeData('pikaday');
+                    }
+                }
+            }
+        });
+    };
+
+}));
+
+
+/***/ }),
+
 /***/ "./node_modules/popper.js/dist/esm/popper.js":
 /*!***************************************************!*\
   !*** ./node_modules/popper.js/dist/esm/popper.js ***!
@@ -93040,9 +93101,9 @@ __webpack_require__(/*! admin-lte/plugins/datatables-responsive/js/responsive.bo
 
 __webpack_require__(/*! admin-lte/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js */ "./node_modules/admin-lte/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js");
 
-var Pikaday = __webpack_require__(/*! pikaday/pikaday.js */ "./node_modules/pikaday/pikaday.js");
+__webpack_require__(/*! pikaday/pikaday.js */ "./node_modules/pikaday/pikaday.js");
 
-window.Pikaday = Pikaday;
+__webpack_require__(/*! pikaday/plugins/pikaday.jquery.js */ "./node_modules/pikaday/plugins/pikaday.jquery.js");
 
 /***/ }),
 

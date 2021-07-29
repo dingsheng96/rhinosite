@@ -2,7 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Cart;
+use App\Models\Price;
 use App\Helpers\Status;
+use App\Models\Package;
+use App\Models\Product;
+use App\Models\PackageItem;
+use App\Models\ProductCategory;
+use App\Models\UserSubscription;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -19,10 +26,16 @@ class ProductAttribute extends Model
     const SLOT_TYPE_WEEKLY = 'weekly';
     const SLOT_TYPE_MONTHLY = 'monthly';
 
+    const VALIDITY_TYPE_DAY = 'day';
+    const VALIDITY_TYPE_MONTH = 'month';
+    const VALIDITY_TYPE_YEAR = 'year';
+
     protected $table = 'product_attributes';
 
     protected $fillable = [
-        'product_id', 'sku', 'stock_type', 'quantity', 'status', 'validity'
+        'product_id', 'sku', 'stock_type', 'quantity', 'status',
+        'validity_type', 'validity', 'recurring', 'purchase_limit',
+        'slot', 'slot_type', 'total_slots_per_day'
     ];
 
     // Relationships
@@ -38,14 +51,7 @@ class ProductAttribute extends Model
 
     public function package()
     {
-        return $this->belongsToMany(
-            Package::class,
-            PackageItem::class,
-            'product_attribute_id',
-            'package_id',
-            'id',
-            'id'
-        )->withPivot('quantity');
+        return $this->belongsToMany(Package::class, PackageItem::class, 'product_attribute_id', 'package_id', 'id', 'id')->withPivot('quantity');
     }
 
     public function carts()
@@ -56,6 +62,11 @@ class ProductAttribute extends Model
     public function productCategory()
     {
         return $this->hasOneThrough(ProductCategory::class, Product::class, 'id', 'id', 'product_id', 'product_category_id');
+    }
+
+    public function userSubscriptions()
+    {
+        return $this->morphMany(UserSubscription::class, 'subscribable');
     }
 
     // Scopes
@@ -96,5 +107,12 @@ class ProductAttribute extends Model
         }
 
         return;
+    }
+
+    public function getPricePerValidityTypeAttribute()
+    {
+        $price = $this->default_price;
+
+        return $price->currency->code . ' ' . number_format(($price->selling_price / $this->validity), 2, '.', ',');
     }
 }

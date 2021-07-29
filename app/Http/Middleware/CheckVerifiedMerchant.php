@@ -16,9 +16,18 @@ class CheckVerifiedMerchant
      */
     public function handle($request, Closure $next)
     {
-        $user = Auth::user()->load(['userDetail']);
+        $user = Auth::user()->load([
+            'userDetail',
+            'userSubscriptions' => function ($query) {
+                $query->active();
+            }
+        ]);
 
         if (!$user->is_merchant || $user->userDetail()->approvedDetails()->exists()) { // user is not merchant or merchant user has verified details
+
+            if (!$user->userSubscriptions->first()) {
+                // redirect to subscription package list page
+            }
 
             return $next($request);
         }

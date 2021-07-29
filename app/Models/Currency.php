@@ -2,6 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Order;
+use App\Models\Price;
+use App\Models\Country;
+use App\Models\Project;
+use App\Models\Transaction;
+use App\Models\CurrencyRate;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 

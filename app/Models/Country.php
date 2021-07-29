@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\City;
+use App\Models\Currency;
+use App\Models\CountryState;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 

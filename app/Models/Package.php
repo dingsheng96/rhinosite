@@ -2,7 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Cart;
+use App\Models\Price;
 use App\Helpers\Status;
+use App\Models\PackageItem;
+use App\Models\ProductAttribute;
+use App\Models\UserSubscription;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -17,7 +22,10 @@ class Package extends Model
 
     protected $table = 'packages';
 
-    protected $fillable = ['name', 'description', 'stock_type', 'quantity', 'status'];
+    protected $fillable = [
+        'name', 'description', 'stock_type',
+        'quantity', 'status', 'purchase_limit'
+    ];
 
     // Relationships
     public function products()
@@ -44,7 +52,7 @@ class Package extends Model
 
     public function userSubscriptions()
     {
-        return $this->hasMany(UserSubscription::class, 'package_id', 'id');
+        return $this->morphMany(UserSubscription::class, 'subscribable');
     }
 
     // Attributes

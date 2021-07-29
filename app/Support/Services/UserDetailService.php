@@ -2,10 +2,9 @@
 
 namespace App\Support\Services;
 
-use App\Models\Role;
 use App\Models\UserDetail;
 use Illuminate\Support\Facades\Auth;
-use App\Notifications\AccountVerified;
+use App\Notifications\VerifyUserDetail;
 
 class UserDetailService extends BaseService
 {
@@ -26,7 +25,7 @@ class UserDetailService extends BaseService
             $this->model->save();
 
             // send email notification
-            $this->model->user->notify(new AccountVerified($this->model));
+            $this->model->user->notify(new VerifyUserDetail($this->model));
         }
 
         return $this->getModel();

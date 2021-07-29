@@ -3,9 +3,6 @@
 namespace App\Support\Services;
 
 use App\Models\Package;
-use Illuminate\Http\Request;
-use App\Support\Facades\CartFacade;
-use Illuminate\Support\Facades\Auth;
 
 class PackageService extends BaseService
 {
@@ -25,11 +22,12 @@ class PackageService extends BaseService
 
     public function storeDetails()
     {
-        $this->model->name          = $this->request->get('name');
-        $this->model->description   = $this->request->get('description');
-        $this->model->stock_type    = $this->request->get('stock_type');
-        $this->model->quantity      = $this->request->get('quantity');
-        $this->model->status        = $this->request->get('status');
+        $this->model->name              =   $this->request->get('name');
+        $this->model->description       =   $this->request->get('description');
+        $this->model->stock_type        =   $this->request->get('stock_type');
+        $this->model->quantity          =   $this->request->get('quantity');
+        $this->model->status            =   $this->request->get('status');
+        $this->model->purchase_limit    =   $this->request->get('purchase_limit');
 
         if ($this->model->isDirty()) {
             $this->model->save();
@@ -49,12 +47,10 @@ class PackageService extends BaseService
             $items_array = [];
 
             foreach ($items as $item) {
-                $items_array = [
-                    $item['sku'] => ['quantity' => $item['quantity']]
-                ];
+                $items_array[$item['sku']] = ['quantity' => $item['quantity']];
             }
 
-            $this->model->products()->sync($items_array);
+            $this->model->products()->attach($items_array);
         }
 
         return $this;
