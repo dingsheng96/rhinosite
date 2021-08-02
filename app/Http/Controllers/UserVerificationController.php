@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Helpers\Status;
 use App\Models\Package;
 use App\Helpers\Message;
+use App\Helpers\Response;
 use App\Models\Permission;
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
@@ -34,10 +35,9 @@ class UserVerificationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, VerificationDataTable $dataTable)
+    public function index(VerificationDataTable $dataTable)
     {
-        return $dataTable->with(['request' => $request])
-            ->render('verification.index');
+        return $dataTable->render('verification.index');
     }
 
     /**
@@ -155,22 +155,10 @@ class UserVerificationController extends Controller
             'address'
         ]);
 
-        // temporarily
+        // trial plans
         $plans = ProductAttribute::whereHas('product', function ($query) {
             $query->filterCategory(ProductCategory::TYPE_SUBSCRIPTION);
-        })->whereDoesntHave('userSubscriptions', function ($query) use ($verification) {
-            $query->where('user_id', $verification->id)->active();
-        })->get();
-
-        $packages = Package::with(['userSubscriptions'])
-            ->whereDoesntHave('userSubscriptions', function ($query) use ($verification) {
-                $query->where('user_id', $verification->id)->active(); // exlucde current merchant's active plan
-            })
-            ->get();
-
-        foreach ($packages as $package) {
-            $plans->push($package);
-        }
+        })->trialMode(true)->get();
 
         return view('verification.edit', compact('verification', 'statuses', 'plans'));
     }
@@ -188,7 +176,8 @@ class UserVerificationController extends Controller
             'status' => [
                 'required',
                 Rule::in(array_keys($this->statuses))
-            ]
+            ],
+            'trial' =>  ['nullable', Rule::exists(ProductAttribute::class, 'id')->where('trial_mode', true)]
         ]);
 
         DB::beginTransaction();
@@ -202,7 +191,10 @@ class UserVerificationController extends Controller
             $verification = $verification->load('userDetail');
 
             // verification in user details service
-            $verification = UserDetailFacade::setModel($verification->userDetail)->setRequest($request)->verify();
+            $verification = UserDetailFacade::setModel($verification->userDetail)
+                ->setRequest($request)
+                ->verify()
+                ->getModel();
 
             DB::commit();
 
@@ -235,9 +227,48 @@ class UserVerificationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $verification)
     {
-        //
+        $action     =   Permission::ACTION_DELETE;
+        $module     =   strtolower(trans_choice('modules.verification', 1));
+        $status     =   'fail';
+        $message    =   Message::instance()->format($action, $module, $status);
+
+        DB::beginTransaction();
+
+        try {
+
+            $verification->delete();
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($verification)
+                ->log($message);
+
+            $status     =   'success';
+            $message    =   Message::instance()->format($action, $module, $status);
+
+            DB::commit();
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+
+            $message = $e->getMessage();
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($verification)
+                ->log($e->getMessage());
+        }
+
+        return Response::instance()
+            ->withStatusCode('modules.user', 'actions.' . $action . $status)
+            ->withStatus($status)
+            ->withMessage($message, true)
+            ->withData([
+                'redirect_to' => route('verifications.index')
+            ])
+            ->sendJson();
     }
 
     public function notify()

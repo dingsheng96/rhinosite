@@ -208,6 +208,8 @@ class PackageController extends Controller
         $message    =   Message::instance()->format($action, $module);
         $status     =   'fail';
 
+        DB::beginTransaction();
+
         try {
 
             throw_if(
@@ -226,6 +228,8 @@ class PackageController extends Controller
                 ->causedBy(Auth::user())
                 ->performedOn($package)
                 ->log($message);
+
+            DB::commit();
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();

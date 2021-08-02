@@ -30,6 +30,10 @@ class RecurringPaymentRequest extends FormRequest
      */
     public function rules()
     {
+        if ($this->has('cancel')) {
+            return [];
+        }
+
         return [
             'name'              =>  ['required', 'max:255'],
             'phone'             =>  ['required', new PhoneFormat],

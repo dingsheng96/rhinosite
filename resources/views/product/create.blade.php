@@ -19,7 +19,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="name" class="col-form-label">{{ __('labels.name') }} <span class="text-red">*</span></label>
-                                    <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
+                                    <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}">
                                     @error('name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -87,7 +87,7 @@
                                             <img src="{{ $default_preview }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
                                         </div>
                                         <div class="col-md-6 col-12">
-                                            <input type="file" id="thumbnail" name="thumbnail" class="form-control-file custom-img-input @error('thumbnail') is-invalid @enderror" required accept=".jpg,.jpeg,.png">
+                                            <input type="file" id="thumbnail" name="thumbnail" class="form-control-file custom-img-input @error('thumbnail') is-invalid @enderror" accept=".jpg,.jpeg,.png">
                                             @error('thumbnail')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>

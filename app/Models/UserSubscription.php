@@ -20,7 +20,7 @@ class UserSubscription extends Model
 
     protected $fillable = [
         'user_id', 'subscribable_type', 'subscribable_id',
-        'status', 'recurring', 'next_billing_at', 'activated_at'
+        'status', 'next_billing_at', 'activated_at'
     ];
 
     protected $casts = [
@@ -48,11 +48,6 @@ class UserSubscription extends Model
     public function scopeActive($query)
     {
         return $query->where('status', self::STATUS_ACTIVE);
-    }
-
-    public function scopeRecurring($query)
-    {
-        return $query->where('recurring', true);
     }
 
     public function scopeInactive($query)

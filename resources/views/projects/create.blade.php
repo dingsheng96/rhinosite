@@ -7,7 +7,7 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="card">
+            <div class="card shadow">
                 <form action="{{ route('projects.store') }}" method="post" enctype="multipart/form-data" role="form">
 
                     @csrf

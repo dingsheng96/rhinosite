@@ -29,7 +29,7 @@
                     <a href="{{ route('account.index') }}">{{ __('app.user_dashboard_sidebar_profile') }}</a>
                 </li>
                 <li class="{{ Nav::hasSegment('wishlist', 1, 'active') }}">
-                    <a href="{{ route('wishlist.index') }}">{{ __('app.user_dashboard_sidebar_wishlist') }}</a>
+                    <a href="{{ route('app.wishlist.index') }}">{{ __('app.user_dashboard_sidebar_wishlist') }}</a>
                 </li>
             </div>
         </ul>
@@ -49,7 +49,7 @@
                         <a href="{{ route('account.index') }}">{{ __('app.user_dashboard_sidebar_profile') }}</a>
                     </li>
                     <li class="{{ Nav::hasSegment('wishlist', 1, 'active') }}">
-                        <a href="{{ route('wishlist.index') }}">{{ __('app.user_dashboard_sidebar_wishlist') }}</a>
+                        <a href="{{ route('app.wishlist.index') }}">{{ __('app.user_dashboard_sidebar_wishlist') }}</a>
                     </li>
                 </ul>
             </div>

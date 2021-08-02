@@ -1,28 +1,26 @@
-@extends('layouts.master', ['title' => trans_choice('modules.subscription', 2), 'guest_view' => true])
+@extends('layouts.master', ['title' => trans_choice('modules.subscription', 2), 'guest_view' => true, 'body' => 'enduser'])
 
 @section('content')
 
-<div class="container" style="padding-top: 7rem; padding-bottom: 5rem;">
+<div class="container" style="padding-top: 5rem; padding-bottom: 5rem;">
 
-    <h1 class="text-center font-weight-bold my-5">
-        {{ __('labels.monthly_subscription_plan') }}
-    </h1>
+    <div class="row justify-content-center">
 
-    <div class="row py-3">
-        @foreach ($plans as $plan)
-        <div class="col-12 col-md-4 my-3">
-            <div class="card shadow">
+        <div class="col-12">
+            <h2 class="text-center font-weight-bold">{{ __('labels.choose_plan') }}</h2>
+            <hr>
+        </div>
+
+        @forelse ($plans as $plan)
+        <div class="col-12 col-md-3 my-3 py-3">
+            <div class="card shadow-lg h-100">
                 <div class="card-body text-center">
 
-                    <h3 class="font-weight-bold mt-3 mb-4">{{ $plan->name ?? $plan->product->name }}</h3>
+                    <h4 class="font-weight-bold mt-3 mb-4">{{ $plan->name ?? $plan->product->name }}</h4>
 
                     <h2 class="font-weight-bold d-inline">{{ $plan->prices->first()->selling_price_with_currency }}</h2>
 
-                    <p class="text-muted">
-                        {!! $plan->price_per_validity_type ? '('.trans_choice('labels.month', 1, ['value' => $plan->price_per_validity_type . ' /']).')' : '&nbsp;' !!}
-                    </p>
-
-                    <p>{!! nl2br($plan->description) !!}</p>
+                    <p class="text-muted">{!! nl2br($plan->description ?? $plan->product->description) !!}</p>
 
                     @if (optional($plan->products)->count() > 0)
                     <div class="pt-3">
@@ -41,16 +39,16 @@
 
                 </div>
 
-                <div class="card-footer border-0 bg-transparent py-5">
-                    @if ($user->active_subscription->subscribable->id == $plan->id)
-                    <span class="btn btn-success btn-lg btn-block" style="pointer-events: none; cursor: default;">
+                <div class="card-footer border-0 bg-transparent pt-3 pb-5 text-center">
+                    @if ($user->userSubscriptions->first() && $user->active_subscription->subscribable->id == $plan->id)
+                    <span class="btn btn-success btn-lg shadow" style="pointer-events: none; cursor: default;">
                         {{ strtoupper(__('labels.current_plan')) }}
                     </span>
                     @else
                     <form action="{{ route('subscriptions.store') }}" method="post" role="form" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="plan" value="{{ json_encode(['id' => $plan->id, 'class' => get_class($plan)]) }}">
-                        <button type="submit" class="btn btn-orange btn-lg btn-block">
+                        <button type="submit" class="btn btn-orange btn-lg shadow">
                             {{ strtoupper(__('labels.select')) }}
                         </button>
                     </form>
@@ -59,7 +57,12 @@
 
             </div>
         </div>
-        @endforeach
+        @empty
+        <div class="col-12 my-3 py-3">
+            <p>{{ __('messages.no_plan_available') }}</p>
+        </div>
+        @endforelse
+
     </div>
 
 </div>

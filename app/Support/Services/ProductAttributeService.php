@@ -35,6 +35,9 @@ class ProductAttributeService extends BaseService
         $attribute->validity            =   $this->request->get('validity');
         $attribute->slot                =   $this->request->get('slot');
         $attribute->slot_type           =   $this->request->get('slot_type');
+        $attribute->recurring           =   $this->request->has('recurring');
+        $attribute->published           =   $this->request->has('published');
+        $attribute->trial_mode          =   $this->request->has('trial_mode');
 
         if ($attribute->isDirty()) {
 

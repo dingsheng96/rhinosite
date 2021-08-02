@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Throwable;
 use Illuminate\Session\TokenMismatchException;
+use Illuminate\Routing\Exceptions\InvalidSignatureException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -53,6 +54,8 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof TokenMismatchException) {
             return redirect()->route('login')->with('info', __('messages.session_expired'));
+        } elseif ($exception instanceof InvalidSignatureException) {
+            return redirect()->route('login')->with('info', __('messages.email_verification_link_expired'));
         }
 
         return parent::render($request, $exception);

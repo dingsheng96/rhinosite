@@ -47,7 +47,7 @@ class CartService extends BaseService
             })->exists()
         ) {
 
-            $this->buyer->cart()->delete();
+            $this->buyer->carts()->delete();
         }
 
         // create new cart if not exists
@@ -134,14 +134,17 @@ class CartService extends BaseService
                 $query->defaultPrice();
             }
         ])->where('user_id', Auth::id())->get()
-            ->map(function ($cart, $key) {
+            ->map(function ($cart) {
+
+                $price = $cart->cartable->prices->first();
                 return [
                     'id'                    =>  $cart->id,
                     'name'                  =>  $cart->cartable->name ?? $cart->cartable->product->name,
+                    'description'           =>  $cart->cartable->description ?? $cart->cartable->product->description,
                     'quantity'              =>  $cart->quantity,
-                    'price'                 =>  $cart->cartable->prices->first()->selling_price,
-                    'currency'              =>  $cart->cartable->prices->first()->currency->code,
-                    'enable_quantity_input' =>  $cart->enable_quantity_input
+                    'enable_quantity_input' =>  $cart->enable_quantity_input,
+                    'price'                 =>  $price->selling_price,
+                    'currency'              =>  $price->currency->code,
                 ];
             });
 

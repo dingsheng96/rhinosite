@@ -60,6 +60,6 @@ class CheckSubscriptionPlanExists implements Rule
      */
     public function message()
     {
-        return 'The validation error message.';
+        return 'This plan is already subscribed by this contractor or not exists.';
     }
 }

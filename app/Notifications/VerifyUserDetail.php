@@ -43,18 +43,22 @@ class VerifyUserDetail extends Notification
     {
         $notifiable->load(['userDetail']);
 
-        $lang       =   'mail.company_verified';
+        $lang       =   'mail.company_verified.';
 
         $userDetail =   $notifiable->userDetail;
         $status     =   $userDetail->status;
 
         $greeting   =   __('mail.greeting', ['name' => $notifiable->name]);
-        $subject    =   __($lang . '.subject', ['status' => __('labels.' . $status)]);
+        $subject    =   __($lang . 'subject', ['status' => __('labels.' . $status)]);
         $line_1     =   __($lang . $status . '.line_1');
         $line_2     =   __($lang . $status . '.line_2');
         $line_3     =   __($lang . $status . '.line_3');
         $line_4     =   __($lang . $status . '.line_4');
         $line_5     =   __($lang . $status . '.line_5');
+        $line_6     =   __($lang . $status . '.line_6');
+        $line_7     =   __($lang . $status . '.line_7');
+        $line_8     =   __($lang . $status . '.line_8');
+        $line_9     =   __($lang . $status . '.line_9');
 
         return (new MailMessage)
             ->subject($subject)
@@ -63,7 +67,11 @@ class VerifyUserDetail extends Notification
             ->line($line_2)
             ->line($line_3)
             ->line($line_4)
-            ->line($line_5);
+            ->line($line_5)
+            ->line($line_6)
+            ->line($line_7)
+            ->line($line_8)
+            ->line($line_9);
     }
 
     /**

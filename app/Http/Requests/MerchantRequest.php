@@ -62,10 +62,6 @@ class MerchantRequest extends FormRequest
             'pic_phone'         =>  ['required', new PhoneFormat],
             'pic_email'         =>  ['required', 'email'],
             'ssm_cert'          =>  [Rule::requiredIf(empty($this->route('merchant'))), 'nullable', 'file', 'max:2000', 'mimes:pdf'],
-
-            'new_plan'          =>  ['nullable', new CheckSubscriptionPlanExists($this->route('merchant'))],
-            'activate_at'       =>  ['required_with:new_plan', 'nullable', 'date_format:Y-m-d', 'after_or_equal:today'],
-            'recurring'         =>  ['nullable']
         ];
     }
 

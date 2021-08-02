@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Helpers\Status;
 use App\Models\Currency;
 use App\Models\PaymentMethod;
+use App\App\TransactionDetail;
 use App\Support\Facades\PriceFacade;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,7 +23,7 @@ class Transaction extends Model
 
     protected $fillable = [
         'transaction_no', 'sourceable_type', 'sourceable_id', 'currency_id',
-        'amount', 'payment_method_id', 'status', 'remarks'
+        'amount', 'payment_method_id', 'status'
     ];
 
     // Relationships
@@ -39,6 +40,11 @@ class Transaction extends Model
     public function currency()
     {
         return $this->belongsTo(Currency::class, 'currency_id', 'id');
+    }
+
+    public function transactionDetails()
+    {
+        return $this->hasMany(TransactionDetail::class, 'transaction_id', 'id');
     }
 
     // Scopes

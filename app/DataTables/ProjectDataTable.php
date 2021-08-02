@@ -51,11 +51,11 @@ class ProjectDataTable extends DataTable
                 return $data->price_with_unit;
             })
             ->editColumn('title', function ($data) {
-                return  '<div class="row">
-                <div class="col-12 col-xl-3">
+                return  '<div class="d-flex justify-content-start">
+                <div>
                 <img src="' . $data->thumbnail->full_file_path . '" alt="' . $data->thumbnail->filename . '" class="table-img-preview">
                 </div>
-                <div class="col-12 col-xl-9">' . $data->english_title . '<br/>' . $data->chinese_title . '</div>
+                <div class="pl-3">' . $data->english_title . '<br/>' . $data->chinese_title . '</div>
                 </div>';
             })
             ->editColumn('created_at', function ($data) {

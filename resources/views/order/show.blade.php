@@ -41,7 +41,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($order->orderItems()->get() as $item)
+                                @foreach ($order->orderItems as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->item }}</td>
@@ -58,8 +58,8 @@
                 <div class="row mb-5">
                     <div class="col-6">
                         <p class="lead">{{ __('labels.paid_by') }} :</p>
-                        {{ $order->paid_by->name ?? '-' }} <br>
-                        {{ $order->transaction->transaction_no }}
+                        {{ $order->transaction->paymentMethod->name ?? '-' }} <br>
+                        {{ $order->transaction->transaction_no ?? '-' }}
                     </div>
                     <div class="col-6">
                         <div class="table-responsive">

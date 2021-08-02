@@ -85,11 +85,7 @@ class SubscriptionLogsDataTable extends DataTable
             'userSubscriptionLogs' => function ($query) {
                 $query->orderByDesc('renewed_at');
             }
-        ])->when(!empty($this->merchant_id), function ($query) {
-            $query->whereHas('userSubscription', function ($query) {
-                $query->where('user_id', $this->merchant_id);
-            });
-        })->newQuery();
+        ])->where('user_id', $this->merchant_id)->newQuery();
     }
 
     /**

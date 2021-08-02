@@ -13,12 +13,18 @@ class PaymentMethod extends Model
     protected $table = 'payment_methods';
 
     protected $fillable = [
-        'name'
+        'name', 'system_default'
     ];
 
     // Relationships
     public function transactions()
     {
         return $this->hasMany(Transaction::class, 'payment_method_id', 'id');
+    }
+
+    // Scopes
+    public function scopeSystemDefault($query)
+    {
+        return $query->where('system_default', true);
     }
 }

@@ -63,10 +63,27 @@
 
                 @auth
 
-                @if (Auth::user()->hasVerifiedEmail() && Auth::user()->has_approved_details)
+                @if (Auth::user()->hasVerifiedEmail())
+
+                @merchant
+
+                @if (!Auth::user()->active_subscription)
+                <li class="nav-item">
+                    <a href="{{ route('subscriptions.index') }}" class="nav-button">{{ __('labels.subscribe_plan') }}</a>
+                </li>
+                @elseif(!Auth::user()->has_approved_details)
+                @else
                 <li class="nav-item">
                     <a href="{{ route('dashboard') }}" class="nav-button">{{ __('labels.return_dashboard') }}</a>
                 </li>
+                @endif
+
+                @else {{-- NOT MERCHANT --}}
+                <li class="nav-item">
+                    <a href="{{ route('dashboard') }}" class="nav-button">{{ __('labels.return_dashboard') }}</a>
+                </li>
+                @endmerchant
+
                 @endif
 
                 <li class="nav-item">

@@ -40,10 +40,58 @@
                         </div>
 
                         <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <div class="icheck-primary">
+                                        <input type="checkbox" name="trial_mode" id="trial_mode" class="@error('trial_mode') is-invalid @enderror" {{ old('trial_mode') ? 'checked' : null }}>
+                                        <label for="trial_mode">{{ __('labels.enable_trial') }}</label>
+                                        @error('trial_mode')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <div class="icheck-primary">
+                                        <input type="checkbox" name="recurring" id="recurring" class="@error('recurring') is-invalid @enderror" {{ old('recurring') ? 'checked' : null }}>
+                                        <label for="recurring">{{ __('labels.recurring') }}</label>
+                                        @error('recurring')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <div class="icheck-primary">
+                                        <input type="checkbox" name="published" id="published" class="@error('published') is-invalid @enderror" {{ old('published') ? 'checked' : null }}>
+                                        <label for="published">{{ __('labels.on_listing') }}</label>
+                                        @error('published')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="stock_type" class="col-form-label">{{ __('labels.stock_type') }} <span class="text-red">*</span></label>
-                                    <select name="stock_type" id="stock_type" class="form-control @error('stock_type') is-invalid @enderror">
+                                    <select name="stock_type" id="stock_type" class="form-control select2 @error('stock_type') is-invalid @enderror">
                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.stock_type'))]) }} ---</option>
                                         @foreach ($stock_types as $type)
                                         <option value="{{ $type }}" {{ old('stock_type') == $type ? 'selected' : null }}>{{ Str::title($type) }}</option>
@@ -74,7 +122,7 @@
                             <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="validity_type" class="col-form-label">{{ __('labels.validity_type') }}</label>
-                                    <select name="validity_type" id="validity_type" class="form-control @error('validity_type') is-invalid @enderror">
+                                    <select name="validity_type" id="validity_type" class="form-control select2 @error('validity_type') is-invalid @enderror">
                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.validity_type'))]) }} ---</option>
                                         @foreach ($validity_types as $type)
                                         <option value="{{ $type }}" {{ old('validity_type') == $type ? 'selected' : null }}>{{ Str::title($type) }}</option>
@@ -104,7 +152,7 @@
                             <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="status" class="col-form-label">{{ __('labels.status') }} <span class="text-red">*</span></label>
-                                    <select name="status" id="status" class="form-control @error('status') is-invalid @enderror">
+                                    <select name="status" id="status" class="form-control select2 @error('status') is-invalid @enderror">
                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.status'))]) }} ---</option>
                                         @foreach ($statuses as $status => $text)
                                         <option value="{{ $status }}" {{ old('status', 'active') == $status ? 'selected' : null }}>{{ Str::title($text) }}</option>
@@ -125,7 +173,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="currency" class="col-form-label">{{ __('labels.currency') }} <span class="text-red">*</span></label>
-                                    <select name="currency" id="currency" class="form-control @error('currency') is-invalid @enderror">
+                                    <select name="currency" id="currency" class="form-control select2 @error('currency') is-invalid @enderror">
                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.currency'))]) }} ---</option>
                                         @foreach ($currencies as $currency)
                                         <option value="{{ $currency->id }}" {{ old('currency') == $currency->id ? 'selected' : null }}>{{ $currency->name_with_code }}</option>
@@ -187,7 +235,7 @@
                             <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="slot_type">{{ __('labels.slot_type') }}</label>
-                                    <select name="slot_type" id="slot_type" class="form-control @error('slot_type') is-invalid @enderror">
+                                    <select name="slot_type" id="slot_type" class="form-control select2 @error('slot_type') is-invalid @enderror">
                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.slot_type'))]) }} ---</option>
                                         @foreach ($slot_types as $type)
                                         <option value="{{ $type }}" {{ old('slot_type') == $type ? 'selected' : null }}>{{ Str::title($type) }}</option>

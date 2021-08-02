@@ -17,12 +17,8 @@ class AppController extends Controller
 {
     public function home()
     {
-        $merchants = User::with([
-            'userDetail',
-            'media' => function ($query) {
-                $query->logo();
-            },
-        ])->merchant()->active()
+        $merchants = User::with(['userDetail', 'media'])
+            ->merchant()->active()
             ->whereHas('userDetail', function ($query) {
                 $query->approvedDetails();
             })
@@ -31,7 +27,8 @@ class AppController extends Controller
             })->inRandomOrder()->limit(6)->get();
 
         $projects = Project::with([
-            'user.ratedBy', 'translations', 'address', 'unit', 'services',
+            'user.ratedBy', 'translations',
+            'unit', 'services', 'address.countryState',
             'prices' => function ($query) {
                 $query->defaultPrice();
             },

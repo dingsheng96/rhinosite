@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\Product;
+use Illuminate\Support\Str;
 use App\Models\ProductCategory;
 use App\Models\ProductAttribute;
 use Yajra\DataTables\Html\Button;
@@ -42,10 +43,10 @@ class ProductAttributeDataTable extends DataTable
                 ])->render();
             })
             ->addColumn('status', function ($data) {
-                return '<span>' . $data->status_label . '</span>';
+                return $data->status_label . ($data->published ? '<br> <span class="badge badge-pill badge-primary px-3">' . __('labels.published') . '</span>' : '');
             })
-            ->editColumn('quantity', function ($data) {
-                return $data->stock_type == ProductAttribute::STOCK_TYPE_INFINITE ? '<span>&infin;</span>' : $data->quantity;
+            ->editColumn('stock_type', function ($data) {
+                return Str::title($data->stock_type);
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
@@ -54,13 +55,14 @@ class ProductAttributeDataTable extends DataTable
                 return $data->slot_with_type;
             })
             ->filterColumn('status', function ($query, $keyword) {
-                return $query->when($keyword == 'available', function ($query) {
-                    $query->where('is_available', true);
-                })->when($keyword == 'unavailable', function ($query) {
-                    $query->where('is_available', false);
-                });
+
+                $keyword = strtolower($keyword);
+
+                return $query->when($keyword == 'published', function ($query) {
+                    $query->where('published', true);
+                })->orWhere('status', 'like', "%{$keyword}%");
             })
-            ->rawColumns(['action', 'status', 'quantity']);
+            ->rawColumns(['action', 'status']);
     }
 
     /**
@@ -86,7 +88,7 @@ class ProductAttributeDataTable extends DataTable
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(0, 'asc')
+            ->orderBy(6, 'asc')
             ->responsive(true)
             ->autoWidth(true)
             ->processing(false);
@@ -102,10 +104,11 @@ class ProductAttributeDataTable extends DataTable
         return [
             Column::computed('DT_RowIndex', '#')->width('5%'),
             Column::make('sku')->title(__('labels.sku'))->width('15%'),
+            Column::make('stock_type')->title(__('labels.stock_type'))->width('15%'),
             Column::make('quantity')->title(__('labels.quantity'))->width('10%'),
-            Column::make('slot')->title(__('labels.slot'))->width('20%'),
+            Column::make('slot')->title(__('labels.slot'))->width('15%'),
             Column::make('status')->title(__('labels.status'))->width('10%'),
-            Column::make('created_at')->title(__('labels.created_at'))->width('20%'),
+            Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
             Column::computed('action', __('labels.action'))->width('15%')
                 ->exportable(false)
                 ->printable(false),

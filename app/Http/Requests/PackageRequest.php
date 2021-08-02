@@ -11,6 +11,7 @@ use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\CheckPackageRecurringProductExists;
 
 class PackageRequest extends FormRequest
 {

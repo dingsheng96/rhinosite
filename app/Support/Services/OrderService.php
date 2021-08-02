@@ -2,13 +2,8 @@
 
 namespace App\Support\Services;
 
-use App\Models\Cart;
 use App\Models\User;
 use App\Models\Order;
-use App\Models\Currency;
-use App\Support\Facades\CartFacade;
-use Illuminate\Support\Facades\Auth;
-use App\Support\Facades\TransactionFacade;
 
 class OrderService extends BaseService
 {
@@ -22,21 +17,21 @@ class OrderService extends BaseService
 
     public function createOrder()
     {
-        $this->cart = Cart::with([
-            'cartable.prices' => function ($query) {
-                $query->defaultPrice();
-            }
-        ])->where('user_id', Auth::id())->get();
+        $this->cart = $this->buyer->carts()
+            ->with([
+                'cartable.prices' => function ($query) {
+                    $query->defaultPrice();
+                }
+            ])->get();
 
-        $cart_summary = $this->cart
-            ->map(function ($item, $key) {
-                return [
-                    'currency_id'   =>  $item->price->currency_id,
-                    'price'         =>  $item->unit_price,
-                    'quantity'      =>  $item->quantity,
-                    'total_price'   =>  $item->item_total_price
-                ];
-            });
+        $cart_summary = $this->cart->map(function ($item, $key) {
+            return [
+                'currency_id'   =>  $item->price->currency_id,
+                'price'         =>  $item->unit_price,
+                'quantity'      =>  $item->quantity,
+                'total_price'   =>  $item->item_total_price
+            ];
+        });
 
         // create order
         $this->model = $this->buyer->orders()
@@ -51,7 +46,10 @@ class OrderService extends BaseService
                 'status'        =>  Order::STATUS_PENDING,
             ]);
 
+        $this->setModel($this->model);
+
         $this->storeOrderItems();
+
         $this->removeCart();
 
         return $this;
@@ -61,17 +59,18 @@ class OrderService extends BaseService
     {
         foreach ($this->cart as $cart_item) {
 
-            $item = $cart_item->cartable
-                ->prices()->defaultPrice()->first();
+            $item   =   $cart_item->cartable;
+            $price  =   $item->prices->first();
 
-            $this->model->orderItems()->create([
-                'orderable_type'    =>  $cart_item->cartable_type,
-                'orderable_id'      =>  $cart_item->cartable_id,
-                'item'              =>  $cart_item->cartable->name,
-                'quantity'          =>  $cart_item->quantity,
-                'unit_price'        =>  $item->selling_price,
-                'total_price'       =>  $cart_item->quantity * $item->selling_price
-            ]);
+            $this->model->orderItems()
+                ->create([
+                    'quantity'          =>  $cart_item->quantity,
+                    'orderable_type'    =>  get_class($item),
+                    'orderable_id'      =>  $item->id,
+                    'item'              =>  $item->name ?? $item->product->name,
+                    'unit_price'        =>  $price->selling_price,
+                    'total_price'       =>  $cart_item->quantity * $price->selling_price,
+                ]);
         }
 
         return $this;
@@ -87,9 +86,18 @@ class OrderService extends BaseService
     private function removeCart()
     {
         if ($this->model) {
-            foreach ($this->cart as $cart) {
-                $cart->delete();
-            }
+            $this->buyer->carts()->delete();
         }
+    }
+
+    public function setOrderStatus(string $status = Order::STATUS_PENDING)
+    {
+        $this->model->status = $status;
+
+        if ($this->model->isDirty()) {
+            $this->model->save();
+        }
+
+        return $this;
     }
 }

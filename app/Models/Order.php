@@ -109,17 +109,14 @@ class Order extends Model
 
     public function getPaidByAttribute()
     {
-        return $this->transaction->paymentMethod()->first();
+        return optional($this->transaction)->paymentMethod;
     }
 
     public function getConcatItemNameAttribute()
     {
-        $items = $this->orderItems()
-            ->select('item')
-            ->get()
-            ->pluck('item')
-            ->toArray();
+        $items = $this->orderItems()->select('item')->get()
+            ->pluck('item')->toArray();
 
-        return Str::limit(implode(',', $items), 90, '...');
+        return Str::limit(implode(',', $items), 95, '...');
     }
 }

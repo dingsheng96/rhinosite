@@ -29,7 +29,7 @@
                     <a href="{{ route('account.index') }}">{{ __('app.user_dashboard_sidebar_profile') }}</a>
                 </li>
                 <li class="{{ Nav::hasSegment('wishlist', 1, 'active') }}">
-                    <a href="{{ route('wishlist.index') }}">{{ __('app.user_dashboard_sidebar_wishlist') }}</a>
+                    <a href="{{ route('app.wishlist.index') }}">{{ __('app.user_dashboard_sidebar_wishlist') }}</a>
                 </li>
             </div>
         </ul>
@@ -49,7 +49,7 @@
                         <a href="{{ route('account.index') }}">{{ __('app.user_dashboard_sidebar_profile') }}</a>
                     </li>
                     <li class="{{ Nav::hasSegment('wishlist', 1, 'active') }}">
-                        <a href="{{ route('wishlist.index') }}">{{ __('app.user_dashboard_sidebar_wishlist') }}</a>
+                        <a href="{{ route('app.wishlist.index') }}">{{ __('app.user_dashboard_sidebar_wishlist') }}</a>
                     </li>
                 </ul>
             </div>
@@ -94,7 +94,7 @@
                 <div id="user-profile">
                     <div class="mb-5">
                         <h3 class="d-inline">{{ __('app.user_dashboard_wishlist') }}</h3>
-                        <a href="{{ route('wishlist.index') }}" class="float-md-right">{{ __('app.btn_view_more') }} &raquo;</a>
+                        <a href="{{ route('app.wishlist.index') }}" class="float-md-right">{{ __('app.btn_view_more') }} &raquo;</a>
                     </div>
 
                     <div class="row">

@@ -9,11 +9,11 @@ use App\Models\Permission;
 use Illuminate\Http\Request;
 use App\DataTables\OrderDataTable;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\OrderRequest;
 use App\Http\Controllers\Controller;
 use App\Support\Facades\OrderFacade;
 use Illuminate\Support\Facades\Auth;
 use App\Support\Facades\TransactionFacade;
-use App\Http\Requests\OrderRequest;
 
 class OrderController extends Controller
 {
@@ -93,6 +93,8 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
+        $order->load(['transaction.paymentMethod', 'orderItems', 'currency']);
+
         return view('order.show', compact('order'));
     }
 

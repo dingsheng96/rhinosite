@@ -41,7 +41,11 @@ return [
     'wishlist_empty' => 'Your wishlist is empty',
     'session_expired' => 'Your session is expired. Please login again.',
     'in_using' => 'This :item is in using.',
-    'fill_in_recurring_form' => "Please fill in following details for recurring payment.",
+    'fill_in_recurring_form' => "Please fill in following details of Credit Card's Holder for recurring payment.",
     'fill_in_credit_card_details' => "Please fill in credit card details for recurring payment.",
     'order_cancelled' => 'Order has been cancelled',
+    'trans_no_on_receipt' => 'Please insert transaction no. on the receipt',
+    'offline_subscription' => 'This is an offline payment subscription page. Please update the recurring payment on iPay88 portal manually if necessarily.',
+    'email_verification_link_expired' => 'The email verification link has already expired. Please login and click the resend button to request for a new one.',
+    'no_plan_available' => 'No plans are available'
 ];

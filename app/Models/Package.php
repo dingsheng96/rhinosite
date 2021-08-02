@@ -23,8 +23,7 @@ class Package extends Model
     protected $table = 'packages';
 
     protected $fillable = [
-        'name', 'description', 'stock_type',
-        'quantity', 'status', 'purchase_limit'
+        'name', 'description', 'stock_type', 'quantity', 'status', 'recurring', 'published'
     ];
 
     // Relationships

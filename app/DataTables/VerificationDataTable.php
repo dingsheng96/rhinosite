@@ -3,7 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\User;
-use App\Models\UserDetail;
+use Illuminate\Support\Arr;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
@@ -25,8 +25,8 @@ class VerificationDataTable extends DataTable
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
 
-                return view('components.action', [
-                    'no_action' =>  !$data->userDetail,
+                $options = [
+                    'no_action' =>  $this->no_action ?? null,
                     'view' => [
                         'permission' => 'merchant.create',
                         'route' => route('verifications.show', ['verification' => $data->id])
@@ -34,8 +34,19 @@ class VerificationDataTable extends DataTable
                     'update' => [
                         'permission' => 'merchant.create',
                         'route' => route('verifications.edit', ['verification' => $data->id]),
+                    ],
+                    'delete' => [
+                        'permission' => 'merchant.create',
+                        'route' => route('verifications.destroy', ['verification' => $data->id])
                     ]
-                ])->render();
+                ];
+
+                if (empty($data->userDetail)) {
+
+                    $options = Arr::only($options, ['delete']);
+                }
+
+                return view('components.action', $options)->render();
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
@@ -64,21 +75,22 @@ class VerificationDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\UserDetail $model
+     * @param \App\Models\User $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query(User $model)
     {
         // Get merchants with not submitted user details, pending or rejected details
-
-        return $model->with(['userDetail'])->merchant()
+        return $model->with(['userDetail'])
+            ->merchant()
             ->doesntHave('userDetail')
             ->orWhereHas('userDetail', function ($query) {
                 $query->pendingDetails()
                     ->orWhere(function ($query) {
                         $query->rejectedDetails();
                     });
-            })->newQuery();
+            })
+            ->newQuery();
     }
 
     /**
@@ -93,7 +105,7 @@ class VerificationDataTable extends DataTable
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(5, 'desc')
+            ->orderBy(1, 'desc')
             ->responsive(true)
             ->autoWidth(true)
             ->processing(false);

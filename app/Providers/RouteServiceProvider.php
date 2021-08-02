@@ -116,23 +116,5 @@ class RouteServiceProvider extends ServiceProvider
                 })
                 ->firstOrFail();
         });
-
-        Route::bind('ads', function ($value) {
-            return ProductAttribute::where('id', $value)
-                ->whereHas('productCategory', function ($query) {
-                    $query->where(app(ProductCategory::class)->getTable() . '.name', ProductCategory::TYPE_ADS);
-                })
-                ->firstOrFail();
-        });
-
-        Route::bind('trans_no', function ($value) {
-            return Transaction::with([
-                'currency',
-                'sourceable.user',
-                'paymentMethod'
-            ])
-                ->where('transaction_no', $value)
-                ->firstOrFail();
-        });
     }
 }

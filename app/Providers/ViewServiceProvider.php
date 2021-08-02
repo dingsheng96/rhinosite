@@ -19,13 +19,17 @@ class ViewServiceProvider extends ServiceProvider
             'projects.create', 'projects.edit'
         ],
         \App\Http\View\Composers\VerificationComposer::class => [
-            '*'
+            'account.*', 'activity_log.*', 'admin.*', 'ads.*', 'cart.*',
+            'country.*', 'currency.*', 'dashboard.admin', 'member.*', 'merchant.*',
+            'order.*', 'package.*', 'role.*', 'service.*', 'product.*', 'projects.*',
+            'transaction.*', 'verification.*', 'wishlist.*'
         ],
         \App\Http\View\Composers\DefaultPreviewComposer::class => [
             '*'
         ],
         \App\Http\View\Composers\CurrencyComposer::class => [
-            '*'
+            'projects.create', 'projects.edit', 'package.create', 'package.edit',
+            'product.attribute.create', 'product.attribute.edit'
         ],
         \App\Http\View\Composers\CartComposer::class => [
             'cart.index', 'checkout.index', 'checkout.recurring'

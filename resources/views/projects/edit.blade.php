@@ -6,7 +6,7 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="card">
+            <div class="card shadow">
 
                 <form action="{{ route('projects.update', ['project' => $project->id]) }}" method="post" enctype="multipart/form-data" role="form">
                     @csrf

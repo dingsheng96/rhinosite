@@ -67,21 +67,6 @@
                                     <p class="form-control" id="business_since">{{ $verification->userDetail->business_since ?? null }}</p>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="status" class="col-form-label">{{ __('labels.status') }} <span class="text-red">*</span></label>
-                                    <select name="status" id="status" class="form-control select2 @error('status') is-invalid @enderror">
-                                        @foreach ($statuses as $index => $status)
-                                        <option value="{{ $index }}" {{ old('status', $verification->userDetail->status) == $index ? 'selected' : null }}>{{ $status }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('status')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                            </div>
                         </div>
 
                         <div class="row">
@@ -166,51 +151,38 @@
                             </div>
                         </div>
 
-                        {{-- TEMPORARILY SUBSCRIPTION --}}
                         <hr>
+                        <h5 class="font-weight-bold">{{ __('labels.admin_section') }}</h5>
                         <div class="row">
                             <div class="col-12 col-md-6">
                                 <div class="form-group">
-                                    <label for="new_plan">{{ __('labels.plan') }}</label>
-                                    <select name="new_plan" id="new_plan" class="form-control select2 @error('new_plan') is-invalid @enderror">
-                                        <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.plan'))]) }} ---</option>
-                                        @foreach ($plans as $plan)
-                                        <option value="{{ json_encode(['id' => $plan->id, 'class' => get_class($plan)]) }}" {{ old('new_plan') == json_encode(['id' => $plan->id, 'class' => get_class($plan)]) ? 'selected' : null }}>{{ $plan->name ?? $plan->product->name }}</option>
+                                    <label for="status" class="col-form-label">{{ __('labels.status') }} <span class="text-red">*</span></label>
+                                    <select name="status" id="status" class="form-control select2 @error('status') is-invalid @enderror">
+                                        @foreach ($statuses as $index => $status)
+                                        <option value="{{ $index }}" {{ old('status', $verification->userDetail->status) == $index ? 'selected' : null }}>{{ $status }}</option>
                                         @endforeach
                                     </select>
-                                    @error('new_plan')
+                                    @error('status')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
                                 </div>
                             </div>
-
                             <div class="col-12 col-md-6">
                                 <div class="form-group">
-                                    <label for="activate_at">{{ __('labels.activation_date') }}</label>
-                                    <div class="input-group">
-                                        <input type="text" name="activate_at" id="activate_at" value="{{ old('activate_at') }}" class="form-control date-picker @error('activated_at') is-invalid @enderror bg-white" readonly>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text bg-white"><i class="fas fa-calendar"></i></span>
-                                        </div>
-                                    </div>
-                                    @error('new_plan')
+                                    <label for="trial" class="col-form-label">{{ __('labels.free_trial_plan') }}</label>
+                                    <select name="trial" id="trial" class="form-control select2 @error('trial') is-invalid @enderror">
+                                        <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.free_trial_plan'))]) }} ---</option>
+                                        @foreach ($plans as $plan)
+                                        <option value="{{ $plan->id }}" {{ old('trial') == $plan->id ? 'selected' : null }}>{{ $plan->product->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('trial')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-12 col-md-6">
-                                <div class="form-group">
-                                    <div class="icheck-primary">
-                                        <input type="checkbox" name="recurring" id="recurring" {{ old('recurring') ? 'checked' : null }}>
-                                        <label for="recurring">{{ __('labels.recurring') }}</label>
-                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -57,7 +57,7 @@
                         <div class="merchant-card">
                             <a href="{{ route('app.project.show', ['project' => $project->id]) }}">
                                 <div class="merchant-image-container">
-                                    <img src="{{ $project->thumbnail->full_file_path }}" alt="{{ $project->original_file_name }}" class="merchant-image">
+                                    <img src="{{ $project->media->first()->full_file_path }}" alt="{{ $project->title }}" class="merchant-image">
                                 </div>
                                 <div class="merchant-body">
                                     <p class="merchant-title">{{ $project->english_title }}</p>
@@ -71,7 +71,7 @@
                                 </div>
                                 <div class="merchant-footer">
                                     {{-- <span class="merchant-footer-left">{{ __('app.price_from') . ' '. $project->price_without_unit }}</span> --}}
-                                    <span class="merchant-footer-right">{{ $project->location }}</span>
+                                    <span class="merchant-footer-right">{{ $project->address->countryState->name }}</span>
                                 </div>
                             </a>
                         </div>
@@ -119,7 +119,7 @@
                 <div class="row justify-content-center">
                     @forelse ($merchants as $merchant)
                     <div class="col-6 col-md">
-                        <img src="{{ $merchant->logo->full_file_path ?? $default_preview }}" alt="partner_image_1" class="home-s4-img">
+                        <img src="{{ $merchant->media->first()->full_file_path ?? $default_preview }}" alt="partner_image_1" class="home-s4-img">
                     </div>
                     @empty
                     @endforelse

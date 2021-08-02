@@ -46,6 +46,15 @@
                 </li>
                 @endcanany
 
+                @canany(['merchant.update'])
+                <li class="nav-item">
+                    <a href="{{ route('subscriptions.index') }}" class="nav-link {{ Nav::hasSegment('subscriptions', 1, 'active') }}">
+                        <i class="nav-icon fas fa-bookmark"></i>
+                        <p>{{ trans_choice('modules.subscription', 1) }}</p>
+                    </a>
+                </li>
+                @endcanany
+
                 {{-- ECOMMERCE --}}
                 @canany(['product.create', 'product.read'. 'product.update', 'product.delete', 'order.create', 'order.read'. 'order.update', 'order.delete', 'package.create', 'package.read'. 'package.update', 'package.delete'])
                 <li class="nav-header">{{ __('modules.ecommerce') }}</li>

@@ -9,6 +9,7 @@ use App\Rules\PhoneFormat;
 use App\Models\CountryState;
 use App\Rules\UniqueMerchant;
 use Illuminate\Validation\Rule;
+use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 

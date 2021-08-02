@@ -1,19 +1,18 @@
-@extends('layouts.master', ['title' => __('modules.checkout'), 'guest_view' => true])
+@extends('layouts.master', ['title' => __('modules.checkout'), 'guest_view' => true, 'body' => 'enduser'])
 
 @section('content')
 
 <div class="container" style="padding-top: 7rem; padding-bottom: 5rem;">
+
+    @include('components.alert')
 
     <form action="{{ route('checkout.recurring') }}" method="post" enctype="multipart/form-data" role="form">
         @csrf
 
         <div class="row mt-3">
             <div class="col-12">
-
                 <div class="card card-body p-4 shadow">
-
-                    <h3 class="card-title">{{ __('labels.order_summary') }}</h3>
-
+                    <h5 class="card-title">{{ __('labels.order_summary') }}</h5>
                     <div class="table-responsive my-3">
                         <table class="table" role="presentation">
                             <thead>
@@ -28,7 +27,11 @@
                                 @forelse ($carts as $item)
                                 <tr>
                                     <th scope="row">{{ $loop->iteration }}</th>
-                                    <td><span class="font-weight-bold">{{ $item['name'] }}</span></td>
+                                    <td>
+                                        <span class="font-weight-bold">{{ $item['name'] }}</span>
+                                        <br>
+                                        <p class="text-muted">{{ $item['description'] }}</p>
+                                    </td>
                                     <td class="text-center"><span class="form-control form-control-sm">{{ $item['quantity'] }}</span></td>
                                     <td class="text-right">{{ $item['currency'] .' '. $item['price'] }}</td>
                                 </tr>
@@ -61,8 +64,6 @@
                 <div class="card card-body p-4 shadow">
                     <h5 class="card-title">{{ __('messages.fill_in_recurring_form') }}</h5>
 
-                    <hr>
-
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <div class="form-group">
@@ -93,17 +94,12 @@
                         <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label for="phone" class="col-form-label">{{ __('labels.contact_no') }} <span class="text-red">*</span></label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text bg-white">+</span>
-                                    </div>
-                                    <input type="text" name="phone" id="phone" value="{{ old('phone') }}" class="form-control @error('phone') is-invalid @enderror">
-                                    @error('phone')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
+                                <input type="text" name="phone" id="phone" value="{{ old('phone') }}" class="form-control @error('phone') is-invalid @enderror" placeholder="Eg: 60123456789">
+                                @error('phone')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
                             </div>
                         </div>
                         <div class="col-12 col-md-6">
@@ -123,7 +119,7 @@
                         <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label for="address_1" class="col-form-label">{{ __('labels.address_1') }} <span class="text-red">*</span></label>
-                                <input type="text" name="address_1" id="address_1" class="form-control @error('address_1') is-invalid @enderror" value="{{ old('address_1', $merchant->address->address_1 ?? null) }}">
+                                <input type="text" name="address_1" id="address_1" class="form-control @error('address_1') is-invalid @enderror" value="{{ old('address_1') }}">
                                 @error('address_1')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -134,7 +130,7 @@
                         <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label for="address_2" class="col-form-label">{{ __('labels.address_2') }}</label>
-                                <input type="text" name="address_2" id="address_2" class="form-control @error('address_2') is-invalid @enderror" value="{{ old('address_2', $merchant->address->address_2 ?? null) }}">
+                                <input type="text" name="address_2" id="address_2" class="form-control @error('address_2') is-invalid @enderror" value="{{ old('address_2') }}">
                                 @error('address_2')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -151,7 +147,7 @@
                                 <select name="country" id="country" class="form-control select2 @error('country') is-invalid @enderror country-state-filter">
                                     <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.country', 1))]) }} ---</option>
                                     @foreach ($countries as $country)
-                                    <option value="{{ $country->id }}" {{ old('country', $merchant->address->city->country->id ?? 0) == $country->id || $country->set_default ? 'selected' : null }}>{{ $country->name }}</option>
+                                    <option value="{{ $country->id }}" {{ old('country') == $country->id || $country->set_default ? 'selected' : null }}>{{ $country->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('country')
@@ -165,7 +161,7 @@
                         <div class="col-md-6 col-12">
                             <div class="form-group">
                                 <label for="postcode" class="col-form-label">{{ __('labels.postcode') }} <span class="text-red">*</span></label>
-                                <input type="text" name="postcode" id="postcode" class="form-control @error('postcode') is-invalid @enderror" value="{{ old('postcode', $merchant->address->postcode ?? null) }}">
+                                <input type="text" name="postcode" id="postcode" class="form-control @error('postcode') is-invalid @enderror" value="{{ old('postcode') }}">
                                 @error('postcode')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -179,7 +175,7 @@
                         <div class="col-md-6 col-12">
                             <div class="form-group">
                                 <label for="country_state" class="col-form-label">{{ trans_choice('labels.country_state', 1) }} <span class="text-red">*</span></label>
-                                <select name="country_state" id="country_state" class="form-control select2 @error('country_state') is-invalid @enderror country-state-dropdown city-filter" data-selected="{{ old('country_state', $merchant->address->city->countryState->id ?? 0) }}"
+                                <select name="country_state" id="country_state" class="form-control select2 @error('country_state') is-invalid @enderror country-state-dropdown city-filter" data-selected="{{ old('country_state', 0) }}"
                                     data-country-state-route="{{ route('data.countries.country-states', ['__REPLACE__']) }}">
                                     <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.country_state', 1))]) }} ---</option>
                                 </select>
@@ -193,8 +189,7 @@
                         <div class="col-md-6 col-12">
                             <div class="form-group">
                                 <label for="city" class="col-form-label">{{ trans_choice('labels.city', 1) }} <span class="text-red">*</span></label>
-                                <select name="city" id="city" class="form-control select2 @error('city') is-invalid @enderror city-dropdown" data-selected="{{ old('city', $merchant->address->city->id ?? 0) }}"
-                                    data-city-route="{{ route('data.countries.country-states.cities', ['__FIRST_REPLACE__', '__SECOND_REPLACE__']) }}">
+                                <select name="city" id="city" class="form-control select2 @error('city') is-invalid @enderror city-dropdown" data-selected="{{ old('city', 0) }}" data-city-route="{{ route('data.countries.country-states.cities', ['__FIRST_REPLACE__', '__SECOND_REPLACE__']) }}">
                                     <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.city', 1))]) }} ---</option>
                                 </select>
                                 @error('city')

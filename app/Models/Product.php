@@ -22,8 +22,7 @@ class Product extends Model
     protected $table = 'products';
 
     protected $fillable = [
-        'name', 'description', 'status', 'product_category_id',
-        'recurring', 'purchase_limit'
+        'name', 'description', 'status', 'product_category_id'
     ];
 
     // Relationships

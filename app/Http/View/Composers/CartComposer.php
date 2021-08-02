@@ -27,10 +27,10 @@ class CartComposer
      */
     public function compose(View $view)
     {
-        $cart_details = CartFacade::getCarts();
+        $cart = CartFacade::getCarts();
 
-        $view->with('carts', $cart_details['items']);
-        $view->with('sub_total', $cart_details['sub_total']);
-        $view->with('cart_currency', $cart_details['currency']);
+        $view->with('carts', $cart['items']);
+        $view->with('sub_total', $cart['sub_total']);
+        $view->with('cart_currency', $cart['currency']);
     }
 }

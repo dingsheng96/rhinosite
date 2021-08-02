@@ -4,17 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use App\Models\User;
+use App\Helpers\Misc;
 use App\Models\Order;
 use App\Models\Country;
 use App\Models\Package;
 use App\Helpers\Message;
 use App\Models\Permission;
+use App\Models\Transaction;
 use App\Models\CountryState;
 use Illuminate\Http\Request;
 use App\Models\PaymentMethod;
+use App\Models\ProductCategory;
 use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\OrderRequest;
 use App\Http\Controllers\Controller;
 use App\Support\Facades\OrderFacade;
 use Illuminate\Support\Facades\Auth;
@@ -45,6 +47,10 @@ class CheckOutController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->has('cancel')) {
+            return redirect()->route('check.index');
+        }
+
         DB::beginTransaction();
 
         $action     =   Permission::ACTION_CREATE;
@@ -54,11 +60,13 @@ class CheckOutController extends Controller
 
         try {
 
-            $user = User::where('id', Auth::id())->firstOrFail();
+            $payment_method = PaymentMethod::systemDefault()->firstOrFail();
+
+            $request->request->add(['payment_method' => $payment_method->id]);
 
             // store order
             $order = OrderFacade::setRequest($request)
-                ->setBuyer($user)
+                ->setBuyer(Auth::user())
                 ->createOrder()
                 ->getModel();
 
@@ -68,9 +76,11 @@ class CheckOutController extends Controller
                 ->newTransaction()
                 ->getModel();
 
+            $request->request->add(['transaction_id' => $transaction->id, 'recurring' => false]);
+
             DB::commit();
 
-            return redirect()->route('payment.redirect', ['trans_no' => $transaction->transaction_no, 'recurring' => false]);
+            return (new PaymentController())->redirect($request);
         } catch (\Error | \Exception $ex) {
 
             DB::rollback();
@@ -87,6 +97,11 @@ class CheckOutController extends Controller
 
     public function recurring(RecurringPaymentRequest $request)
     {
+        if ($request->has('cancel')) {
+            Auth::user()->carts()->delete();
+            return redirect()->route('subscriptions.index')->withSuccess(__('messages.order_cancelled'));
+        }
+
         DB::beginTransaction();
 
         $action     =   Permission::ACTION_CREATE;
@@ -96,18 +111,13 @@ class CheckOutController extends Controller
 
         try {
 
-            if ($request->has('cancel')) {
-                $message = __('messages.order_cancelled');
-                Auth::user()->carts()->delete();
-                DB::commit();
-                return redirect()->route('dashboard')->withSuccess($message);
-            }
+            $payment_method = PaymentMethod::systemDefault()->firstOrFail();
 
-            $user = User::where('id', Auth::id())->firstOrFail();
+            $request->request->add(['payment_method' => $payment_method->id]);
 
             // store order
             $order = OrderFacade::setRequest($request)
-                ->setBuyer($user)
+                ->setBuyer(Auth::user())
                 ->createOrder()
                 ->getModel();
 
@@ -117,40 +127,11 @@ class CheckOutController extends Controller
                 ->newTransaction()
                 ->getModel();
 
+            $request->request->add(['transaction_id' => $transaction->id, 'recurring' => true]);
+
             DB::commit();
 
-            $country            =   Country::find($request->get('country'));
-            $country_state      =   CountryState::find($request->get('country_state'));
-            $city               =   City::find($request->get('city'));
-
-            return view('payment.index', [
-                'redirect_url'  =>  config('payment.recurring_payment_url'),
-                'credentials'   =>  [
-                    'MerchantCode'      =>  config('payment.merchant_code'),
-                    'RefNo'             =>  $transaction->transaction_no,
-                    'FirstPaymentDate'  =>  now()->format('DDMMYYYY'),
-                    'Currency'          =>  $transaction->currency->code,
-                    'Amount'            =>  $transaction->getFormattedAmount(),
-                    'NumberofPayments'  =>  9999, // Unlimited
-                    'Frequency'         =>  $this->getRecurringFrequency($order->orderItems()->first()),
-                    'Desc'              =>  $transaction->sourceable->concat_item_name,
-                    'CC_Ic'             =>  $request->get('nric'),
-                    'CC_Email'          =>  $request->get('email'),
-                    'CC_Phone'          =>  $request->get('phone'),
-                    'P_Name'            =>  $request->get('name'),
-                    'P_Email'           =>  $request->get('email'),
-                    'P_Phone'           =>  $request->get('phone'),
-                    'P_Addrl1'          =>  $request->get('address_1'),
-                    'P_Addrl2'          =>  $request->get('address_2'),
-                    'P_Zip'             =>  $request->get('postcode'),
-                    'P_City'            =>  $city->name,
-                    'P_State'           =>  $country_state->name,
-                    'P_Country'         =>  $country->name,
-                    'Signature'         =>  $this->generateSignature(true),
-                    'ResponseURL'       =>  route('payment.response', ['trans_no' => $this->ref_no]),
-                    'BackendURL'        =>  route('payment.backend', ['trans_no' => $this->ref_no]),
-                ]
-            ]);
+            return (new PaymentController())->redirect($request);
         } catch (\Error | \Exception $ex) {
 
             DB::rollback();
@@ -162,26 +143,6 @@ class CheckOutController extends Controller
                 ->log($ex->getMessage());
 
             return redirect()->back()->with('fail', $message);
-        }
-    }
-
-    public function getRecurringFrequency($order_item)
-    {
-        $frequencies = [
-            'weekly' => 1,
-            'montly' => 2,
-            'quarterly' => 3,
-            'half-yearly' => 4,
-            'yearly' => 5
-        ];
-
-        if ($order_item->orderable_type == Package::class) {
-
-            $package_items = $order_item->orderable->products()->get();
-
-            // foreach($package_items as $item) {
-            //     $item->
-            // }
         }
     }
 }

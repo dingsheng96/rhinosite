@@ -30,13 +30,47 @@
                             </div>
                         </div>
 
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <div class="icheck-primary">
+                                        <input type="checkbox" name="recurring" id="recurring" class="@error('recurring') is-invalid @enderror" {{ old('recurring') ? 'checked' : null }}>
+                                        <label for="recurring">{{ __('labels.recurring') }}</label>
+                                        @error('recurring')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <div class="icheck-primary">
+                                        <input type="checkbox" name="published" id="published" class="@error('published') is-invalid @enderror" {{ old('published') ? 'checked' : null }}>
+                                        <label for="published">{{ __('labels.on_listing') }}</label>
+                                        @error('published')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="stock_type" class="col-form-label">{{ __('labels.stock_type') }} <span class="text-red">*</span></label>
                                     <select name="stock_type" id="stock_type" class="form-control select2 @error('stock_type') is-invalid @enderror">
+                                        <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.stock_type'))]) }} ---</option>
                                         @foreach ($stock_types as $type)
-                                        <option value="{{ $type }}" {{ old('stock_type', 'finite') == $type ? 'selected' : null }}>{{ Str::title($type) }}</option>
+                                        <option value="{{ $type }}" {{ old('stock_type') == $type ? 'selected' : null }}>{{ Str::title($type) }}</option>
                                         @endforeach
                                     </select>
                                     @error('stock_type')
@@ -97,7 +131,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="currency" class="col-form-label">{{ __('labels.currency') }} <span class="text-red">*</span></label>
-                                    <select name="currency" id="currency" class="form-control @error('currency') is-invalid @enderror">
+                                    <select name="currency" id="currency" class="form-control select2 @error('currency') is-invalid @enderror">
                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.currency'))]) }} ---</option>
                                         @foreach ($currencies as $currency)
                                         <option value="{{ $currency->id }}" {{ old('currency', $default_currency->id) == $currency->id ? 'selected' : null }}>{{ $currency->name_with_code }}</option>
@@ -152,21 +186,12 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 col-12">
-                                <div class="form-group">
-                                    <label for="purchase_limit" class="col-form-label">{{ __('labels.purchase_limit') }} <span class="text-red">*</span></label>
-                                    <input type="number" id="purchase_limit" name="purchase_limit" class="form-control" value="{{ old('purchase_limit', 0) }}" min="0" step="1">
-                                </div>
-                            </div>
-                        </div>
-
                         <hr>
 
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group table-responsive">
-                                    @include('package.items')
+                                    @include('package.items', ['no_action' => false])
                                 </div>
                             </div>
                         </div>

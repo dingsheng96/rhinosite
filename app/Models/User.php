@@ -4,12 +4,12 @@ namespace App\Models;
 
 use App\Models\Cart;
 use App\Models\Role;
+use App\Helpers\Misc;
 use App\Models\Media;
 use App\Models\Order;
 use App\Models\Rating;
 use App\Helpers\Status;
 use App\Models\Address;
-use App\Models\Country;
 use App\Models\Project;
 use App\Models\Service;
 use App\Models\Wishlist;
@@ -182,26 +182,10 @@ class User extends Authenticatable implements MustVerifyEmail
             ->orderByDesc('ratings');
     }
 
-    public function scopeActiveSubscription($query)
-    {
-        return $query->whereHas('userSubscriptions', function ($query) {
-            $query->active();
-        });
-    }
-
     // Attributes
     public function setPhoneAttribute($value)
     {
-        $value = preg_replace('/[^0-9]/', '', $value);
-
-        $country = Country::defaultCountry()->first();
-
-        if (!in_array(substr($value, 0, 2), $country->dial_code)) {
-
-            $value = $country->dial_code[0] . ltrim($value, '0');
-        }
-
-        $this->attributes['phone'] = $value;
+        $this->attributes['phone'] = Misc::instance()->stripTagsAndAddCountryCodeToPhone($value);
     }
 
     public function getFullAddressAttribute()
@@ -272,9 +256,7 @@ class User extends Authenticatable implements MustVerifyEmail
             return null;
         }
 
-        $format = chunk_split($this->phone, 4, ' ');
-
-        return '+' . rtrim($format, ' ');
+        return Misc::instance()->addTagsToPhone($this->phone);
     }
 
     public function getCategoryAttribute()

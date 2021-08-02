@@ -10,6 +10,16 @@ $(function () {
         });
     }
 
+    if($('.date-picker-plan').length > 0) {
+
+        let datepicker_input = $('.date-picker-plan');
+
+        datepicker_input.pikaday({
+            format: 'YYYY-MM-DD',
+            minDate: new Date()
+        });
+    }
+
 
     // let today = new Date();
     // let nextMonth = new Date();

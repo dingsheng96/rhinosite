@@ -2,22 +2,23 @@
 
 @section('content')
 
-<form method="post" name="ePayment" action="{{ $redirect_url }}">
+{{-- <form method="post" name="ePayment" action="{{ $payment_url }}">
 
-    @foreach ($credentials as $key => $value)
-    <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-    @endforeach
+@foreach ($credentials as $key => $value)
+<input type="hidden" name="{{ $key }}" value="{{ $value }}">
+@endforeach
 
-</form>
+</form> --}}
+@dd($credentials, $payment_url)
 
 @endsection
 
 @push('scripts')
 
-<script type="text/javascript">
+{{-- <script type="text/javascript">
     window.onload = function() {
         document.forms['ePayment'].submit();
     }
-</script>
+</script> --}}
 
 @endpush

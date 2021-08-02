@@ -33,9 +33,8 @@ class ProductAttribute extends Model
     protected $table = 'product_attributes';
 
     protected $fillable = [
-        'product_id', 'sku', 'stock_type', 'quantity', 'status',
-        'validity_type', 'validity', 'recurring', 'purchase_limit',
-        'slot', 'slot_type', 'total_slots_per_day'
+        'product_id', 'sku', 'stock_type', 'quantity', 'status', 'published',
+        'validity_type', 'validity', 'recurring', 'trial_mode', 'slot', 'slot_type'
     ];
 
     // Relationships
@@ -80,6 +79,21 @@ class ProductAttribute extends Model
         return $query->where('status', self::STATUS_INACTIVE);
     }
 
+    public function scopePublished($query)
+    {
+        return $query->where('published', true);
+    }
+
+    public function scopeRecurring($query, bool $status = true)
+    {
+        return $query->where('recurring', $status);
+    }
+
+    public function scopeTrialMode($query, bool $status = true)
+    {
+        return $query->where('trial_mode', $status);
+    }
+
     // Attributes
     public function getStatusLabelAttribute()
     {
@@ -107,12 +121,5 @@ class ProductAttribute extends Model
         }
 
         return;
-    }
-
-    public function getPricePerValidityTypeAttribute()
-    {
-        $price = $this->default_price;
-
-        return $price->currency->code . ' ' . number_format(($price->selling_price / $this->validity), 2, '.', ',');
     }
 }

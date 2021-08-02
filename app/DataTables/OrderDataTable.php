@@ -26,17 +26,16 @@ class OrderDataTable extends DataTable
             ->eloquent($query)
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
-
                 return view('components.action', [
                     'no_action' => $this->no_action ?: null,
                     'view' => [
                         'permission' => 'order.read',
                         'route' => route('orders.show', ['order' => $data->id])
                     ],
-                    'update' => [
-                        'permission' => 'order.update',
-                        'route' => route('orders.edit', ['order' => $data->id]),
-                    ]
+                    // 'update' => [
+                    //     'permission' => 'order.update',
+                    //     'route' => route('orders.edit', ['order' => $data->id]),
+                    // ]
                 ])->render();
             })
             ->addColumn('user', function ($data) {

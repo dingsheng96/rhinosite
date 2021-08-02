@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container">
+<div class="container" style="padding-top: 7rem; padding-bottom: 5rem;">
 
     <form action="{{ route('checkout.store') }}" method="post" enctype="multipart/form-data" role="form">
         @csrf
@@ -28,7 +28,11 @@
                                 @forelse ($carts as $item)
                                 <tr>
                                     <th scope="row">{{ $loop->iteration }}</th>
-                                    <td><span class="font-weight-bold">{{ $item['name'] }}</span></td>
+                                    <td>
+                                        <span class="font-weight-bold">{{ $item['name'] }}</span>
+                                        <br>
+                                        <p class="text-muted">{{ $item['description'] }}</p>
+                                    </td>
                                     <td class="text-center"><span class="form-control form-control-sm">{{ $item['quantity'] }}</span></td>
                                     <td class="text-right">{{ $item['currency'] .' '. $item['price'] }}</td>
                                 </tr>

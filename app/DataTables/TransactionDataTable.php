@@ -25,16 +25,16 @@ class TransactionDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->addColumn('action', function ($data) {
+            // ->addColumn('action', function ($data) {
 
-                return view('components.action', [
-                    'no_action' => $this->no_action ?: null,
-                    'view' => [
-                        'permission' => 'transaction.create',
-                        'route' => route('transactions.show', ['transaction' => $data->id])
-                    ],
-                ])->render();
-            })
+            //     return view('components.action', [
+            //         'no_action' => $this->no_action ?: null,
+            //         'view' => [
+            //             'permission' => 'transaction.create',
+            //             'route' => route('transactions.show', ['transaction' => $data->id])
+            //         ],
+            //     ])->render();
+            // })
             ->addColumn('order_no', function ($data) {
                 return $data->sourceable->order_no;
             })
@@ -46,6 +46,9 @@ class TransactionDataTable extends DataTable
             })
             ->editColumn('amount', function ($data) {
                 return $data->amount_with_currency_code;
+            })
+            ->editColumn('payment_method', function ($data) {
+                return $data->paymentMethod->name;
             })
             ->filterColumn('status', function ($query, $keyword) {
                 $query->where('status', strtolower($keyword));
@@ -61,7 +64,7 @@ class TransactionDataTable extends DataTable
      */
     public function query(Transaction $model)
     {
-        return $model->with(['sourceable'])->newQuery();
+        return $model->with(['sourceable', 'paymentMethod'])->newQuery();
     }
 
     /**
@@ -91,14 +94,15 @@ class TransactionDataTable extends DataTable
     {
         return [
             Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('transaction_no')->title(__('labels.transaction_no'))->width('20%'),
-            Column::make('order_no')->title(__('labels.order_no'))->width('20%'),
-            Column::make('amount')->title(__('labels.amount'))->width('20%'),
+            Column::make('transaction_no')->title(__('labels.transaction_no'))->width('15%'),
+            Column::make('order_no')->title(__('labels.order_no'))->width('15%'),
+            Column::make('amount')->title(__('labels.amount'))->width('15%'),
+            Column::make('payment_method')->title(__('labels.payment_method'))->width('15%'),
             Column::make('status')->title(__('labels.status'))->width('10%'),
             Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
-            Column::computed('action', __('labels.action'))->width('10%')
-                ->exportable(false)
-                ->printable(false),
+            // Column::computed('action', __('labels.action'))->width('10%')
+            //     ->exportable(false)
+            //     ->printable(false),
         ];
     }
 

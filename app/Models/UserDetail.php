@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Helpers\Misc;
 use App\Models\Media;
 use App\Helpers\Status;
 use App\Models\Address;
@@ -74,16 +75,7 @@ class UserDetail extends Model
     // Attributes
     public function setPicPhoneAttribute($value)
     {
-        $value = preg_replace('/[^0-9]/', '', $value);
-
-        $country = Country::defaultCountry()->first();
-
-        if (!in_array(substr($value, 0, 2), $country->dial_code)) {
-
-            $value = $country->dial_code[0] . ltrim($value, '0');
-        }
-
-        $this->attributes['pic_phone'] = $value;
+        $this->attributes['pic_phone'] = Misc::instance()->stripTagsAndAddCountryCodeToPhone($value);
     }
 
     public function getStatusLabelAttribute()
@@ -109,8 +101,6 @@ class UserDetail extends Model
             return null;
         }
 
-        $format = chunk_split($this->pic_phone, 4, ' ');
-
-        return '+' . rtrim($format, ' ');
+        return Misc::instance()->addTagsToPhone($this->pic_phone);
     }
 }

@@ -31,11 +31,45 @@
                             </div>
                         </div>
 
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <div class="icheck-primary">
+                                        <input type="checkbox" name="recurring" id="recurring" class="@error('recurring') is-invalid @enderror" {{ old('recurring', $package->recurring) ? 'checked' : null }}>
+                                        <label for="recurring">{{ __('labels.recurring') }}</label>
+                                        @error('recurring')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <div class="icheck-primary">
+                                        <input type="checkbox" name="published" id="published" class="@error('published') is-invalid @enderror" {{ old('published', $package->published) ? 'checked' : null }}>
+                                        <label for="published">{{ __('labels.on_listing') }}</label>
+                                        @error('published')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="stock_type" class="col-form-label">{{ __('labels.stock_type') }} <span class="text-red">*</span></label>
                                     <select name="stock_type" id="stock_type" class="form-control select2 @error('stock_type') is-invalid @enderror">
+                                        <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.stock_type'))]) }} ---</option>
                                         @foreach ($stock_types as $type)
                                         <option value="{{ $type }}" {{ old('stock_type', $package->stock_type) == $type ? 'selected' : null }}>{{ Str::title($type) }}</option>
                                         @endforeach
@@ -149,15 +183,6 @@
                                 <div class="form-group">
                                     <label for="selling_price" class="col-form-label">{{ __('labels.selling_price') }}</label>
                                     <input type="number" id="selling_price" name="selling_price" class="form-control sale-price-input" disabled value="{{ old('selling_price', $price->selling_price) }}" min="0" step="0.01">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 col-12">
-                                <div class="form-group">
-                                    <label for="purchase_limit" class="col-form-label">{{ __('labels.purchase_limit') }} <span class="text-red">*</span></label>
-                                    <input type="number" id="purchase_limit" name="purchase_limit" class="form-control" value="{{ old('purchase_limit', $package->purchase_limit) }}" min="0" step="1">
                                 </div>
                             </div>
                         </div>

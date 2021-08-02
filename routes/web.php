@@ -34,13 +34,13 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::resource('subscriptions', 'SubscriptionController');
 
+    Route::resource('carts', 'CartController');
+
     Route::group(['middleware' => ['verified_merchant']], function () {
 
         Route::get('dashboard', 'HomeController@index')->name('dashboard');
 
         Route::resource('account', 'AccountController');
-
-        Route::resource('carts', 'CartController');
 
         Route::resource('ads', 'AdsController');
 
@@ -115,10 +115,17 @@ Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
     });
 });
 
-Route::group(['prefix' => 'payment/{trans_no}', 'as' => 'payment.'], function () {
+Route::group(['prefix' => 'payment', 'as' => 'payment.'], function () {
 
     Route::get('redirect', 'PaymentController@redirect')->name('redirect');
+
     Route::post('response', 'PaymentController@response')->name('response');
-    Route::post('backend', 'PaymentController@backendResponse')->name('backend');
+    Route::post('backend', 'PaymentController@backend')->name('backend');
+
+    Route::group(['prefix' => 'recurring', 'as' => 'recurring.'], function () {
+        Route::post('response', 'PaymentController@recurringResponse')->name('response');
+        Route::post('backend', 'PaymentController@recurringBackend')->name('backend');
+    });
+
     Route::get('status', 'PaymentController@paymentStatus')->name('status');
 });

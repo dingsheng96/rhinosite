@@ -27,7 +27,7 @@ return [
     'users' => 'Users',
     'verification' => 'Verification|Verifications',
     'admin' => 'Admin|Admins',
-    'merchant' => 'Merchant|Merchants',
+    'merchant' => 'Contractor|Contractors',
     'member' => 'Member|Members',
 
     'subscription' => 'Subscription|Subscriptions',
