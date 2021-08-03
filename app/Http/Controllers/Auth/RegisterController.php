@@ -127,6 +127,10 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
+        if (empty(request()->get('role'))) {
+            return redirect()->route('register', ['role' => 'member']);
+        }
+
         abort_unless(
             request()->get('role') == strtolower(Role::ROLE_MEMBER) || request()->get('role') == strtolower(Role::ROLE_MERCHANT),
             404

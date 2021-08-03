@@ -64,7 +64,7 @@
                             @enderror
                         </div>
 
-                        <p class="login-text text-right mb-4"><u><a href="#" class="txtgrey">{{ __('app.login_btn_forgot_password') }}</a></u></p>
+                        <p class="login-text text-right mb-4"><u><a href="{{ route('password.request') }}" class="txtgrey">{{ __('app.login_btn_forgot_password') }}</a></u></p>
 
                         <button type="submit" class="btn btn-orange w-100 ml-0 mb-3">{{ __('labels.sign_in') }}</button>
                     </form>

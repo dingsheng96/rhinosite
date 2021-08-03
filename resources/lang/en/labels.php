@@ -214,4 +214,5 @@ return [
     'enable_trial' => 'Enable Trial',
     'on_listing' => 'Show on Listing',
     'subscribe_plan' => 'Subscribe Plan',
+    'company_name' => 'Company Name',
 ];

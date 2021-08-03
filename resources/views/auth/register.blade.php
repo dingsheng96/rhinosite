@@ -25,7 +25,7 @@
                         <input type="hidden" name="role" value="{{ request()->get('role') }}">
 
                         <div class="input-group mb-3">
-                            <p class="login-text">{{ __('labels.name') }} <span class="text-danger">*</span></p>
+                            <p class="login-text">{{ request()->get('role') == 'merchant' ? __('labels.company_name') : __('labels.name') }} <span class="text-danger">*</span></p>
                             <input type="text" name="name" id="name" value="{{ old('name') }}" class="@error('name') is-invalid @enderror">
                             @error('name')
                             <span class="invalid-feedback" role="alert">
