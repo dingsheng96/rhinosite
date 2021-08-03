@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Helpers\Status;
 use App\Models\Currency;
 use App\Models\PaymentMethod;
-use App\App\TransactionDetail;
+use App\Models\TransactionDetail;
 use App\Support\Facades\PriceFacade;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -45,6 +45,11 @@ class Transaction extends Model
     public function transactionDetails()
     {
         return $this->hasMany(TransactionDetail::class, 'transaction_id', 'id');
+    }
+
+    public function userSubscription()
+    {
+        return $this->hasOne(UserSubscription::class, 'transaction_id', 'id');
     }
 
     // Scopes

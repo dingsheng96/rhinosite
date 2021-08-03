@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\PaymentMethod;
 use App\Models\ProductCategory;
 use App\Models\ProductAttribute;
+use App\Models\UserSubscription;
 use Illuminate\Support\Facades\DB;
 use App\Support\Facades\CartFacade;
 use App\Http\Controllers\Controller;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Support\Facades\MerchantFacade;
 use App\Http\Requests\SubscriptionRequest;
 use App\Support\Facades\TransactionFacade;
+use App\Support\Facades\UserSubscriptionFacade;
 
 class SubscriptionController extends Controller
 {
@@ -66,14 +68,19 @@ class SubscriptionController extends Controller
      */
     public function create()
     {
-        $merchants = User::merchant()->orderBy('name')->get();
+        $merchants = User::with(['userDetail'])
+            ->merchant()
+            ->whereHas('userDetail', function ($query) {
+                $query->approvedDetails();
+            })
+            ->orderBy('name')->get();
 
         $plans = ProductAttribute::with([
             'prices' => function ($query) {
                 $query->defaultPrice();
             }
-        ])->published()->whereHas('product', function ($query) {
-            $query->filterCategory(ProductCategory::TYPE_SUBSCRIPTION)->trialMode(false);
+        ])->whereHas('product', function ($query) {
+            $query->filterCategory(ProductCategory::TYPE_SUBSCRIPTION);
         })->get();
 
         $packages = Package::with(['userSubscriptions'])->get();
@@ -99,52 +106,56 @@ class SubscriptionController extends Controller
         $module     =   strtolower(trans_choice('modules.merchant', 1));
         $message    =   Message::instance()->format($action, $module);
         $status     =   'fail';
-        $user       =   User::with('carts')->merchant()
-            ->where('id', $request->get('merchant', Auth::id()))
-            ->firstOrFail();
+        $user       =   User::with('carts')->merchant()->where('id', $request->get('merchant', Auth::id()))->firstOrFail();
+
+        DB::beginTransaction();
 
         try {
 
-            $item = json_decode($request->get('plan'));
+            $item   =   json_decode($request->get('plan'));
+            $trial  =   false;
+            $transaction = null;
 
             // get item model
             switch ($item->class) {
                 case ProductAttribute::class:
-                    $item_model = ProductAttribute::findOrFail($item->id);
+                    $item_model =   ProductAttribute::findOrFail($item->id);
+                    $trial      =   $item_model->trial_mode;
                     break;
                 case Package::class:
-                    $item_model = Package::findOrFaiL($item->id);
+                    $item_model =   Package::findOrFaiL($item->id);
                     break;
             }
 
             CartFacade::setBuyer($user)->addToCart($item_model)->getModel();
 
-            if (!$request->has('merchant') || empty($request->get('merchant'))) {
+            if (empty($request->get('merchant')) && Auth::user()->is_merchant) {
                 DB::commit();
                 return redirect()->route('checkout.index');
             }
 
-            // store order
-            $order = OrderFacade::setRequest($request)
-                ->setBuyer($user)
-                ->createOrder()
-                ->setOrderStatus(Order::STATUS_PAID)
-                ->getModel();
+            if (!$trial && Auth::user()->is_admin) {
+                // store order
+                $order = OrderFacade::setRequest($request)
+                    ->setBuyer($user)
+                    ->createOrder()
+                    ->setOrderStatus(Order::STATUS_PAID)
+                    ->getModel();
 
-            // create new transaction from order
-            $transaction = TransactionFacade::setParent($order)
-                ->setRequest($request)
-                ->newTransaction()
-                ->setTransactionStatus(Transaction::STATUS_SUCCESS)
-                ->getModel();
+                // create new transaction from order
+                $transaction = TransactionFacade::setParent($order)
+                    ->setRequest($request)
+                    ->newTransaction()
+                    ->setTransactionStatus(Transaction::STATUS_SUCCESS)
+                    ->getModel();
+            }
 
             $merchant  = MerchantFacade::setModel($user)
-                ->setRequest($request)
-                ->storeSubscription()
+                ->storeSubscription($request->get('plan'), $transaction)
                 ->getModel();
 
-            $status  = 'success';
-            $message = Message::instance()->format($action, $module, $status);
+            $status  =  'success';
+            $message =  Message::instance()->format($action, $module, $status);
 
             activity()->useLog('web')
                 ->causedBy(Auth::user())
@@ -202,9 +213,60 @@ class SubscriptionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Package $subscription)
+    public function update(Request $request, UserSubscription $subscription)
     {
-        //
+        $action     =   Permission::ACTION_UPDATE;
+        $module     =   strtolower(trans_choice('modules.subscription', 1));
+        $message    =   'Subscription unable to terminate.';
+        $status     =   'fail';
+
+        DB::beginTransaction();
+
+        try {
+
+            $subscription->load(['user', 'transaction']);
+
+            if ($subscription->has('transaction')) {
+
+                $subscription = UserSubscriptionFacade::setModel($subscription)->terminate()->getModel();
+
+                if ($subscription->status == UserSubscription::STATUS_INACTIVE && !empty($subscription->terminated_at)) {
+                    $status  =  'success';
+                    $message =  Message::instance()->format($action, $module, $status);
+                }
+            }
+
+            if ($subscription->doesntHave('transaction')) {
+
+                $subscription->status = UserSubscription::STATUS_INACTIVE;
+                $subscription->terminated_at = now();
+                $subscription->save();
+
+                $status  =  'success';
+                $message =  Message::instance()->format($action, $module, $status);
+            }
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($subscription)
+                ->withProperties($request->all())
+                ->log($message);
+
+            DB::commit();
+
+            return redirect()->route('account.index')->with($status, $message);
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($subscription)
+                ->withProperties($request->all())
+                ->log($e->getMessage());
+
+            return redirect()->back()->with('fail', $message);
+        }
     }
 
     /**

@@ -46,7 +46,8 @@
                                     <select name="plan" id="plan" class="form-control select2 @error('plan') is-invalid @enderror">
                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.plan'))]) }} ---</option>
                                         @forelse ($plans as $plan)
-                                        <option value="{{ json_encode(['id' => $plan->id, 'class' => get_class($plan)]) }}" {{ old('plan') == json_encode(['id' => $plan->id, 'class' => get_class($plan)]) ? 'selected' : null }}>{{ $plan->name ?? $plan->product->name }}</option>
+                                        <option value="{{ json_encode(['id' => $plan->id, 'class' => get_class($plan), 'trial' => $plan->trial_mode]) }}" {{ old('plan') == json_encode(['id' => $plan->id, 'class' => get_class($plan), 'trial' => $plan->trial_mode]) ? 'selected' : null }}>
+                                            {{ $plan->name }}</option>
                                         @empty
                                         @endforelse
                                     </select>
@@ -61,18 +62,18 @@
 
                         <div class="row">
                             <div class="col-12 col-md-6">
-                                <label for="trans_no">{{ __('labels.transaction_no') }} <span class="text-red">*</span></label>
+                                <label for="trans_no">{{ __('labels.transaction_no') }}</label>
                                 <input type="text" name="trans_no" id="trans_no" value="{{ old('trans_no') }}" class="form-control @error('trans_no') is-invalid @enderror">
-                                <small>* {{ __('messages.trans_no_on_receipt') }}</small>
                                 @error('trans_no')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
+                                <small>* {{ __('messages.trans_no_on_receipt') }}</small>
                             </div>
 
                             <div class="col-12 col-md-6">
-                                <label for="payment_method">{{ __('labels.payment_method') }} <span class="text-red">*</span></label>
+                                <label for="payment_method">{{ __('labels.payment_method') }}</label>
                                 <select name="payment_method" id="payment_method" class="form-control select2 @error('payment_method') is-invalid @enderror">
                                     <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.payment_method'))]) }} ---</option>
                                     @foreach ($payment_methods as $method)

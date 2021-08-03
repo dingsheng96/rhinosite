@@ -11,12 +11,16 @@
             <hr>
         </div>
 
+        <div class="col-12">
+            @include('components.alert')
+        </div>
+
         @forelse ($plans as $plan)
         <div class="col-12 col-md-3 my-3 py-3">
             <div class="card shadow-lg h-100">
                 <div class="card-body text-center">
 
-                    <h4 class="font-weight-bold mt-3 mb-4">{{ $plan->name ?? $plan->product->name }}</h4>
+                    <h4 class="font-weight-bold mt-3 mb-4">{{ $plan->name }}</h4>
 
                     <h2 class="font-weight-bold d-inline">{{ $plan->prices->first()->selling_price_with_currency }}</h2>
 
@@ -47,7 +51,7 @@
                     @else
                     <form action="{{ route('subscriptions.store') }}" method="post" role="form" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="plan" value="{{ json_encode(['id' => $plan->id, 'class' => get_class($plan)]) }}">
+                        <input type="hidden" name="plan" value="{{ json_encode(['id' => $plan->id, 'class' => get_class($plan), 'trial' => $plan->trial_mode]) }}">
                         <button type="submit" class="btn btn-orange btn-lg shadow">
                             {{ strtoupper(__('labels.select')) }}
                         </button>

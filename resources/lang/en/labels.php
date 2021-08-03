@@ -173,6 +173,7 @@ return [
     'package_include' => 'Package Include',
     'select_payment_method' => 'Select Payment Method',
     'change_plan' => 'Change Plan',
+    'terminate_plan' => 'Terminate Plan',
     'purchase_order' => 'Purchase Order',
     'order_date' => 'Order Date',
     'order_no' => 'Order No.',
@@ -215,4 +216,5 @@ return [
     'on_listing' => 'Show on Listing',
     'subscribe_plan' => 'Subscribe Plan',
     'company_name' => 'Company Name',
+    'free_trial' => 'Free Trial',
 ];

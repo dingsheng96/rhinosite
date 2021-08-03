@@ -175,7 +175,7 @@
                                     <select name="trial" id="trial" class="form-control select2 @error('trial') is-invalid @enderror">
                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.free_trial_plan'))]) }} ---</option>
                                         @foreach ($plans as $plan)
-                                        <option value="{{ $plan->id }}" {{ old('trial') == $plan->id ? 'selected' : null }}>{{ $plan->product->name }}</option>
+                                        <option value="{{ $plan->id }}" {{ old('trial') == $plan->id ? 'selected' : null }}>{{ $plan->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('trial')

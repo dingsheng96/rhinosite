@@ -50,50 +50,50 @@
 
             <div class="row">
                 <div class="col-12">
+
                     @if ($user->active_subscription)
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="alert alert-info shadow">
-                                <div class="row">
-                                    <div class="col-12 col-md-6">
-                                        <h6 class="alert-heading">
-                                            {{ __('labels.current_plan') . ':' }}
-                                        </h6>
-                                        <h3 class="alert-heading">{{ $user->active_subscription->name }}</h3>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <p class="alert-heading text-md-right">
-                                            <a href="{{ route('subscriptions.index') }}" role="button">
-                                                {{ __('labels.change_plan') }}
-                                            </a>
-                                        </p>
-                                        <p class="alert-heading text-md-right">
-                                            <a href="" role="button">
-                                                {{ __('labels.buy_add_on') }}
-                                            </a>
-                                        </p>
-                                    </div>
-                                </div>
-                                <hr>
-                                <p>{{ trans_choice('labels.subscribed_at', 2, ['date' => $user->active_subscription->activated_at]) }}</p>
-                                <p>{{ trans_choice('labels.expired_at', 2, ['date' => $user->active_subscription_latest_log->expired_at]) }}</p>
-                                <p>{{ trans_choice('labels.renewed_at', 2, ['date' => $user->active_subscription_latest_log->renewed_at]) }}</p>
-                                <p>{{ trans_choice('labels.next_billing_at', 2, ['date' => $user->active_subscription->next_billing_at]) }}</p>
+                    <div class="alert alert-info shadow">
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <h6 class="alert-heading">
+                                    {{ __('labels.current_plan') . ':' }}
+                                </h6>
+                                <h3 class="alert-heading">{{ $user->active_subscription->name }}</h3>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <p class="alert-heading text-md-right">
+                                    <a href="#" role="button" onclick="event.preventDefault();
+                                    subscriptionTerminationAlert('{{ __('messages.confirm_question') }}', '{{ __('messages.delete_info') }}', '{{ route('subscriptions.update', ['subscription' => $user->active_subscription->id]) }}')">
+                                        {{ __('labels.terminate_plan') }}
+                                    </a>
+                                </p>
+                                <p class="alert-heading text-md-right">
+                                    <a href="" role="button">
+                                        {{ __('labels.buy_add_on') }}
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                        <hr>
+                        <p>{{ trans_choice('labels.subscribed_at', 2, ['date' => $user->active_subscription->activated_at]) }}</p>
+                        <p>{{ trans_choice('labels.expired_at', 2, ['date' => $user->active_subscription_latest_log->expired_at]) }}</p>
+                        <p>{{ trans_choice('labels.renewed_at', 2, ['date' => $user->active_subscription_latest_log->renewed_at]) }}</p>
+                        <p>{{ trans_choice('labels.next_billing_at', 2, ['date' => $user->active_subscription->next_billing_at]) }}</p>
+                    </div>
+                    @else
+                    <div class="card card-body shadow">
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <h4>{{ __('messages.no_subscription') }}</h4>
+
+                                <a role="button" href="{{ route('subscriptions.index') }}" class="btn btn-outline-primary btn-rounded-corner my-3">
+                                    {{ __('labels.sign_up_a_plan') }}
+                                </a>
                             </div>
                         </div>
                     </div>
-                    @else
-                    <div class="row">
-                        <div class="col-12 text-center py-3">
-
-                            <h4>{{ __('messages.no_subscription') }}</h4>
-
-                            <a role="button" href="{{ route('subscriptions.index') }}" class="btn btn-outline-primary btn-rounded-corner my-3">
-                                {{ __('labels.sign_up_a_plan') }}
-                            </a>
-                        </div>
-                    </div>
                     @endif
+
                 </div>
             </div>
 

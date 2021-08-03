@@ -44,6 +44,11 @@ class UserSubscription extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class, 'transaction_id', 'id');
+    }
+
     // Scopes
     public function scopeActive($query)
     {
@@ -56,11 +61,6 @@ class UserSubscription extends Model
     }
 
     // Attributes
-    public function setNextBillingAtAttribute($value)
-    {
-        $this->attributes['next_billing_at'] = $value->startOfDay();
-    }
-
     public function getSubscriptionDateAttribute()
     {
         return $this->created_at->format('jS M Y') ?? null;

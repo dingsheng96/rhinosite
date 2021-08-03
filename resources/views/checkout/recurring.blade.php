@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container" style="padding-top: 7rem; padding-bottom: 5rem;">
+<div class="container" style="padding-top: 5rem; padding-bottom: 5rem;">
 
     @include('components.alert')
 
@@ -11,7 +11,7 @@
 
         <div class="row mt-3">
             <div class="col-12">
-                <div class="card card-body p-4 shadow">
+                <div class="card card-body p-4 shadow-lg">
                     <h5 class="card-title">{{ __('labels.order_summary') }}</h5>
                     <div class="table-responsive my-3">
                         <table class="table" role="presentation">
@@ -61,7 +61,7 @@
 
         <div class="row mt-3">
             <div class="col-12">
-                <div class="card card-body p-4 shadow">
+                <div class="card card-body p-4 shadow-lg">
                     <h5 class="card-title">{{ __('messages.fill_in_recurring_form') }}</h5>
 
                     <div class="row">
@@ -200,22 +200,23 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            @if (count($carts) > 0)
+                            <button type="submit" class="btn btn-orange btn-lg mt-3 float-right ml-2" name="pay">
+                                {{ strtoupper(__('labels.pay_now')) }}
+                            </button>
+                            <button type="submit" class="btn btn-black btn-lg mt-3 float-right mr-2" name="cancel">
+                                {{ strtoupper(__('labels.cancel')) }}
+                            </button>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="row mt-3">
-            <div class="col-12">
-                @if (count($carts) > 0)
-                <button type="submit" class="btn btn-orange btn-lg mt-3 float-right ml-2 shadow" name="pay">
-                    {{ strtoupper(__('labels.pay_now')) }}
-                </button>
-                <button type="submit" class="btn btn-black btn-lg mt-3 float-right mr-2 shadow" name="cancel">
-                    {{ strtoupper(__('labels.cancel')) }}
-                </button>
-                @endif
-            </div>
-        </div>
     </form>
 
 </div>

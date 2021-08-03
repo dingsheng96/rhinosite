@@ -204,3 +204,54 @@ function cartItemIncrement()
 {
     alert('Plus 1');
 }
+
+function subscriptionTerminationAlert(title, message, redirectUrl)
+{
+    Swal.fire({
+        title: title,
+        text: message,
+        icon: 'warning',
+        showCancelButton: true,
+        customClass: {
+            confirmButton: 'btn btn-success btn-lg mx-2',
+            cancelButton: 'btn btn-danger btn-lg mx-2'
+        },
+        buttonsStyling: false,
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+
+            $.ajax({
+                url: redirectUrl,
+                type: "POST",
+                data: {
+                    '_method': 'put',
+                    '_token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: (xhl) => {
+
+                    Swal.fire({
+                        icon: xhl.status ? 'success' : 'error',
+                        title: xhl.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+
+                        if(xhl.status) {
+                            window.location.replace(xhl.data.redirect_to);
+                        }
+                    });
+                },
+                error: (xhl) => {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: xhl.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        }
+    });
+}

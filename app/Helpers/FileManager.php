@@ -58,11 +58,15 @@ class FileManager
 
     public function getMimesType(string $extension): string
     {
+        $extension = strtolower($extension);
+
         return $this->mimes[$extension];
     }
 
     public function getExcelReaderType(string $extension): string
     {
+        $extension = strtolower($extension);
+
         $reader = [
             'xlsx'  =>  Excel::XLSX,
             'csv'   =>  Excel::CSV,

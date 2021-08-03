@@ -35,16 +35,6 @@ class UserSubscriptionLog extends Model
     }
 
     // Attributes
-    public function setRenewedAtAttribute($value)
-    {
-        $this->attributes['renewed_at'] = $value->startOfDay();
-    }
-
-    public function setExpiredAtAttribute($value)
-    {
-        $this->attributes['expired_at'] = $value->endOfDay();
-    }
-
     public function getRenewedAtAttribute($value)
     {
         return date('Y-m-d', strtotime($value));

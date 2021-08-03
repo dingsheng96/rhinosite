@@ -23,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
         'cartFacade' => \App\Support\Services\CartService::class,
         'accountFacade' => \App\Support\Services\AccountService::class,
         'verificationFacade' => \App\Support\Services\VerificationService::class,
+        'userSubscriptionFacade' => \App\Support\Services\UserSubscriptionService::class,
     ];
 
     /**

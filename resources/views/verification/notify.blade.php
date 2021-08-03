@@ -1,4 +1,4 @@
-@extends('layouts.master', ['title' => trans_choice('modules.merchant', 2), 'guest_view' => true])
+@extends('layouts.master', ['title' => trans_choice('modules.merchant', 2), 'guest_view' => true, 'body' => 'enduser'])
 
 @section('content')
 

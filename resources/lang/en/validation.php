@@ -197,6 +197,8 @@ return [
         'business_since' => 'business since',
         'reg_no' => 'registration no.',
         'agree' => 'agreement',
+        'merchant' => 'contractor',
+        'trans_no' => 'transaction no.',
     ],
 
 ];

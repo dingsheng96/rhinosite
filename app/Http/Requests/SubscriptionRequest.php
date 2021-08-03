@@ -31,13 +31,15 @@ class SubscriptionRequest extends FormRequest
      */
     public function rules()
     {
+        $plan = json_decode($this->get('plan'));
+
         return [
 
-            'merchant'          =>  ['nullable', new ExistMerchant()],
+            'merchant'          =>  [Rule::requiredIf(Auth::user()->is_admin), 'nullable', new ExistMerchant()],
             'plan'              =>  ['required', new CheckSubscriptionPlanExists(User::find($this->get('merchant', Auth::id())))],
 
-            'trans_no'          =>  ['required_with:merchant', 'nullable', Rule::unique(Transaction::class, 'transaction_no')->whereNull('deleted_at')],
-            'payment_method'    =>  ['required_with:merchant', 'nullable', 'exists:' . PaymentMethod::class . ',id']
+            'trans_no'          =>  [Rule::requiredIf((bool) !$plan->trial && Auth::user()->is_admin), 'nullable', Rule::unique(Transaction::class, 'transaction_no')->whereNull('deleted_at')],
+            'payment_method'    =>  [Rule::requiredIf((bool) !$plan->trial && Auth::user()->is_admin), 'nullable', 'exists:' . PaymentMethod::class . ',id']
         ];
     }
 }

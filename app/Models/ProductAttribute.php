@@ -122,4 +122,13 @@ class ProductAttribute extends Model
 
         return;
     }
+
+    public function getNameAttribute()
+    {
+        if ($this->trial_mode) {
+            return $this->product->name . ' (.' . __('labels.free_trial') . '.)';
+        }
+
+        return $this->product->name;
+    }
 }

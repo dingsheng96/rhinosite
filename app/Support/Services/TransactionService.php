@@ -2,10 +2,8 @@
 
 namespace App\Support\Services;
 
-use App\Models\Order;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
-use Illuminate\Support\Facades\Http;
 use App\Support\Services\BaseService;
 
 class TransactionService extends BaseService
@@ -43,10 +41,9 @@ class TransactionService extends BaseService
         return $this;
     }
 
-    public function storeTransactionDetails(bool $is_termination = false)
+    public function storeTransactionDetails()
     {
         $tran_details = new TransactionDetail();
-        $tran_details->is_termination = $is_termination;
         $tran_details->remark = $this->request->get('Remark');
         $tran_details->status = ((int) $this->request->get('Status')) ? Transaction::STATUS_SUCCESS : Transaction::STATUS_FAILED;
         $tran_details->auth_code = $this->request->get('AuthCode');

@@ -61,7 +61,7 @@ class MerchantController extends Controller
     {
         DB::beginTransaction();
 
-        $action     =   Permission::ACTION_UPDATE;
+        $action     =   Permission::ACTION_CREATE;
         $module     =   strtolower(trans_choice('modules.merchant', 1));
         $message    =   Message::instance()->format($action, $module);
         $status     =   'fail';

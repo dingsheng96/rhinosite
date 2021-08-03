@@ -2,7 +2,7 @@
 
 @section('content')
 
-<form method="post" name="ePayment" action="{{ $payment_url }}">
+<form method="post" name="terminateForm" action="{{ $termination_url }}">
 
     @foreach ($credentials as $key => $value)
     <input type="hidden" name="{{ $key }}" value="{{ $value }}">
@@ -16,7 +16,7 @@
 
 <script type="text/javascript">
     window.onload = function() {
-        document.forms['ePayment'].submit();
+        document.forms['terminateForm'].submit();
     }
 </script>
 

@@ -6,20 +6,20 @@ use Carbon\Carbon;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Media;
-use App\Models\Country;
 use App\Models\Package;
-use App\Models\Product;
 use App\Models\UserDetail;
+use App\Models\Transaction;
 use App\Helpers\FileManager;
 use App\Models\UserAdsQuota;
 use App\Models\ProductCategory;
 use App\Models\ProductAttribute;
 use App\Models\UserSubscription;
 use App\Models\UserAdsQuotaHistory;
-use App\Models\UserSubscriptionLog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Builder;
+use App\Notifications\FreeTrialSubscription;
 
 class MerchantService extends BaseService
 {
@@ -146,27 +146,20 @@ class MerchantService extends BaseService
         return $this;
     }
 
-    public function storeSubscription(string $plan = null)
+    public function storeSubscription(string $plan = null, Transaction $transaction = null)
     {
-        if ($this->request->has('plan') || !empty($plan)) {
-            // deactivate existing plan
-            $active_subscription = $this->model->userSubscriptions()->active()->first();
+        if (!empty($plan)) {
 
-            if ($active_subscription) {
-                $active_subscription->status =  UserSubscription::STATUS_INACTIVE;
-                $active_subscription->save();
-            }
+            $plan = json_decode($plan);
 
             // calculate next billing date and expired date
-            $plan = json_decode($this->request->get('plan', $plan));
+            $activation_date    =   Carbon::createFromFormat('Y-m-d', today()->toDateString());
+            $valid_until        =   $activation_date->copy();
+            $trial              =   false;
 
-            $activation_date = Carbon::createFromFormat('Y-m-d', $this->request->get('activate_at', today()->toDateString()));
+            if ($plan->class == Package::class) { // if plan is package
 
-            $valid_until = $activation_date;
-
-            if ($plan->class == Package::class) {
-
-                $package        =   Package::with(['products'])->where('id', $plan->id)->firstOrFail();
+                $package        =   Package::with(['products.productCategory'])->where('id', $plan->id)->firstOrFail();
                 $package_items  =   $package->products;
 
                 foreach ($package_items as $attribute) {
@@ -195,14 +188,14 @@ class MerchantService extends BaseService
                     // check item whether is ads products from package
                     if ($attribute->productCategory->name  == ProductCategory::TYPE_ADS) {
 
-                        $this->storeAds($attribute, $attribute->pivot->quantity);
+                        $this->storeAdsQuota($attribute, $attribute->pivot->quantity);
                     }
                 }
 
-                $next_bill_date = $valid_until->copy()->addDay();
+                $next_bill_date = ($package->recurring) ? $valid_until->copy()->addDay()->startOfDay() : null;
             }
 
-            if ($plan->class == ProductAttribute::class) {
+            if ($plan->class == ProductAttribute::class) { // if plan is product
 
                 $attribute = ProductAttribute::with(['product'])->where('id', $plan->id)->firstOrFail();
 
@@ -220,32 +213,52 @@ class MerchantService extends BaseService
                             break;
                     }
 
-                    $next_bill_date = $valid_until->copy()->addDay();
+                    $next_bill_date = ($attribute->recurring) ? $valid_until->copy()->addDay()->startOfDay() : null;
+
+                    $trial = $attribute->trial_mode;
                 }
             }
 
-            // save new plan
-            $new_subscription = $this->model->userSubscriptions()
-                ->create([
-                    'subscribable_type' =>  $plan->class,
-                    'subscribable_id'   =>  $plan->id,
-                    'activated_at'      =>  $this->request->get('activate_at', today()),
-                    'status'            =>  UserSubscription::STATUS_ACTIVE,
-                    'next_billing_at'   =>  $next_bill_date,
-                ]);
+            $subscription = $this->model->userSubscriptions()->active()
+                ->whereHasMorph('subscribable', $plan->class, function (Builder $query) use ($plan) {
+                    $query->where('id', $plan->id);
+                })->firstOr(function () {
+                    return new UserSubscription();
+                });
+
+            if (!$subscription) { // if different active subscription found, deactivate it
+                $this->model->userSubscriptions()
+                    ->active()->first()->update([
+                        'status' => UserSubscription::STATUS_INACTIVE
+                    ]);
+            }
+
+            // save subscription
+            $subscription->subscribable_type =  $plan->class;
+            $subscription->subscribable_id   =  $plan->id;
+            $subscription->status            =  UserSubscription::STATUS_ACTIVE;
+            $subscription->activated_at      =  $activation_date->startOfDay();
+            $subscription->next_billing_at   =  $next_bill_date;
+            $subscription->transaction_id    =  empty($transaction) ? null : $transaction->id;
+
+            $this->model->userSubscriptions()->save($subscription);
 
             // save subscription logs
-            $new_subscription->userSubscriptionLogs()
+            $subscription->userSubscriptionLogs()
                 ->create([
-                    'renewed_at' => $next_bill_date,
-                    'expired_at' => $valid_until,
+                    'renewed_at' => $activation_date->startOfDay(),
+                    'expired_at' => $valid_until->endOfDay(),
                 ]);
+
+            if ($trial) {
+                $this->model->notify(new FreeTrialSubscription());
+            }
         }
 
         return $this;
     }
 
-    public function storeAds(ProductAttribute $item, int $quantity)
+    public function storeAdsQuota(ProductAttribute $item, int $quantity)
     {
         $user_ads_quota = $this->model->userAdsQuotas()
             ->where('product_attribute_id', $item->id)
@@ -267,11 +280,10 @@ class MerchantService extends BaseService
         }
 
         // create new user ads quoata history
-        $sourceable_type = Auth::user();
-        $sourceable_id = Auth::id();
-
-        $applicable_type = $user_ads_quota;
-        $applicable_id  =   $user_ads_quota->id;
+        $sourceable_type    =   Auth::user();
+        $sourceable_id      =   Auth::id();
+        $applicable_type    =   $user_ads_quota;
+        $applicable_id      =   $user_ads_quota->id;
 
         $new_user_ads_quota_history = new UserAdsQuotaHistory();
         $new_user_ads_quota_history->initial_quantity   =   $initial_quantity;
