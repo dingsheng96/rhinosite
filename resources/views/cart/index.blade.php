@@ -27,6 +27,14 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-12">
+                            <span>{{ __('labels.variant') }} :</span>
+                            <br>
+                            <span>{{ $item['variant'] ?? '-' }}</span>
+                        </div>
+                    </div>
+
                     @if ($item['enable_quantity_input'])
                     <div class="row mt-3">
                         <div class="col-6">

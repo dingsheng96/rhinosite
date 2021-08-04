@@ -67,8 +67,8 @@ class PaymentController extends Controller
             'Lang'          =>  'UTF-8',
             'SignatureType' =>  'SHA256',
             'Signature'     =>  $this->generateRequestSignature($ref_no, $amount, $currency),
-            'ResponseURL'   =>  route('payment.response', ['']),
-            'BackendURL'    =>  route('payment.backend')
+            'ResponseURL'   =>  route('payment.response'),
+            'BackendURL'    =>  route('payment.backend'),
         ];
 
         activity()->useLog('onetime_payment')
@@ -78,7 +78,7 @@ class PaymentController extends Controller
 
         return view('payment.index', [
             'credentials'   =>  $credentials,
-            'payment_url'   =>  config('payment.payment_url')
+            'payment_url'   =>  config('payment.payment_url'),
         ]);
     }
 
@@ -100,10 +100,20 @@ class PaymentController extends Controller
             ->withProperties($request->all())
             ->log('Response from Ipay88 payment gateway');
 
-        $transaction->status = (!empty($status) && $status == 1) ? Transaction::STATUS_SUCCESS : Transaction::STATUS_FAILED;
-        $transaction->save();
+        $update_status  = (!empty($status) && $status == 1) ? Transaction::STATUS_SUCCESS : Transaction::STATUS_FAILED;
+        $order_status   = (!empty($status) && $status == 1) ? Order::STATUS_PAID : Order::STATUS_CANCELLED;
 
-        Auth::guard('web')->login($transaction->sourceable->user);
+        $transaction = TransactionFacade::setRequest($request)
+            ->setModel($transaction)
+            ->setTransactionStatus($update_status)
+            ->storeTransactionDetails()
+            ->getModel();
+
+        $order = OrderFacade::setModel($transaction->sourceable)
+            ->setOrderStatus($order_status)
+            ->getModel();
+
+        Auth::guard('web')->login($order->user);
 
         return redirect()->route('payment.status', ['ref_no' => $transaction->transaction_no]);
     }
@@ -164,7 +174,7 @@ class PaymentController extends Controller
                     if ($item->orderable_type == ProductAttribute::class && $item->orderable->productCategory->name == ProductCategory::TYPE_ADS) {
 
                         $merchant = MerchantFacade::setModel($transaction->sourceable->user)
-                            ->storeAds($item->orderable, $item->quantity)
+                            ->storeAdsQuota($item->orderable, $item->quantity)
                             ->getModel();
                     }
                 }
@@ -271,10 +281,20 @@ class PaymentController extends Controller
             ->withProperties($request->all())
             ->log('Response from Ipay88 payment gateway');
 
-        $transaction->status = (!empty($status) && $status == '00') ? Transaction::STATUS_SUCCESS : Transaction::STATUS_FAILED;
-        $transaction->save();
+        $update_status = (!empty($status) && $status == '00') ? Transaction::STATUS_SUCCESS : Transaction::STATUS_FAILED;
+        $order_status   = (!empty($status) && $status == '00') ? Order::STATUS_PAID : Order::STATUS_CANCELLED;
 
-        Auth::guard('web')->login($transaction->sourceable->user);
+        $transaction = TransactionFacade::setRequest($request)
+            ->setModel($transaction)
+            ->setTransactionStatus($update_status)
+            ->storeTransactionDetails(true)
+            ->getModel();
+
+        $order = OrderFacade::setModel($transaction->sourceable)
+            ->setOrderStatus($order_status)
+            ->getModel();
+
+        Auth::guard('web')->login($order->user);
 
         return redirect()->route('payment.status', ['ref_no' => $transaction->transaction_no]);
     }

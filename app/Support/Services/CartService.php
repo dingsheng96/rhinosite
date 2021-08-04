@@ -136,15 +136,24 @@ class CartService extends BaseService
         ])->where('user_id', Auth::id())->get()
             ->map(function ($cart) {
 
-                $price = $cart->cartable->prices->first();
+                $cart_item  =   $cart->cartable;
+                $price      =   $cart_item->prices->first();
+                $variant    =   '-';
+
+                if (get_class($cart_item) == ProductAttribute::class && $cart_item->stock_type == ProductAttribute::STOCK_TYPE_INFINITE) {
+
+                    $variant = trans_choice('labels.item_unit', $cart_item->quantity, ['value' => $cart_item->quantity]) . ' - ' . $price->selling_price_with_currency;
+                }
+
                 return [
                     'id'                    =>  $cart->id,
-                    'name'                  =>  $cart->cartable->name ?? $cart->cartable->product->name,
-                    'description'           =>  $cart->cartable->description ?? $cart->cartable->product->description,
+                    'name'                  =>  $cart->item_name,
+                    'description'           =>  $cart->item_description,
                     'quantity'              =>  $cart->quantity,
                     'enable_quantity_input' =>  $cart->enable_quantity_input,
-                    'price'                 =>  $price->selling_price,
+                    'price'                 =>  number_format($price->selling_price * $cart->quantity, 2, '.', ''),
                     'currency'              =>  $price->currency->code,
+                    'variant'               =>  $variant
                 ];
             });
 
@@ -153,5 +162,23 @@ class CartService extends BaseService
             'sub_total' => $carts->sum('price') ?? 0,
             'currency' => $carts->pluck('currency')->unique('currency')->first()
         ];
+    }
+
+    public function purchase()
+    {
+        foreach ($this->request->get('item') as $item) {
+
+            $quantity = $item['quantity'];
+
+            while ($quantity > 0) {
+                $product = ProductAttribute::find($item['variant']);
+
+                $this->addToCart($product);
+
+                $quantity--;
+            }
+        }
+
+        return $this;
     }
 }

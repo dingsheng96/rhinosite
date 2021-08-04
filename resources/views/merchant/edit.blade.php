@@ -375,9 +375,9 @@
                                                     <h6 class="alert-heading">{{ __('labels.current_plan') . ':' }}</h6>
                                                     <h3 class="alert-heading">{{ $subscription->name }}</h3>
                                                     <hr>
-                                                    <p>{{ trans_choice('labels.subscribed_at', 2, ['date' => $subscription->activated_at]) }}</p>
+                                                    <p>{{ trans_choice('labels.subscribed_at', 2, ['date' => $subscription->subscription_date]) }}</p>
                                                     <p>{{ trans_choice('labels.expired_at', 2, ['date' => $subscription->expired_at]) }}</p>
-                                                    <p>{{ trans_choice('labels.next_billing_at', 2, ['date' => $subscription->next_billing_at]) }}</p>
+                                                    <p>{{ trans_choice('labels.next_billing_at', 2, ['date' => $subscription->next_billing_date ??'-']) }}</p>
                                                 </div>
                                             </div>
                                         </div>

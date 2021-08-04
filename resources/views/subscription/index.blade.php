@@ -8,16 +8,18 @@
 
         <div class="col-12">
             <h2 class="text-center font-weight-bold">{{ __('labels.choose_plan') }}</h2>
-            <hr>
         </div>
 
-        <div class="col-12">
+        <div class="col-12 my-3">
             @include('components.alert')
         </div>
 
+    </div>
+
+    <div class="row justify-content-center py-3">
         @forelse ($plans as $plan)
-        <div class="col-12 col-md-3 my-3 py-3">
-            <div class="card shadow-lg h-100">
+        <div class="col-12 col-md-3 my-3">
+            <div class="card shadow-lg h-100 border">
                 <div class="card-body text-center">
 
                     <h4 class="font-weight-bold mt-3 mb-4">{{ $plan->name }}</h4>
@@ -62,11 +64,10 @@
             </div>
         </div>
         @empty
-        <div class="col-12 my-3 py-3">
+        <div class="col-12 my-3">
             <p>{{ __('messages.no_plan_available') }}</p>
         </div>
         @endforelse
-
     </div>
 
 </div>

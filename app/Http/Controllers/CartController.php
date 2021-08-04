@@ -8,13 +8,13 @@ use App\Helpers\Response;
 use App\Models\Permission;
 use Illuminate\Http\Request;
 use App\Models\PaymentMethod;
+use App\Http\Requests\CartRequest;
 use Illuminate\Support\Facades\DB;
 use App\Support\Facades\CartFacade;
 use App\Http\Controllers\Controller;
 use App\Support\Facades\PriceFacade;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use App\Http\Requests\CartRequest;
 
 class CartController extends Controller
 {
@@ -55,21 +55,23 @@ class CartController extends Controller
 
         try {
 
-            $cart = CartFacade::setRequest($request)->storeData()->getModel();
+            throw_if(
+                !$request->has('from_page') && $request->get('from_page') != 1,
+                new \Exception('Unable add to cart.')
+            );
+
+            $cart = CartFacade::setRequest($request)->setBuyer(Auth::user())->purchase()->getModel();
 
             DB::commit();
+
+            return redirect()->route('products.index')->withSuccess('Added to cart!');
         } catch (\Error | \Exception $ex) {
 
             DB::rollback();
-
             $message = $ex->getMessage();
-        }
 
-        return Response::instance()
-            ->withStatusCode('modules.cart', 'actions.' . $action . $status)
-            ->withStatus($status)
-            ->withMessage($message, true)
-            ->sendJson();
+            return redirect()->back()->with('fail', $message);
+        }
     }
 
     /**

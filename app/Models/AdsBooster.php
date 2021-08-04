@@ -15,6 +15,7 @@ class AdsBooster extends Model
 
     const CATEGORY_BUMP = 'Category Bump';
     const CATEGORY_HIGHLIGHT = 'Category Highlight';
+    const BANNER_ADVERTISEMENT = 'Banner Advertisement';
 
     protected $table = 'ads_boosters';
 
@@ -64,6 +65,16 @@ class AdsBooster extends Model
             $query->whereHas('product', function ($query) {
                 $query->filterCategory(ProductCategory::TYPE_ADS)
                     ->where('name', self::CATEGORY_HIGHLIGHT);
+            });
+        });
+    }
+
+    public function scopeBannerAdvertisement($query)
+    {
+        return $query->whereHas('productAttribute', function ($query) {
+            $query->whereHas('product', function ($query) {
+                $query->filterCategory(ProductCategory::TYPE_ADS)
+                    ->where('name', self::BANNER_ADVERTISEMENT);
             });
         });
     }

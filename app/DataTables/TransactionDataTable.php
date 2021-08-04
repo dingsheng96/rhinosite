@@ -36,7 +36,7 @@ class TransactionDataTable extends DataTable
             //     ])->render();
             // })
             ->addColumn('order_no', function ($data) {
-                return $data->sourceable->order_no;
+                return optional($data->sourceable)->order_no ?? '-';
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
@@ -79,7 +79,7 @@ class TransactionDataTable extends DataTable
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(0, 'asc')
+            ->orderBy(6, 'desc')
             ->responsive(true)
             ->autoWidth(true)
             ->processing(false);

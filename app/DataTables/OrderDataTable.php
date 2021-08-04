@@ -81,7 +81,7 @@ class OrderDataTable extends DataTable
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(0, 'asc')
+            ->orderBy(1, 'desc')
             ->responsive(true)
             ->autoWidth(true)
             ->processing(false);

@@ -63,13 +63,28 @@ class UserSubscription extends Model
     // Attributes
     public function getSubscriptionDateAttribute()
     {
-        return $this->created_at->format('jS M Y') ?? null;
+        return optional($this->activated_at)->format('jS M Y');
+    }
+
+    public function getNextBillingDateAttribute()
+    {
+        return optional($this->next_billing_at)->format('jS M Y');
+    }
+
+    public function getStatusLabelAttribute()
+    {
+        $label =  Status::instance()->statusLabel($this->status);
+
+        return '<span class="' . $label['class'] . ' px-3">' . $label['text'] . '</span>';
     }
 
     public function getNameAttribute()
     {
         if ($this->subscribable) {
             if ($this->subscribable_type == ProductAttribute::class) {
+                if ($this->subscribable->trial_mode) {
+                    return $this->subscribable->product->name . ' (' . __('labels.free_trial') . ')';
+                }
 
                 return $this->subscribable->product->name;
             }
@@ -78,39 +93,5 @@ class UserSubscription extends Model
         }
 
         return null;
-    }
-
-    public function getNextBillingAtAttribute($value)
-    {
-        if ($value) {
-            return date('Y-m-d', strtotime($value));
-        }
-
-        return '-';
-    }
-
-    public function getExpiredAtAttribute()
-    {
-        if ($this->active_user_subscription_log) {
-            return $this->active_user_subscription_log->expired_at->toDateString();
-        }
-
-        return '-';
-    }
-
-    public function getActivatedAtAttribute($value)
-    {
-        if ($value) {
-            return date('Y-m-d', strtotime($value));
-        }
-
-        return '-';
-    }
-
-    public function getStatusLabelAttribute()
-    {
-        $label =  Status::instance()->statusLabel($this->status);
-
-        return '<span class="' . $label['class'] . ' px-3">' . $label['text'] . '</span>';
     }
 }

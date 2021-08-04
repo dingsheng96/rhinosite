@@ -19,6 +19,10 @@ class Product extends Model
     const STATUS_ACTIVE = 'active';
     const STATUS_INACTIVE = 'inactive';
 
+    const NAME_CATEGORY_BUMP = 'Category Bump';
+    const NAME_CATEGORY_HIGHLIGHT = 'Category Highlight';
+    const NAME_BANNER_ADVERTISEMENT = 'Banner Advertisement';
+
     protected $table = 'products';
 
     protected $fillable = [

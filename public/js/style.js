@@ -131,13 +131,25 @@ $(function() {
 
     if($('.btn-decrement').length > 0) {
         $('.btn-decrement').on('click', function () {
-            cartItemDecrement();
+
+            let input = $(this).parents('.input-group').find('.quantity-input');
+            let value = parseInt(input.val());
+
+            if(value <= 0) {
+                input.val(0);
+            } else {
+                input.val(value-1);
+            }
         });
     }
 
     if($('.btn-increment').length > 0) {
         $('.btn-increment').on('click', function () {
-            cartItemIncrement();
+
+            let input = $(this).parents('.input-group').find('.quantity-input');
+            let value = parseInt(input.val());
+
+            input.val(value+1);
         });
     }
 });

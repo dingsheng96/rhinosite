@@ -5,6 +5,56 @@
 <div class="container-fluid">
 
     <div class="row">
+        <div class="col-12">
+            @if ($user->active_subscription)
+            <div class="alert alert-info shadow">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <h5 class="alert-heading">
+                            {{ __('labels.current_plan') . ':' }}
+                        </h5>
+                        <h3 class="alert-heading">{{ $user->active_subscription->name }}</h3>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <p class="alert-heading text-md-right">
+                            <a href="#" role="button" onclick="event.preventDefault();
+                            subscriptionTerminationAlert('{{ __('messages.confirm_question') }}', '{{ __('messages.delete_info') }}', '{{ route('subscriptions.update', ['subscription' => $user->active_subscription->id]) }}')">
+                                {{ __('labels.terminate_plan') }}
+                            </a>
+                        </p>
+                        <p class="alert-heading text-md-right">
+                            <a href="#subscriptionLog" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="subscriptionLog">
+                                {{ __('labels.view_details') }}
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                <div id="subscriptionLog" class="collapse hide">
+                    <hr>
+                    <p>{{ trans_choice('labels.subscribed_at', 2, ['date' => $user->active_subscription->subscription_date]) }}</p>
+                    <p>{{ trans_choice('labels.next_billing_at', 2, ['date' => $user->active_subscription->next_billing_date ?? '-']) }}</p>
+                    <p>{{ trans_choice('labels.renewed_at', 2, ['date' => $user->active_subscription_latest_log->renewed_date]) }}</p>
+                    <p>{{ trans_choice('labels.expired_at', 2, ['date' => $user->active_subscription_latest_log->expired_date]) }}</p>
+                </div>
+
+            </div>
+            @else
+            <div class="card card-body shadow">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h4>{{ __('messages.no_subscription') }}</h4>
+
+                        <a role="button" href="{{ route('subscriptions.index') }}" class="btn btn-outline-primary btn-rounded-corner my-3">
+                            {{ __('labels.sign_up_a_plan') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-12 col-md-4">
             <div class="card shadow">
                 <div class="card-body box-profile">
@@ -26,11 +76,11 @@
                         </li>
                         <li class="list-group-item">
                             <strong><i class="fas fa-globe-asia mr-1 text-indigo"></i> {{ __('labels.website') }}</strong>
-                            <p class="text-muted">{{ $user_details->website }}</p>
+                            <p class="text-muted">{{ $user_details->website ?? '-' }}</p>
                         </li>
                         <li class="list-group-item">
                             <strong><i class="fab fa-facebook mr-1 text-primary"></i> {{ __('labels.facebook') }}</strong>
-                            <p class="text-muted">{{ $user_details->facebook }}</p>
+                            <p class="text-muted">{{ $user_details->facebook ?? '-' }}</p>
                         </li>
                         <li class="list-group-item">
                             <strong><i class="fas fa-user mr-1 text-secondary"></i> {{ __('labels.person_in_charge') }}</strong>
@@ -47,56 +97,6 @@
         </div>
 
         <div class="col-12 col-md-8">
-
-            <div class="row">
-                <div class="col-12">
-
-                    @if ($user->active_subscription)
-                    <div class="alert alert-info shadow">
-                        <div class="row">
-                            <div class="col-12 col-md-6">
-                                <h6 class="alert-heading">
-                                    {{ __('labels.current_plan') . ':' }}
-                                </h6>
-                                <h3 class="alert-heading">{{ $user->active_subscription->name }}</h3>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <p class="alert-heading text-md-right">
-                                    <a href="#" role="button" onclick="event.preventDefault();
-                                    subscriptionTerminationAlert('{{ __('messages.confirm_question') }}', '{{ __('messages.delete_info') }}', '{{ route('subscriptions.update', ['subscription' => $user->active_subscription->id]) }}')">
-                                        {{ __('labels.terminate_plan') }}
-                                    </a>
-                                </p>
-                                <p class="alert-heading text-md-right">
-                                    <a href="" role="button">
-                                        {{ __('labels.buy_add_on') }}
-                                    </a>
-                                </p>
-                            </div>
-                        </div>
-                        <hr>
-                        <p>{{ trans_choice('labels.subscribed_at', 2, ['date' => $user->active_subscription->activated_at]) }}</p>
-                        <p>{{ trans_choice('labels.expired_at', 2, ['date' => $user->active_subscription_latest_log->expired_at]) }}</p>
-                        <p>{{ trans_choice('labels.renewed_at', 2, ['date' => $user->active_subscription_latest_log->renewed_at]) }}</p>
-                        <p>{{ trans_choice('labels.next_billing_at', 2, ['date' => $user->active_subscription->next_billing_at]) }}</p>
-                    </div>
-                    @else
-                    <div class="card card-body shadow">
-                        <div class="row">
-                            <div class="col-12 text-center">
-                                <h4>{{ __('messages.no_subscription') }}</h4>
-
-                                <a role="button" href="{{ route('subscriptions.index') }}" class="btn btn-outline-primary btn-rounded-corner my-3">
-                                    {{ __('labels.sign_up_a_plan') }}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-
-                </div>
-            </div>
-
             @if (!empty($user->userAdsQuotas))
             <div class="row">
                 @forelse ($user->userAdsQuotas as $quota)

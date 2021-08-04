@@ -41,11 +41,17 @@ class TransactionService extends BaseService
         return $this;
     }
 
-    public function storeTransactionDetails()
+    public function storeTransactionDetails(bool $status_revert = false)
     {
         $tran_details = new TransactionDetail();
         $tran_details->remark = $this->request->get('Remark');
+
         $tran_details->status = ((int) $this->request->get('Status')) ? Transaction::STATUS_SUCCESS : Transaction::STATUS_FAILED;
+
+        if ($status_revert) {
+            $tran_details->status = ((int) $this->request->get('Status')) ? Transaction::STATUS_FAILED : Transaction::STATUS_SUCCESS;
+        }
+
         $tran_details->auth_code = $this->request->get('AuthCode');
         $tran_details->description = $this->request->get('ErrDesc');
         $tran_details->ipay_transaction_id = $this->request->get('TransId');

@@ -87,6 +87,7 @@ function updateCart(route, data, cart)
                             return oldHtml.replaceAll('__REPLACE_ITEM_NAME__', value.name)
                             .replaceAll('__REPLACE_ITEM_ID__', value.id)
                             .replaceAll('__REPLACE_ITEM_QUANTITY__', value.quantity)
+                            .replaceAll('__REPLACE_ITEM_VARIANT__', value.variant)
                             .replaceAll('__REPLACE_ITEM_PRICE_WITH_CURRENCY__', value.currency + value.price);
                         }).appendTo('#cart-items-list');
 

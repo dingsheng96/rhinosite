@@ -68,6 +68,15 @@ class Cart extends Model
         return $this->cartable->name;
     }
 
+    public function getItemDescriptionAttribute()
+    {
+        if ($this->cartable_type == ProductAttribute::class) {
+            return $this->cartable->product->description;
+        }
+
+        return $this->cartable->description;
+    }
+
     public function getEnableQuantityInputAttribute()
     {
         if ($this->cartable_type == Package::class) {

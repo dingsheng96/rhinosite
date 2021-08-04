@@ -14,6 +14,7 @@ use App\Models\UserAdsQuota;
 use App\Models\ProductCategory;
 use App\Models\ProductAttribute;
 use App\Models\UserSubscription;
+use App\Notifications\VerifyEmail;
 use App\Models\UserAdsQuotaHistory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -23,6 +24,8 @@ use App\Notifications\FreeTrialSubscription;
 
 class MerchantService extends BaseService
 {
+    public $from_verification;
+
     public function __construct()
     {
         parent::__construct(User::class);
@@ -30,8 +33,10 @@ class MerchantService extends BaseService
 
     public function storeData(bool $from_verification = false)
     {
+        $this->from_verification = $from_verification;
+
         $this->storeProfile();
-        $this->storeDetails($from_verification);
+        $this->storeDetails();
         $this->storeAddress();
         $this->storeImage();
         $this->storeSsmCert();
@@ -50,6 +55,10 @@ class MerchantService extends BaseService
             $this->model->password = Hash::make($this->request->get('password'));
         }
 
+        if (!$this->from_verification) {
+            $this->model->email_verified_at = now();
+        }
+
         if ($this->model->isDirty()) {
             $this->model->save();
         }
@@ -61,17 +70,16 @@ class MerchantService extends BaseService
         return $this;
     }
 
-    public function storeDetails(bool $from_verification = false)
+    public function storeDetails()
     {
-
         $details = $this->model->userDetail()
-            ->when($from_verification, function ($query) {
+            ->when($this->from_verification, function ($query) {
                 $query->pendingDetails()
                     ->orWhere(function ($query) {
                         $query->rejectedDetails();
                     });
             })
-            ->when(!$from_verification, function ($query) {
+            ->when(!$this->from_verification, function ($query) {
                 $query->approvedDetails();
             })
             ->firstOr(function () {
@@ -85,9 +93,7 @@ class MerchantService extends BaseService
         $details->pic_name          =   $this->request->get('pic_name');
         $details->pic_phone         =   $this->request->get('pic_phone');
         $details->pic_email         =   $this->request->get('pic_email');
-        $details->status            =   (!$details->exists || $from_verification) // if new details or from verification page, set pending, else set approved
-            ? UserDetail::STATUS_PENDING
-            : UserDetail::STATUS_APPROVED;
+        $details->status            =   ($this->from_verification) ? UserDetail::STATUS_PENDING : UserDetail::STATUS_APPROVED; // if details created from verification page, set pending, else set approved
 
         $this->model->userDetail()->save($details);
 
@@ -260,6 +266,13 @@ class MerchantService extends BaseService
 
     public function storeAdsQuota(ProductAttribute $item, int $quantity)
     {
+        if ($item->stock_type == ProductAttribute::STOCK_TYPE_INFINITE) {
+            $quantity = $item->quantity * $quantity;
+        } elseif ($item->stock_type == ProductAttribute::STOCK_TYPE_FINITE) {
+            $item->quantity -= $quantity;
+            $item->save();
+        }
+
         $user_ads_quota = $this->model->userAdsQuotas()
             ->where('product_attribute_id', $item->id)
             ->firstOr(function () {

@@ -30,7 +30,9 @@
                                     <td>
                                         <span class="font-weight-bold">{{ $item['name'] }}</span>
                                         <br>
-                                        <p class="text-muted">{{ $item['description'] }}</p>
+                                        <span class="text-muted">{{ __('labels.variant').': '.$item['variant'] }}</span>
+                                        <br>
+                                        <span class="text-muted">{!! $item['description'] !!}</span>
                                     </td>
                                     <td class="text-center"><span class="form-control form-control-sm">{{ $item['quantity'] }}</span></td>
                                     <td class="text-right">{{ $item['currency'] .' '. $item['price'] }}</td>

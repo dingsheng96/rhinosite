@@ -40,6 +40,10 @@ class ProductController extends Controller
      */
     public function index(ProductDataTable $dataTable)
     {
+        if (Auth::user()->is_merchant) {
+            return $this->purchaseIndex();
+        }
+
         return $dataTable->render('product.index');
     }
 
@@ -284,5 +288,23 @@ class ProductController extends Controller
                 'redirect_to' => route('products.index')
             ])
             ->sendJson();
+    }
+
+    public function purchaseIndex()
+    {
+        $products = Product::with([
+            'productCategory',
+            'productAttributes' => function ($query) {
+                $query->with(['prices' => function ($query) {
+                    $query->defaultPrice();
+                }])->active()->published();
+            }
+        ])->filterCategory(ProductCategory::TYPE_ADS)
+            ->whereHas('productAttributes', function ($query) {
+                $query->active()->published();
+            })->orderBy('name')
+            ->get();
+
+        return view('product.purchase', compact('products'));
     }
 }

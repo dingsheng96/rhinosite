@@ -11,6 +11,14 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-12">
+            <span>{{ __('labels.variant') }} :</span>
+            <br>
+            <span>__REPLACE_ITEM_VARIANT__</span>
+        </div>
+    </div>
+
 
     <div class="row mt-3" id="enable_quantity_input_template">
         <div class="col-6">
