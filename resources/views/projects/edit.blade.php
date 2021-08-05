@@ -411,19 +411,23 @@
                                     </div>
 
                                     <div class="tab-pane fade" id="ads" role="tabpanel" aria-labelledby="ads-tab">
-                                        <p class="text-muted">Coming soon...</p>
-                                        {{-- <p class="cart-text">
+                                        @if($ads_boosters->count() > 0)
+                                        <p class="card-text">
                                             <span class="font-weight-bold">{{ __('messages.boosts_ads_preference_text') }}</span>
-                                        <br>
-                                        {{ __('messages.select_prefer_boosts_ads_days') }}
+                                            <br>
+                                            {{ __('messages.select_prefer_boosts_ads_days') }}
                                         </p>
 
                                         <div class="row">
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
                                                     <label for="ads_type" class="col-form-label">{{ __('labels.ads_type') }}</label>
-                                                    <select name="ads_type" id="ads_type" class="form-control select2 @error('ads_type') is-invalid @enderror disabled-date-filter">
+                                                    <select name="ads_type" id="ads_type" class="form-control select2 @error('ads_type') is-invalid @enderror ads-date-filter">
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.ads_type'))]) }} ---</option>
+                                                        @forelse ($ads_boosters as $product)
+                                                        <option value="{{ $product->id }}" {{ old('ads_type') == $product->id ? 'selected' : null }}>{{ $product->name }}</option>
+                                                        @empty
+                                                        @endforelse
                                                     </select>
                                                     @error('ads_type')
                                                     <span class="invalid-feedback" role="alert">
@@ -434,22 +438,42 @@
                                             </div>
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
-                                                    <label for="boost_ads_date" class="col-form-label">{{ __('labels.boosts_ads_date') }}</label>
+                                                    <label for="date_from" class="col-form-label">{{ __('labels.start_from') }}</label>
                                                     <div class="input-group">
-                                                        <input type="text" id="boost_ads_date" name="boost_ads_date" class="form-control date-picker @error('boosts_ads_date') is-invalid @enderror bg-white" readonly placeholder="dd/mm/yyyy"
-                                                            data-disabled-date-route="{{ route('data.ads.date', ['ads' => '__REPLACE__']) }}">
+                                                        <input type="text" id="date_from" name="date_from" class="form-control ads-date-picker @error('date_from') is-invalid @enderror" placeholder="yyyy-mm-dd"
+                                                            data-ads-date-filter-route="{{ route('data.ads.unavailable-date', ['ads' => '__REPLACE__']) }}" disabled>
                                                         <div class="input-group-append">
                                                             <span class="input-group-text bg-white"><i class="far fa-calendar"></i></span>
                                                         </div>
                                                     </div>
-                                                    @error('boosts_ads_date')
+                                                    @error('date_from')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
                                                     @enderror
                                                 </div>
                                             </div>
-                                        </div> --}}
+                                        </div>
+                                        @else
+                                        @merchant
+                                        <div class="row">
+                                            <div class="col-12 text-center my-5">
+                                                <p>{{ __('messages.empty_list', ['list' => strtolower(__('labels.ads'))]) }}</p>
+                                                <a href="{{ route('products.index') }}" role="button" class="btn btn-outline-primary btn-rounded-corner">
+                                                    {{ __('labels.buy_add_on') }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                        @endmerchant
+
+                                        @admin
+                                        <div class="row">
+                                            <div class="col-12 text-center my-5">
+                                                <p>{{ __('messages.empty_list', ['list' => strtolower(__('labels.ads'))]) }}</p>
+                                            </div>
+                                        </div>
+                                        @endadmin
+                                        @endif
                                     </div>
 
                                 </div>

@@ -106,7 +106,7 @@ Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
 
     Route::group(['middleware' => ['auth:web', 'verified']], function () {
         Route::post('products/{product}/sku', 'DataController@getSkuFromProduct')->name('products.sku');
-        Route::post('ads/{ads}/date', 'DataController@getAdsAvailableDate')->name('ads.date');
+        Route::post('ads/{ads}/unavailable-date', 'DataController@getAdsUnavailableDate')->name('ads.unavailable-date');
     });
 
     Route::group(['prefix' => 'countries/{country}', 'as' => 'countries.'], function () {

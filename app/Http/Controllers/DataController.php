@@ -9,7 +9,10 @@ use App\Helpers\Response;
 use App\Models\AdsBooster;
 use App\Models\Permission;
 use App\Models\CountryState;
+use Illuminate\Support\Carbon;
 use App\Models\ProductAttribute;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class DataController extends Controller
 {
@@ -68,32 +71,77 @@ class DataController extends Controller
             ->sendJson();
     }
 
-    public function getAdsAvailableDate(ProductAttribute $ads)
+    public function getAdsUnavailableDate(Product $ads)
     {
-        $action = Permission::ACTION_READ;
-        $status = 'success';
-        $message = null;
-        $data = [];
+        $action     =   Permission::ACTION_READ;
+        $status     =   'success';
+        $message    =   'Ok';
+        $data       =   [];
 
         try {
 
+            $ads->load([
+                'productAttributes' => function ($query) {
+                    $query->orderBy('slot');
+                }
+            ]);
+
             throw_if(
-                $ads->status == ProductAttribute::STATUS_INACTIVE,
-                new \Exception('This ad is not available')
+                $ads->status == Product::STATUS_INACTIVE,
+                new \Exception('This ads is not available')
             );
 
-            // get ads details (slot, slot type, total slots per day)
-            $slots = $ads->slot;
-            $slot_type = $ads->slot_type;
-            $total_slots_per_day = $ads->total_slots_per_day;
+            // get attribute
+            $attribute = $ads->productAttributes
+                ->map(function ($item) {
+                    return ['slot' => $item->slot, 'slot_type' => $item->slot_type];
+                })
+                ->unique()->first();
 
             // get full dates from now till one month later
-            $boost_ads_list = AdsBooster::where('product_attribute_id', $ads->id) // get ads list within one month from today
-                ->whereBetween('boosted_at', [today(), today()->addMonth()])
+            $boost_ads_list = AdsBooster::selectRaw('DATE(boosted_at) as boosted_date, COUNT(boosted_at) as day_count')
+                ->whereDate('boosted_at', '>',  today())
+                ->where('product_id', $ads->id)
+                ->groupBy(DB::raw('DATE(boosted_at)'))
+                ->having('day_count', '=', $attribute['slot'])
                 ->get();
 
-            // filter
+            switch ($attribute['slot_type']) {
+                case ProductAttribute::SLOT_TYPE_DAILY:
+                    $difference = 1;
+                    break;
+                case ProductAttribute::SLOT_TYPE_WEEKLY:
+                    $difference = 7;
+                    break;
+                case ProductAttribute::SLOT_TYPE_MONTHLY:
+                    $difference = 30;
+                    break;
+                default:
+                    $difference = 1;
+                    break;
+            }
 
+            foreach ($boost_ads_list as $list) {
+
+                if (count($data) < 1) {
+                    $data[] = $list->boosted_date;
+                    continue;
+                }
+
+                $end_date       =   Carbon::createFromFormat('Y-m-d', end($data));
+                $listed_date    =   Carbon::createFromFormat('Y-m-d', $list->boosted_date);
+                $periods        =   [];
+
+                if ($end_date->diffInDays($listed_date) <= $difference) {
+                    $period = $end_date->daysUntil($listed_date)->toArray();
+
+                    foreach ($period as $date) {
+                        $periods[] = $date->toDateString();
+                    }
+                }
+
+                $data = array_merge($data, $periods);
+            }
         } catch (\Error | \Exception $ex) {
 
             $status = 'fail';

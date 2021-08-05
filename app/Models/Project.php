@@ -225,9 +225,7 @@ class Project extends Model
 
     public function getThumbnailAttribute()
     {
-        return $this->media()
-            ->where('type', Media::TYPE_THUMBNAIL)
-            ->first();
+        return $this->media()->thumbnail()->first();
     }
 
     public function getUnitValueAttribute($value)

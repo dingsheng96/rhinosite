@@ -20,45 +20,51 @@ $(function () {
         });
     }
 
+    if ($(".ads-date-filter").length > 0 && $('.ads-date-picker').length > 0) {
 
-    // let today = new Date();
-    // let nextMonth = new Date();
-    // nextMonth.setMonth(today.getMonth() + 1);
+        let date_filter     =   $(".ads-date-filter");
+        let datepicker      =   $('.ads-date-picker');
+        let minDate         =   new Date(new Date().setDate(new Date().getDate() + 1));
+        let maxDate         =   new Date(new Date().setMonth(new Date().getMonth() + 6));
+        let disabled_dates  =   [];
 
-    // let datepicker = new Pikaday({
-    //     field: $('.ads-date-picker')[0],
-    //     minDate: today,
-    //     maxDate: nextMonth,
-    //     format: 'DD/MM/YYYY'
-    // });
+        date_filter.on("change", function() {
 
-    // $(function () {
+            if ($(this).val() != null && $(this).val() != "") {
 
-    //     if ($(".ads-slot-filter").length > 0) {
-    //         if ($(".ads-slot-filter").val() != null && $(".ads-slot-filter").val() != "") {
-    //             getAdsAvailableDate($(".ads-slot-filter"), $(".ads-slot-filter").val());
-    //         }
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: datepicker.data("ads-date-filter-route").replace("__REPLACE__", $(this).val()),
+                    type: "POST",
+                    success: xhr => {
 
-    //         $(".ads-slot-filter").on("change", function() {
-    //             getAdsAvailableDate($(this), $(this).val());
-    //         });
-    //     }
-    // });
+                        datepicker.removeAttr('disabled');
+                        datepicker.attr('readonly', true);
+                        datepicker.addClass('bg-white');
 
-    // function getAdsAvailableDate(dropdown, ads_id) {
+                        if (xhr.status) {
 
-    //     let url = dropdown.data("filter-route").replace("__REPLACE__", ads_id);
+                            disabled_dates = xhr.data;
 
-    //     if (ads_id != null && ads_id != "") {
-    //         $.ajax({
-    //             url: url,
-    //             type: "GET",
-    //             success: xhr => {
-    //                 if (xhr.status) {
+                            datepicker.pikaday({
+                                format: 'YYYY-MM-DD',
+                                minDate: minDate,
+                                maxDate: maxDate,
+                                disableDayFn: function (date) {
+                                    if ($.inArray(moment(date).format("YYYY-MM-DD"), disabled_dates) !== -1) {
+                                        return date;
+                                    }
+                                },
+                            });
+                        }
+                    }
+                });
+            }
+        });
 
-    //                 }
-    //             }
-    //         });
-    //     }
-    // }
+
+    }
+
 });

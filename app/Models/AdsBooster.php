@@ -20,7 +20,7 @@ class AdsBooster extends Model
     protected $table = 'ads_boosters';
 
     protected $fillable = [
-        'product_attribute_id', 'boostable_type', 'boostable_id', 'boosted_at'
+        'product_id', 'boostable_type', 'boostable_id', 'boosted_at'
     ];
 
     protected $casts = [
@@ -33,14 +33,9 @@ class AdsBooster extends Model
         return $this->morphTo();
     }
 
-    public function productAttribute()
-    {
-        return $this->belongsTo(ProductAttribute::class, 'product_attribute_id', 'id');
-    }
-
     public function product()
     {
-        return $this->hasOneThrough(Product::class, ProductAttribute::class, 'id', 'id', 'product_attribute_id', 'product_id');
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
     // Scopes

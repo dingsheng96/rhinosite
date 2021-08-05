@@ -7,19 +7,37 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
+    public $user;
+
     public function index()
     {
-        $user = Auth::user()->load([
+        $this->user = Auth::user();
+
+        if ($this->user->is_admin) {
+            $data = $this->adminDashboard();
+        } elseif ($this->user->is_merchant) {
+            $data = $this->merchantDashboard();
+        } elseif ($this->user->is_member) {
+            $data = $this->memberDashboard();
+        }
+
+        return view('dashboard.' . Auth::user()->folder_name, $data);
+    }
+
+    private function adminDashboard(): array
+    {
+        return [];
+    }
+
+    private function merchantDashboard(): array
+    {
+        $this->user->load([
             'address', 'userAdsQuotas',
             'userDetail' => function ($query) {
                 $query->approvedDetails();
             },
             'media' => function ($query) {
-                $query->when(Auth::user()->is_member, function ($query) {
-                    $query->logo();
-                })->when(Auth::user()->is_merchant, function ($query) {
-                    $query->logo();
-                });
+                $query->logo();
             }
         ]);
 
@@ -28,10 +46,10 @@ class HomeController extends Controller
             ->whereHas('user', function ($query) {
                 $query->merchant()->active();
             })
-            ->when(Auth::user()->is_merchant, function ($query) {
-                $query->where('user_id', Auth::user()->id);
+            ->when($this->user->is_merchant, function ($query) {
+                $query->where('user_id', $this->user->id);
             })
-            ->when(Auth::user()->is_member, function ($query) {
+            ->when($this->user->is_member, function ($query) {
                 $query->whereHas('wishlists', function ($query) {
                     $query->where('user_id', Auth::id());
                 });
@@ -45,8 +63,27 @@ class HomeController extends Controller
                 $query->whereDate('boosted_at', today());
             })->get();
 
-        $total_ads_quotas = $user->userAdsQuotas->sum('quantity') ?? 0;
+        $total_ads_quotas = $this->user->userAdsQuotas->sum('quantity') ?? 0;
 
-        return view('dashboard.' . Auth::user()->folder_name, compact('user', 'projects', 'boosting_projects', 'total_ads_quotas'));
+        return [
+            'user' => $this->user,
+            'projects' => $projects,
+            'boosting_projects' => $boosting_projects,
+            'total_ads_quotas' => $total_ads_quotas
+        ];
+    }
+
+    private function memberDashboard(): array
+    {
+        $this->user->load([
+            'address', 'wishlists',
+            'media' => function ($query) {
+                $query->logo();
+            }
+        ]);
+
+        return [
+            'user' => $this->user
+        ];
     }
 }

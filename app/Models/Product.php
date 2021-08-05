@@ -7,7 +7,6 @@ use App\Helpers\Status;
 use App\Models\UserAdsQuota;
 use App\Models\ProductCategory;
 use App\Models\ProductAttribute;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -45,9 +44,14 @@ class Product extends Model
         return $this->morphMany(Media::class, 'sourceable');
     }
 
-    public function userAdsQuota()
+    public function userAdsQuotas()
     {
-        return $this->hasManyThrough(UserAdsQuota::class, ProductAttribute::class, 'product_id', 'product_attribute_id', 'id', 'id');
+        return $this->hasMany(UserAdsQuota::class, 'product_id', 'id');
+    }
+
+    public function adsBoosters()
+    {
+        return $this->hasMany(AdsBooster::class, 'product_id', 'id');
     }
 
     // Scopes
@@ -56,6 +60,13 @@ class Product extends Model
         return $query->whereHas('productCategory', function ($query) use ($keyword) {
             $query->where('name', $keyword);
         });
+    }
+
+    public function scopeActive($query, bool $status = true)
+    {
+        $status = $status ? self::STATUS_ACTIVE : self::STATUS_INACTIVE;
+
+        return $query->where('status', $status);
     }
 
     // Attributes

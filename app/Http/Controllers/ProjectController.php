@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Media;
 use App\Models\Price;
 use App\Helpers\Status;
+use App\Models\Product;
 use App\Models\Project;
 use App\Models\Service;
 use App\Helpers\Message;
 use App\Helpers\Response;
 use App\Models\Permission;
 use App\Helpers\FileManager;
+use App\Models\UserAdsQuota;
+use App\Models\ProductCategory;
 use Illuminate\Support\Facades\DB;
 use App\DataTables\ProjectDataTable;
 use App\Http\Controllers\Controller;
@@ -133,14 +136,31 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        $thumbnail          =   $project->media()->thumbnail()->first();
+        $project->load([
+            'media',
+            'prices' => function ($query) {
+                $query->defaultPrice();
+            }
+        ]);
+
+        $thumbnail          =   $project->thumbnail;
         $media              =   $project->media()->image()->get();
         $max_files          =   Media::MAX_IMAGE_PROJECT - $media->count();
-        $default_price      =   $project->prices()->defaultPrice()->first();
+        $default_price      =   $project->prices->first();
         $statuses           =   Status::instance()->projectStatus();
         $services           =   Service::orderBy('name', 'asc')->get();
+        $ads_boosters       =   Product::with(['userAdsQuotas'])
+            ->filterCategory(ProductCategory::TYPE_ADS)
+            ->active()
+            ->whereHas('userAdsQuotas', function ($query) use ($project) {
+                $query->when(Auth::user()->is_merchant, function ($query) {
+                    $query->where('user_id', Auth::id());
+                })->when(Auth::user()->is_admin, function ($query) use ($project) {
+                    $query->where('user_id', $project->user_id);
+                });
+            })->orderBy('name')->get();
 
-        return view('projects.edit', compact('project', 'max_files', 'media', 'default_price', 'statuses', 'services'));
+        return view('projects.edit', compact('project', 'max_files', 'media', 'default_price', 'statuses', 'services', 'ads_boosters'));
     }
 
     /**

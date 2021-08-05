@@ -266,6 +266,8 @@ class MerchantService extends BaseService
 
     public function storeAdsQuota(ProductAttribute $item, int $quantity)
     {
+        $item->load(['product']);
+
         if ($item->stock_type == ProductAttribute::STOCK_TYPE_INFINITE) {
             $quantity = $item->quantity * $quantity;
         } elseif ($item->stock_type == ProductAttribute::STOCK_TYPE_FINITE) {
@@ -274,13 +276,13 @@ class MerchantService extends BaseService
         }
 
         $user_ads_quota = $this->model->userAdsQuotas()
-            ->where('product_attribute_id', $item->id)
+            ->where('product_id', $item->product->id)
             ->firstOr(function () {
                 return new UserAdsQuota();
             });
 
-        $user_ads_quota->product_attribute_id =   $item->id;
-        $user_ads_quota->quantity             +=  $quantity;
+        $user_ads_quota->product_id =   $item->product->id;
+        $user_ads_quota->quantity   +=  $quantity;
 
         $this->model->userAdsQuotas()->save($user_ads_quota);
 
