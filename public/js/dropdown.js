@@ -38,6 +38,28 @@ $(function() {
             getSkuFromProduct($(this), $(this).val());
         });
     }
+
+    if($(".ads-booster-filter").length > 0) {
+
+        if($('.ads-booster-filter option:selected').val() != 0) {
+            getAdsFromMerchant($('.ads-booster-filter option:selected').val());
+        }
+
+        $(document).on("change", '.ads-booster-filter', function() {
+            getAdsFromMerchant($(this).val());
+        });
+    }
+
+    if($(".project-ads-filter").length > 0) {
+
+        if($('.project-ads-filter option:selected').val() != 0) {
+            getProjectsAndAdsFromMerchant($('.project-ads-filter option:selected').val());
+        }
+
+        $(document).on("change", '.project-ads-filter', function() {
+            getProjectsAndAdsFromMerchant($(this).val());
+        });
+    }
 });
 
 function getCountryStatesFromCountry(country_id) {
@@ -74,5 +96,36 @@ function getSkuFromProduct(parent, product_id) {
 
     if (product_id != null && product_id != "") {
         setDataIntoDropdown(url, dropdown, "sku", "id");
+    }
+}
+
+function getProjectsAndAdsFromMerchant(merchant_id) {
+
+    let project_dropdown = $(".project-dropdown");
+    let ads_dropdown = $(".ads-dropdown");
+
+    removeChildOption(project_dropdown);
+    removeChildOption(ads_dropdown);
+
+    let project_url = project_dropdown.data("merchant-project-route").replace("__REPLACE__", merchant_id);
+    let ads_url = ads_dropdown.data("merchant-ads-route").replace("__REPLACE__", merchant_id);
+
+    if (merchant_id != null && merchant_id != "") {
+        setDataIntoDropdown(project_url, project_dropdown, "title", "id");
+        setDataIntoDropdown(ads_url, ads_dropdown, "name", "id");
+    }
+}
+
+function getAdsFromMerchant(merchant_id) {
+
+    let ads_dropdown = $('.ads-dropdown');
+
+    removeChildOption(ads_dropdown);
+
+    let ads_url = ads_dropdown.data("merchant-ads-route").replace("__REPLACE__", merchant_id);
+
+    if (merchant_id != null && merchant_id != "") {
+
+        setDataIntoDropdown(ads_url, ads_dropdown, "name", "id");
     }
 }

@@ -58,7 +58,7 @@ class HomeController extends Controller
             ->limit(4)
             ->get();
 
-        $boosting_projects = Project::with('adsBoosters.productAttribute.product.productCategory')
+        $boosting_projects = Project::with('adsBoosters.product.productCategory')
             ->whereHas('adsBoosters', function ($query) {
                 $query->whereDate('boosted_at', today());
             })->get();

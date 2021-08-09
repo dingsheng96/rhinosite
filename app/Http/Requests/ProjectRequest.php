@@ -4,15 +4,15 @@ namespace App\Http\Requests;
 
 use App\Models\City;
 use App\Models\Unit;
-use App\Models\AdsType;
 use App\Models\Country;
+use App\Models\Product;
 use App\Models\Project;
 use App\Models\Service;
 use App\Models\Currency;
 use App\Models\CountryState;
 use App\Rules\ExistMerchant;
+use App\Models\ProductCategory;
 use Illuminate\Validation\Rule;
-use App\Rules\UniquePriceCurrency;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;
@@ -40,14 +40,14 @@ class ProjectRequest extends FormRequest
         $merchant_id = $this->get('merchant') ?? Auth::id();
 
         return [
-            'title_en' =>  [
+            'title_en'      =>  [
                 'required', 'min:3', 'max:100',
                 Rule::unique(Project::class, 'title')
                     ->ignore($this->route('project'), 'id')
                     ->where('user_id', $merchant_id)
                     ->whereNull('deleted_at')
             ],
-            'title_cn'      =>  ['required', 'max:100'],
+            'title_cn'      =>  ['nullable', 'max:100'],
             'currency'      =>  ['required', 'exists:' . Currency::class . ',id'],
             'unit_price'    =>  ['numeric'],
             'unit_value'    =>  ['required', 'numeric'],
@@ -68,14 +68,24 @@ class ProjectRequest extends FormRequest
                 Rule::exists(CountryState::class, 'id')
                     ->where('country_id', $this->get('country'))
             ],
-            'city'              =>  [
+            'city'          =>  [
                 'required',
                 Rule::exists(City::class, 'id')
                     ->where('country_state_id', $this->get('country_state'))
             ],
-            'ads_type'          =>  ['filled', 'exists:' . AdsType::class . ',id'],
-            'boost_ads_date'    =>  ['required_with:ads_type', 'nullable', 'date', 'date_format:d/m/Y'],
-            'merchant'          =>  [Rule::requiredIf(Auth::user()->is_admin), 'nullable', new ExistMerchant()]
+            'ads_type'      =>  [
+                'nullable',
+                Rule::exists(Product::class, 'id')
+                    ->where(
+                        'product_category_id',
+                        ProductCategory::select('id')
+                            ->where('name', ProductCategory::TYPE_ADS)
+                            ->first()
+                            ->id
+                    )->whereNull('deleted_at')
+            ],
+            'date_from'     =>  [Rule::requiredIf(!empty($this->get('ads_type'))), 'nullable', 'date', 'date_format:Y-m-d', 'after:today'],
+            'merchant'      =>  [Rule::requiredIf(Auth::user()->is_admin), 'nullable', new ExistMerchant()]
         ];
     }
 
@@ -97,25 +107,7 @@ class ProjectRequest extends FormRequest
     public function attributes()
     {
         return [
-            'title_en'          =>  __('validation.attributes.title_en'),
-            'title_cn'          =>  __('validation.attributes.title_cn'),
-            'thumbnail'         =>  __('validation.attributes.thumbnail'),
-            'files.*'           =>  __('validation.attributes.file'),
-            'description'       =>  __('validation.attributes.description'),
-            'materials'         =>  __('validation.attributes.materials'),
-            'services.*'        =>  __('validation.attributes.services'),
-            'address_1'         =>  __('validation.attributes.address_1'),
-            'address_2'         =>  __('validation.attributes.address_2'),
-            'country'           =>  __('validation.attributes.country'),
-            'postcode'          =>  __('validation.attributes.postcode'),
-            'country_state'     =>  __('validation.attributes.country_state'),
-            'city'              =>  __('validation.attributes.city'),
-            'ads_type'          =>  __('validation.attributes.ads_type'),
-            'boost_ads_date'    =>  __('validation.attributes.boost_ads_date'),
-            'unit_price'        =>  __('validation.attributes.unit_price'),
-            'currency'          =>  __('validation.attributes.currency'),
-            'unit_value'        =>  __('validation.attributes.unit_value'),
-            'unit'              =>  __('validation.attributes.unit'),
+            'date_from' => __('validation.attributes.boosting_date_from')
         ];
     }
 }

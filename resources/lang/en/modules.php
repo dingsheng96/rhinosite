@@ -15,7 +15,7 @@ return [
 
     'general' => 'General',
     'dashboard' => 'Dashboard',
-    'ads' => 'Ads',
+    'ads' => 'Ads Boosters',
     'project' => 'Project|Projects',
 
     'ecommerce' => 'Ecommerce',

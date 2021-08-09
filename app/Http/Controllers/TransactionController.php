@@ -7,6 +7,14 @@ use App\DataTables\TransactionDataTable;
 
 class TransactionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['can:transaction.read']);
+        $this->middleware(['can:transaction.create'])->only(['create', 'store']);
+        $this->middleware(['can:transaction.update'])->only(['edit', 'update']);
+        $this->middleware(['can:transaction.delete'])->only(['delete']);
+    }
+
     /**
      * Display a listing of the resource.
      *

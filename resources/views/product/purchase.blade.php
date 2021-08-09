@@ -32,12 +32,14 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label for="item_{{ $loop->iteration }}" class="col-form-label">{{ __('labels.variant') }}</label>
-                                <select name="item[{{ $index }}][variant]" id="item_{{ $loop->iteration }}" class="form-control @error('item.'.$index.'.variant') is-invalid @enderror">
-                                    @foreach ($product->productAttributes as $attribute)
+                                <select name="item[{{ $index }}][variant]" id="item_{{ $loop->iteration }}" class="form-control select2 @error('item.'.$index.'.variant') is-invalid @enderror">
+                                    <option value="0" disabled selected>{{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.variant')) ]) }}</option>
+                                    @forelse ($product->productAttributes as $attribute)
                                     <option value="{{ $attribute->id }}" {{ old('item.'.$index.'.variant') == $attribute->id ? 'selected' : null }}>{{ trans_choice('labels.item_unit', $attribute->quantity, ['value' => $attribute->quantity]) }} -
                                         {{ $attribute->prices->first()->selling_price_with_currency }}
                                     </option>
-                                    @endforeach
+                                    @empty
+                                    @endforelse
                                 </select>
                                 @error('item.'.$index.'.variant')
                                 <span class="invalid-feedback" role="alert">
@@ -54,7 +56,7 @@
                                         <button class="btn btn-outline-secondary btn-decrement" type="button">-</button>
                                     </div>
                                     <input type="number" name="item[{{ $index }}][quantity]" id="quantity_{{ $loop->iteration }}" value="{{ old('item.'.$index.'.quantity', 0) }}" min="0"
-                                        class="form-control quantity-input text-center disable-spinbox bg-white @error('item.'.$index.'.quantity') is-invalid @enderror">
+                                        class="form-control quantity-input text-center disable-spinbox bg-white @error('item.'.$index.'.quantity') is-invalid @enderror" readonly>
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-secondary btn-increment" type="button">+</button>
                                     </div>

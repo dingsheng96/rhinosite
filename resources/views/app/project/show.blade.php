@@ -67,8 +67,18 @@
                             <p class="services-subtitle mb-md-0">{{ $project->user->name }}</p>
                         </div>
                         <div class="col-sm-5 text-sm-right">
-                            <a role="button" class="btn"><i class="far fa-heart txtorange services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_add_wishlist') }}"></i></a>
-                            <a role="button" href="https://api.whatsapp.com/send?phone={{ $project->user->phone }}" class="btn" target="_blank"><i class="fab fa-whatsapp txtgreen services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_call') }}"></i></a>
+                            <a role="button" class="btn">
+                                <i class="far fa-heart txtorange services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_add_wishlist') }}"></i>
+                            </a>
+                            <a role="button" href="tel:{{ $project->user->formatted_phone_number }}" class="btn" target="_blank">
+                                <i class="fas fa-phone text-secondary services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_call') }}"></i>
+                            </a>
+                            @if (!empty($project->user->userDetail->whatsapp))
+                            <a role="button" href="https://api.whatsapp.com/send?phone={{ $project->user->userDetail->whatsapp }}&text={{ urlencode(__('messages.whatsapp_message', ['name' => $project->user->name, 'link' => route('app.project.show', ['project' => $project->id])])) }}" class="btn"
+                                target="_blank">
+                                <i class="fab fa-whatsapp txtgreen services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_whatsapp') }}"></i>
+                            </a>
+                            @endif
                         </div>
                     </div>
                     {{-- <div class="row align-items-center mb-3 mb-sm-2">

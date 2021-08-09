@@ -49,4 +49,7 @@ return [
     'email_verification_link_expired' => 'The email verification link has already expired. Please login and click the resend button to request for a new one.',
     'no_plan_available' => 'No plans are available',
     'add_on_product' => 'Feel free to add ons products to strengthen your target audience to get more sales.',
+    'whatsapp_message' => "Hi :name, I found your project listing (:link) on " . config('app.url') . " and am interested to find out more.",
+    'no_slot_available' => 'No slot available',
+    'insufficient_quota' => 'Insufficient Quota',
 ];

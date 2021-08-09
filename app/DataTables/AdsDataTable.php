@@ -3,8 +3,8 @@
 namespace App\DataTables;
 
 use App\Models\Project;
-use App\Models\AdsBooster;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Illuminate\Support\Facades\Auth;
@@ -31,61 +31,49 @@ class AdsDataTable extends DataTable
                 return view('components.action', [
                     'no_action' => $this->no_action ?: null,
                     'view' => [
-                        'permission' => 'merchant.create',
-                        'route' => route('verifications.show', ['verification' => $data->id])
-                    ],
-                    'update' => [
-                        'permission' => 'merchant.create',
-                        'route' => route('verifications.edit', ['verification' => $data->id]),
+                        'permission' => 'ads.create',
+                        'route' => route('ads-boosters.show', ['ads_booster' => $data->id])
                     ]
                 ])->render();
             })
-            ->addColumn('project', function ($data) {
+            ->editColumn('title', function ($data) {
 
-                return  '<div class="row">
-                <div class="col-6 col-md-3">
-                <img src="' . optional(optional($data->boostable)->thumbnail)->full_file_path . '" alt="' . optional(optional($data->boostable)->thumbnail)->filename . '" class="table-img-preview">
+                return  '<div class="d-flex justify-content-start">
+                <div>
+                <img src="' . $data->thumbnail->full_file_path . '" alt="' . $data->thumbnail->filename . '" class="table-img-preview">
                 </div>
-                <div class="col-6 col-md-9">' . optional($data->boostable)->english_title . '<br/>' . optional($data->boostable)->chinese_title . '</div>
+                <div class="pl-3">' . Str::limit($data->english_title, 50, '...') . '<br/>' . Str::limit($data->chinese_title ?? null, 50, '...') . '</div>
                 </div>';
             })
             ->addColumn('merchant', function ($data) {
-                return optional(optional($data->boostable)->user)->name;
-            })
-            ->addColumn('ads_type', function ($data) {
-                return optional(optional($data->productAttribute)->product)->name;
+                return $data->user->name;
             })
             ->addColumn('status', function ($data) {
-                return $data->status_label;
+                return $data->boosting_status;
             })
-            ->editColumn('boosted_at', function ($data) {
-                return $data->boosted_at->toDateTimeString();
+            ->filterColumn('merchant', function ($query, $keyword) {
+                $query->whereHasMorph('boostable', [Project::class], function (Builder $query) use ($keyword) {
+                    $query->whereHas('user', function ($query) use ($keyword) {
+                        $query->merchant()->where('name', 'like', "%{$keyword}%");
+                    });
+                });
             })
-            ->editColumn('created_at', function ($data) {
-                return $data->created_at->toDateTimeString();
-            })
-            // ->filterColumn('name', function ($query, $keyword) {
-            //     $query->whereHas('user', function ($query) use ($keyword) {
-            //         $query->where('name', 'like', "%{$keyword}%");
-            //     });
-            // })
-            ->rawColumns(['action', 'project', 'status']);
+            ->rawColumns(['action', 'title', 'status']);
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\AdsBooster $model
+     * @param \App\Models\Project $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(AdsBooster $model)
+    public function query(Project $model)
     {
-        return $model->with(['productAttribute.product', 'boostable'])
+        return $model->with(['adsBoosters.product', 'media', 'translations'])
             ->when(Auth::user()->is_merchant, function ($query) {
-                $query->whereHasMorph('boostable', Project::class, function (Builder $query) {
-                    $query->where('user_id', Auth::id());
-                });
+                $query->where('user_id', Auth::id());
             })
+            ->whereHas('adsBoosters')
             ->newQuery();
     }
 
@@ -96,14 +84,12 @@ class AdsDataTable extends DataTable
      */
     public function html()
     {
-        $order_index = Auth::user()->is_merchant ? 4 : 5;
-
         return $this->builder()
             ->setTableId('ads-table')
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy($order_index, 'desc')
+            ->orderBy(2, 'desc')
             ->responsive(true)
             ->autoWidth(true)
             ->processing(false);
@@ -118,19 +104,16 @@ class AdsDataTable extends DataTable
     {
         $columns = [
             Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('project')->title(trans_choice('labels.project', 1)),
-            Column::make('merchant')->title(__('labels.merchant'))->width('15%'),
-            Column::make('ads_type')->title(__('labels.ads_type'))->width('15%'),
-            Column::make('status')->title(__('labels.status'))->width('10%'),
-            Column::make('boosted_at')->title(trans_choice('labels.boosted_at', 1))->width('15%'),
-            Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
+            Column::make('title')->title(trans_choice('labels.project', 1))->width('35%'),
+            Column::make('status')->title(__('labels.status'))->width('20%'),
+            Column::make('merchant')->title(__('labels.merchant'))->width('30%'),
             Column::computed('action', __('labels.action'))->width('10%')
                 ->exportable(false)
                 ->printable(false),
         ];
 
         if (Auth::user()->is_merchant) {
-            $columns = Arr::except($columns, 2);
+            $columns = Arr::except($columns, 3);
         }
 
         return $columns;

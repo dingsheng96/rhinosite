@@ -95,11 +95,14 @@ class AppController extends Controller
     public function showProject(Project $project)
     {
         $project = $project->load([
-            'user.ratedBy', 'translations', 'address',
+            'translations', 'address',
             'unit', 'media', 'services',
             'prices' => function ($query) {
                 $query->defaultPrice();
             },
+            'user.userDetail' => function ($query) {
+                $query->approvedDetails();
+            }
         ]);
 
         $project_services = $project->services;
@@ -115,7 +118,7 @@ class AppController extends Controller
                 $query->whereIn('id', $project_services->pluck('id')->toArray());
             })
             ->whereHas('user', function ($query) {
-                $query->merchant()->active();
+                $query->with(['userDetail'])->merchant()->active();
             })->inRandomOrder()->take(3)->get();
 
         return view('app.project.show', compact('project', 'similar_projects', 'project_services'));

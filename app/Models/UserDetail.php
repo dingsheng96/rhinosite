@@ -23,7 +23,7 @@ class UserDetail extends Model
     protected $table = 'user_details';
 
     protected $fillable = [
-        'user_id', 'business_since', 'website', 'facebook', 'pic_name',
+        'user_id', 'business_since', 'website', 'facebook', 'whatsapp', 'pic_name',
         'pic_phone', 'pic_email', 'validated_by', 'status', 'validated_at'
     ];
 
@@ -78,6 +78,15 @@ class UserDetail extends Model
         $this->attributes['pic_phone'] = Misc::instance()->stripTagsAndAddCountryCodeToPhone($value);
     }
 
+    public function setWhatsappAttribute($value)
+    {
+        if (!empty($value)) {
+            $value = Misc::instance()->stripTagsAndAddCountryCodeToPhone($value);
+        }
+
+        $this->attributes['whatsapp'] = $value;
+    }
+
     public function getStatusLabelAttribute()
     {
         $label = Status::instance()->statusLabel($this->status);
@@ -102,5 +111,14 @@ class UserDetail extends Model
         }
 
         return Misc::instance()->addTagsToPhone($this->pic_phone);
+    }
+
+    public function getFormattedWhatsappAttribute()
+    {
+        if (empty($this->whatsapp)) {
+            return null;
+        }
+
+        return Misc::instance()->addTagsToPhone($this->whatsapp);
     }
 }

@@ -25,7 +25,8 @@ class UserSubscription extends Model
 
     protected $casts = [
         'next_billing_at' => 'datetime',
-        'activated_at' => 'datetime'
+        'activated_at' => 'datetime',
+        'terminated_at' => 'datetime'
     ];
 
     // Relationships
@@ -69,6 +70,11 @@ class UserSubscription extends Model
     public function getNextBillingDateAttribute()
     {
         return optional($this->next_billing_at)->format('jS M Y');
+    }
+
+    public function getTerminatedDateAttribute()
+    {
+        return optional($this->terminated_at)->format('jS M Y');
     }
 
     public function getStatusLabelAttribute()

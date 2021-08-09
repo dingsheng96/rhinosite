@@ -5,6 +5,7 @@ namespace App\Support\Services;
 use App\Models\Transaction;
 use App\Models\UserSubscription;
 use App\Models\TransactionDetail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Support\Services\BaseService;
@@ -22,19 +23,34 @@ class UserSubscriptionService extends BaseService
 
         if ($this->model->status == UserSubscription::STATUS_ACTIVE) {
 
-            $body = [
-                'MerchantCode' => config('payment.merchant_code'),
-                'RefNo' => $transaction->transaction_no,
-                'Signature' => $this->generateTerminateSignature()
-            ];
+            if (empty($transaction) || !$transaction->paymentMethod->system_default) {
+
+                $this->model->terminated_at = now();
+                $this->model->save();
+
+                return $this;
+            }
+
+            $xml = '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:pay="https://payment.ipay88.com.my">
+                    <soap:Header/>
+                    <soap:Body>
+                    <pay:Termination>
+                    <pay:MerchantCode>' . config('payment.merchant_code') . '</pay:MerchantCode>
+                    <pay:Refno>' . $transaction->transaction_no . '</pay:Refno>
+                    <pay:Signature>' . $this->generateTerminateSignature() . '</pay:Signature>
+                    </pay:Termination>
+                    </soap:Body>
+                    </soap:Envelope>';
 
             activity()->useLog('web')
                 ->causedBy(Auth::user())
                 ->performedOn($this->model)
-                ->withProperties(json_encode($body))
+                ->withProperties($xml)
                 ->log('Preparing calling Ipay88 terminate recurring api.');
 
-            $response = Http::post(config('payment.terminate_recurring_payment_url'), $body)->body();
+            $response = Http::withBody($xml, 'text/xml')
+                ->post(config('payment.terminate_recurring_payment_url'))
+                ->body();
 
             activity()->useLog('web')
                 ->causedBy(Auth::user())
@@ -42,19 +58,27 @@ class UserSubscriptionService extends BaseService
                 ->withProperties($response)
                 ->log('Return from Ipay88 terminate recurring api.');
 
-            $result = simplexml_load_string($response);
+            $response = str_replace(
+                'xmlns:soap="http://www.w3.org/2003/05/soap-envelope"',
+                '',
+                $response
+            );
 
-            if ($result->Status == 1) {
+            $result = simplexml_load_string($response, "SimpleXMLElement", LIBXML_NOCDATA | LIBXML_NOWARNING | LIBXML_NOERROR);
+
+            $encoded_result =   json_encode($result);
+            $array_result   =   json_decode($encoded_result, true);
+            $data           =   $array_result['soap:Body']['TerminationResponse']['TerminationResult'];
+
+            if ($data['Status'] == 1) {
 
                 $transaction_details = new TransactionDetail();
-
                 $transaction_details->is_termination = true;
                 $transaction_details->status = Transaction::STATUS_SUCCESS;
-                $transaction_details->subscription_reference = $result->RefNo;
-                $transaction_details->remark = $result->ErrDesc;
-                $transaction->save($transaction_details);
+                $transaction_details->subscription_reference = $data['Refno'];
+                $transaction_details->remark = json_encode($data['Errdesc']);
+                $transaction->transactionDetails()->save($transaction_details);
 
-                $this->model->status = UserSubscription::STATUS_INACTIVE;
                 $this->model->terminated_at = now();
                 $this->model->save();
             }

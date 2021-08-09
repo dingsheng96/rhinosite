@@ -12,7 +12,7 @@
 
                     @can('ads.create')
                     <span class="card-tools">
-                        <a href="{{ route('ads.create') }}" class="btn btn-outline-primary btn-rounded-corner">
+                        <a href="{{ route('ads-boosters.create') }}" class="btn btn-outline-primary btn-rounded-corner">
                             <i class="fas fa-plus"></i>
                             {{ __('modules.create', ['module' => __('modules.ads')]) }}
                         </a>

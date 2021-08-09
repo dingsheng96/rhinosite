@@ -43,7 +43,7 @@
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <label for="title_cn" class="col-form-label">{{ __('labels.project_title', ['lang' => __('labels.chinese')]) }} <span class="text-red">*</span></label>
+                                                    <label for="title_cn" class="col-form-label">{{ __('labels.project_title', ['lang' => __('labels.chinese')]) }}</label>
                                                     <input type="text" name="title_cn" id="title_cn" class="form-control @error('title_cn') is-invalid @enderror" value="{{ old('title_cn') }}">
                                                     @error('title_cn')
                                                     <span class="invalid-feedback" role="alert">
@@ -72,12 +72,12 @@
                                             </div>
                                         </div>
 
+                                        @admin
                                         <div class="row">
-                                            @admin
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     <label for="merchant" class="col-form-label">{{ __('labels.merchant') }} <span class="text-red">*</span></label>
-                                                    <select name="merchant" id="merchant" class="form-control select2 @error('merchant') is-invalid @enderror">
+                                                    <select name="merchant" id="merchant" class="form-control select2 @error('merchant') is-invalid @enderror ads-booster-filter">
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.merchant'))]) }} ---</option>
                                                         @foreach ($merchants as $merchant)
                                                         <option value="{{ $merchant->id }}" {{ old('merchant') == $merchant->id ? 'selected' : null }}>{{ $merchant->name }}</option>
@@ -90,8 +90,8 @@
                                                     @enderror
                                                 </div>
                                             </div>
-                                            @endadmin
                                         </div>
+                                        @endadmin
 
                                         <div class="row">
                                             <div class="col-12 col-md-6">
@@ -130,7 +130,7 @@
                                                     <select name="currency" class="form-control select2 @error('currency') is-invalid @enderror">
                                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder' , ['label' => strtolower(__('labels.currency'))]) }} ---</option>
                                                         @foreach ($currencies as $currency)
-                                                        <option value="{{ $currency->id }}" {{ old('currency') == $currency->id ? 'selected' : null }}>{{ $currency->name_with_code }}</option>
+                                                        <option value="{{ $currency->id }}" {{ old('currency', $default_currency->id) == $currency->id ? 'selected' : null }}>{{ $currency->name_with_code }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('currency')
@@ -219,8 +219,8 @@
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <label for="address_2" class="col-form-label">{{ __('labels.address_2') }} <span class="text-red">*</span></label>
-                                                    <input type="text" name="address_2" id="address_2" class="form-control @error('address_2') is-invalid @enderror" value="{{ old('address_2') }}">
+                                                    <label for="address_2" class="col-form-label">{{ __('labels.address_2') }}</label>
+                                                    <input type="text" name="address_2" id="address_2" class="form-control @error('address_2') is-invalid @enderror" value="{{ old('address_2') }}" placeholder="({{ __('labels.optional') }})">
                                                     @error('address_2')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -231,7 +231,7 @@
                                         </div>
 
                                         <div class="row">
-                                            <div class="col-12">
+                                            <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="postcode" class="col-form-label">{{ __('labels.postcode') }} <span class="text-red">*</span></label>
                                                     <input type="text" name="postcode" id="postcode" class="form-control @error('postcode') is-invalid @enderror" value="{{ old('postcode') }}">
@@ -242,10 +242,7 @@
                                                     @enderror
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-12">
+                                            <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="country" class="col-form-label">{{ trans_choice('labels.country', 1) }} <span class="text-red">*</span></label>
                                                     <select name="country" id="country" class="form-control select2 @error('country') is-invalid @enderror country-state-filter">
@@ -264,7 +261,7 @@
                                         </div>
 
                                         <div class="row">
-                                            <div class="col-12">
+                                            <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="country_state" class="col-form-label">{{ trans_choice('labels.country_state', 1) }} <span class="text-red">*</span></label>
                                                     <select name="country_state" id="country_state" class="form-control select2 @error('country_state') is-invalid @enderror country-state-dropdown city-filter" data-selected="{{ old('country_state') }}"
@@ -278,10 +275,7 @@
                                                     @enderror
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-12">
+                                            <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="city" class="col-form-label">{{ trans_choice('labels.city', 1) }} <span class="text-red">*</span></label>
                                                     <select name="city" id="city" class="form-control select2 @error('city') is-invalid @enderror city-dropdown" data-selected="{{ old('city') }}"
@@ -344,19 +338,23 @@
                                     </div>
 
                                     <div class="tab-pane fade" id="ads" role="tabpanel" aria-labelledby="ads-tab">
-                                        <p class="text-muted">Coming soon...</p>
-                                        {{-- <p class="cart-text">
+
+                                        <p class="card-text">
                                             <span class="font-weight-bold">{{ __('messages.boosts_ads_preference_text') }}</span>
-                                        <br>
-                                        {{ __('messages.select_prefer_boosts_ads_days') }}
+                                            <br>
+                                            {{ __('messages.select_prefer_boosts_ads_days') }}
                                         </p>
 
                                         <div class="row">
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
                                                     <label for="ads_type" class="col-form-label">{{ __('labels.ads_type') }}</label>
-                                                    <select name="ads_type" id="ads_type" class="form-control select2 @error('ads_type') is-invalid @enderror disabled-date-filter">
+                                                    <select name="ads_type" id="ads_type" class="form-control select2 @error('ads_type') is-invalid @enderror ads-date-filter ads-dropdown" data-merchant-ads-route="{{ route('data.merchants.ads-quota', '__REPLACE__') }}">
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.ads_type'))]) }} ---</option>
+                                                        @forelse ($ads_boosters as $product)
+                                                        <option value="{{ $product->id }}" {{ old('ads_type') == $product->id ? 'selected' : null }}>{{ $product->name }}</option>
+                                                        @empty
+                                                        @endforelse
                                                     </select>
                                                     @error('ads_type')
                                                     <span class="invalid-feedback" role="alert">
@@ -367,22 +365,23 @@
                                             </div>
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
-                                                    <label for="boost_ads_date" class="col-form-label">{{ __('labels.boosts_ads_date') }}</label>
+                                                    <label for="date_from" class="col-form-label">{{ __('labels.first_boosting_date') }}</label>
                                                     <div class="input-group">
-                                                        <input type="text" id="boost_ads_date" name="boost_ads_date" class="form-control date-picker @error('boosts_ads_date') is-invalid @enderror bg-white" readonly placeholder="dd/mm/yyyy"
-                                                            data-disabled-date-route="{{ route('data.ads.date', ['ads' => '__REPLACE__']) }}">
+                                                        <input type="text" id="date_from" name="date_from" class="form-control ads-date-picker @error('date_from') is-invalid @enderror" placeholder="yyyy-mm-dd"
+                                                            data-ads-date-filter-route="{{ route('data.ads.unavailable-date', ['ads' => '__REPLACE__']) }}" value="{{ old('start_from') }}" {{ old('start_from') ? null : 'disabled' }}>
                                                         <div class="input-group-append">
                                                             <span class="input-group-text bg-white"><i class="far fa-calendar"></i></span>
                                                         </div>
+                                                        @error('date_from')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
                                                     </div>
-                                                    @error('boosts_ads_date')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
                                                 </div>
                                             </div>
-                                        </div> --}}
+                                        </div>
+
                                     </div>
 
                                 </div>

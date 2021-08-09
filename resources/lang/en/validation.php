@@ -199,6 +199,10 @@ return [
         'agree' => 'agreement',
         'merchant' => 'contractor',
         'trans_no' => 'transaction no.',
+        'date_from' => 'date from',
+        'ads_type' => 'ads type',
+        'boosting_date_from' => 'boosting date from',
+        'variant' => 'variant',
     ],
 
 ];

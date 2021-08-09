@@ -16,12 +16,14 @@
                         <h3 class="alert-heading">{{ $user->active_subscription->name }}</h3>
                     </div>
                     <div class="col-12 col-md-6">
+                        @if (empty($user->active_subscription->terminated_at))
                         <p class="alert-heading text-md-right">
                             <a href="#" role="button" onclick="event.preventDefault();
-                            subscriptionTerminationAlert('{{ __('messages.confirm_question') }}', '{{ __('messages.delete_info') }}', '{{ route('subscriptions.update', ['subscription' => $user->active_subscription->id]) }}')">
+                            subscriptionTerminationAlert('{{ __('messages.confirm_question') }}', '{{ __('messages.delete_info') }}', '{{ route('subscriptions.terminate', ['subscription' => $user->active_subscription->id]) }}')">
                                 {{ __('labels.terminate_plan') }}
                             </a>
                         </p>
+                        @endif
                         <p class="alert-heading text-md-right">
                             <a href="#subscriptionLog" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="subscriptionLog">
                                 {{ __('labels.view_details') }}
@@ -32,8 +34,12 @@
                 <div id="subscriptionLog" class="collapse hide">
                     <hr>
                     <p>{{ trans_choice('labels.subscribed_at', 2, ['date' => $user->active_subscription->subscription_date]) }}</p>
+                    @if (!empty($user->active_subscription->terminated_at))
+                    <p>{{ trans_choice('labels.terminated_at', 2, ['date' => $user->active_subscription->terminated_date]) }}</p>
+                    @else
                     <p>{{ trans_choice('labels.next_billing_at', 2, ['date' => $user->active_subscription->next_billing_date ?? '-']) }}</p>
                     <p>{{ trans_choice('labels.renewed_at', 2, ['date' => $user->active_subscription_latest_log->renewed_date]) }}</p>
+                    @endif
                     <p>{{ trans_choice('labels.expired_at', 2, ['date' => $user->active_subscription_latest_log->expired_date]) }}</p>
                 </div>
 

@@ -159,7 +159,7 @@ class Project extends Model
     public function scopeSortByCategoryBump($query)
     {
         return $query->orderByDesc(
-            AdsBooster::select('product_attribute_id')
+            AdsBooster::select('product_id')
                 ->whereColumn('boostable_id', $this->getTable() . '.id')
                 ->where('boostable_type', self::class)
                 ->categoryBump()
@@ -246,5 +246,20 @@ class Project extends Model
     public function getHasActiveBumpAttribute()
     {
         return $this->adsBoosters()->boosting()->categoryBump()->exists();
+    }
+
+    public function getBoostingStatusAttribute()
+    {
+        if ($this->adsBoosters()->boosting()->exists()) {
+            $index = 'boosting';
+        } elseif ($this->adsBoosters()->upcoming()->exists()) {
+            $index = 'upcoming';
+        } else {
+            $index = 'expired';
+        }
+
+        $status = Status::instance()->statusLabel($index);
+
+        return '<span class="px-3 ' . $status['class'] . '">' . $status['text'] . '</span>';
     }
 }

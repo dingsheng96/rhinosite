@@ -39,6 +39,22 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label for="reg_no" class="col-form-label">{{ __('labels.reg_no') }}</label>
+                                <p class="form-control" id="reg_no">{{ $verification->userDetail->reg_no ?? null }}</p>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label for="business_since" class="col-form-label">{{ __('labels.business_since') }}</label>
+                                <p class="form-control" id="business_since">{{ $verification->userDetail->business_since ?? null }}</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <div class="form-group">
@@ -53,14 +69,21 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <div class="form-group">
-                                <label for="business_since" class="col-form-label">{{ __('labels.business_since') }}</label>
-                                <p class="form-control" id="business_since">{{ $verification->userDetail->business_since ?? null }}</p>
+                                <label for="whatsapp" class="col-form-label">{{ __('labels.whatsapp') }}</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-white">+</span>
+                                    </div>
+                                    <p class="form-control" id="whatsapp">{{ $verification->userDetail->whatsapp ?? null }}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">

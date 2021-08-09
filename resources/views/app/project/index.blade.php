@@ -156,7 +156,7 @@
                                             </div>
                                             <div class="merchant-footer">
                                                 {{-- <span class="merchant-footer-left">{{ __('app.price_from') . ' ' .$project->price_without_unit }}</span> --}}
-                                                <span class="merchant-footer-right">{{ $project->location }}</span>
+                                                <span class="merchant-footer-right"><i class="fas fa-map-marker-alt text-danger mr-1"></i> {{ $project->location }}</span>
                                             </div>
                                         </a>
                                         <button class="btn btn-compare collapse">{{ __('app.project_btn_add_compare') }}</button>

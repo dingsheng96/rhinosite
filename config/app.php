@@ -54,8 +54,6 @@ return [
 
     'url' => env('APP_URL', 'http://rhinosite.test'),
 
-    'portal_url' => env('APP_PORTAL_URL', 'http://portal.rhinosite.test'),
-
     'asset_url' => env('ASSET_URL', null),
 
     /*

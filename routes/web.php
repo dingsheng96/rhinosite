@@ -32,6 +32,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/recurring', 'CheckOutController@recurring')->name('recurring');
     });
 
+    Route::post('subscriptions/{subscription}/terminate', 'SubscriptionController@terminate')->name('subscriptions.terminate');
     Route::resource('subscriptions', 'SubscriptionController');
 
     Route::resource('carts', 'CartController');
@@ -42,7 +43,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
         Route::resource('account', 'AccountController');
 
-        Route::resource('ads', 'AdsController');
+        Route::resource('ads-boosters', 'AdsBoosterController');
 
         Route::resource('projects', 'ProjectController');
         Route::resource('projects.media', 'ProjectMediaController')->only(['destroy']);
@@ -107,6 +108,8 @@ Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
     Route::group(['middleware' => ['auth:web', 'verified']], function () {
         Route::post('products/{product}/sku', 'DataController@getSkuFromProduct')->name('products.sku');
         Route::post('ads/{ads}/unavailable-date', 'DataController@getAdsUnavailableDate')->name('ads.unavailable-date');
+        Route::post('merchants/{merchant}/ads-quota', 'DataController@getMerchantAdsQuota')->name('merchants.ads-quota');
+        Route::post('merchants/{merchant}/projects', 'DataController@getMerchantProjects')->name('merchants.projects');
     });
 
     Route::group(['prefix' => 'countries/{country}', 'as' => 'countries.'], function () {

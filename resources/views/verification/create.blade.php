@@ -18,7 +18,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="name" class="col-form-label">{{ __('labels.name') }} <span class="text-red">*</span></label>
-                                <input type="text" name="name" id="name" value="{{ old('name', $user->name)  }}" class="form-control @error('name') is-invalid @enderror">
+                                <input type="text" name="name" id="name" value="{{ old('name', $user->name ?? null)  }}" class="form-control @error('name') is-invalid @enderror">
                                 @error('name')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -36,7 +36,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-white">+</span>
                                     </div>
-                                    <input type="text" name="phone" id="phone" value="{{ old('phone', $user->phone) }}" class="form-control @error('phone') is-invalid @enderror">
+                                    <input type="text" name="phone" id="phone" value="{{ old('phone', $user->phone ?? null) }}" class="form-control @error('phone') is-invalid @enderror">
                                 </div>
                                 @error('phone')
                                 <span class="invalid-feedback" role="alert">
@@ -48,33 +48,8 @@
                         <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label for="email" class="col-form-label">{{ __('labels.email') }} <span class="text-red">*</span></label>
-                                <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" class="form-control @error('email') is-invalid @enderror">
+                                <input type="email" name="email" id="email" value="{{ old('email', $user->email ?? null) }}" class="form-control @error('email') is-invalid @enderror">
                                 @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12 col-md-6">
-                            <div class="form-group">
-                                <label for="website" class="col-form-label">{{ __('labels.website') }}</label>
-                                <input type="url" name="website" id="website" value="{{ old('website', $user->userDetail->website ?? null) }}" class="form-control @error('website') is-invalid @enderror" placeholder="{{ __('labels.optional') }}">
-                                @error('website')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="form-group">
-                                <label for="facebook" class="col-form-label">{{ __('labels.facebook') }}</label>
-                                <input type="url" name="facebook" id="facebook" value="{{ old('facebook', $user->userDetail->facebook ?? null) }}" class="form-control @error('facebook') is-invalid @enderror" placeholder="{{ __('labels.optional') }}">
-                                @error('facebook')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -107,6 +82,84 @@
                                 <label for="reg_no" class="col-form-label">{{ __('labels.reg_no') }} <span class="text-red">*</span></label>
                                 <input type="text" name="reg_no" id="reg_no" value="{{ old('reg_no', $user->userDetail->reg_no ?? null) }}" class="form-control @error('reg_no') is-invalid @enderror">
                                 @error('reg_no')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label for="logo" class="col-form-label">{{ __('labels.logo') }} <span class="text-red">*</span></label>
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <input type="file" id="logo" name="logo" class="form-control-file custom-img-input @error('logo') is-invalid @enderror" accept=".jpg,.jpeg,.png">
+                                        @error('logo')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                        <ul class="pl-3 mt-3">{!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG', 'dimension' => '1024x1024']) !!}</ul>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <img src="{{ $default_preview }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label for="ssm_cert" class="col-form-label">{{ __('labels.ssm_cert') }} <span class="text-red">*</span></label>
+                                <input type="file" name="ssm_cert" id="ssm_cert" class="form-control-file @error('ssm_cert') is-invalid @enderror" accept="application/pdf">
+                                @error('ssm_cert')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <ul class="px-3">{!! trans_choice('messages.upload_file_rules', 1, ['maxsize' => '2mb', 'extensions' => 'PDF', 'dimension' => '1024x1024']) !!}</ul>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label for="website" class="col-form-label">{{ __('labels.website') }}</label>
+                                <input type="url" name="website" id="website" value="{{ old('website', $user->userDetail->website ?? null) }}" class="form-control @error('website') is-invalid @enderror" placeholder="{{ __('labels.optional') }}">
+                                @error('website')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label for="facebook" class="col-form-label">{{ __('labels.facebook') }}</label>
+                                <input type="url" name="facebook" id="facebook" value="{{ old('facebook', $user->userDetail->facebook ?? null) }}" class="form-control @error('facebook') is-invalid @enderror" placeholder="{{ __('labels.optional') }}">
+                                @error('facebook')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label for="whatsapp" class="col-form-label">{{ __('labels.whatsapp') }}</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-white">+</span>
+                                    </div>
+                                    <input type="text" name="whatsapp" id="whatsapp" value="{{ old('whatsapp', $user->userDetail->whatsapp ?? null) }}" class="form-control @error('whatsapp') is-invalid @enderror">
+                                </div>
+                                @error('whatsapp')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -202,40 +255,6 @@
                                 </span>
                                 @enderror
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12 col-md-6">
-                            <div class="form-group">
-                                <label for="logo" class="col-form-label">{{ __('labels.logo') }} <span class="text-red">*</span></label>
-                                <div class="row">
-                                    <div class="col-12 col-md-6">
-                                        <input type="file" id="logo" name="logo" class="form-control-file custom-img-input @error('logo') is-invalid @enderror" accept=".jpg,.jpeg,.png">
-                                        @error('logo')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                        <ul class="pl-3 mt-3">{!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG', 'dimension' => '1024x1024']) !!}</ul>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <img src="{{ $default_preview }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="form-group">
-                                <label for="ssm_cert" class="col-form-label">{{ __('labels.ssm_cert') }} <span class="text-red">*</span></label>
-                                <input type="file" name="ssm_cert" id="ssm_cert" class="form-control-file @error('ssm_cert') is-invalid @enderror" accept="application/pdf">
-                                @error('ssm_cert')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                            <ul class="px-3">{!! trans_choice('messages.upload_file_rules', 1, ['maxsize' => '2mb', 'extensions' => 'PDF', 'dimension' => '1024x1024']) !!}</ul>
                         </div>
                     </div>
 

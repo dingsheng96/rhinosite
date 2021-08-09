@@ -29,7 +29,7 @@ return [
     'cancelled' => 'Cancelled',
     'expired' => 'Expired',
     'boosting' => 'Boosting',
-    'incoming' => 'In Coming',
+    'upcoming' => 'Upcoming',
     'completed' => 'Completed',
     'not_submit' => 'Not Submit',
     'verified' => 'Verified',
@@ -155,6 +155,7 @@ return [
     'expired_at' => 'Expired At|Expired Date : :date',
     'renewed_at' => 'Renewed At|Renewed Date : :date',
     'next_billing_at' => 'Next Billing At|Next Billing Date : :date',
+    'terminated_at' => 'Terminated At|Terminated Date : :date',
     'month' => '{1} :value month|{2,} :value months',
     'available_packages' => 'Available Packages',
     'summary' => 'Summary',
@@ -225,4 +226,7 @@ return [
     'item_unit' => '{1} :value unit|{2,} :value units',
     'variant' => 'Variant',
     'add_to_cart' => 'Add To Cart',
+    'whatsapp' => 'Whatsapp',
+    'first_boosting_date' => 'Boosting Date From',
+    'ads_boosting_history' => 'Ads Boosting History'
 ];

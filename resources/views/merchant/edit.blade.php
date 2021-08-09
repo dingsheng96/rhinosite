@@ -72,11 +72,29 @@
                                         </div>
 
                                         <div class="row">
-                                            <div class="col-12">
+                                            <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="reg_no" class="col-form-label">{{ __('labels.reg_no') }} <span class="text-red">*</span></label>
                                                     <input type="text" name="reg_no" id="reg_no" value="{{ old('reg_no', $user_details->reg_no ?? null) }}" class="form-control @error('reg_no') is-invalid @enderror">
                                                     @error('reg_no')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="business_since" class="col-form-label">{{ __('labels.business_since') }} <span class="text-red">*</span></label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="business_since" id="business_since" value="{{ old('business_since', $user_details->business_since ?? null) }}" class="form-control date-picker @error('business_since') is-invalid @enderror bg-white" readonly>
+                                                        <div class="input-group-append">
+                                                            <div class="input-group-text bg-white">
+                                                                <i class="far fa-calendar"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @error('business_since')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
@@ -112,16 +130,14 @@
                                         <div class="row">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="business_since" class="col-form-label">{{ __('labels.business_since') }} <span class="text-red">*</span></label>
+                                                    <label for="whatsapp" class="col-form-label">{{ __('labels.whatsapp') }}</label>
                                                     <div class="input-group">
-                                                        <input type="text" name="business_since" id="business_since" value="{{ old('business_since', $user_details->business_since ?? null) }}" class="form-control date-picker @error('business_since') is-invalid @enderror bg-white" readonly>
-                                                        <div class="input-group-append">
-                                                            <div class="input-group-text bg-white">
-                                                                <i class="far fa-calendar"></i>
-                                                            </div>
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text bg-white">+</span>
                                                         </div>
+                                                        <input type="text" name="whatsapp" id="whatsapp" value="{{ old('whatsapp', $user_details->whatsapp) }}" class="form-control @error('whatsapp') is-invalid @enderror">
                                                     </div>
-                                                    @error('business_since')
+                                                    @error('whatsapp')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>

@@ -112,8 +112,8 @@ class Status
                 'text' => __('labels.boosting'),
                 'class' => 'badge badge-pill badge-lg badge-success'
             ],
-            'incoming' => [
-                'text' => __('labels.incoming'),
+            'upcoming' => [
+                'text' => __('labels.upcoming'),
                 'class' => 'badge badge-pill badge-lg badge-warning'
             ]
         ];

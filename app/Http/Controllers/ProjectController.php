@@ -3,16 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Media;
-use App\Models\Price;
 use App\Helpers\Status;
 use App\Models\Product;
 use App\Models\Project;
 use App\Models\Service;
 use App\Helpers\Message;
+use App\Models\Currency;
 use App\Helpers\Response;
 use App\Models\Permission;
-use App\Helpers\FileManager;
-use App\Models\UserAdsQuota;
 use App\Models\ProductCategory;
 use Illuminate\Support\Facades\DB;
 use App\DataTables\ProjectDataTable;
@@ -20,6 +18,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ProjectRequest;
 use App\Support\Facades\ProjectFacade;
+use App\DataTables\AdsBoostingDataTable;
 
 class ProjectController extends Controller
 {
@@ -48,13 +47,22 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        $max_files  =   Media::MAX_IMAGE_PROJECT;
+        $max_files          =   Media::MAX_IMAGE_PROJECT;
+        $services           =   Service::orderBy('name', 'asc')->get();
+        $statuses           =   Status::instance()->projectStatus();
+        $default_currency   =   Currency::defaultCountryCurrency()->first();
+        $ads_boosters       =   [];
 
-        $services   =   Service::orderBy('name', 'asc')->get();
+        if (Auth::user()->is_merchant) {
+            $ads_boosters   =   Product::with(['userAdsQuotas'])
+                ->filterCategory(ProductCategory::TYPE_ADS)
+                ->active()
+                ->whereHas('userAdsQuotas', function ($query) {
+                    $query->where('user_id', Auth::id());
+                })->orderBy('name')->get();
+        }
 
-        $statuses   =   Status::instance()->projectStatus();
-
-        return view('projects.create', compact('max_files', 'services', 'statuses'));
+        return view('projects.create', compact('max_files', 'services', 'statuses', 'default_currency', 'ads_boosters'));
     }
 
     /**
@@ -134,7 +142,7 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Project $project)
+    public function edit(Project $project, AdsBoostingDataTable $dataTable)
     {
         $project->load([
             'media',
@@ -160,7 +168,8 @@ class ProjectController extends Controller
                 });
             })->orderBy('name')->get();
 
-        return view('projects.edit', compact('project', 'max_files', 'media', 'default_price', 'statuses', 'services', 'ads_boosters'));
+        return $dataTable->with(['project' => $project])
+            ->render('projects.edit', compact('project', 'max_files', 'media', 'default_price', 'statuses', 'services', 'ads_boosters'));
     }
 
     /**

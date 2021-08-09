@@ -225,7 +225,6 @@ function subscriptionTerminationAlert(title, message, redirectUrl)
                 url: redirectUrl,
                 type: "POST",
                 data: {
-                    '_method': 'put',
                     '_token': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: (xhl) => {

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\Package;
 use App\Helpers\Message;
+use App\Helpers\Response;
 use App\Models\Permission;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -215,58 +216,7 @@ class SubscriptionController extends Controller
      */
     public function update(Request $request, UserSubscription $subscription)
     {
-        $action     =   Permission::ACTION_UPDATE;
-        $module     =   strtolower(trans_choice('modules.subscription', 1));
-        $message    =   'Subscription unable to terminate.';
-        $status     =   'fail';
-
-        DB::beginTransaction();
-
-        try {
-
-            $subscription->load(['user', 'transaction']);
-
-            if ($subscription->has('transaction')) {
-
-                $subscription = UserSubscriptionFacade::setModel($subscription)->terminate()->getModel();
-
-                if ($subscription->status == UserSubscription::STATUS_INACTIVE && !empty($subscription->terminated_at)) {
-                    $status  =  'success';
-                    $message =  Message::instance()->format($action, $module, $status);
-                }
-            }
-
-            if ($subscription->doesntHave('transaction')) {
-
-                $subscription->status = UserSubscription::STATUS_INACTIVE;
-                $subscription->terminated_at = now();
-                $subscription->save();
-
-                $status  =  'success';
-                $message =  Message::instance()->format($action, $module, $status);
-            }
-
-            activity()->useLog('web')
-                ->causedBy(Auth::user())
-                ->performedOn($subscription)
-                ->withProperties($request->all())
-                ->log($message);
-
-            DB::commit();
-
-            return redirect()->route('account.index')->with($status, $message);
-        } catch (\Error | \Exception $e) {
-
-            DB::rollBack();
-
-            activity()->useLog('web')
-                ->causedBy(Auth::user())
-                ->performedOn($subscription)
-                ->withProperties($request->all())
-                ->log($e->getMessage());
-
-            return redirect()->back()->with('fail', $message);
-        }
+        //
     }
 
     /**
@@ -278,5 +228,60 @@ class SubscriptionController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Terminate the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function terminate(Request $request, UserSubscription $subscription)
+    {
+        $action     =   Permission::ACTION_UPDATE;
+        $module     =   strtolower(trans_choice('modules.subscription', 1));
+        $message    =   'Subscription unable to terminate.';
+        $status     =   'fail';
+
+        DB::beginTransaction();
+
+        try {
+
+            $subscription->load(['user', 'transaction']);
+
+            $subscription = UserSubscriptionFacade::setModel($subscription)->terminate()->getModel();
+
+            if (!empty($subscription->terminated_at)) {
+                $status  =  'success';
+                $message =  'Subscription terminated successfully!';
+            }
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($subscription)
+                ->withProperties($request->all())
+                ->log($message);
+
+            DB::commit();
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($subscription)
+                ->withProperties($request->all())
+                ->log($e->getMessage());
+        }
+
+        return Response::instance()
+            ->withStatusCode('modules.user', 'actions.' . $action . $status)
+            ->withStatus($status)
+            ->withMessage($message, true)
+            ->withData([
+                'redirect_to' => route('account.index')
+            ])
+            ->sendJson();
     }
 }

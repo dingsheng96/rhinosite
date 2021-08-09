@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use App\Helpers\Status;
 use App\Models\Product;
 use App\Models\ProductCategory;
@@ -41,51 +42,64 @@ class AdsBooster extends Model
     // Scopes
     public function scopeBoosting($query)
     {
-        return $query->whereDate('boosted_at', today()->format('Y-m-d'));
+        return $query->whereDate('boosted_at', today()->toDateString());
+    }
+
+    public function scopeExpired($query)
+    {
+        return $query->whereDate('boosted_at', '<', today()->toDateString());
+    }
+
+    public function scopeUpcoming($query)
+    {
+        return $query->whereDate('boosted_at', '>', today()->toDateString());
     }
 
     public function scopeCategoryBump($query)
     {
-        return $query->whereHas('productAttribute', function ($query) {
-            $query->whereHas('product', function ($query) {
-                $query->filterCategory(ProductCategory::TYPE_ADS)
-                    ->where('name', self::CATEGORY_BUMP);
-            });
+        return $query->whereHas('product', function ($query) {
+            $query->filterCategory(ProductCategory::TYPE_ADS)
+                ->where('name', self::CATEGORY_BUMP);
         });
     }
 
     public function scopeCategoryHighlight($query)
     {
-        return $query->whereHas('productAttribute', function ($query) {
-            $query->whereHas('product', function ($query) {
-                $query->filterCategory(ProductCategory::TYPE_ADS)
-                    ->where('name', self::CATEGORY_HIGHLIGHT);
-            });
+        return $query->whereHas('product', function ($query) {
+            $query->filterCategory(ProductCategory::TYPE_ADS)
+                ->where('name', self::CATEGORY_HIGHLIGHT);
         });
     }
 
     public function scopeBannerAdvertisement($query)
     {
-        return $query->whereHas('productAttribute', function ($query) {
-            $query->whereHas('product', function ($query) {
-                $query->filterCategory(ProductCategory::TYPE_ADS)
-                    ->where('name', self::BANNER_ADVERTISEMENT);
-            });
+        return $query->whereHas('product', function ($query) {
+            $query->filterCategory(ProductCategory::TYPE_ADS)
+                ->where('name', self::BANNER_ADVERTISEMENT);
         });
     }
 
     // Attributes
+    public function setBoostedAtAttribute($value)
+    {
+        $value = Carbon::createFromFormat('Y-m-d H:i:s', $value);
+
+        $this->attributes['boosted_at'] = $value->startOfDay();
+    }
+
+    public function getBoostedAtAttribute($value)
+    {
+        return Carbon::parse($value)->startOfDay();
+    }
+
     public function getStatusLabelAttribute()
     {
-        $current_boosting_date = $this->boosted_at->toDateString();
-        $today = today()->toDateString();
-
-        if ($current_boosting_date == $today) {
+        if ($this->boosted_at->eq(today()->startOfDay())) {
             $index = 'boosting';
-        } elseif ($current_boosting_date < $today) {
-            $index = 'expired';
+        } elseif ($this->boosted_at->gt(today()->startOfDay())) {
+            $index = 'upcoming';
         } else {
-            $index = 'incoming';
+            $index = 'expired';
         }
 
         $status = Status::instance()->statusLabel($index);

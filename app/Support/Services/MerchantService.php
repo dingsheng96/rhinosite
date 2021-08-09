@@ -90,6 +90,7 @@ class MerchantService extends BaseService
         $details->business_since    =   $this->request->get('business_since');
         $details->website           =   $this->request->get('website');
         $details->facebook          =   $this->request->get('facebook');
+        $details->whatsapp          =   $this->request->get('whatsapp');
         $details->pic_name          =   $this->request->get('pic_name');
         $details->pic_phone         =   $this->request->get('pic_phone');
         $details->pic_email         =   $this->request->get('pic_email');

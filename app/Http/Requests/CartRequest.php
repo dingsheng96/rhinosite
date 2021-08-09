@@ -72,7 +72,9 @@ class CartRequest extends FormRequest
     public function attributes()
     {
         return [
-            'item.*' => __('validation.attributes.item')
+            'item.*' => __('validation.attributes.item'),
+            'item.*.variant' => __('validation.attributes.variant'),
+            'item.*.quantity' => __('validation.attributes.quantity')
         ];
     }
 }

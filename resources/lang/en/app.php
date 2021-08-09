@@ -47,7 +47,8 @@ return [
     'project_details_subtitle_material' => 'Materials Used',
     'project_details_subtitle_similar_projects' => 'Similar Projects',
     'project_details_btn_add_wishlist' => 'Add to wishlist',
-    'project_details_btn_call' => 'Make a call',
+    'project_details_btn_call' => 'Call Us',
+    'project_details_btn_whatsapp' => 'Whatsapp Us',
 
     'register_title_main' => 'Application',
     'register_form_title' => 'Application Form',

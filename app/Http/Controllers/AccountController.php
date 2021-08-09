@@ -24,7 +24,7 @@ class AccountController extends Controller
         $user = Auth::user()->load([
             'address',
             'userAdsQuotas' => function ($query) {
-                $query->orderBy('product_attribute_id');
+                $query->orderBy('product_id');
             },
             'userDetail' => function ($query) {
                 $query->approvedDetails();

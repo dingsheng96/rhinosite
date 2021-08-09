@@ -32,12 +32,17 @@ $(function () {
 
             if ($(this).val() != null && $(this).val() != "") {
 
+                let project = $('.project-dropdown').length > 0 ? $('.project-dropdown option:selected').val() : $('.ads-date-picker').data('project');
+
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     url: datepicker.data("ads-date-filter-route").replace("__REPLACE__", $(this).val()),
                     type: "POST",
+                    data: {
+                        "project": project
+                    },
                     success: xhr => {
 
                         datepicker.removeAttr('disabled');
@@ -53,7 +58,8 @@ $(function () {
                                 minDate: minDate,
                                 maxDate: maxDate,
                                 disableDayFn: function (date) {
-                                    if ($.inArray(moment(date).format("YYYY-MM-DD"), disabled_dates) !== -1) {
+
+                                    if ($.inArray(moment(date).format("YYYY-MM-DD"), Object.values(disabled_dates)) !== -1) {
                                         return date;
                                     }
                                 },
