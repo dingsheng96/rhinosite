@@ -27,12 +27,12 @@
         <div class="row justify-content-center">
             <div class="col-lg-11 col-xl-10">
                 <p class="paragraph">
-                    Prior to 2021, property owners who like to build or renovate their premises will have to engage with a contractor either by their own contact word of mouth, whilst Contractors are depending on clients’ referral in connecting with new clients. Reason being there
-                    are limited online exposure for the Contractors and Clients are spending hours vetting through the available sources for a trustable and reliable Contractor within their budget.
+                    Prior to 2021, property owners who like to build or renovate their premises will have to engage with a contractor either by their own contact or word of mouth, whilst Contractors are depending on clients’ referral in connecting with new clients. Reason being there
+                    are limited online exposure for the Contractors and Users are spending hours vetting through the available sources for a trustable and reliable Contractor within their budget.
                 </p>
                 <p class="paragraph">
                     Hence, our Founders created Rhinosite to solve these common pain-points faced by property owners and Contractors. Our core value is to create more business opportunities for the construction industry where a Contractor is able to build their long-term
-                    relationship with their clients and Clients are able to find a contractor in a hassle-free and transparent process.
+                    relationship with their clients and Users are able to find a contractor in a hassle-free and transparent process.
                 </p>
             </div>
         </div>

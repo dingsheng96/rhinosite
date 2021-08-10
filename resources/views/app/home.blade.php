@@ -109,7 +109,7 @@
             </div>
             <div class="col-lg-8">
                 <p class="paragraph">
-                    Rhinosite team will has a due diligence process to ensure that only reliable and quality
+                    Rhinosite team will have a due diligence process to ensure that only reliable and quality
                     contractors are able to be listed on our platform. Rhinosite will investigate thoroughly on
                     those Contractors whom received poor ratings/ feedback. The Contractor will be
                     terminated if the issue remains unsolved.

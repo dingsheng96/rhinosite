@@ -21,7 +21,7 @@ return [
     'home_subtitle_main' => "Compare Price, Project Portfolios and Contractor's Specialization",
     'home_btn_join_merchant' => "I'm Interested",
     'home_text_join_merchant' => 'JOIN US AS CONTRACTORS',
-    'home_subtitle_partner' => 'Our Partnership with Contractors',
+    'home_subtitle_partner' => 'Our Partnership Contractors',
     'home_subtitle_merchant' => 'Recently Deal Contractors',
 
     'project_btn_view_merchant' => 'View Contractor',
