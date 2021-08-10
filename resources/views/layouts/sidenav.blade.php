@@ -30,7 +30,7 @@
 
                 @canany(['ads.create', 'ads.read', 'ads.update', 'ads.delete'])
                 <li class="nav-item">
-                    <a href="{{ route('ads-boosters.index') }}" class="nav-link {{ Nav::hasSegment('ads', 1, 'active') }}">
+                    <a href="{{ route('ads-boosters.index') }}" class="nav-link {{ Nav::hasSegment('ads-boosters', 1, 'active') }}">
                         <i class="nav-icon fas fa-rocket"></i>
                         <p>{{ __('modules.ads') }}</p>
                     </a>

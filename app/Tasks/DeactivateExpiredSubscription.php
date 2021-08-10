@@ -29,6 +29,8 @@ class DeactivateExpiredSubscription
                 ->performedOn(new UserSubscription())
                 ->withProperties(['target_id' => $expired_subscriptions->pluck('id')->toArray()])
                 ->log('Successfully Processed Tasks: ' . $expired_subscriptions->count());
+
+            DB::commit();
         } catch (\Error | \Exception $ex) {
 
             DB::rollBack();

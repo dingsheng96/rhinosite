@@ -8,16 +8,19 @@
     <div class="row">
         <div class="col-12">
             <div class="card shadow">
+
+                <div class="card-header">
+                    <h3 class="card-title">{!! __('messages.complete_fields') !!}</h3>
+                </div>
+
                 <form action="{{ route('projects.store') }}" method="post" enctype="multipart/form-data" role="form">
-
                     @csrf
-
                     <div class="card-body">
-
                         <div class="row">
                             <div class="col-5 col-sm-3">
                                 <div class="nav flex-column nav-tabs h-100" id="project-tabs" role="tablist" aria-orientation="vertical">
                                     <a class="nav-link active" id="general-tab" data-toggle="pill" href="#general" role="tab" aria-controls="general" aria-selected="true">{{ __('labels.general') }}</a>
+                                    <a class="nav-link" id="details-tab" data-toggle="pill" href="#details" role="tab" aria-controls="details" aria-selected="false">{{ __('labels.details') }}</a>
                                     <a class="nav-link" id="location-tab" data-toggle="pill" href="#location" role="tab" aria-controls="location" aria-selected="false">{{ __('labels.location') }}</a>
                                     <a class="nav-link" id="image-tab" data-toggle="pill" href="#image" role="tab" aria-controls="image" aria-selected="false">{{ trans_choice('labels.image', 2) }}</a>
                                     <a class="nav-link" id="ads-tab" data-toggle="pill" href="#ads" role="tab" aria-controls="ads" aria-selected="false">{{ __('labels.boost_ads') }}</a>
@@ -54,24 +57,6 @@
                                             </div>
                                         </div>
 
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="form-group">
-                                                    <label for="status" class="col-form-label">{{ __('labels.status') }} <span class="text-red">*</span></label>
-                                                    <select name="status" id="status" class="form-control select2 @error('status') is-invalid @enderror">
-                                                        @foreach ($statuses as $status => $text)
-                                                        <option value="{{ $status }}" {{ old('status', 'published') == $status ? 'selected' : null }}>{{ $text }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('status')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-
                                         @admin
                                         <div class="row">
                                             <div class="col-12">
@@ -96,44 +81,13 @@
                                         <div class="row">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="unit_value" class="col-form-label">{{ __('labels.unit_value') }} <span class="text-red">*</span></label>
-                                                    <input type="number" name="unit_value" id="unit_value" class="form-control @error('unit_value') is-invalid @enderror" value="{{ old('unit_value', '0.00') }}" min="0.00" step="0.01">
-                                                    @error('unit_value')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label for="unit" class="col-form-label">{{ __('labels.unit') }} <span class="text-red">*</span></label>
-                                                    <select name="unit" id="unit" class="form-control select2 @error('unit') is-invalid @enderror">
-                                                        <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.unit'))]) }} ---</option>
-                                                        @foreach ($units as $unit)
-                                                        <option value="{{ $unit->id }}" {{ old('unit') == $unit->id ? 'selected' : null }}>{{ $unit->full_display }}</option>
+                                                    <label for="status" class="col-form-label">{{ __('labels.status') }} <span class="text-red">*</span></label>
+                                                    <select name="status" id="status" class="form-control select2 @error('status') is-invalid @enderror">
+                                                        @foreach ($statuses as $status => $text)
+                                                        <option value="{{ $status }}" {{ old('status', 'published') == $status ? 'selected' : null }}>{{ $text }}</option>
                                                         @endforeach
                                                     </select>
-                                                    @error('unit')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label for="currency" class="col-form-label">{{ __('labels.currency') }} <span class="text-red">*</span></label>
-                                                    <select name="currency" class="form-control select2 @error('currency') is-invalid @enderror">
-                                                        <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder' , ['label' => strtolower(__('labels.currency'))]) }} ---</option>
-                                                        @foreach ($currencies as $currency)
-                                                        <option value="{{ $currency->id }}" {{ old('currency', $default_currency->id) == $currency->id ? 'selected' : null }}>{{ $currency->name_with_code }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('currency')
+                                                    @error('status')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
@@ -141,20 +95,6 @@
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label for="unit_price" class="col-form-label">{{ __('labels.unit_price') }} <span class="text-red">*</span></label>
-                                                    <input type="number" name="unit_price" class="form-control" value="{{ old('unit_price', '0.00') }}" min="0.00" step="0.01">
-                                                    @error('unit_price')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-12">
                                                 <div class="form-group">
                                                     <label for="services" class="col-form-label">{{ __('labels.services') }} <span class="text-red">*</span></label>
                                                     <select name="services[]" id="services" class="form-control select2-multiple @error('services') is-invalid @enderror" multiple="multiple" data-placeholder="{{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.services'))]) }}">
@@ -184,7 +124,68 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
 
+                                    <div class="tab-pane text-left fade show" id="details" role="tabpanel" aria-labelledby="details-tab">
+                                        <div class="row">
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="unit_value" class="col-form-label">{{ __('labels.unit_value') }}</label>
+                                                    <input type="number" name="unit_value" id="unit_value" class="form-control @error('unit_value') is-invalid @enderror" value="{{ old('unit_value', '0.00') }}" min="0.00" step="0.01">
+                                                    @error('unit_value')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="unit" class="col-form-label">{{ __('labels.unit') }}</label>
+                                                    <select name="unit" id="unit" class="form-control select2 @error('unit') is-invalid @enderror">
+                                                        <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.unit'))]) }} ---</option>
+                                                        @foreach ($units as $unit)
+                                                        <option value="{{ $unit->id }}" {{ old('unit') == $unit->id ? 'selected' : null }}>{{ $unit->full_display }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('unit')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="currency" class="col-form-label">{{ __('labels.currency') }}</label>
+                                                    <select name="currency" class="form-control select2 @error('currency') is-invalid @enderror">
+                                                        <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder' , ['label' => strtolower(__('labels.currency'))]) }} ---</option>
+                                                        @foreach ($currencies as $currency)
+                                                        <option value="{{ $currency->id }}" {{ old('currency', $default_currency->id) == $currency->id ? 'selected' : null }}>{{ $currency->name_with_code }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('currency')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="unit_price" class="col-form-label">{{ __('labels.unit_price') }}</label>
+                                                    <input type="number" name="unit_price" class="form-control" value="{{ old('unit_price', '0.00') }}" min="0.00" step="0.01">
+                                                    @error('unit_price')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="form-group">
@@ -198,7 +199,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
 
                                     <div class="tab-pane fade" id="location" role="tabpanel" aria-labelledby="location-tab">

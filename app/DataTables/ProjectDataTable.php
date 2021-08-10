@@ -103,12 +103,14 @@ class ProjectDataTable extends DataTable
      */
     public function html()
     {
+        $order_column = Auth::user()->is_merchant ? 4 : 5;
+
         return $this->builder()
             ->setTableId('project-table')
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(5, 'desc')
+            ->orderBy($order_column, 'desc')
             ->responsive(true)
             ->autoWidth(true)
             ->processing(false);

@@ -49,9 +49,9 @@ class ProjectRequest extends FormRequest
             ],
             'title_cn'      =>  ['nullable', 'max:100'],
             'currency'      =>  ['required', 'exists:' . Currency::class . ',id'],
-            'unit_price'    =>  ['numeric'],
-            'unit_value'    =>  ['required', 'numeric'],
-            'unit'          =>  ['required', 'exists:' . Unit::class . ',id'],
+            'unit_price'    =>  ['nullable', 'numeric'],
+            'unit_value'    =>  ['nullable', 'numeric'],
+            'unit'          =>  ['nullable', 'exists:' . Unit::class . ',id'],
             'thumbnail'     =>  [Rule::requiredIf(empty($this->route('project'))), 'nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2000', 'dimensions:max_height=1024,max_width=1024'],
             'files'         =>  [Rule::requiredIf(empty($this->route('project'))), 'nullable', 'array'],
             'files.*'       =>  ['image', 'mimes:jpg,jpeg,png', 'max:2000', 'dimensions:max_height=1024,max_width=1024'],
@@ -76,13 +76,8 @@ class ProjectRequest extends FormRequest
             'ads_type'      =>  [
                 'nullable',
                 Rule::exists(Product::class, 'id')
-                    ->where(
-                        'product_category_id',
-                        ProductCategory::select('id')
-                            ->where('name', ProductCategory::TYPE_ADS)
-                            ->first()
-                            ->id
-                    )->whereNull('deleted_at')
+                    ->where('product_category_id', ProductCategory::select('id')->where('name', ProductCategory::TYPE_ADS)->first()->id)
+                    ->whereNull('deleted_at')
             ],
             'date_from'     =>  [Rule::requiredIf(!empty($this->get('ads_type'))), 'nullable', 'date', 'date_format:Y-m-d', 'after:today'],
             'merchant'      =>  [Rule::requiredIf(Auth::user()->is_admin), 'nullable', new ExistMerchant()]

@@ -45,7 +45,7 @@ return [
     'industry_experience' => 'Industry Experience',
     'listed_projects' => 'Listed Projects',
     'current_ads_boosting' => 'Current Ads Boosting',
-    'total_ads_available' => 'Total Ads Available',
+    'total_ads_quota' => 'Total Ads Quota',
     'current_bought_product' => 'Current Bought Product',
     'current_plan' => 'Current Subscription Plan',
     'view_all' => 'View All',

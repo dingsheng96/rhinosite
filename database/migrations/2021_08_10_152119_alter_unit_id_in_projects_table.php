@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterValueInTranslationsTable extends Migration
+class AlterUnitIdInProjectsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class AlterValueInTranslationsTable extends Migration
      */
     public function up()
     {
-        Schema::table('translations', function (Blueprint $table) {
-            $table->longText('value')->nullable()->change();
+        Schema::table('projects', function (Blueprint $table) {
+
+            $table->unsignedBigInteger('unit_id')->nullable()->change();
         });
     }
 
@@ -25,8 +26,9 @@ class AlterValueInTranslationsTable extends Migration
      */
     public function down()
     {
-        Schema::table('translations', function (Blueprint $table) {
-            $table->longText('value')->change();
+        Schema::table('projects', function (Blueprint $table) {
+
+            $table->unsignedBigInteger('unit_id')->change();
         });
     }
 }

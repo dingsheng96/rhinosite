@@ -79,7 +79,7 @@
                             </div>
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
-                                    <label for="date_from" class="col-form-label">{{ __('labels.first_boosting_date') }}</label>
+                                    <label for="date_from" class="col-form-label">{{ __('labels.first_boosting_date') }} <span class="text-red">*</span></label>
                                     <div class="input-group">
                                         <input type="text" id="date_from" name="date_from" class="form-control ads-date-picker @error('date_from') is-invalid @enderror" placeholder="yyyy-mm-dd" data-ads-date-filter-route="{{ route('data.ads.unavailable-date', ['ads' => '__REPLACE__']) }}"
                                             value="{{ old('start_from') }}" {{ old('start_from') ? null : 'disabled' }}>

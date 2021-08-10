@@ -85,7 +85,7 @@
                 </div>
             </div>
             <div class="col-lg-6 d-lg-inline-flex px-0 d-none">
-                <img src="{{ asset('storage/assets/home/s3-left.png') }}" alt="login_image" class="res-img">
+                <img src="{{ asset('storage/assets/home/s3-left.png') }}" alt="login_image" class="res-img" loading="lazy">
             </div>
         </div>
     </div>

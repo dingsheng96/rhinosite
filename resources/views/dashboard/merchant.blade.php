@@ -61,55 +61,47 @@
 
     {{-- Widgets --}}
     <div class="row mb-4">
-        <div class="col-lg-3 col-12">
-            <div class="card small-box shadow border bg-info">
-                <div class="card-body">
-                    <div class="inner">
-                        <p>{{ __('labels.listed_projects') }}</p>
-                        <h3>{{ $projects->count() ?? 0 }}</h3>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box shadow">
+                <span class="info-box-icon bg-info elevation-1"><i class="fas fa-briefcase"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">{{ __('labels.listed_projects') }}</span>
+                    <span class="info-box-number">
+                        {{ $projects->count() ?? 0 }}
+                    </span>
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-12">
-            <div class="card small-box shadow border bg-teal">
-                <div class="card-body">
-                    <div class="inner">
-                        <p>{{ __('labels.current_ads_boosting') }}</p>
-                        <h3>{{ $boosting_projects->count() ?? 0 }}</h3>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-rocket"></i>
-                    </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box shadow">
+                <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-rocket"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">{{ __('labels.current_ads_boosting') }}</span>
+                    <span class="info-box-number">
+                        {{ $boosting_projects->count() ?? 0 }}
+                    </span>
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-12">
-            <div class="card small-box shadow border bg-purple">
-                <div class="card-body">
-                    <div class="inner">
-                        <p>{{ __('labels.total_ads_available') }}</p>
-                        <h3>{{ $total_ads_quotas ?? 0 }}</h3>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-images"></i>
-                    </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box shadow">
+                <span class="info-box-icon bg-success elevation-1"><i class="fas fa-wallet"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">{{ __('labels.total_ads_quota') }}</span>
+                    <span class="info-box-number">
+                        {{ $total_ads_quotas }}
+                    </span>
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-12">
-            <div class="card small-box shadow border bg-light">
-                <div class="card-body">
-                    <div class="inner">
-                        <p>{{ __('labels.current_plan') }}</p>
-                        <h3>{{ $user->userSubscriptions->first()->name ?? '-' }}</h3>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-bookmark"></i>
-                    </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box shadow">
+                <span class="info-box-icon bg-purple elevation-1"><i class="fas fa-bookmark"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">{{ __('labels.current_plan') }}</span>
+                    <span class="info-box-number">
+                        {{ $user->userSubscriptions->first()->name ?? '-' }}
+                    </span>
                 </div>
             </div>
         </div>
@@ -144,7 +136,7 @@
                                     </p>
                                 </div>
                                 <div class="card-footer bg-white">
-                                    <p class="card-text text-muted">{{ $project->location ?? '-' }}</p>
+                                    <p class="card-text text-muted"><i class="fas fa-map-marker-alt text-danger mr-1"></i> {{ $project->location ?? '-' }}</p>
                                 </div>
                             </div>
                         </a>
@@ -192,7 +184,7 @@
                                     </p>
                                 </div>
                                 <div class="card-footer bg-white">
-                                    <p class="card-text text-muted">{{ $project->location ?? '-' }}</p>
+                                    <p class="card-text text-muted"><i class="fas fa-map-marker-alt text-danger mr-1"></i> {{ $project->location ?? '-' }}</p>
                                 </div>
                             </div>
                         </a>

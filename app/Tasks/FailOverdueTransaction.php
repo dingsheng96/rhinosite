@@ -2,8 +2,11 @@
 
 namespace App\Tasks;
 
-use App\Models\UserSubscription;
+use App\Models\Order;
+use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
+use App\Support\Facades\OrderFacade;
+use App\Support\Facades\TransactionFacade;
 
 class FailOverdueTransaction
 {
@@ -12,30 +15,32 @@ class FailOverdueTransaction
         DB::beginTransaction();
 
         $today = today()->startOfDay();
+        $last_two_days = $today->copy()->subDays(2)->startOfDay();
 
-        $expired_subscriptions = UserSubscription::with(['userSubscriptionLogs'])
-            ->active()->whereHas('userSubscriptionLogs', function ($query) use ($today) {
-                $query->where('expired_at', '<', $today)->orderByDesc('created_at')->limit(1);
-            })->get();
+        // cancelling pending two days transactions
+        $transactions = Transaction::with(['sourceable'])->pending()
+            ->whereBetween('created_at', [$last_two_days, $today])->get();
 
         try {
 
-            foreach ($expired_subscriptions as $subscription) {
-                $subscription->status = UserSubscription::STATUS_INACTIVE;
-                $subscription->save();
+            foreach ($transactions as $transaction) {
+                $transaction =  TransactionFacade::setModel($transaction)->setTransactionStatus(Transaction::STATUS_FAILED)->getModel();
+                $order = OrderFacade::setModel($transaction->sourceable)->ssetOrderStatus(Order::STATUS_CANCELLED)->getModel();
             }
 
-            activity()->useLog('task_deactivate_expired_subscription')
-                ->performedOn(new UserSubscription())
-                ->withProperties(['target_id' => $expired_subscriptions->pluck('id')->toArray()])
-                ->log('Successfully Processed Tasks: ' . $expired_subscriptions->count());
+            activity()->useLog('task_cancelled_overdue_transactions')
+                ->performedOn(new Transaction())
+                ->withProperties(['target_id' => $transactions->pluck('id')->toArray()])
+                ->log('Successfully Processed Tasks: ' . $transactions->count());
+
+            DB::commit();
         } catch (\Error | \Exception $ex) {
 
             DB::rollBack();
 
-            activity()->useLog('task_deactivate_expired_subscription')
-                ->performedOn(new UserSubscription())
-                ->withProperties(['target_id' => $expired_subscriptions->pluck('id')->toArray()])
+            activity()->useLog('task_cancelled_overdue_transactions')
+                ->performedOn(new Transaction())
+                ->withProperties(['target_id' => $transactions->pluck('id')->toArray()])
                 ->log('Processed Tasks Revert. Error found: ' . $ex->getMessage());
         }
     }

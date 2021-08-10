@@ -129,9 +129,15 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        $media      =   $project->media();
-        $images     =   (clone ($media))->image()->get();
-        $thumbnail  =   (clone ($media))->thumbnail()->first();
+        $project->load([
+            'media',
+            'prices' => function ($query) {
+                $query->defaultPrice();
+            }
+        ]);
+
+        $images     =   $project->media()->image()->get();
+        $thumbnail  =   $project->media()->thumbnail()->first();
 
         return view('projects.show', compact('project', 'images', 'thumbnail'));
     }

@@ -49,6 +49,22 @@ class Order extends Model
         return $this->belongsTo(Currency::class, 'currency_id', 'id');
     }
 
+    // Scopes
+    public function scopePending($query)
+    {
+        return $query->where('status', self::STATUS_PENDING);
+    }
+
+    public function scopePaid($query)
+    {
+        return $query->where('status', self::STATUS_PAID);
+    }
+
+    public function scopeCancelled($query)
+    {
+        return $query->where('status', self::STATUS_CANCELLED);
+    }
+
     // Attributes
     public function setSubTotalAttribute($value)
     {

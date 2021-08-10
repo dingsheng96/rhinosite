@@ -41,24 +41,20 @@ class HomeController extends Controller
             }
         ]);
 
-        $projects = Project::with(['translations', 'user.userDetail'])
+        $projects = Project::with(['translations', 'user.userDetail', 'address'])
             ->published()
             ->whereHas('user', function ($query) {
-                $query->merchant()->active();
-            })
-            ->when($this->user->is_merchant, function ($query) {
-                $query->where('user_id', $this->user->id);
-            })
-            ->when($this->user->is_member, function ($query) {
-                $query->whereHas('wishlists', function ($query) {
-                    $query->where('user_id', Auth::id());
-                });
+                $query->where('id', $this->user->id)->merchant()->active();
             })
             ->orderByDesc('created_at')
             ->limit(4)
             ->get();
 
-        $boosting_projects = Project::with('adsBoosters.product.productCategory')
+        $boosting_projects = Project::with(['user', 'adsBoosters.product.productCategory'])
+            ->published()
+            ->whereHas('user', function ($query) {
+                $query->where('id', $this->user->id)->merchant()->active();
+            })
             ->whereHas('adsBoosters', function ($query) {
                 $query->whereDate('boosted_at', today());
             })->get();
@@ -81,6 +77,18 @@ class HomeController extends Controller
                 $query->logo();
             }
         ]);
+
+        $projects = Project::with(['translations', 'user.userDetail'])
+            ->published()
+            ->whereHas('user', function ($query) {
+                $query->merchant()->active();
+            })
+            ->whereHas('wishlists', function ($query) {
+                $query->where('user_id', Auth::id());
+            })
+            ->orderByDesc('created_at')
+            ->limit(4)
+            ->get();
 
         return [
             'user' => $this->user
