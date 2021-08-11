@@ -47,9 +47,6 @@ class ProjectDataTable extends DataTable
             ->addColumn('merchant', function ($data) {
                 return $data->user->name;
             })
-            ->addColumn('price', function ($data) {
-                return $data->price_with_unit;
-            })
             ->editColumn('title', function ($data) {
                 return  '<div class="d-flex justify-content-start">
                 <div>
@@ -125,10 +122,9 @@ class ProjectDataTable extends DataTable
     {
         $columns = [
             Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('title')->title(__('labels.title'))->width('25%'),
-            Column::make('merchant')->title(__('labels.merchant'))->width('20%'),
-            Column::make('price')->title(__('labels.price') . ' / ' . __('labels.unit'))->width('15%'),
-            Column::make('status')->title(__('labels.status'))->width('10%'),
+            Column::make('title')->title(__('labels.title'))->width('30%'),
+            Column::make('merchant')->title(__('labels.merchant'))->width('25%'),
+            Column::make('status')->title(__('labels.status'))->width('15%'),
             Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
             Column::computed('action', __('labels.action'))->width('10%')
                 ->exportable(false)

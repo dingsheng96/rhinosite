@@ -71,7 +71,7 @@
                                     <div class="merchant-card {{ $project->has_active_highlight ? 'highlight' : null }}">
                                         <a href="{{ route('app.project.show', ['project' => $project->id]) }}">
                                             <div class="merchant-image-container">
-                                                <img src="{{ $project->media->first()->full_file_path }}" alt="{{ $project->user->name }}" class="merchant-image">
+                                                <img src="{{ $project->media()->first()->full_file_path }}" alt="{{ $project->media()->first()->filename }}" class="merchant-image">
                                             </div>
                                             <div class="merchant-body">
                                                 @if ($project->has_active_highlight)

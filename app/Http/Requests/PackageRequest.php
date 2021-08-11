@@ -53,7 +53,7 @@ class PackageRequest extends FormRequest
             'description' => ['nullable'],
             'items' => [Rule::requiredIf(!$this->route('package')), 'nullable', 'array'],
             'items.*.product' => ['exists:' . Product::class . ',id'],
-            'items.*.sku' => ['distinct', Rule::exists(ProductAttribute::class, 'id')],
+            'items.*.sku' => ['distinct', Rule::exists(ProductAttribute::class, 'id')->where('status', ProductAttribute::STATUS_ACTIVE)->whereNull('deleted_at')],
             'items.*.quantity' => ['integer', 'min:0']
         ];
     }

@@ -67,16 +67,27 @@
                             <p class="services-subtitle mb-md-0">{{ $project->user->name }}</p>
                         </div>
                         <div class="col-sm-5 text-sm-right">
-                            <a role="button" class="btn">
+                            @auth
+                            <button type="button" class="btn btn-add-wishlist" data-wishlist="{{ route('app.wishlist.store') }}" data-project="{{ $project->id }}">
+                                @if (Auth::user()->favouriteProjects()->get()->contains($project->id))
+                                <i class="fas fa-heart txtorange services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_add_wishlist') }}"></i>
+                                @else
                                 <i class="far fa-heart txtorange services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_add_wishlist') }}"></i>
-                            </a>
-                            <a role="button" href="tel:{{ $project->user->formatted_phone_number }}" class="btn" target="_blank">
-                                <i class="fas fa-phone text-secondary services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_call') }}"></i>
-                            </a>
+                                @endif
+                            </button>
+                            @else
+                            <button type="button" class="btn btn-add-wishlist" data-wishlist="{{ route('login') }}">
+                                <i class="far fa-heart txtorange services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_add_wishlist') }}"></i>
+                            </button>
+                            @endauth
                             @if (!empty($project->user->userDetail->whatsapp))
                             <a role="button" href="https://api.whatsapp.com/send?phone={{ $project->user->userDetail->whatsapp }}&text={{ urlencode(__('messages.whatsapp_message', ['name' => $project->user->name, 'link' => route('app.project.show', ['project' => $project->id])])) }}" class="btn"
                                 target="_blank">
                                 <i class="fab fa-whatsapp txtgreen services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_whatsapp') }}"></i>
+                            </a>
+                            @else
+                            <a role="button" href="tel:{{ $project->user->formatted_phone_number }}" class="btn" target="_blank">
+                                <i class="fas fa-phone text-secondary services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_call') }}"></i>
                             </a>
                             @endif
                         </div>

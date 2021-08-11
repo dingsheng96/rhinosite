@@ -106,4 +106,24 @@ class AdsBooster extends Model
 
         return '<span class="px-3 ' . $status['class'] . '">' . $status['text'] . '</span>';
     }
+
+    public function getBadgeColorAttribute()
+    {
+        switch ($this->product->name) {
+            case Product::NAME_CATEGORY_BUMP:
+                $color = 'bg-success';
+                break;
+            case Product::NAME_CATEGORY_BUMP:
+                $color = 'bg-purple';
+                break;
+            case Product::NAME_CATEGORY_HIGHLIGHT:
+                $color = 'bg-pink';
+                break;
+            default:
+                $color = 'bg-primary';
+                break;
+        }
+
+        return $color;
+    }
 }

@@ -99,7 +99,7 @@ Route::group(['as' => 'app.'], function () {
 
         Route::post('rating', 'AppController@rateUser')->name('ratings.store');
 
-        Route::resource('wishlist', 'WishlistController');
+        Route::resource('wishlist', 'WishlistController')->only(['index', 'store']);
     });
 });
 

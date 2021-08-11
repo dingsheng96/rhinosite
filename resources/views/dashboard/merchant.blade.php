@@ -76,7 +76,7 @@
             <div class="info-box shadow">
                 <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-rocket"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text">{{ __('labels.current_ads_boosting') }}</span>
+                    <span class="info-box-text">{{ __('labels.current_boosting_projects') }}</span>
                     <span class="info-box-number">
                         {{ $boosting_projects->count() ?? 0 }}
                     </span>
@@ -158,7 +158,7 @@
 
                 <div class="row">
                     <div class="col-12">
-                        <h5 class="font-weight-bold d-inline">{{ __('labels.current_ads_boosting') }}</h5>
+                        <h5 class="font-weight-bold d-inline">{{ __('labels.current_boosting_projects') }}</h5>
                     </div>
                 </div>
 
@@ -169,11 +169,6 @@
                     <div class="col-md-3 col-12">
                         <a href="{{ route('projects.show', ['project' => $project->id]) }}">
                             <div class="card shadow-lg border h-100">
-                                <div class="ribbon-wrapper ribbon ribbon-lg">
-                                    <div class="ribbon bg-warning">
-                                        Highlighted
-                                    </div>
-                                </div>
                                 <img src="{{ $project->thumbnail->full_file_path ?? $default_preview }}" alt="image" class="card-img-top" style="height: 250px; width: 100%; min-height: 210px; object-fit: cover;">
                                 <div class="card-body">
                                     <h5 class="card-title font-weight-bold text-secondary">{{ $project->english_title ?? '-' }}</h5>
@@ -185,6 +180,11 @@
                                 </div>
                                 <div class="card-footer bg-white">
                                     <p class="card-text text-muted"><i class="fas fa-map-marker-alt text-danger mr-1"></i> {{ $project->location ?? '-' }}</p>
+                                </div>
+                                <div class="card-footer bg-white">
+                                    @foreach ($project->adsBoosters()->boosting()->get() as $booster)
+                                    <span class="badge badge-pill badge-light {{ $booster->badge_color }}">{{ $booster->product->name }}</span>
+                                    @endforeach
                                 </div>
                             </div>
                         </a>

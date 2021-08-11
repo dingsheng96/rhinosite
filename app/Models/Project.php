@@ -12,7 +12,6 @@ use App\Helpers\Status;
 use App\Models\Address;
 use App\Models\Service;
 use App\Models\Language;
-use App\Models\Wishlist;
 use App\Models\AdsBooster;
 use App\Models\Translation;
 use App\Models\CountryState;
@@ -86,9 +85,9 @@ class Project extends Model
         return $this->morphToMany(User::class, 'comparable');
     }
 
-    public function wishlists()
+    public function wishlistedBy()
     {
-        return $this->morphMany(Wishlist::class, 'sourceable');
+        return $this->morphToMany(User::class, 'favourable', Favourable::class)->withPivot('created_at');
     }
 
     // Scopes

@@ -44,17 +44,23 @@ return [
     'joined_since' => 'Joined Since',
     'industry_experience' => 'Industry Experience',
     'listed_projects' => 'Listed Projects',
-    'current_ads_boosting' => 'Current Ads Boosting',
     'total_ads_quota' => 'Total Ads Quota',
     'current_bought_product' => 'Current Bought Product',
     'current_plan' => 'Current Subscription Plan',
+    'total_contractors' => 'Total Active Contractors',
+    'total_members' => 'Total Active Members',
+    'total_weekly_transaction' => "Weekly Transaction Amount",
+    'total_listing_projects' => 'Total Listing Projects',
+    'monthly_sales' => 'Monthly Sales',
+    'monthly_project_listing' => 'Monthly Project Listing',
+    'current_boosting_projects' => 'Current Boosting Projects',
     'view_all' => 'View All',
+    'more_info' => 'More Info',
     'dropdown_placeholder' => 'Please select :label',
     'change_profile_pic' => 'Change Profile Picture',
     'change_logo' => 'Change Logo',
     'sign_up_a_plan' => 'Sign up a plan',
     'optional' => 'Optional',
-
     'project' => 'Project|Projects',
     'country_state' => 'Country State|Country States',
     'city' => 'City|Cities',
@@ -228,5 +234,6 @@ return [
     'add_to_cart' => 'Add To Cart',
     'whatsapp' => 'Whatsapp',
     'first_boosting_date' => 'Boosting Date From',
-    'ads_boosting_history' => 'Ads Boosting History'
+    'ads_boosting_history' => 'Ads Boosting History',
+
 ];

@@ -84,7 +84,7 @@ class AdsBoostingDataTable extends DataTable
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(3, 'desc')
+            ->orderBy(0, 'desc')
             ->responsive(true)
             ->autoWidth(true)
             ->processing(false);

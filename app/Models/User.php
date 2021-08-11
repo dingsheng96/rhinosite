@@ -12,7 +12,6 @@ use App\Helpers\Status;
 use App\Models\Address;
 use App\Models\Project;
 use App\Models\Service;
-use App\Models\Wishlist;
 use App\Models\UserDetail;
 use App\Models\UserAdsQuota;
 use App\Models\UserSubscription;
@@ -65,9 +64,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->morphMany(Media::class, 'sourceable');
     }
 
-    public function wishlists()
+    public function favouriteProjects()
     {
-        return $this->hasMany(Wishlist::class, 'user_id', 'id');
+        return $this->morphedByMany(Project::class, 'favourable', Favourable::class)->withPivot('created_at');
     }
 
     public function ratings()

@@ -136,7 +136,7 @@ class AdsBoosterController extends Controller
             }
         ]);
 
-        return $dataTable->with(['ads_booster' => $ads_booster])
+        return $dataTable->with(['project' => $ads_booster])
             ->render('ads.show', compact('ads_booster'));
     }
 

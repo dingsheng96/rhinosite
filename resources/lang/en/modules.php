@@ -42,6 +42,7 @@ return [
     'city' => 'City|Cities',
     'service' => 'Service|Services',
     'activity_logs' => 'Activity Logs',
+    'wishlist' => 'Wishlist',
 
     'app' => [
         'home' => 'Home',

@@ -25,8 +25,8 @@ class ProjectService extends BaseService
 
     public function storeData()
     {
-        $this->storeTitle();
         $this->storeDetails();
+        $this->storeTitle();
         $this->storeServices();
         $this->storeImages();
         $this->storePrice();
@@ -78,7 +78,9 @@ class ProjectService extends BaseService
                 $translation->language_id   =   $language->id;
                 $translation->value         =   $this->request->get('title_' . strtolower($language->code), '');
 
-                if ($translation->isDirty()) {
+                if ($translation->exists && $translation->isDirty()) {
+                    $translation->save();
+                } else {
                     $this->model->translations()->save($translation);
                 }
             }

@@ -87,4 +87,35 @@ $(function () {
             reader.readAsDataURL(file);
         }
     });
+
+    $('.btn-add-wishlist').on('click', function () {
+
+        let route = $(this).data('wishlist');
+        let target = $(this).data('project');
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: route,
+            type: "POST",
+            data: {
+                "project": target
+            },
+            success: xhr => {
+
+                if (xhr.status) {
+
+                    let data = xhr.data;
+
+                    if(data.liked) {
+                        $(this).find('i').removeClass('far').addClass('fas');
+                        return;
+                    }
+
+                    $(this).find('i').removeClass('fas').addClass('far');
+                }
+            }
+        });
+    });
 });

@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Helpers\Message;
+use App\Helpers\Response;
+use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 
 class WishlistController extends Controller
 {
@@ -18,7 +22,16 @@ class WishlistController extends Controller
     public function index()
     {
         $projects = Project::published()
-            ->with(['translations', 'user.userDetail'])
+            ->with([
+                'translations',
+                'user' => function ($query) {
+                    $query->with([
+                        'userDetail' => function ($query) {
+                            $query->approvedDetails();
+                        }
+                    ]);
+                }
+            ])
             ->whereHas('user', function ($query) {
                 $query->merchant()->active();
             })
@@ -26,12 +39,10 @@ class WishlistController extends Controller
                 $query->where('user_id', Auth::user()->id);
             })
             ->when(Auth::user()->is_member, function ($query) {
-                $query->whereHas('wishlists', function ($query) {
-                    $query->where('user_id', Auth::id());
+                $query->whereHas('wishlistedBy', function ($query) {
+                    $query->where('id', Auth::id());
                 });
             })
-            ->select('id', DB::raw('COUNT(*) AS projects_count'))
-            ->groupBy('id')
             ->orderByDesc('created_at')
             ->paginate(15, ['*'], 'page', request()->get('page'));
 
@@ -56,7 +67,57 @@ class WishlistController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'project' => ['required', 'exists:' . Project::class . ',id'],
+        ]);
+
+        DB::beginTransaction();
+        $action     =   Permission::ACTION_CREATE;
+        $module     =   strtolower(__('modules.wishlist'));
+        $status     =   'fail';
+        $message    =   Message::instance()->format($action, $module, $status);
+        $liked      =   false;
+
+        try {
+
+            $project = Project::where('id', $request->get('project'))->published()
+                ->whereHas('user', function ($query) {
+                    $query->merchant()->active()
+                        ->whereHas('userDetail', function ($query) {
+                            $query->approvedDetails();
+                        });
+                    // ->whereHas('userSubscriptions', function ($query) {
+                    //     $query->active();
+                    // });
+                })->select('id', 'user_id')->firstOrFail();
+
+            $favouite_projects = Auth::user()->favouriteProjects();
+
+            if ($favouite_projects->get()->contains($project->id)) {
+                $favouite_projects->detach($project->id);
+            } else {
+                $favouite_projects->attach($project->id);
+                $liked = true;
+            }
+
+            DB::commit();
+
+            $status     =   'success';
+            $message    =   Message::instance()->format($action, $module, $status);
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+            $message = $e->getMessage();
+        }
+
+        return Response::instance()
+            ->withStatusCode('modules.project', 'actions.' . $action . $status)
+            ->withStatus($status)
+            ->withMessage($message)
+            ->withData([
+                'liked' => $liked
+            ])
+            ->sendJson();
     }
 
     /**
