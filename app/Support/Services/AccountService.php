@@ -62,12 +62,13 @@ class AccountService extends BaseService
             ->approvedDetails()
             ->first();
 
-        $details->business_since        =   $this->request->get('business_since');
-        $details->website               =   $this->request->get('website');
-        $details->facebook              =   $this->request->get('facebook');
-        $details->pic_name              =   $this->request->get('pic_name');
-        $details->pic_phone             =   $this->request->get('pic_phone');
-        $details->pic_email             =   $this->request->get('pic_email');
+        $details->business_since    =   $this->request->get('business_since');
+        $details->website           =   $this->request->get('website');
+        $details->facebook          =   $this->request->get('facebook');
+        $details->whatsapp          =   $this->request->get('whatsapp');
+        $details->pic_name          =   $this->request->get('pic_name');
+        $details->pic_phone         =   $this->request->get('pic_phone');
+        $details->pic_email         =   $this->request->get('pic_email');
 
         if ($details->isDirty()) {
             $this->model->userDetail()->save($details);

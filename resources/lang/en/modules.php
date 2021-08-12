@@ -55,7 +55,7 @@ return [
         'term_policy' => 'Terms & Policies',
         'privacy_policy' => 'Privacy Policy',
         'register' => 'Register',
-        'project' => 'Project'
+        'project' => 'Project',
     ]
 
 ];

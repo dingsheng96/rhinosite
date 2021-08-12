@@ -160,53 +160,72 @@ class AppController extends Controller
 
     public function compareList()
     {
+        $compare_lists = Auth::user()->comparisons()
+            ->with([
+                'user', 'media', 'translations', 'address', 'services',
+                'prices' => function ($query) {
+                    $query->defaultPrice();
+                }
+            ])->get();
 
-        return view('app.compare');
+        return view('app.compare', compact('compare_lists'));
     }
 
     public function addToCompareList(Request $request)
     {
         $request->validate([
             'target' => 'required|in:project',
-            'target_id' => 'required|exists:' . Project::class . ',id'
+            'target_id' => 'required|exists:' . Project::class . ',id',
         ]);
 
         $action     =   Permission::ACTION_UPDATE;
-        $module     =   strtolower(trans_choice('modules.project', 1));
         $status     =   'fail';
-        $message    =   Message::instance()->format($action, $module);
-        $count = 0;
+        $message    =   'Unable to add project to compare list.';
+        $data       =   [];
 
         DB::beginTransaction();
 
         try {
 
-            $project = Project::findOrFail($request->get('target_id'));
-
             $compare_lists = Auth::user()->comparisons();
 
-            throw_if($compare_lists->count() >= 3, new \Exception(__('messages.compare_list_reached_limit')));
+            if ($request->get('target') == 'project') {
 
-            $compare_lists->sync([$project->id]);
+                $project = Project::findOrFail($request->get('target_id'));
 
-            $compare_lists->fresh();
+                if ($compare_lists->get()->contains($project->id)) {
 
-            $count = $compare_lists->count();
+                    $compare_lists->detach($project->id);
+
+                    $message = 'Project removed from compare list.';
+                } else {
+
+                    throw_if($compare_lists->count() >= 3, new \Exception(__('messages.compare_list_reached_limit')));
+
+                    $compare_lists->attach($project->id);
+
+                    $message = 'Project added to compare list.';
+                }
+            }
+
+            $status = 'success';
+            $data = [
+                'selected' => $compare_lists->count(),
+                'attached' => $compare_lists->pluck('id')
+            ];
 
             DB::commit();
         } catch (\Error | \Exception $ex) {
 
             DB::rollBack();
-
             $message = $ex->getMessage();
-            $status = false;
         }
 
         return Response::instance()
             ->withStatusCode('modules.project', 'actions.' . $action . $status)
             ->withStatus($status)
-            ->withMessage($message, true)
-            ->withData(['projects_count' => $count])
+            ->withMessage($message)
+            ->withData($data)
             ->sendJson();
     }
 }

@@ -19,7 +19,6 @@ $(function () {
         }
     });
 
-
     if ($('.btn-view-more').length > 0) {
 
         $('body').on('click', '.btn-view-more', function (e) {
@@ -45,36 +44,6 @@ $(function () {
             form.submit();
         });
     }
-
-    $(".btn-collapse").on('click', function(){
-
-        $(".compare.collapse, .btn-compare.collapse").collapse('toggle');
-    });
-
-    $('body').on('click', '.btn-compare', function (e) {
-
-        e.preventDefault();
-
-        let form = $(this).next('form[name="compare_form"]');
-
-        let data = form.serializeArray();
-
-        let action = form.attr('action');
-
-        $.ajax({
-            url: action,
-            type: "POST",
-            data: data,
-            success: (xhl) => {
-
-                let res = xhl.data;
-
-                if(xhl.status) {
-
-                }
-            }
-        });
-    });
 
     $(".custom-img-input").on("change", function(e) {
         let file = e.target.files[0];
@@ -114,6 +83,77 @@ $(function () {
                     }
 
                     $(this).find('i').removeClass('fas').addClass('far');
+                }
+            }
+        });
+    });
+
+    let cookie = $.cookie("rhinosite_compare_collapse");
+    let accordion = $(".compare.collapse, .btn-compare.collapse");
+
+    if(cookie == 1) {
+        accordion.collapse('show');
+    }
+
+    $(".btn-collapse").on('click', function() {
+
+        var date = new Date();
+        var minutes = 30;
+        date.setTime(date.getTime() + (minutes * 60 * 1000));
+
+        var status = cookie == 1 ? 0 : 1;
+
+        $.cookie("rhinosite_compare_collapse", status, { expires: date });
+        accordion.collapse('toggle');
+    });
+
+    $('.btn-compare').on('click', function () {
+
+        let route       =   $(this).data('compare-route');
+        let target      =   $(this).data('compare-target');
+        let target_id   =   $(this).data('compare-target-id');
+        let data_text   =   $(this).data('compare-text');
+        let btn_text    =   $(this).text();
+        let refresh     =   $(this).data('refresh');
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: route,
+            type: "POST",
+            data: {
+                "target": target,
+                "target_id": target_id,
+            },
+            success: xhr => {
+
+                if (xhr.status) {
+
+                    let data = xhr.data;
+
+                    $(this).data('compare-text', btn_text);
+                    $(this).text(data_text);
+                    $(this).removeClass('bg-danger');
+
+                    if($.inArray(target_id, data.attached) !== -1) {
+                        $(this).addClass('bg-danger');
+                    }
+
+                    $('.compare-count').text(data.selected);
+
+                    if(data.selected > 1) {
+                        $('.btn-view-result').removeAttr('disabled');
+                    } else {
+                        $('.btn-view-result').attr('disabled', true);
+                    }
+
+                    if(refresh) {
+                        location.reload();
+                    }
+
+                } else {
+                    alert(xhr.message);
                 }
             }
         });

@@ -36,7 +36,8 @@ return [
     'project_sidebar_btn_filter' => 'Filter',
     'project_sidebar_btn_reset' => 'Reset',
     'project_mobile_sidebar_toggle_title' => 'Filter',
-    'project_btn_add_compare' => 'Add to Compare List',
+    'project_btn_add_compare' => 'Add To Compare List',
+    'project_btn_remove_compare' => 'Remove From Compare List',
 
     'project_details_title_main' => 'Project',
     'project_details_price' => 'Price',
@@ -111,4 +112,7 @@ return [
     'verify_rejected_title' => 'Verification Rejected',
     'verify_rejected_message' => 'We are sorry to inform that your application is rejected by us. You may update and resubmit your application by clicking the update button. Our team will take approximately 5-7 working days to process your application.<br><br> If you need assistance, please contact us at info@rhinosite.com.my or call us at 016-303 1808.',
     'verify_rejected_btn_update' => 'Update Application',
+
+    'compare_title_main' => 'Compare Services',
+    'compare_subtitle' => 'Comparison between :count services',
 ];

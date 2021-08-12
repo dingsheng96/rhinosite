@@ -61,7 +61,9 @@ class HomeController extends Controller
             DB::raw('sum(id) as monthly_projects_count'),
             DB::raw("DATE_FORMAT(created_at,'%M %Y') as months")
         )->whereYear('created_at', today()->format('Y'))
-            ->groupBy('months')->orderBy('created_at')->get()->toArray();
+            ->groupBy('months')
+            ->orderBy('months')
+            ->get()->toArray();
 
         $current_boosting_projects = (clone $listing_projects)
             ->whereHas('adsBoosters', function ($query) {
@@ -72,7 +74,9 @@ class HomeController extends Controller
             DB::raw('CAST((sum(amount) / 100) AS DECIMAL(11,2)) as sums'),
             DB::raw("DATE_FORMAT(created_at,'%M %Y') as months")
         )->success()->whereYear('created_at', today()->format('Y'))
-            ->groupBy('months')->orderBy('created_at')->get()->toArray();
+            ->groupBy('months')
+            ->orderBy('months')
+            ->get()->toArray();
 
         return [
             'total_contractors' => $total_contractors,

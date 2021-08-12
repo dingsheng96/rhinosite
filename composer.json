@@ -22,7 +22,8 @@
         "spatie/laravel-activitylog": "^3.17",
         "spatie/laravel-permission": "^4.2",
         "yajra/laravel-datatables": "^1.5",
-        "yangyiyi/extra-command": "^1.0"
+        "yangyiyi/extra-command": "^1.0",
+        "intervention/image": "^2.5"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",

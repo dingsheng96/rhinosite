@@ -13,6 +13,8 @@ use App\Models\Address;
 use App\Models\Service;
 use App\Models\Language;
 use App\Models\AdsBooster;
+use App\Models\Comparable;
+use App\Models\Favourable;
 use App\Models\Translation;
 use App\Models\CountryState;
 use App\Models\ProjectService;
@@ -82,7 +84,7 @@ class Project extends Model
 
     public function userComparisons()
     {
-        return $this->morphToMany(User::class, 'comparable');
+        return $this->morphToMany(User::class, 'comparable', Comparable::class);
     }
 
     public function wishlistedBy()

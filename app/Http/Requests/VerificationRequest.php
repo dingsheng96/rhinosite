@@ -42,6 +42,7 @@ class VerificationRequest extends FormRequest
             'business_since'    =>  ['required', 'date_format:Y-m-d'],
             'website'           =>  ['nullable', 'url'],
             'facebook'          =>  ['nullable', 'url'],
+            'whatsapp'          =>  ['nullable', new PhoneFormat],
             'address_1'         =>  ['required', 'min:3', 'max:255'],
             'address_2'         =>  ['nullable'],
             'postcode'          =>  ['required', 'digits:5'],

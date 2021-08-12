@@ -112,22 +112,22 @@
                         <span class="h5">{{ trans_choice('app.project_search_items', 1, ['total' => $projects->total()]) }}</span>
                         @endif
 
-                        {{-- @auth
+                        @auth
                         <button id="compare" name="compare" class="btn btn-orange ml-auto btn-collapse">
                             {{ __('app.project_btn_compare') }}
                         </button>
                         @else
                         <a role="button" href="{{ route('login') }}" class="btn btn-orange ml-auto">{{ __('app.project_btn_login_to_compare') }}</a>
-                        @endauth --}}
+                        @endauth
                     </div>
 
                     <div class="row search-filter-result compare collapse">
                         <div class="col-md-6 mb-3 mb-md-0">
-                            <span>Choose 2 contractor to compare now</span>
+                            <span>Choose a maximum of 3 contractors to compare now</span>
                         </div>
                         <div class="col-md-6 text-md-right">
-                            <span class="ml-auto mr-2">Selected : 2</span>
-                            <a href="compare.html" class="btn btn-black mx-0">View Result</a>
+                            <span class="ml-auto mr-2">Selected : <span class="compare-count">{{ Auth::user()->comparisons()->count() }}</span></span>
+                            <button type="button" onclick="return window.location.href = '{{ route('app.comparisons.index') }}';" class="btn btn-black mx-0 btn-view-result" {{ Auth::user()->comparisons()->count() < 2 ? 'disabled' : null }}>View Result</a>
                         </div>
                     </div>
 
@@ -159,12 +159,17 @@
                                                 <span class="merchant-footer-right"><i class="fas fa-map-marker-alt text-danger mr-1"></i> {{ $project->location }}</span>
                                             </div>
                                         </a>
-                                        <button class="btn btn-compare collapse">{{ __('app.project_btn_add_compare') }}</button>
-                                        <form action="{{ route('app.comparisons.store') }}" method="POST" role="form" class="d-none" name="compare_form">
-                                            @csrf
-                                            <input type="hidden" name="target" value="{{ strtolower(class_basename(get_class($project))) }}">
-                                            <input type="hidden" name="target_id" value="{{ $project->id }}">
-                                        </form>
+
+                                        @auth
+                                        @if (Auth::user()->comparisons()->get()->contains($project->id))
+                                        <button class="btn btn-compare collapse bg-danger" data-compare-route="{{ route('app.comparisons.store') }}" data-compare-target="{{ strtolower(class_basename(get_class($project))) }}" data-compare-target-id="{{ $project->id }}"
+                                            data-compare-text="{{ __('app.project_btn_add_compare') }}">{{ __('app.project_btn_remove_compare') }}</button>
+                                        @else
+                                        <button class="btn btn-compare collapse" data-compare-route="{{ route('app.comparisons.store') }}" data-compare-target="{{ strtolower(class_basename(get_class($project))) }}" data-compare-target-id="{{ $project->id }}"
+                                            data-compare-text="{{ __('app.project_btn_remove_compare') }}">{{ __('app.project_btn_add_compare') }}</button>
+                                        @endif
+                                        @endauth
+
                                     </div>
                                 </div>
                                 @empty

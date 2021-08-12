@@ -182,17 +182,6 @@
                                         <div class="row">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="website" class="col-form-label">{{ __('labels.website') }}</label>
-                                                    <input type="url" name="website" id="website" value="{{ old('website', $user_details->website ?? null) }}" class="form-control @error('website') is-invalid @enderror">
-                                                    @error('website')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
                                                     <label for="business_since" class="col-form-label">{{ __('labels.year_of_experience') }} <span class="text-red">*</span></label>
                                                     <div class="input-group">
                                                         <input type="text" name="business_since" id="business_since" value="{{ old('business_since', $user_details->business_since) }}" class="form-control date-picker @error('business_since') is-invalid @enderror">
@@ -209,10 +198,37 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="website" class="col-form-label">{{ __('labels.website') }}</label>
+                                                    <input type="url" name="website" id="website" value="{{ old('website', $user_details->website ?? null) }}" class="form-control @error('website') is-invalid @enderror">
+                                                    @error('website')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <div class="row">
-                                            <div class="col-12">
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="whatsapp" class="col-form-label">{{ __('labels.whatsapp') }}</label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text bg-white">+</span>
+                                                        </div>
+                                                        <input type="text" name="whatsapp" id="whatsapp" value="{{ old('whatsapp', $user_details->whatsapp) ?? null }}" class="form-control @error('whatsapp') is-invalid @enderror">
+                                                    </div>
+                                                    @error('whatsapp')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="facebook" class="col-form-label">{{ __('labels.facebook') }}</label>
                                                     <input type="url" name="facebook" id="facebook" value="{{ old('facebook', $user_details->facebook ?? null) }}" class="form-control @error('facebook') is-invalid @enderror">

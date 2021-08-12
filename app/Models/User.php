@@ -12,6 +12,8 @@ use App\Helpers\Status;
 use App\Models\Address;
 use App\Models\Project;
 use App\Models\Service;
+use App\Models\Comparable;
+use App\Models\Favourable;
 use App\Models\UserDetail;
 use App\Models\UserAdsQuota;
 use App\Models\UserSubscription;
@@ -111,7 +113,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function comparisons()
     {
-        return $this->morphedByMany(Project::class, 'comparable');
+        return $this->morphedByMany(Project::class, 'comparable', Comparable::class);
     }
 
     // Functions

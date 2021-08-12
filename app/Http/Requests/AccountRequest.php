@@ -51,6 +51,7 @@ class AccountRequest extends FormRequest
             'pic_email' => [Rule::requiredIf($is_merchant), 'nullable', 'email'],
             'website' => ['nullable', 'url', 'max:255'],
             'facebook' => ['nullable', 'url', 'max:255'],
+            'whatsapp' =>  ['nullable', new PhoneFormat],
             'business_since' => [Rule::requiredIf($is_merchant), 'nullable', 'date_format:Y-m-d'],
             'address_1' =>  [Rule::requiredIf($is_merchant || $is_member), 'nullable', 'min:3', 'max:255'],
             'address_2' =>  ['nullable'],
