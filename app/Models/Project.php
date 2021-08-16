@@ -7,7 +7,6 @@ use App\Models\Unit;
 use App\Models\User;
 use App\Models\Media;
 use App\Models\Price;
-use App\Models\Rating;
 use App\Helpers\Status;
 use App\Models\Address;
 use App\Models\Service;
@@ -64,7 +63,7 @@ class Project extends Model
 
     public function ratings()
     {
-        return $this->hasMany(Rating::class, 'sourceable');
+        return $this->morphToMany(User::class, 'rateable', Rateable::class)->withPivot('scale')->withTimestamps();
     }
 
     public function prices()

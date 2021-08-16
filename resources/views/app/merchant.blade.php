@@ -42,15 +42,15 @@
             <div class="col-lg-5 col-xl-4 text-right align-self-center">
                 <p>{{ __('app.merchant_joined_date', ['date' => $merchant->joined_date]) }}</p>
                 <p>{{ __('app.merchant_industry_year', ['year' => trans_choice('labels.year', $merchant->userDetail->years_of_experience, ['value' => $merchant->userDetail->years_of_experience])]) }}</p>
-                <p>{!! $merchant->rating_stars !!}</p>
+                <p id="rating-stars">{!! $merchant->rating_stars !!}</p>
 
                 @auth
                 @member
-                <button type="button" class="btn btn-orange" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-orange btn-rate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{ __('app.merchant_btn_rate_merchant') }}
                 </button>
                 <div class="dropdown-menu dropdown-menu-right merchant-rate text-center">
-                    <form action="">
+                    <form action="{{ route('app.ratings.store') }}" method="POST" role="form" enctype="multipart/form-data" id="ratingform" data-merchant="{{ $merchant->id }}">
                         <p class="mb-0">{{ __('app.merchant_rate_dropdown_title') }}</p>
                         <div class="rate">
                             <input type="radio" id="star5" name="rate" value="5" />

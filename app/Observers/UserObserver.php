@@ -43,11 +43,8 @@ class UserObserver
         $user->wishlists()->delete();
         $user->carts()->delete();
         $user->userSubscriptions()->delete();
-        $user->ratings()->delete();
         $user->orders()->delete();
-        // $user->userAdsQuotas()->delete();
-        // $user->userAdsQuotaHistories()->delete();
-        $user->ratedBy()->delete();
+        $user->userAdsQuotas()->delete();
         $user->comparisons()->detach();
     }
 

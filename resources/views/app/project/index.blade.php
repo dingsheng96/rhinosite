@@ -121,6 +121,7 @@
                         @endauth
                     </div>
 
+                    @auth
                     <div class="row search-filter-result compare collapse">
                         <div class="col-md-6 mb-3 mb-md-0">
                             <span>Choose a maximum of 3 contractors to compare now</span>
@@ -130,6 +131,7 @@
                             <button type="button" onclick="return window.location.href = '{{ route('app.comparisons.index') }}';" class="btn btn-black mx-0 btn-view-result" {{ Auth::user()->comparisons()->count() < 2 ? 'disabled' : null }}>View Result</a>
                         </div>
                     </div>
+                    @endauth
 
                     <div class="row">
                         <div class="col-12">

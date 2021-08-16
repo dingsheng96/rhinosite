@@ -77,7 +77,7 @@
                 <div class="row align-items-center mb-4">
                     <div class="col-12">
                         <p class="font-weight-bold txtblk mb-2">3. Trustable & Reliable Contractors</p>
-                        <p class="paragraph mb-2">- Rhinosite team will has a due diligence process to ensure that only reliable and quality contractors are able to be listed on our platform. </p>
+                        <p class="paragraph mb-2">- Rhinosite team will have a due diligence process to ensure that only reliable and quality contractors are able to be listed on our platform. </p>
                         <p class="paragraph mb-2">- Rhinosite will investigate thoroughly on those Contractors whom received poor ratings/ feedback. The Contractor will be terminated if the issue remains unsolved. </p>
                     </div>
                 </div>

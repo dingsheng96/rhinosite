@@ -23,6 +23,12 @@
                                 {{ __('labels.terminate_plan') }}
                             </a>
                         </p>
+                        @else
+                        <p class="alert-heading text-md-right">
+                            <a href="{{ route('subscriptions.index') }}" role="button">
+                                {{ __('labels.change_plan') }}
+                            </a>
+                        </p>
                         @endif
                         <p class="alert-heading text-md-right">
                             <a href="#subscriptionLog" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="subscriptionLog">

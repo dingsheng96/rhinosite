@@ -228,4 +228,48 @@ class AppController extends Controller
             ->withData($data)
             ->sendJson();
     }
+
+    public function rateUser(Request $request)
+    {
+        $request->validate([
+            'merchant' => ['required', 'exists:' . User::class . ',id'],
+            'rating' => ['required', 'in:1,2,3,4,5']
+        ]);
+
+        $action     =   Permission::ACTION_CREATE;
+        $status     =   'fail';
+        $message    =   'Unable to rate contractor.';
+        $data       =   [];
+
+        DB::beginTransaction();
+
+        try {
+
+            Auth::user()->ratedBy()->attach([
+                $request->get('merchant') => ['scale' => $request->get('rating'), 'created_at' => now()]
+            ]);
+
+            DB::commit();
+
+            $rating = User::with('ratings')->where('id', $request->get('merchant'))->first();
+
+            $status = 'success';
+            $message = 'Contractor rated successfully.';
+            $data = [
+                'rated' => true,
+                'rating' => $rating->rating_stars
+            ];
+        } catch (\Error | \Exception $ex) {
+
+            DB::rollBack();
+            $message = $ex->getMessage();
+        }
+
+        return Response::instance()
+            ->withStatusCode('modules.merchant', 'actions.' . $action . $status)
+            ->withStatus($status)
+            ->withMessage($message)
+            ->withData($data)
+            ->sendJson();
+    }
 }

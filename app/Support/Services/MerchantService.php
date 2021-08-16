@@ -51,7 +51,7 @@ class MerchantService extends BaseService
         $this->model->email     =  $this->request->get('email');
         $this->model->status    =  $this->request->get('status', User::STATUS_ACTIVE);
 
-        if ($this->request->has('password')) {
+        if ($this->request->has('password') && !empty($this->request->get('password'))) {
             $this->model->password = Hash::make($this->request->get('password'));
         }
 

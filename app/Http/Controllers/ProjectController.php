@@ -129,17 +129,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        $project->load([
-            'media',
-            'prices' => function ($query) {
-                $query->defaultPrice();
-            }
-        ]);
-
-        $images     =   $project->media()->image()->get();
-        $thumbnail  =   $project->media()->thumbnail()->first();
-
-        return view('projects.show', compact('project', 'images', 'thumbnail'));
+        return redirect()->route('app.project.show', ['project' => $project->id]);
     }
 
     /**
