@@ -256,7 +256,7 @@
                                                                 <strong>{{ $message }}</strong>
                                                             </span>
                                                             @enderror
-                                                            <ul class="pl-3 mt-3">{!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG', 'dimension' => '1024x1024']) !!}</ul>
+                                                            <ul class="pl-3 mt-3">{!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG']) !!}</ul>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -315,7 +315,7 @@
                                                                     </span>
                                                                     @enderror
                                                                     <ul class="list-unstyled mt-3">
-                                                                        {!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG', 'dimension' => '1024x1024']) !!}
+                                                                        {!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG']) !!}
                                                                         <li>
                                                                             <a href="{{ $project->thumbnail->full_file_path ?? $default_preview }}" download>{{ __('labels.download') . ' ' . __('labels.thumbnail') }}</a>
                                                                         </li>
@@ -337,7 +337,7 @@
                                                         <div class="dz-default dz-message">
                                                             <h1><i class="fas fa-cloud-upload-alt"></i></h1>
                                                             <h4>{{ __('messages.drag_and_drop') }}</h4>
-                                                            <ul class="list-unstyled">{!! trans_choice('messages.upload_image_rules', 2, ['maxsize' => '10mb', 'extensions' => 'JPG,JPEG, PNG', 'maxfiles' => $max_files, 'dimension' => '1024x1024']) !!}</ul>
+                                                            <ul class="list-unstyled">{!! trans_choice('messages.upload_image_rules', 2, ['maxsize' => '10mb', 'extensions' => 'JPG,JPEG, PNG', 'maxfiles' => $max_files]) !!}</ul>
                                                         </div>
                                                     </div>
                                                     @error('files')

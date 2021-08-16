@@ -29,7 +29,7 @@ return [
     'select_prefer_boosts_ads_days' => 'Select your preferred day to boost ads.',
     // 'password_format' => 'Minimum 8 characters with at least 1 uppercase letter[A-Z], 1 number[0-9] and 1 special character[@$!%*#?&].',
     'password_format' => 'Minimum 8 characters with at least 1 uppercase letter[A-Z], 1 lowercase letter [a-z] and 1 number[0-9].',
-    'upload_image_rules' => '{1} <li>Only :extensions file type allowed.</li><li>Total file size must be &le; :maxsize.</li><li>Maximum file dimension: :dimension px.</li>|{2,} <li>Only total of :maxfiles files allowed.</li><li>Only :extensions file type allowed</li><li>Total file size must be &le; :maxsize.</li><li>Maximum file dimension: :dimension px.</li>',
+    'upload_image_rules' => '{1} <li>Only :extensions file type allowed.</li><li>Total file size must be &le; :maxsize.</li>|{2,} <li>Only total of :maxfiles files allowed.</li><li>Only :extensions file type allowed</li><li>Total file size must be &le; :maxsize.</li>',
     'start_session' => 'Sign in to start your session',
     'no_records' => 'No records found.',
     'errors_found' => 'Errors found!',
