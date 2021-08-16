@@ -222,12 +222,12 @@ body.enduser h4 {
     padding-left: 20px;
 }
 
-.footer-right-content > ul > li {
+.footer-right-content>ul>li {
     list-style: none;
     padding-bottom: 1rem;
 }
 
-.footer-right-content > ul > li.header {
+.footer-right-content>ul>li.header {
     font-weight: 700;
     text-decoration: underline;
 }
@@ -237,7 +237,7 @@ body.enduser h4 {
     padding: 1rem 0;
 }
 
-.footer-bottom ul > li,
+.footer-bottom ul>li,
 .footer-bottom ul {
     font-size: 14px;
     display: inline-block;
@@ -246,11 +246,11 @@ body.enduser h4 {
     padding-left: 0;
 }
 
-.footer-bottom ul > li:not(:first-child) {
+.footer-bottom ul>li:not(:first-child) {
     margin-left: 10px;
 }
 
-.footer-bottom ul > li > a {
+.footer-bottom ul>li>a {
     color: #000;
 }
 
@@ -649,7 +649,9 @@ input[type="text"].home-s1-searchbar:focus {
 #merchant-category ul {
     display: flex;
     padding-left: 0;
-    margin: 0 auto;
+    /* margin: 0 auto; */
+    margin-left: auto;
+    width: calc(100% - 315px);
 }
 
 #merchant-category ul li {
@@ -671,7 +673,7 @@ input[type="text"].home-s1-searchbar:focus {
 .gap {
     width: 25px;
     display: inline-flex;
-    background-color: #fff;
+    background-color: #f5f5f5;
     float: left;
 }
 
@@ -825,10 +827,17 @@ ul.pagination {
     z-index: 0;
 }
 
-ul.pagination li .page-link {
-    background-color: #000;
+ul.pagination li .page-link,
+ul.pagination li.disabled {
+    background-color: transparent !important;
     margin: 0 0.25rem;
-    color: #fff;
+    color: #000;
+    font-weight: bold;
+    border: none;
+    width: 30px;
+    line-height: 39px;
+    text-align: center;
+    padding: 0;
 }
 
 ul.pagination li .page-link.arrow {
@@ -836,25 +845,47 @@ ul.pagination li .page-link.arrow {
     color: #000;
 }
 
-ul.pagination li .page-link:hover {
-    background-color: #ff9317;
-    color: #fff;
+ul.pagination li.page-item:not(.active, .disabled):hover .page-link {
+    /* background-color: #ff9317 !important; */
+    color: #ff9317 !important;
 }
 
 ul.pagination li.active,
 ul.pagination li.active .page-link {
     background-color: #ff9317 !important;
+    border-radius: 50%;
     border: none;
 }
 
-ul.pagination li:first-child,
-ul.pagination li:last-child {
-    margin-right: 0.25rem;
-    margin-left: 0.25rem;
+ul.pagination li {
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
 }
 
 .filter-overlay {
     display: none;
+}
+
+.top-service {
+    padding: 20px 15px !important;
+    background-color: #000;
+    display: flex !important;
+    align-items: center;
+    width: 100%;
+    border-radius: 15px;
+    word-break: break-word;
+}
+
+.top-service a {
+    color: #f68d53;
+}
+
+.top-service:not(:first-child) {
+    margin-left: 20px;
+}
+
+.top-service a:hover {
+    text-decoration: none;
 }
 
 /*--------------------------------------------------------------
@@ -1037,7 +1068,7 @@ ul.pagination li:last-child {
     color: #000;
 }
 
-.breadcrumb-item + .breadcrumb-item::before {
+.breadcrumb-item+.breadcrumb-item::before {
     color: #000000;
     content: ">";
 }
@@ -1288,12 +1319,12 @@ ul.pagination li:last-child {
     width: 100%;
 }
 
-.rate:not(:checked) > input {
+.rate:not(:checked)>input {
     position: absolute;
     top: -9999px;
 }
 
-.rate:not(:checked) > label {
+.rate:not(:checked)>label {
     float: right;
     width: 1em;
     overflow: hidden;
@@ -1303,24 +1334,24 @@ ul.pagination li:last-child {
     color: #ccc;
 }
 
-.rate:not(:checked) > label:before {
+.rate:not(:checked)>label:before {
     content: "★ ";
 }
 
-.rate > input:checked ~ label {
+.rate>input:checked~label {
     color: #ffbc05;
 }
 
-.rate:not(:checked) > label:hover,
-.rate:not(:checked) > label:hover ~ label {
+.rate:not(:checked)>label:hover,
+.rate:not(:checked)>label:hover~label {
     color: #ffbc05;
 }
 
-.rate > input:checked + label:hover,
-.rate > input:checked + label:hover ~ label,
-.rate > input:checked ~ label:hover,
-.rate > input:checked ~ label:hover ~ label,
-.rate > label:hover ~ input:checked ~ label {
+.rate>input:checked+label:hover,
+.rate>input:checked+label:hover~label,
+.rate>input:checked~label:hover,
+.rate>input:checked~label:hover~label,
+.rate>label:hover~input:checked~label {
     color: #ffbc05;
 }
 
@@ -1411,9 +1442,7 @@ ul.pagination li:last-child {
 }
 
 .join-bar {
-    background: transparent
-        linear-gradient(90deg, #ff8c08 0%, #f9cb7d 31%, #fdca00 100%) 0% 0%
-        no-repeat padding-box;
+    background: transparent linear-gradient(90deg, #ff8c08 0%, #f9cb7d 31%, #fdca00 100%) 0% 0% no-repeat padding-box;
     padding-top: 30px;
     width: 100%;
     margin-left: auto;
@@ -1473,22 +1502,31 @@ ul.pagination li:last-child {
 --------------------------------------------------------------*/
 #login-header {
     padding: 6rem 0;
-    background-image: url("../storage/assets/login/login.jpg");
+    background-image: url("../storage/assets/login/login_banner.jpg");
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: center 60%;
-    position: relative;
+    background-position: center 25%;
 }
 
 .user {
     font-weight: 500;
     font-size: 14px;
     margin-bottom: 1.5rem;
-    padding-right: 15px;
+}
+
+a.user {
+    margin-right: 20px;
+    padding: 10px 30px;
+    background-color: #cecece;
+    border-radius: 50px;
+    color: #FFF;
+    font-weight: 600;
 }
 
 .user:hover {
     color: #5f5f5f;
+    text-decoration: none;
+    filter: brightness(1.0);
 }
 
 .user {
@@ -1497,16 +1535,11 @@ ul.pagination li:last-child {
 
 .user.active {
     color: #000;
-    text-decoration: underline;
-}
-
-.user:nth-child(even) {
-    border-left: 1px solid #5f5f5f;
-    padding-left: 15px;
+    background-color: #fe9320;
 }
 
 .login-container {
-    padding: 3rem;
+    padding: 3rem 3rem 2rem 3rem;
     width: 50vw;
     max-width: 750px;
     display: flex;
@@ -1516,8 +1549,8 @@ ul.pagination li:last-child {
     margin-bottom: auto;
 }
 
-#login-1 img {
-    max-height: 800px;
+.right-img {
+    max-height: 750px;
     object-fit: cover;
 }
 
@@ -1534,6 +1567,7 @@ ul.pagination li:last-child {
 .login-text {
     font-size: 14px;
     color: #5f5f5f;
+    font-weight: 600;
 }
 
 .enduser input[type="password"],
@@ -1558,6 +1592,31 @@ ul.pagination li:last-child {
     font-weight: 500;
 }
 
+#login-1 input[type="email"],
+#login-1 input[type="password"] {
+    border-radius: 50px;
+    border: none;
+    box-shadow: 0px 3px 10px #00000029;
+    padding: 15px 25px;
+}
+
+.login-btn {
+    background-color: #000;
+    width: 70% !important;
+    padding: 15px 0;
+    border-radius: 50px;
+    text-align: center;
+    color: #FFF;
+    display: block;
+    margin: 0 auto;
+}
+
+.login-icon {
+    max-width: 25px;
+    height: auto;
+    margin-left: 10px;
+}
+
 /*--------------------------------------------------------------
 # privacy (privacy-1)
 --------------------------------------------------------------*/
@@ -1573,11 +1632,11 @@ ul.pagination li:last-child {
     margin-bottom: 3rem;
 }
 
-#privacy-1 ol > li > ol {
+#privacy-1 ol>li>ol {
     margin-top: 1.5rem;
 }
 
-#privacy-1 ol > li > ol > li {
+#privacy-1 ol>li>ol>li {
     margin-bottom: 1.5rem;
 }
 
@@ -1596,11 +1655,11 @@ ul.pagination li:last-child {
     margin-bottom: 3rem;
 }
 
-#terms-1 ol > li > ol {
+#terms-1 ol>li>ol {
     margin-top: 1.5rem;
 }
 
-#terms-1 ol > li > ol > li {
+#terms-1 ol>li>ol>li {
     margin-bottom: 1.5rem;
 }
 
@@ -1810,6 +1869,7 @@ ul.pagination li:last-child {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 1200px) and (max-width: 1439px) {
+
     /* navbar and footer */
     body.enduser {
         padding-top: 80px;
@@ -1825,7 +1885,7 @@ ul.pagination li:last-child {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li {
+    .footer-bottom ul>li {
         font-size: 0.8rem;
     }
 
@@ -1841,8 +1901,13 @@ ul.pagination li:last-child {
 
     /* project/merchant page */
     #merchant-category {
-        padding: 5rem 0 3rem 0;
+        padding: 4rem 0 1.5rem 0;
     }
+
+    #merchant-category ul {
+        width: calc(100% - 230px);
+    }
+
 
     .sidebar {
         width: 230px;
@@ -1999,6 +2064,7 @@ ul.pagination li:last-child {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
+
     /* additional */
     body.enduser h1 {
         font-size: 35px;
@@ -2027,7 +2093,7 @@ ul.pagination li:last-child {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li {
+    .footer-bottom ul>li {
         font-size: 0.8rem;
     }
 
@@ -2088,10 +2154,13 @@ ul.pagination li:last-child {
     /* end here */
 
     /* merchant /project page */
-    #merchant-category .d-flex,
-    #merchant-category ul {
+    #merchant-category .d-flex {
         flex-direction: column;
         margin: 0;
+    }
+
+    #merchant-category ul {
+        width: 100%;
     }
 
     #merchant-category {
@@ -2147,6 +2216,7 @@ ul.pagination li:last-child {
 ----------------------------------------------------- */
 
 @media only screen and (max-width: 1199px) {
+
     #user .sidebar,
     #user {
         background-color: #fff;
@@ -2236,7 +2306,7 @@ ul.pagination li:last-child {
         display: none;
     }
 
-    #merchant-category ul > li,
+    #merchant-category ul>li,
     #merchant-category span {
         padding-left: 0;
         margin-bottom: 20px;
@@ -2349,7 +2419,7 @@ ul.pagination li:last-child {
         font-size: 25px;
     }
 
-    .services-3-price > span {
+    .services-3-price>span {
         display: block;
     }
 
@@ -2409,6 +2479,7 @@ ul.pagination li:last-child {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 767px) and (max-width: 991px) {
+
     /* additional */
     body.enduser h1 {
         font-size: 35px;
@@ -2450,7 +2521,7 @@ ul.pagination li:last-child {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li {
+    .footer-bottom ul>li {
         font-size: 0.7rem;
     }
 
@@ -2491,10 +2562,22 @@ ul.pagination li:last-child {
     /* end here */
 
     /* merchant /project page */
-    #merchant-category .d-flex,
-    #merchant-category ul {
+    #merchant-category .d-flex {
         flex-direction: column;
         margin: 0;
+    }
+
+    #merchant-category ul {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .top-service {
+        width: 30%;
+    }
+
+    .top-service:nth-child(4) {
+        margin-left: 0;
     }
 
     #merchant-category {
@@ -2508,6 +2591,7 @@ ul.pagination li:last-child {
         width: 100vw;
         margin: 0 auto;
     }
+
 }
 
 /* ---------------------------------------------------
@@ -2515,6 +2599,13 @@ ul.pagination li:last-child {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 600px) and (max-width: 766px) {
+
+    .top-service {
+        width: 100%;
+        min-width: 300px;
+        margin-left: 0 !important;
+    }
+
     /* additional */
     body.enduser h1 {
         font-size: 32px;
@@ -2553,7 +2644,7 @@ ul.pagination li:last-child {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li {
+    .footer-bottom ul>li {
         font-size: 0.7rem;
     }
 
@@ -2584,7 +2675,7 @@ ul.pagination li:last-child {
         margin-bottom: 70px;
     }
 
-    .footer-right-content > ul {
+    .footer-right-content>ul {
         padding-left: 0;
     }
 
@@ -2835,6 +2926,10 @@ ul.pagination li:last-child {
     .profile-name {
         margin-left: 0;
     }
+
+    #login-header {
+        padding: 3rem 0;
+    }
 }
 
 /* ---------------------------------------------------
@@ -2842,6 +2937,13 @@ ul.pagination li:last-child {
 ----------------------------------------------------- */
 
 @media only screen and (max-width: 599px) {
+
+    .top-service {
+        width: 100%;
+        min-width: 250px;
+        margin-left: 0 !important;
+    }
+
     /* additional */
     body.enduser h1 {
         font-size: 28px;
@@ -2898,7 +3000,7 @@ ul.pagination li:last-child {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li,
+    .footer-bottom ul>li,
     .footer-background {
         font-size: 0.7rem;
     }
@@ -2931,7 +3033,7 @@ ul.pagination li:last-child {
         margin-bottom: 70px;
     }
 
-    .footer-right-content > ul {
+    .footer-right-content>ul {
         padding-left: 0;
     }
 
@@ -2947,7 +3049,7 @@ ul.pagination li:last-child {
         margin-bottom: 2rem !important;
     }
 
-    .footer-right-content > ul > li {
+    .footer-right-content>ul>li {
         list-style: none;
         padding-bottom: 0.7rem;
     }
@@ -3350,5 +3452,14 @@ ul.pagination li:last-child {
     #compare-1 .provided-services i {
         font-size: 1rem;
         padding: 0.5rem;
+    }
+
+    #login-header {
+        padding: 3rem 0;
+    }
+
+    a.user {
+        font-size: 12px;
+        padding: 10px 15px;
     }
 }

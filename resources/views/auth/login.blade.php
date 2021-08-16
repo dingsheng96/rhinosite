@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div id="subpage-header">
+<div id="login-header">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-11">
@@ -46,7 +46,7 @@
 
                         <div class="input-group">
                             <p class="login-text">{{ __('labels.email') }}</p>
-                            <input type="email" name="email" id="email" class="@error('email') is-invalid @enderror">
+                            <input type="email" name="email" id="email" placeholder="Enter email" class="@error('email') is-invalid @enderror">
                             @error('email')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -56,7 +56,7 @@
 
                         <div class="input-group">
                             <p class="login-text">{{ __('labels.password') }}</p>
-                            <input type="password" name="password" id="password" class="@error('password') is-invalid @enderror">
+                            <input type="password" name="password" id="password" placeholder="Enter password" class="@error('password') is-invalid @enderror">
                             @error('password')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -66,12 +66,16 @@
 
                         <p class="login-text text-right mb-4"><u><a href="{{ route('password.request') }}" class="txtgrey">{{ __('app.login_btn_forgot_password') }}</a></u></p>
 
-                        <button type="submit" class="btn btn-orange w-100 ml-0 mb-3">{{ __('labels.sign_in') }}</button>
+                        <button type="submit" class="btn login-btn mb-3">{{ __('labels.sign_in') }}</button>
                     </form>
 
                     <div class="tab-content">
                         <div class="tab-pane active" id="member">
-                            <a href="#" class="btn btn-blue w-100">{{ __('app.login_btn_facebook') }}</a>
+                            <div class="text-center login-text">
+                                Continue with
+                                <a href="#"><img src="{{ asset('storage/assets/login/facebook.png') }}" class="login-icon"></a>
+                                <a href="#"><img src="{{ asset('storage/assets/login/google.png') }}" class="login-icon"></a>
+                            </div>
                             <div class="text-center my-3">
                                 {!! __('app.login_btn_register_member') !!}
                             </div>
@@ -85,7 +89,7 @@
                 </div>
             </div>
             <div class="col-lg-6 d-lg-inline-flex px-0 d-none">
-                <img src="{{ asset('storage/assets/home/s3-left.png') }}" alt="login_image" class="res-img" loading="lazy">
+                <img src="{{ asset('storage/assets/login/login_image.jpg') }}" alt="login_image" class="res-img right-img" loading="lazy">
             </div>
         </div>
     </div>

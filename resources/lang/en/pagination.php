@@ -13,6 +13,6 @@ return [
     |
     */
 
-    'previous' => '&laquo;',
-    'next' => '&raquo;',
+    'previous' => "<i class='fas fa-chevron-circle-left' style='font-size:20px;'></i>",
+    'next' => "<i class='fas fa-chevron-circle-right' style='font-size:20px;'></i>",
 ];
