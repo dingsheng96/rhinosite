@@ -27,8 +27,6 @@ $(function () {
             init: function () {
 
                 let myDropzone = this;
-                let maxImageWidth = 1024;
-                let maxImageHeight = 1024;
 
                 btn_submit.on('click', function (e) {
                     e.preventDefault();
@@ -58,16 +56,6 @@ $(function () {
 
         this.on('maxfilesexceeded', function (file) {
             this.removeFile(file);
-        });
-
-        this.on("thumbnail", function (file) {
-            if (file.width > maxImageWidth || file.height > maxImageHeight) {
-
-                this.removeFile(file);
-
-                let message = 'Dimensions of image exceeds limit.';
-                customAlert(message, 'error');
-            }
         });
 
         this.on('sendingmultiple', function (file, xhr, formData) {

@@ -58,7 +58,7 @@ class MerchantRequest extends FormRequest
             'facebook'          =>  ['nullable', 'url'],
             'whatsapp'          =>  ['nullable', new PhoneFormat],
             'business_since'    =>  ['required', 'date_format:Y-m-d'],
-            'logo'              =>  [Rule::requiredIf(empty($this->route('merchant'))), 'nullable', 'image', 'max:2000', 'mimes:jpg,jpeg,png', 'dimensions:max_height=1024,max_width=1024'],
+            'logo'              =>  [Rule::requiredIf(empty($this->route('merchant'))), 'nullable', 'image', 'max:2000', 'mimes:jpg,jpeg,png'],
             'pic_name'          =>  ['required'],
             'pic_phone'         =>  ['required', new PhoneFormat],
             'pic_email'         =>  ['required', 'email'],

@@ -52,8 +52,7 @@ class ProductRequest extends FormRequest
                 'nullable',
                 'image',
                 'mimes:jpg,jpeg,png',
-                'max:2000',
-                'dimensions:max_height=1024,max_width=1024'
+                'max:2000'
             ],
             'files.*' => [
                 'nullable',
