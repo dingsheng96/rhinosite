@@ -35,7 +35,7 @@ return [
     'verified' => 'Verified',
     'unverified' => 'Unverified',
 
-    'copyright' => '&copy ' . config('app.name') . ' ' . date('Y'),
+    'copyright' => '&copy ' . config('app.name') . ' ' . date('Y').". All rights reserved",
     'terms_policy' => 'Terms & Policies',
     'privacy_policy' => 'Privacy Policies',
     'remember_me' => 'Remember Me',

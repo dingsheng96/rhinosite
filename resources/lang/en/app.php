@@ -20,7 +20,7 @@ return [
     'home_title_main' => 'No.1 Contractor Platform in Malaysia',
     'home_subtitle_main' => "Compare Price, Project Portfolios and Contractor's Specialization",
     'home_btn_join_merchant' => "I'm Interested",
-    'home_text_join_merchant' => 'JOIN US AS CONTRACTORS',
+    'home_text_join_merchant' => 'JOIN US AS <br/><span class="txtorange">CONTRACTORS</span>',
     'home_subtitle_partner' => 'Our Partnership Contractors',
     'home_subtitle_merchant' => 'Recently Deal Contractors',
 

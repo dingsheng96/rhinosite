@@ -123,17 +123,16 @@ body.enduser h4 {
 }
 
 .nav-button {
-    border: solid 1px #000000;
-    color: #000;
-    background-color: transparent;
+    color: #ff9317;
+    background-color: #000;
     display: inline-flex;
     text-align: center;
     padding: 1rem 1.5rem;
+    border-radius: 8px;
 }
 
 .nav-button:hover {
-    background-color: #000;
-    color: #ff9317;
+    color: #FFF;
     text-decoration: none;
 }
 
@@ -150,7 +149,11 @@ body.enduser h4 {
 }
 
 .footer-background {
-    background-color: #000;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.7) calc(50vw - 400px), rgba(0, 0, 0, 0.4) calc(50vw - 400px)),
+        url('../storage/assets/home/footer-new.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center right;
     padding: 48px 0;
     float: left;
     width: 100%;
@@ -181,25 +184,11 @@ body.enduser h4 {
     max-width: 180px;
 }
 
-.footer-background::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: calc(50vw + 400px);
-    height: 100%;
-    -webkit-filter: brightness(50%);
-    filter: brightness(50%);
-    background-image: url("../storage/assets/home/footer-2.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center center;
-}
-
 .footer-right {
     display: inline-flex;
     flex-direction: row;
     margin-left: auto;
+    width: 40%;
 }
 
 .footer-right a {
@@ -213,13 +202,14 @@ body.enduser h4 {
 
 .footer-right-content {
     color: #ffffff;
-    width: 33%;
-    flex: 0 0 33%;
-    max-width: 33%;
+    width: 100%;
+    /* flex: 0 0 100%; */
+    max-width: 100%;
 }
 
-.footer-right-content {
-    padding-left: 20px;
+.footer-right-content:last-child {
+    width: auto;
+    max-width: auto;
 }
 
 .footer-right-content>ul>li {
@@ -261,6 +251,14 @@ body.enduser h4 {
 /*--------------------------------------------------------------
 # ADDITIONAL ITEMS
 --------------------------------------------------------------*/
+.slider {
+    visibility: hidden;
+}
+
+.slider.slick-initialized {
+    visibility: visible;
+}
+
 .btn {
     font-size: 0.8rem;
     border-radius: 0;
@@ -378,8 +376,8 @@ input[type="text"].home-s1-searchbar:focus {
 
 .category-item {
     font-size: 0.7rem;
-    color: #000;
-    background-color: #fff;
+    color: #ff9317;
+    background-color: #000;
     padding: 1rem;
     box-shadow: 0px 3px 10px #63636329;
     cursor: pointer;
@@ -390,6 +388,7 @@ input[type="text"].home-s1-searchbar:focus {
     margin-bottom: 24px;
     position: relative;
     overflow: hidden;
+    border-radius: 8px;
 }
 
 .category-item span {
@@ -427,6 +426,27 @@ input[type="text"].home-s1-searchbar:focus {
     border-radius: 50px;
     z-index: 0;
     transition: 0.4s ease-in-out;
+}
+
+#home-tryrhino {
+    padding: 64px 0 0 0;
+}
+
+.try-rhino-background {
+    background-image: url('../storage/assets/home/aboutus.jpg');
+    border-radius: 18px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: right 8%;
+}
+
+.try-rhino-content {
+    padding: 150px;
+    position: relative;
+    border-radius: 18px;
+    color: #FFF;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.3) 100%);
+    z-index: 1;
 }
 
 /* Home (Section 2) */
@@ -572,6 +592,19 @@ input[type="text"].home-s1-searchbar:focus {
     background-color: #ffa033;
 }
 
+.btn-round {
+    padding: 0.5rem 2rem;
+    background-color: #ffa033;
+    color: #fff;
+    font-weight: 500;
+    border-radius: 18px;
+}
+
+.btn-round:hover {
+    color: #fff;
+    background-color: #f68d53;
+}
+
 /* Home (Section 3) */
 #home-s3 {
     background-image: url("../storage/assets/home/s3-right.png");
@@ -612,12 +645,10 @@ input[type="text"].home-s1-searchbar:focus {
 
 .home-s4-img {
     width: 100%;
-    max-width: 180px;
-    height: 100%;
+    height: 150px;
     display: block;
     margin: 0 auto;
-    object-fit: cover;
-    padding-bottom: 48px;
+    object-fit: scale-down;
 }
 
 /*--------------------------------------------------------------
@@ -827,8 +858,7 @@ ul.pagination {
     z-index: 0;
 }
 
-ul.pagination li .page-link,
-ul.pagination li.disabled {
+ul.pagination li .page-link {
     background-color: transparent !important;
     margin: 0 0.25rem;
     color: #000;
@@ -867,17 +897,19 @@ ul.pagination li {
 }
 
 .top-service {
-    padding: 20px 15px !important;
     background-color: #000;
     display: flex !important;
     align-items: center;
     width: 100%;
     border-radius: 15px;
     word-break: break-word;
+    padding: 0 !important;
 }
 
 .top-service a {
     color: #f68d53;
+    width: 100%;
+    padding: 20px 15px !important;
 }
 
 .top-service:not(:first-child) {
@@ -886,6 +918,11 @@ ul.pagination li {
 
 .top-service a:hover {
     text-decoration: none;
+    color: #FFF;
+}
+
+.top-service:hover {
+    background-color: #f68d53;
 }
 
 /*--------------------------------------------------------------
@@ -1383,6 +1420,24 @@ ul.pagination li {
     padding: 64px 0;
 }
 
+.about-tabbed {
+    min-height: 200px;
+    margin-bottom: 2rem;
+}
+
+.about-pills .nav-link {
+    box-shadow: 0px 3px 10px #00000029;
+    font-weight: 700;
+    color: #000;
+    font-size: 18px;
+    border-radius: 10px;
+}
+
+.about-pills .nav-link.active {
+    background-color: #ff9317;
+    color: #000;
+}
+
 .about-icon {
     width: 100%;
     height: auto;
@@ -1412,7 +1467,28 @@ ul.pagination li {
 /*--------------------------------------------------------------
 # Join (join-1)
 --------------------------------------------------------------*/
+#join-1 .res-img {
+    object-fit: cover;
+    height: 100%;
+}
+
+.join-1-content {
+    padding: 100px;
+    text-align: center;
+    align-self: center;
+}
+
 /* join-2 */
+#join-header {
+    padding: 6rem 0;
+    background-image: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, 30%, rgba(0, 0, 0, 0.3) 100%),
+        url("../storage/assets/joinus/partnerheader.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center 40%;
+    position: relative;
+}
+
 #join-2 {
     background-color: #f2f2f2;
     padding: 4% 0;
@@ -1502,7 +1578,8 @@ ul.pagination li {
 --------------------------------------------------------------*/
 #login-header {
     padding: 6rem 0;
-    background-image: url("../storage/assets/login/login_banner.jpg");
+    background-image: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, 20%, rgba(0, 0, 0, 0.3) 100%),
+        url("../storage/assets/login/login_banner.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center 25%;
@@ -1545,7 +1622,6 @@ a.user {
     display: flex;
     flex-direction: column;
     margin-left: auto;
-    margin-top: auto;
     margin-bottom: auto;
 }
 
@@ -1869,6 +1945,17 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 1200px) and (max-width: 1439px) {
+    .footer-right {
+        width: 60%;
+    }
+
+    #about-2 h3 {
+        font-size: 18px;
+    }
+
+    .try-rhino-content {
+        padding: 90px;
+    }
 
     /* navbar and footer */
     body.enduser {
@@ -1907,7 +1994,6 @@ a.user {
     #merchant-category ul {
         width: calc(100% - 230px);
     }
-
 
     .sidebar {
         width: 230px;
@@ -2022,8 +2108,9 @@ a.user {
         font-size: 22px;
     }
 
-    .footer-background::before {
-        width: calc(50vw + 300px);
+    .footer-background {
+        background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.7) calc(50vw - 300px), rgba(0, 0, 0, 0.4) calc(50vw - 300px)),
+            url('../storage/assets/home/footer-new.jpg');
     }
 
     .services-title {
@@ -2064,6 +2151,26 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .footer-right {
+        width: 60%;
+    }
+
+    .footer-background {
+        background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.7) calc(50vw - 200px), rgba(0, 0, 0, 0.4) calc(50vw - 200px)),
+            url('../storage/assets/home/footer-new.jpg');
+    }
+
+    .join-1-content {
+        padding: 60px;
+    }
+
+    #about-2 h3 {
+        font-size: 18px;
+    }
+
+    .try-rhino-content {
+        padding: 70px;
+    }
 
     /* additional */
     body.enduser h1 {
@@ -2323,10 +2430,6 @@ a.user {
         padding-right: 2rem;
     }
 
-    .footer-background::before {
-        width: 65%;
-    }
-
     .footer-right {
         max-width: 65%;
     }
@@ -2479,6 +2582,36 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 767px) and (max-width: 991px) {
+    .footer-right {
+        width: 60%;
+    }
+
+    .footer-background {
+        background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.7) calc(50vw - 150px), rgba(0, 0, 0, 0.4) calc(50vw - 150px)),
+            url('../storage/assets/home/footer-new.jpg');
+    }
+
+    #join-1 .res-img {
+        max-width: 400px;
+        display: block;
+        margin: 30px auto;
+    }
+
+    .join-1-content {
+        padding: 50px;
+    }
+
+    #about-2 h3 {
+        font-size: 18px;
+    }
+
+    #home-category {
+        margin-top: -80px;
+    }
+
+    .try-rhino-content {
+        padding: 90px;
+    }
 
     /* additional */
     body.enduser h1 {
@@ -2599,6 +2732,25 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 600px) and (max-width: 766px) {
+    #join-header {
+        padding: 3rem 0;
+    }
+
+    .join-1-content {
+        padding: 10px;
+    }
+
+    #about-2 h3 {
+        font-size: 18px;
+    }
+
+    #home-category {
+        margin-top: -80px;
+    }
+
+    .try-rhino-content {
+        padding: 75px;
+    }
 
     .top-service {
         width: 100%;
@@ -2660,11 +2812,10 @@ a.user {
         padding: 25px 0;
     }
 
-    .footer-background::before {
-        width: 100%;
-        height: 270px;
-        bottom: 0;
-        top: unset;
+    .footer-background {
+        background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 270px, rgba(0, 0, 0, 0.5) 270px),
+            url('../storage/assets/home/mobilefooter-2.jpg');
+        background-position: center 80%;
     }
 
     .footer-left-content {
@@ -2736,10 +2887,6 @@ a.user {
     #home-s2,
     #home-s4 {
         padding: 24px 0;
-    }
-
-    .home-s4-img {
-        padding-bottom: 30px;
     }
 
     /* home-s3 */
@@ -2937,6 +3084,41 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (max-width: 599px) {
+    #join-header {
+        padding: 3rem 0;
+        text-align: center;
+    }
+
+    .join-1-content {
+        padding: 0;
+    }
+
+    .about-tabbed {
+        min-height: 250px;
+        margin-bottom: 2rem;
+    }
+
+    .about-pills .nav-item {
+        padding-left: 0;
+        padding-right: 0.8rem;
+        margin-bottom: 1rem;
+    }
+
+    #about-2 h3 {
+        font-size: 18px;
+    }
+
+    .about-pills .nav-link {
+        font-size: 14px;
+    }
+
+    #home-category {
+        margin-top: -80px;
+    }
+
+    .try-rhino-content {
+        padding: 50px;
+    }
 
     .top-service {
         width: 100%;
@@ -3017,12 +3199,10 @@ a.user {
         padding: 0.75rem;
     }
 
-    .footer-background::before {
-        width: 100%;
-        height: 430px;
-        bottom: 0;
-        top: unset;
-        background-image: url("../storage/assets/footer-2.jpg");
+    .footer-background {
+        background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 180px, rgba(0, 0, 0, 0.5) 180px),
+            url('../storage/assets/home/mobilefooter-2.jpg');
+        background-position: 70% center;
     }
 
     .footer-left-content {
@@ -3115,10 +3295,6 @@ a.user {
     #home-s2,
     #home-s4 {
         padding: 24px 0;
-    }
-
-    .home-s4-img {
-        padding-bottom: 30px;
     }
 
     /* home-s3 */
@@ -3456,6 +3632,7 @@ a.user {
 
     #login-header {
         padding: 3rem 0;
+        text-align: center;
     }
 
     a.user {

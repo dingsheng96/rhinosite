@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div id="subpage-header">
+<div id="join-header">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-11">
@@ -14,16 +14,16 @@
 
 <div id="join-1">
     <div class="container-fluid">
-        <div class="row align-items-center">
-            <div class="col-md-6 px-0">
+        <div class="row">
+            <div class="col-lg-6 px-0 mb-3 mb-lg-0">
                 <img src="{{ asset('storage/assets/joinus/join-1.jpg') }}" alt="join_1_image" class="res-img">
             </div>
-            <div class="col-md-6 col-lg-5 mx-auto text-center">
+            <div class="col-lg-6 join-1-content">
                 <h2>
                     With the advance technology in today’s world, listing with Rhinosite enables you to
                     increase your exposure and presence online.
                 </h2>
-                <a href="{{ route('register', ['role' => 'merchant']) }}" class="btn btn-orange">{{ __('app.partner_btn_application') }}</a>
+                <a href="{{ route('register', ['role' => 'merchant']) }}" class="btn btn-round">{{ __('app.partner_btn_application') }}</a>
             </div>
         </div>
     </div>
@@ -104,7 +104,7 @@
         <div class="row text-xl-center text-left">
             <div class="col-12 col-xl">
                 <p class="paragraph">
-                    1. Fill in an <a href="{{ route('register', ['role' => 'merchant']) }}">Electronic Application Form</a> and verify your email address.
+                    1. Fill in an <a class="txtorange" href="{{ route('register', ['role' => 'merchant']) }}">Electronic Application Form</a> and verify your email address.
                 </p>
             </div>
             <div class="col-12 col-xl">
@@ -121,7 +121,7 @@
             <div class="col-12 col-xl">
                 <p class="paragraph">
                     4. You are all set! You can now create projects and start receiving enquiries from your potential customers.
-                    You may also read up on our <a href="#join-5">FAQ</a> and <a href="{{ route('app.term') }}" target="blank">Terms & Conditions</a> incorporated herein to understand our operation better.
+                    You may also read up on our <a class="txtorange" href="#join-5">FAQ</a> and <a class="txtorange" href="{{ route('app.term') }}" target="blank">Terms & Conditions</a> incorporated herein to understand our operation better.
                 </p>
             </div>
             <div class="col-12 col-xl">
