@@ -6,6 +6,7 @@
         "customer": 130,
         "agent": 140,
         "merchant": 141,
+        "member": 142,
         "product": 150,
         "package": 160,
         "package_distribution": 161,

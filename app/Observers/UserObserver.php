@@ -40,12 +40,12 @@ class UserObserver
         $user->address()->delete();
         $user->media()->delete();
         $user->projects()->delete();
-        $user->wishlists()->delete();
         $user->carts()->delete();
         $user->userSubscriptions()->delete();
         $user->orders()->delete();
         $user->userAdsQuotas()->delete();
         $user->comparisons()->detach();
+        $user->favouriteProjects()->detach();
     }
 
     /**

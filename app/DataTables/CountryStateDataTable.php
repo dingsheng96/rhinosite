@@ -26,10 +26,6 @@ class CountryStateDataTable extends DataTable
 
                 return view('components.action', [
                     'no_action' => $this->no_action ?: null,
-                    'view' => [
-                        'permission' => 'country.read',
-                        'route' => route('countries.country-states.show', ['country' => $this->country_id, 'country_state' => $data->id])
-                    ],
                     'update' => [
                         'permission' => 'country.update',
                         'route' => route('countries.country-states.edit', ['country' => $this->country_id, 'country_state' => $data->id])

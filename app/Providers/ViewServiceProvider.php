@@ -10,7 +10,7 @@ class ViewServiceProvider extends ServiceProvider
         \App\Http\View\Composers\CountryComposer::class => [
             'projects.create', 'projects.edit', 'merchant.edit', 'merchant.create',
             'account.merchant', 'verification.create', 'auth.register', 'account.member',
-            'checkout.recurring'
+            'checkout.recurring', 'member.edit', 'member.create'
         ],
         \App\Http\View\Composers\UnitComposer::class => [
             'projects.create', 'projects.edit'
@@ -22,7 +22,7 @@ class ViewServiceProvider extends ServiceProvider
             'account.*', 'activity_log.*', 'admin.*', 'ads.*', 'cart.*',
             'country.*', 'currency.*', 'dashboard.admin', 'member.*', 'merchant.*',
             'order.*', 'package.*', 'role.*', 'service.*', 'product.*', 'projects.*',
-            'transaction.*', 'verification.*', 'wishlist.*'
+            'transaction.*', 'verification.*', 'wishlist.*', 'subscription.create'
         ],
         \App\Http\View\Composers\DefaultPreviewComposer::class => [
             '*'

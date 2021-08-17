@@ -100,9 +100,9 @@ class CountryDataTable extends DataTable
     {
         return [
             Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('name')->title(__('labels.name'))->width('25%'),
+            Column::make('name')->title(__('labels.name'))->width('20%'),
             Column::make('dial_code')->title(__('labels.dial_code'))->width('10%'),
-            Column::make('currency')->title(__('labels.currency'))->width('15%'),
+            Column::make('currency')->title(__('labels.currency'))->width('20%'),
             Column::make('country_states_count')
                 ->searchable(false)
                 ->title(trans_choice('labels.country_state', 2))->width('10%'),

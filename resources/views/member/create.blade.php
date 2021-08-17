@@ -7,12 +7,11 @@
         <div class="col-12">
             <div class="card shadow-lg">
                 <div class="card-header bg-transparent">
-                    <h3 class="card-title">{{ __('modules.edit', ['module' => trans_choice('modules.member', 1)]) }}</h3>
+                    <h3 class="card-title">{{ __('modules.create', ['module' => trans_choice('modules.member', 1)]) }}</h3>
                 </div>
 
-                <form action="{{ route('members.update', ['member' => $member->id]) }}" method="post" role="form" enctype="multipart/form-data">
+                <form action="{{ route('members.store') }}" method="post" role="form" enctype="multipart/form-data">
                     @csrf
-                    @method('put')
 
                     <div class="card-body">
 
@@ -30,7 +29,7 @@
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     <label for="name" class="col-form-label">{{ __('labels.name') }} <span class="text-red">*</span></label>
-                                                    <input type="text" name="name" id="name" value="{{ old('name', $member->name) ?? null }}" class="form-control ucfirst @error('name') is-invalid @enderror" required>
+                                                    <input type="text" name="name" id="name" value="{{ old('name') ?? null }}" class="form-control ucfirst @error('name') is-invalid @enderror">
                                                     @error('name')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -47,7 +46,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text bg-white">+</span>
                                                         </div>
-                                                        <input type="text" name="phone" id="phone" value="{{ old('phone', $member->phone) ?? null }}" class="form-control @error('phone') is-invalid @enderror" required>
+                                                        <input type="text" name="phone" id="phone" value="{{ old('phone') ?? null }}" class="form-control @error('phone') is-invalid @enderror">
                                                     </div>
                                                     @error('phone')
                                                     <span class="invalid-feedback" role="alert">
@@ -59,7 +58,7 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="email" class="col-form-label">{{ __('labels.email') }} <span class="text-red">*</span></label>
-                                                    <input type="email" name="email" id="email" value="{{ old('email', $member->email) ?? null }}" class="form-control @error('email') is-invalid @enderror" required>
+                                                    <input type="email" name="email" id="email" value="{{ old('email') ?? null }}" class="form-control @error('email') is-invalid @enderror">
                                                     @error('email')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -72,7 +71,7 @@
                                         <div class="row">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="logo" class="col-form-label">{{ __('labels.profile_picture') }}</label>
+                                                    <label for="logo" class="col-form-label">{{ __('labels.profile_picture') }} <span class="text-red">*</span></label>
                                                     <div class="row">
                                                         <div class="col-12 col-md-6">
                                                             <input type="file" id="logo" name="logo" class="form-control-file custom-img-input @error('logo') is-invalid @enderror" accept=".jpg,.jpeg,.png">
@@ -84,7 +83,7 @@
                                                             <ul class="pl-3 mt-3">{!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG']) !!}</ul>
                                                         </div>
                                                         <div class="col-12 col-md-6">
-                                                            <img src="{{ $member->logo->full_file_path ?? $default_preview }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
+                                                            <img src="{{ $default_preview }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -95,7 +94,7 @@
                                                     <label for="status" class="col-form-label">{{ __('labels.status') }} <span class="text-red">*</span></label>
                                                     <select name="status" id="status" class="form-control select2 @error('status') is-invalid @enderror">
                                                         @foreach ($statuses as $status => $display)
-                                                        <option value="{{ $status }}" {{ old('status', $member->status) == $status }}>{{ $display }}</option>
+                                                        <option value="{{ $status }}" {{ old('status') == $status }}>{{ $display }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('status')
@@ -112,7 +111,7 @@
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <label for="password" class="col-form-label">{{ __('labels.new_password') }}</label>
+                                                    <label for="password" class="col-form-label">{{ __('labels.password') }} <span class="text-red">*</span></label>
                                                     <input type="password" name="password" id="password" value="{{ old('password')  }}" class="form-control @error('password') is-invalid @enderror">
                                                     <small>{!! __('messages.password_format') !!}</small>
                                                     @error('password')
@@ -127,7 +126,7 @@
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <label for="password_confirmation" class="col-form-label">{{ __('labels.new_password_confirmation') }}</label>
+                                                    <label for="password_confirmation" class="col-form-label">{{ __('labels.password_confirmation') }} <span class="text-red">*</span></label>
                                                     <input type="password" name="password_confirmation" id="password_confirmation" value="{{ old('password_confirmation') }}" class="form-control @error('password_confirmation') is-invalid @enderror">
                                                     @error('password_confirmation')
                                                     <span class="invalid-feedback" role="alert">
@@ -142,7 +141,7 @@
                                     <div class="tab-pane text-left fade show" id="vert-tabs-location" role="tabpanel" aria-labelledby="vert-tabs-location-tab">
                                         <div class="form-group">
                                             <label for="address_1" class="col-form-label">{{ __('labels.address_1') }} <span class="text-red">*</span></label>
-                                            <input type="text" name="address_1" id="address_1" class="form-control @error('address_1') is-invalid @enderror" value="{{ old('address_1', $member->address->address_1 ?? null) }}" required>
+                                            <input type="text" name="address_1" id="address_1" class="form-control @error('address_1') is-invalid @enderror" value="{{ old('address_1') }}">
                                             @error('address_1')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -152,7 +151,7 @@
 
                                         <div class="form-group">
                                             <label for="address_2" class="col-form-label">{{ __('labels.address_2') }} <span class="text-red">*</span></label>
-                                            <input type="text" name="address_2" id="address_2" class="form-control @error('address_2') is-invalid @enderror" value="{{ old('address_2', $member->address->address_2 ?? null) }}" required>
+                                            <input type="text" name="address_2" id="address_2" class="form-control @error('address_2') is-invalid @enderror" value="{{ old('address_2') }}">
                                             @error('address_2')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -164,10 +163,10 @@
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
                                                     <label for="country" class="col-form-label">{{ trans_choice('labels.country', 1) }} <span class="text-red">*</span></label>
-                                                    <select name="country" id="country" class="form-control select2 @error('country') is-invalid @enderror country-state-filter" required>
+                                                    <select name="country" id="country" class="form-control select2 @error('country') is-invalid @enderror country-state-filter">
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.country', 1))]) }} ---</option>
                                                         @foreach ($countries as $country)
-                                                        <option value="{{ $country->id }}" {{ (old('country', $member->address->city->country->id ?? 0) == $country->id || $country->set_default) ? 'selected' : null }}>{{ $country->name }}</option>
+                                                        <option value="{{ $country->id }}" {{ (old('country') == $country->id || $country->set_default) ? 'selected' : null }}>{{ $country->name }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('country')
@@ -181,7 +180,7 @@
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
                                                     <label for="postcode" class="col-form-label">{{ __('labels.postcode') }} <span class="text-red">*</span></label>
-                                                    <input type="text" name="postcode" id="postcode" class="form-control @error('postcode') is-invalid @enderror" value="{{ old('postcode', $member->address->postcode ?? null) }}" required>
+                                                    <input type="text" name="postcode" id="postcode" class="form-control @error('postcode') is-invalid @enderror" value="{{ old('postcode') }}">
                                                     @error('postcode')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -195,8 +194,8 @@
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
                                                     <label for="country_state" class="col-form-label">{{ trans_choice('labels.country_state', 1) }} <span class="text-red">*</span></label>
-                                                    <select name="country_state" id="country_state" class="form-control select2 @error('country_state') is-invalid @enderror country-state-dropdown city-filter" data-selected="{{ old('country_state', $member->address->city->countryState->id ?? 0) }}"
-                                                        data-country-state-route="{{ route('data.countries.country-states', ['__REPLACE__']) }}" required>
+                                                    <select name="country_state" id="country_state" class="form-control select2 @error('country_state') is-invalid @enderror country-state-dropdown city-filter" data-selected="{{ old('country_state', 0) }}"
+                                                        data-country-state-route="{{ route('data.countries.country-states', ['__REPLACE__']) }}">
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.country_state', 1))]) }} ---</option>
                                                     </select>
                                                     @error('country_state')
@@ -209,8 +208,8 @@
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
                                                     <label for="city" class="col-form-label">{{ trans_choice('labels.city', 1) }} <span class="text-red">*</span></label>
-                                                    <select name="city" id="city" class="form-control select2 @error('city') is-invalid @enderror city-dropdown" data-selected="{{ old('city', $member->address->city->id ?? 0) }}"
-                                                        data-city-route="{{ route('data.countries.country-states.cities', ['__FIRST_REPLACE__', '__SECOND_REPLACE__']) }}" required>
+                                                    <select name="city" id="city" class="form-control select2 @error('city') is-invalid @enderror city-dropdown" data-selected="{{ old('city', 0) }}"
+                                                        data-city-route="{{ route('data.countries.country-states.cities', ['__FIRST_REPLACE__', '__SECOND_REPLACE__']) }}">
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.city', 1))]) }} ---</option>
                                                     </select>
                                                     @error('city')

@@ -45,4 +45,9 @@ class Country extends Model
     {
         return explode(',', $value);
     }
+
+    public function getFormattedDialCodeAttribute()
+    {
+        return implode(',', $this->dial_code);
+    }
 }

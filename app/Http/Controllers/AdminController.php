@@ -11,10 +11,10 @@ use App\Models\Permission;
 use Illuminate\Http\Request;
 use App\DataTables\AdminDataTable;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\AdminRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\AdminRequest;
 
 class AdminController extends Controller
 {
@@ -70,7 +70,8 @@ class AdminController extends Controller
                 'name'      =>  $input['name'],
                 'email'     =>  $input['email'],
                 'password'  =>  Hash::make($input['password']),
-                'status'    =>  $input['status']
+                'status'    =>  $input['status'],
+                'email_verified_at' => now(),
             ]);
 
             $admin->assignRole(Role::ROLE_SUPER_ADMIN);
@@ -131,9 +132,50 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AdminRequest $request, User $admin)
     {
-        //
+        DB::beginTransaction();
+
+        $action     =   Permission::ACTION_UPDATE;
+        $module     =   strtolower(trans_choice('modules.admin', 1));
+        $message    =   Message::instance()->format($action, $module);
+
+        try {
+
+            $input = $request->get('update');
+
+            $admin->update([
+                'name'      =>  $input['name'],
+                'email'     =>  $input['email'],
+                'password'  =>  empty($input['password']) ? $admin->password : Hash::make($input['password']),
+                'status'    =>  $input['status'],
+            ]);
+
+            DB::commit();
+
+            $message = Message::instance()->format($action, $module, 'success');
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($admin)
+                ->withProperties($request->all())
+                ->log($message);
+
+            return redirect()->route('admins.index')->withSuccess($message);
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+
+            activity()->useLog('web')
+                ->causedBy(Auth::user())
+                ->performedOn($admin)
+                ->withProperties($request->all())
+                ->log($e->getMessage());
+
+            return redirect()->back()
+                ->with('fail', $message)
+                ->withInput();
+        }
     }
 
     /**

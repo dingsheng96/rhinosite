@@ -175,6 +175,7 @@ return [
     'user_account' => 'User Account',
     'menu' => 'Menu',
     'profile' => 'Profile',
+    'profile_picture' => 'Profile Picture',
     'subscription' => 'Subscription',
     'years_of_experience' => 'Years Of Experience',
     'settings' => 'Settings',

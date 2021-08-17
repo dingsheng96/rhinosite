@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Validation\Rule;
+use App\Models\Country;
 use App\Models\Currency;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Country;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CountryRequest extends FormRequest
@@ -42,7 +42,7 @@ class CountryRequest extends FormRequest
                     Rule::exists(Currency::class, 'id')
                         ->whereNull('deleted_at')
                 ],
-                'dial' => ['required']
+                'dial' => ['required'],
             ];
         }
 

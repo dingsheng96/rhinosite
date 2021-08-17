@@ -26,14 +26,10 @@ class AdminDataTable extends DataTable
             ->addColumn('action', function ($data) {
                 return view('components.action', [
                     'no_action' => $this->no_action ?: $data->id == Auth::id(),
-                    'view' => [
-                        'permission' => 'admin.read',
-                        'route' => route('admins.show', ['admin' => $data->id])
-                    ],
                     'update' => [
                         'permission' => 'admin.update',
-                        'route' => '#updateadminModal',
-                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode(['name' => $data->name, 'code' => $data->code]) . "'" . ' data-route="' . route('admins.update', ['admin' => $data->id]) . '"'
+                        'route' => '#updateAdminModal',
+                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode($data) . "'" . ' data-route="' . route('admins.update', ['admin' => $data->id]) . '"'
                     ],
                     'delete' => [
                         'permission' => 'admin.delete',
@@ -45,7 +41,7 @@ class AdminDataTable extends DataTable
                 return $data->created_at->toDateTimeString();
             })
             ->editColumn('last_login_at', function ($data) {
-                return $data->last_login_at->toDateTimeString();
+                return optional($data->last_login_at)->toDateTimeString();
             })
             ->editColumn('status', function ($data) {
                 return '<span>' . $data->status_label . '</span>';

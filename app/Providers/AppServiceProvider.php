@@ -24,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
         'accountFacade' => \App\Support\Services\AccountService::class,
         'verificationFacade' => \App\Support\Services\VerificationService::class,
         'userSubscriptionFacade' => \App\Support\Services\UserSubscriptionService::class,
+        'memberFacade' => \App\Support\Services\MemberService::class,
     ];
 
     /**
