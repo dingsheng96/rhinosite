@@ -102,7 +102,7 @@ class Status
             ],
             'draft' => [
                 'text' => __('labels.draft'),
-                'class' => 'badge badge-pill badge-lg badge-primay'
+                'class' => 'badge badge-pill badge-lg badge-primary'
             ],
             'expired' => [
                 'text' => __('labels.expired'),

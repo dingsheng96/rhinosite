@@ -168,6 +168,14 @@ class Project extends Model
         );
     }
 
+    public function scopeWithValidMerchant($query)
+    {
+        return $query->whereHas('user', function ($query) {
+            $query->merchant()->active()
+                ->withActiveSubscription()->withApprovedDetails();
+        });
+    }
+
     // Attributes
     public function getPriceWithUnitAttribute()
     {

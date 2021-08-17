@@ -17,11 +17,10 @@ class AppController extends Controller
 {
     public function home()
     {
-        $merchants = User::with(['userDetail', 'media'])
+        $merchants = User::with(['userDetail', 'media', 'userSubscriptions'])
             ->merchant()->active()
-            ->whereHas('userDetail', function ($query) {
-                $query->approvedDetails();
-            })
+            ->withActiveSubscription()
+            ->withApprovedDetails()
             ->whereHas('media', function ($query) {
                 $query->logo();
             })->inRandomOrder()->limit(6)->get();
@@ -38,7 +37,8 @@ class AppController extends Controller
             'adsBoosters' => function ($query) {
                 $query->boosting();
             }
-        ])->published()->inRandomOrder()->limit(6)->get();
+        ])->published()->withValidMerchant()
+            ->inRandomOrder()->limit(6)->get();
 
         return view('app.home', compact('projects', 'merchants'));
     }
@@ -80,12 +80,7 @@ class AppController extends Controller
             'adsBoosters' => function ($query) {
                 $query->boosting();
             }
-        ])->whereHas('user', function ($query) {
-            $query->merchant()->active()
-                ->whereHas('userDetail', function ($query) {
-                    $query->approvedDetails();
-                });
-        })->published()->sortByCategoryBump()
+        ])->withValidMerchant()->published()->sortByCategoryBump()
             ->searchable($request->get('q'))->filterable($request)
             ->paginate(12, ['*'], 'page', $request->get('page', 1));
 

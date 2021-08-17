@@ -54,7 +54,7 @@ class ProjectRequest extends FormRequest
             'unit'          =>  ['nullable', 'exists:' . Unit::class . ',id'],
             'thumbnail'     =>  [Rule::requiredIf(empty($this->route('project'))), 'nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2000'],
             'files'         =>  [Rule::requiredIf(empty($this->route('project'))), 'nullable', 'array'],
-            'files.*'       =>  ['image', 'mimes:jpg,jpeg,png', 'max:2000'],
+            'files.*'       =>  ['image', 'mimes:jpg,jpeg,png', 'max:10000'],
             'description'   =>  ['required'],
             'materials'     =>  ['nullable'],
             'services'      =>  ['required', 'array'],

@@ -27,7 +27,10 @@ class ServiceComposer
     public function compose(View $view)
     {
         $services = Service::withCount(['projects'])
-            ->whereHas('projects')
+            ->with(['projects'])
+            ->whereHas('projects', function ($query) {
+                $query->published();
+            })
             ->inRandomOrder()
             ->get();
 

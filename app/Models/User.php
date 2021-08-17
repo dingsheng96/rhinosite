@@ -182,6 +182,20 @@ class User extends Authenticatable implements MustVerifyEmail
             ->orderByDesc('ratings');
     }
 
+    public function scopeWithActiveSubscription($query)
+    {
+        return $query->whereHas('userSubscriptions', function ($query) {
+            $query->active();
+        });
+    }
+
+    public function scopeWithApprovedDetails($query)
+    {
+        return $query->whereHas('userDetail', function ($query) {
+            $query->approvedDetails();
+        });
+    }
+
     // Attributes
     public function setPhoneAttribute($value)
     {

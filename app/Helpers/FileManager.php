@@ -109,18 +109,15 @@ class FileManager
     {
         $max_width = 1024;
         $max_height = 1024;
-
+        $filename = md5($image->getClientOriginalName() . uniqid() . time());
+        $save_path = $store_path . '/' . $filename . '.' . $image->extension();
 
         $img = Image::make($image->path());
         $img->height() > $img->width() ? $max_width = null : $max_height = null;
 
         $img->resize($max_width, $max_height, function ($constraint) {
             $constraint->aspectRatio();
-        });
-
-        $filename = md5($img->__toString() . time());
-        $save_path = $store_path . '/' . $filename . '.' . $image->extension();
-        $img->save(public_path('storage/' . $save_path));
+        })->save(public_path('storage/' . $save_path));
 
         return $save_path;
     }
