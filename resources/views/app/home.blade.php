@@ -51,7 +51,7 @@
                 <div class="row">
                     <div class="col-lg-6 try-rhino-content">
                         <h2 class="text-white">Try Rhinosite</h2>
-                        <p class="paragraph text-white">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum est, ipsam blanditiis tempora quasi illum laboriosam modi debitis deleniti culpa!</p>
+                        <p class="paragraph text-white">Subscribe with us today to create more business opportunities and build a long-term relationship with your clients via a hassle-free & transparent process.</p>
                         <a href="{{ route('app.about') }}" class="btn btn-round">Learn More</a>
                     </div>
                 </div>
