@@ -24,7 +24,7 @@ class AppController extends Controller
             })
             ->whereHas('media', function ($query) {
                 $query->logo();
-            })->inRandomOrder()->limit(6)->get();
+            })->inRandomOrder()->limit(12)->get();
 
         $projects = Project::with([
             'user.ratedBy', 'translations',

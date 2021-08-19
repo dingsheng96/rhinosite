@@ -251,6 +251,11 @@ body.enduser h4 {
 /*--------------------------------------------------------------
 # ADDITIONAL ITEMS
 --------------------------------------------------------------*/
+.badge-padding {
+    padding: 0.8rem 1.6rem;
+    font-size: 0.9rem;
+}
+
 .slider {
     visibility: hidden;
 }
@@ -366,7 +371,7 @@ input[type="text"].home-s1-searchbar:focus {
 
 /* category */
 #home-category {
-    margin-top: -90px;
+    margin-top: -80px;
 }
 
 .category-title {
@@ -644,7 +649,7 @@ input[type="text"].home-s1-searchbar:focus {
 }
 
 .home-s4-img {
-    width: 100%;
+    width: 80%;
     height: 150px;
     display: block;
     margin: 0 auto;
@@ -1573,6 +1578,42 @@ ul.pagination li {
     transition-duration: 0.2s;
 }
 
+.partner-steps {
+    font-size: 22px !important;
+    font-weight: bold !important;
+    margin-bottom: 0.75rem !important;
+    color: #000 !important;
+}
+
+#join-partner {
+    margin-bottom: 3rem;
+}
+
+.join-partner-background {
+    background-image: url('../storage/assets/home/aboutus.jpg');
+    border-radius: 18px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: right 8%;
+}
+
+.join-partner-content {
+    padding: 150px;
+    position: relative;
+    border-radius: 18px;
+    color: #FFF;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.3) 100%);
+    z-index: 1;
+}
+
+.step-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-width: 80px;
+    margin: 0 auto 16px auto;
+}
+
 /*--------------------------------------------------------------
 # login (login-1)
 --------------------------------------------------------------*/
@@ -1957,6 +1998,10 @@ a.user {
         padding: 90px;
     }
 
+    .join-partner-content {
+        padding: 90px;
+    }
+
     /* navbar and footer */
     body.enduser {
         padding-top: 80px;
@@ -2169,6 +2214,10 @@ a.user {
     }
 
     .try-rhino-content {
+        padding: 70px;
+    }
+
+    .join-partner-content {
         padding: 70px;
     }
 
@@ -2582,6 +2631,10 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 767px) and (max-width: 991px) {
+    .partner-steps {
+        font-size: 20px !important;
+    }
+
     .footer-right {
         width: 60%;
     }
@@ -2610,6 +2663,10 @@ a.user {
     }
 
     .try-rhino-content {
+        padding: 90px;
+    }
+
+    .join-partner-content {
         padding: 90px;
     }
 
@@ -2732,6 +2789,10 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 600px) and (max-width: 766px) {
+    .partner-steps {
+        font-size: 18px !important;
+    }
+
     #join-header {
         padding: 3rem 0;
     }
@@ -2749,6 +2810,10 @@ a.user {
     }
 
     .try-rhino-content {
+        padding: 75px;
+    }
+
+    .join-partner-content {
         padding: 75px;
     }
 
@@ -3084,6 +3149,14 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (max-width: 599px) {
+    .step-img {
+        max-width: 60px;
+    }
+
+    .partner-steps {
+        font-size: 18px !important;
+    }
+
     #join-header {
         padding: 3rem 0;
         text-align: center;
@@ -3117,6 +3190,10 @@ a.user {
     }
 
     .try-rhino-content {
+        padding: 50px;
+    }
+
+    .join-partner-content {
         padding: 50px;
     }
 

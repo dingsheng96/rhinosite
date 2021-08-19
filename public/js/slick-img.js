@@ -91,8 +91,8 @@ $(function () {
     });
 
     $('.slider-home').slick({
-        slidesToShow: 4,
-        slidesToScroll: 4,
+        slidesToShow: 6,
+        slidesToScroll: 1,
         dots: false,
         infinite: true,
         // centerMode: true,
@@ -106,7 +106,7 @@ $(function () {
                 breakpoint: 768,
                 settings: {
                     slidesToShow: 2,
-                    slidesToScroll: 2,
+                    slidesToScroll: 1,
                 }
             },
             {
