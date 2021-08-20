@@ -55,4 +55,25 @@ return [
         'line_3'    =>  "Please note that your free trial is valid for 30 days upon signing up with Rhinosite. Rhinosite Team will send you a reminder to renew your subscription prior to your expiry date.",
         'line_4'    =>  "Thereafter, you may click the button below to start creating your projects.",
     ],
+
+    'pre_expired' => [
+        'subject'   =>  'Your Subscription Almost Expired',
+        'line_1'    =>  "Please kindly be reminded that your subscription will be expiring in 3 days. There will be an automated email sent to you on the day of your subscription expiry as well.",
+        'line_2'    =>  "On behalf of Rhinosite Team, we would like to express our gratitude towards your support. Hence, please share with us your feedbacks or comments (if any) so we can continue improving & serve you better."
+    ],
+
+    'expired' => [
+        'subject'   =>  'Your Subscription Expired',
+        'line_1'    =>  "We would like to remind you that your subscription on Rhinosite is expiring today. If you have the intention to renew your subscription, please click the button below to select your subscription plan and thereafter proceed to payment.",
+        'line_2'    =>  "Based on our statistics over the past month, we are happy to inform that more than 50% of our contractors have received an average of 5 to 10 enquiries. We look forward to your continuous support so that Rhinosite is able to grow to its full potential in the next couple of months.",
+        'action'    =>  "PROCEED SUBSCRIPTION"
+    ],
+
+    'three_days_after_expired' => [
+        'subject'   =>  'Your Subscription Expired',
+        'line_1'    =>   "We understand that you might be busy during this time. However, we would like to remind you that your subscription has already expired on Rhinosite.",
+        'line_2'    =>   "Please click the button below to select your subscription plan and thereafter proceed to payment in order to renew your account. No worries, your account is still with us but unfortunately it will not be publicly available until you have renewed your subscription.",
+        'line_3'    =>  "We would like to highlight that your account will be permanently removed from our system after 7 days of expiry.",
+        'action'    =>  "PROCEED SUBSCRIPTION"
+    ]
 ];

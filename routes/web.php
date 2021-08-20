@@ -1,7 +1,10 @@
 <?php
 
+use App\Models\UserSubscription;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Notifications\SubscriptionExpired;
+use App\Notifications\SubscriptionPreExpire;
 
 /*
 |--------------------------------------------------------------------------
@@ -131,4 +134,18 @@ Route::group(['prefix' => 'payment', 'as' => 'payment.'], function () {
     });
 
     Route::get('status', 'PaymentController@paymentStatus')->name('status');
+});
+
+Route::get('email', function () {
+
+    $pre_expired_subscriptions = UserSubscription::with(['userSubscriptionLogs', 'user'])->active()
+        ->whereHas('userSubscriptionLogs', function ($query) {
+            $query->whereDate('expired_at', today()->startOfDay()) // 3 days before
+                ->orderByDesc('created_at')
+                ->limit(1);
+        })->whereHas('user', function ($query) {
+            $query->merchant()->active()->withApprovedDetails();
+        })->first();
+
+    return (new SubscriptionExpired())->toMail($pre_expired_subscriptions->user);
 });
