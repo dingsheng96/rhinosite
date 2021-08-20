@@ -70,32 +70,32 @@
                 <div class="tab-content about-tabbed text-lg-left text-center">
                   <div id="menu1" class="tab-pane active"><br>
                     <h3 class="font-weight-bold txtblk mb-2">1. Increase your exposure and presence online</h3>
-                    <p class="paragraph mb-0"> - Rhinosite allows you to grow your business by increasing the chances of your business exposure online – to connect property owners to contractors in a single platform.</p>
+                    <p class="paragraph mb-0">Rhinosite allows you to grow your business by increasing the chances of your business exposure online – to connect property owners to contractors in a single platform.</p>
                   </div>
                   <div id="menu2" class="tab-pane fade"><br>
                     <h3 class="font-weight-bold txtblk mb-2">2. Transparent & Hassle-Free</h3>
-                    <p class="paragraph mb-2">- By listing with us, contractors are able to provide their nature of business, past portfolios, location, contact numbers, asking price etc. so that the end users are able to filter according to their needs in a more time-efficient manner.</p>
-                    <p class="paragraph mb-2">- No other hidden costs and commission charged. </p>
+                    <p class="paragraph mb-2">By listing with us, contractors are able to provide their nature of business, past portfolios, location, contact numbers, asking price etc. so that the end users are able to filter according to their needs in a more time-efficient manner.</p>
+                    <p class="paragraph mb-2">No other hidden costs and commission charged. </p>
                   </div>
                   <div id="menu3" class="tab-pane fade"><br>
                     <h3 class="font-weight-bold txtblk mb-2">3. Trustable & Reliable Contractors</h3>
-                    <p class="paragraph mb-2">- Rhinosite team will have a due diligence process to ensure that only reliable and quality contractors are able to be listed on our platform.</p>
-                    <p class="paragraph mb-2">- Rhinosite will investigate thoroughly on those Contractors whom received poor ratings/ feedback. The Contractor will be terminated if the issue remains unsolved.</p>
+                    <p class="paragraph mb-2">Rhinosite team will have a due diligence process to ensure that only reliable and quality contractors are able to be listed on our platform.</p>
+                    <p class="paragraph mb-2">Rhinosite will investigate thoroughly on those Contractors whom received poor ratings/ feedback. The Contractor will be terminated if the issue remains unsolved.</p>
                   </div>
                   <div id="menu4" class="tab-pane fade"><br>
                     <h3 class="font-weight-bold txtblk mb-2">4. Convenient & Time-Efficient</h3>
-                    <p class="paragraph mb-2">- Users are able to search and filter according to their needs and preference with just one-click away. </p>
-                    <p class="paragraph mb-2">- Users are able to view all the Contractors and select according to their preference. </p>
+                    <p class="paragraph mb-2">Users are able to search and filter according to their needs and preference with just one-click away. </p>
+                    <p class="paragraph mb-2">Users are able to view all the Contractors and select according to their preference. </p>
                   </div>
                   <div id="menu5" class="tab-pane fade"><br>
                     <h3 class="font-weight-bold txtblk mb-2">5. Safe and Secure</h3>
-                    <p class="paragraph mb-2">- Although Users liaise directly with the Contractors, they are still bound by Terms & Conditions to safeguard both Contractors’ and Users’ concerns. </p>
-                        <p class="paragraph mb-2">- For any payment related matters, Rhinosite also has payment gateway incorporated to ensure that your payments are dealt in a secure and convenient way. </p>
+                    <p class="paragraph mb-2">Although Users liaise directly with the Contractors, they are still bound by Terms & Conditions to safeguard both Contractors’ and Users’ concerns. </p>
+                        <p class="paragraph mb-2">For any payment related matters, Rhinosite also has payment gateway incorporated to ensure that your payments are dealt in a secure and convenient way. </p>
                   </div>
                   <div id="menu6" class="tab-pane fade"><br>
                     <h3 class="font-weight-bold txtblk mb-2">6. Build a Long-Term Relationship with your Users/ Grow your Business</h3>
-                    <p class="paragraph mb-2">- Once a User is satisfied with your services, they are more than happy to come back to you the next time they are looking for a Contractor. </p>
-                    <p class="paragraph mb-2">- Users will also be delighted to introduce you to their friends or families who are looking for a reliable & trustable Contractor. </p>
+                    <p class="paragraph mb-2">Once a User is satisfied with your services, they are more than happy to come back to you the next time they are looking for a Contractor. </p>
+                    <p class="paragraph mb-2">Users will also be delighted to introduce you to their friends or families who are looking for a reliable & trustable Contractor. </p>
                   </div>
                 </div>
                 <!-- Nav pills -->

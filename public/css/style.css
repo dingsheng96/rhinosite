@@ -921,7 +921,7 @@ ul.pagination li {
     margin-left: 20px;
 }
 
-.top-service a:hover {
+.top-service:hover a {
     text-decoration: none;
     color: #FFF;
 }
@@ -1986,6 +1986,11 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 1200px) and (max-width: 1439px) {
+    .badge-padding {
+        padding: 0.5rem 1rem;
+        font-size: 0.7rem;
+    }
+
     .footer-right {
         width: 60%;
     }
@@ -2196,6 +2201,15 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .highlight-img {
+        height: 60%;
+    }
+
+    .badge-padding {
+        padding: 0.5rem 1rem;
+        font-size: 0.7rem;
+    }
+
     .footer-right {
         width: 60%;
     }
@@ -2631,6 +2645,15 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 767px) and (max-width: 991px) {
+    .highlight-img {
+        height: 70%;
+    }
+
+    .badge-padding {
+        padding: 0.5rem 1rem;
+        font-size: 0.7rem;
+    }
+
     .partner-steps {
         font-size: 20px !important;
     }
@@ -2789,6 +2812,15 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 600px) and (max-width: 766px) {
+    .highlight-img {
+        height: 70%;
+    }
+
+    .badge-padding {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+
     .partner-steps {
         font-size: 18px !important;
     }
@@ -3149,6 +3181,11 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (max-width: 599px) {
+    .badge-padding {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+
     .step-img {
         max-width: 60px;
     }
