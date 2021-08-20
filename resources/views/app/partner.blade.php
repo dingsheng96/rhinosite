@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div id="subpage-header">
+<div id="join-header">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-11">
@@ -14,16 +14,16 @@
 
 <div id="join-1">
     <div class="container-fluid">
-        <div class="row align-items-center">
-            <div class="col-md-6 px-0">
+        <div class="row">
+            <div class="col-lg-6 px-0 mb-3 mb-lg-0">
                 <img src="{{ asset('storage/assets/joinus/join-1.jpg') }}" alt="join_1_image" class="res-img">
             </div>
-            <div class="col-md-6 col-lg-5 mx-auto text-center">
+            <div class="col-lg-6 join-1-content">
                 <h2>
                     With the advance technology in today’s world, listing with Rhinosite enables you to
                     increase your exposure and presence online.
                 </h2>
-                <a href="{{ route('register', ['role' => 'merchant']) }}" class="btn btn-orange">{{ __('app.partner_btn_application') }}</a>
+                <a href="{{ route('register', ['role' => 'merchant']) }}" class="btn btn-round">{{ __('app.partner_btn_application') }}</a>
             </div>
         </div>
     </div>
@@ -48,6 +48,7 @@
         </div>
     </div>
 </div>
+
 
 {{-- <div id="join-3">
     <div class="container">
@@ -99,34 +100,59 @@
 
 <div id="join-4">
     <div class="container">
+        {{-- <div id="join-partner">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 join-partner-background">
+                        <div class="row">
+                            <div class="col-lg-6 join-partner-content">
+                                <h2 class="text-white">Join Rhinosite!</h2>
+                                <p class="paragraph text-white">We are offering 1 month free subscription for all! Register with us today to enhance your business opportunities with Rhinosite.</p>
+                                <a href="{{ route('register', ['role' => 'merchant']) }}" class="btn btn-round">Join Us</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> --}}
         <h2>Contractors Application Process Overview</h2>
         <div class="join-bar"></div>
-        <div class="row text-xl-center text-left">
-            <div class="col-12 col-xl">
+        <div class="row text-center justify-content-center">
+            <div class="col-12 col-lg-6 col-xl">
+                <img src="{{ asset('storage/assets/joinus/step-1.png') }}" class="step-img">
+                <h3 class="partner-steps">Steps 1</h3>
                 <p class="paragraph">
-                    1. Fill in an <a href="{{ route('register', ['role' => 'merchant']) }}">Electronic Application Form</a> and verify your email address.
+                    Fill in an <a class="txtorange" href="{{ route('register', ['role' => 'merchant']) }}">Electronic Application Form</a> and verify your email address.
                 </p>
             </div>
-            <div class="col-12 col-xl">
+            <div class="col-12 col-lg-6 col-xl">
+                <img src="{{ asset('storage/assets/joinus/step-2.png') }}" class="step-img">
+                <h3 class="partner-steps">Steps 2</h3>
                 <p class="paragraph">
-                    2. Log in to your dashboard, complete your profile by filling in mandatory fields and upload all required documents to avoid any issues/delay in your applications.
+                    Log in to your dashboard, complete your profile by filling in mandatory fields and upload all required documents to avoid any issues/delay in your applications.
                     (This is a Rhinosite due-diligence process to ensure that our contractors are trustable and reliable for their potential customers)
                 </p>
             </div>
-            <div class="col-12 col-xl">
+            <div class="col-12 col-lg-6 col-xl">
+                <img src="{{ asset('storage/assets/joinus/step-3.png') }}" class="step-img">
+                <h3 class="partner-steps">Steps 3</h3>
                 <p class="paragraph">
-                    3. Our team will take approximately 5-7 working days to process your application and once your application is approved, you can log into your contractor’s dashboard to proceed to subscription payment.
+                    Our team will take approximately 5-7 working days to process your application and once your application is approved, you can log into your contractor’s dashboard to proceed to subscription payment.
                 </p>
             </div>
-            <div class="col-12 col-xl">
+            <div class="col-12 col-lg-6 col-xl">
+                <img src="{{ asset('storage/assets/joinus/step-4.png') }}" class="step-img">
+                <h3 class="partner-steps">Steps 4</h3>
                 <p class="paragraph">
-                    4. You are all set! You can now create projects and start receiving enquiries from your potential customers.
-                    You may also read up on our <a href="#join-5">FAQ</a> and <a href="{{ route('app.term') }}" target="blank">Terms & Conditions</a> incorporated herein to understand our operation better.
+                    You are all set! You can now create projects and start receiving enquiries from your potential customers.
+                    You may also read up on our <a class="txtorange" href="#join-5">FAQ</a> and <a class="txtorange" href="{{ route('app.term') }}" target="blank">Terms & Conditions</a> incorporated herein to understand our operation better.
                 </p>
             </div>
-            <div class="col-12 col-xl">
+            <div class="col-12 col-lg-6 col-xl">
+                <img src="{{ asset('storage/assets/joinus/step-5.png') }}" class="step-img">
+                <h3 class="partner-steps">Steps 5</h3>
                 <p class="paragraph">
-                    5. If in any circumstances that you are still in doubt, we do have a support team to further assist you with your queries. Please drop us an email at info@rhinosite.com.my or call us at 016-303 1808.
+                    If in any circumstances that you are still in doubt, we do have a support team to further assist you with your queries. Please drop us an email at <b>info@rhinosite.com.my</b> or call us at <b>016-303 1808</b>.
                 </p>
             </div>
         </div>

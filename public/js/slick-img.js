@@ -16,8 +16,7 @@ $(function () {
         focusOnSelect: true,
         infinite: false,
         centerPadding: '0px',
-        responsive: [
-            {
+        responsive: [{
                 breakpoint: 1400,
                 settings: {
                     slidesToShow: 3,
@@ -74,8 +73,7 @@ $(function () {
         dots: true,
         infinite: true,
         centerMode: true,
-        responsive: [
-            {
+        responsive: [{
                 breakpoint: 1200,
                 settings: {
                     slidesToShow: 2
@@ -87,6 +85,35 @@ $(function () {
                     slidesToShow: 1,
                     slidesToScroll: 1,
                     dots: true,
+                }
+            },
+        ]
+    });
+
+    $('.slider-home').slick({
+        slidesToShow: 6,
+        slidesToScroll: 1,
+        dots: false,
+        infinite: true,
+        // centerMode: true,
+        responsive: [{
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 3
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 599,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
                 }
             },
         ]

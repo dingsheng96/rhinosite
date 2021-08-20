@@ -129,13 +129,13 @@
                             <p class="merchant-subtitle">{{ $project->user->name }}</p>
                             <p class="merchant-subtitle">
                                 @foreach ($project->services as $service)
-                                <span class="badge badge-pill badge-info">{{ $service->name }}</span>
+                                <span class="badge badge-pill badge-info badge-padding">{{ $service->name }}</span>
                                 @endforeach
                             </p>
                         </div>
                         <div class="merchant-footer">
                             {{-- <span class="merchant-footer-left">{{ __('app.price_from') . ' ' . $project->price_without_unit }}</span> --}}
-                            <span class="merchant-footer-right">{{ $project->location }}</span>
+                            <span class="merchant-footer-right"><i class="fas fa-map-marker-alt text-danger mr-1"></i> {{ $project->location }}</span>
                         </div>
                     </a>
                 </div>

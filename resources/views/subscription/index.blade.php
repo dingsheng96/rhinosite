@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container" style="padding-top: 5rem; padding-bottom: 5rem;">
+<div class="container" style="padding-top: 5rem; padding-bottom: 5rem; min-height:80vh;">
 
     <div class="row justify-content-center">
 

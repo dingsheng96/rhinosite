@@ -20,7 +20,7 @@ return [
     'home_title_main' => 'No.1 Contractor Platform in Malaysia',
     'home_subtitle_main' => "Compare Price, Project Portfolios and Contractor's Specialization",
     'home_btn_join_merchant' => "I'm Interested",
-    'home_text_join_merchant' => 'JOIN US AS CONTRACTORS',
+    'home_text_join_merchant' => 'JOIN US AS <br/><span class="txtorange">CONTRACTORS</span>',
     'home_subtitle_partner' => 'Our Partnership Contractors',
     'home_subtitle_merchant' => 'Recently Deal Contractors',
 
@@ -60,7 +60,7 @@ return [
     'login_option_member' => 'Existing User',
     'login_option_merchant' => 'Contractor',
     'login_form_title' => 'Welcome to Rhinosite',
-    'login_btn_forgot_password' => 'Forgot Password',
+    'login_btn_forgot_password' => 'Forgot Password?',
     'login_btn_facebook' => 'Continue with Facebook',
     'login_btn_register_member' => '<span class="login-text">New Member? </span><a href="' . route('register', ['role' => 'member']) . '" class="login-text text-underline txtorange"><u>Register Now</u></a>',
     'login_btn_register_merchant' => '<span class="login-text">Wish to be a Contractor? </span><a href="' . route('register', ['role' => 'merchant']) . '" class="login-text text-underline txtorange"><u>Join Now</u></a>',

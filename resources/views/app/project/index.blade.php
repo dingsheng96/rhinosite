@@ -152,7 +152,7 @@
                                                 <p class="merchant-subtitle">{{ $project->user->name }}</p>
                                                 <p class="merchant-subtitle">
                                                     @foreach ($project->services as $service)
-                                                    <span class="badge badge-pill badge-info">{{ $service->name }}</span>
+                                                    <span class="badge badge-pill badge-info badge-padding">{{ $service->name }}</span>
                                                     @endforeach
                                                 </p>
                                             </div>
@@ -183,6 +183,9 @@
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
                             {!! $projects->withQueryString()->links() !!}
+                        </div>
+                        <div class="col-12 d-flex justify-content-center">
+                            <p class="text-secondary">{!! $projects->firstItem() !!} - {!! $projects->lastItem() !!} of {!! $projects->total()!!} services for peace of mind</p>
                         </div>
                     </div>
                 </div>

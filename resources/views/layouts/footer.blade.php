@@ -128,12 +128,12 @@
 
 <div class="footer-bottom">
     <div class="container">
-        <div class="d-flex">
-            <ul>
+        <div class="d-block d-sm-flex text-center text-sm-left">
+            <ul class="d-block d-sm-inline-block">
                 <li><a href="{{ route('app.term') }}">{{ __('labels.terms_policy') }}</a></li>
                 <li><a href="{{ route('app.privacy') }}">{{ __('labels.privacy_policy') }}</a></li>
             </ul>
-            <ul class="ml-auto">
+            <ul class="ml-auto d-block d-sm-inline-block">
                 <li class="ml-auto">{!! __('labels.copyright') !!}</li>
             </ul>
         </div>

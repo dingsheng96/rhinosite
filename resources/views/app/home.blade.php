@@ -44,6 +44,22 @@
     </div>
 </div>
 
+<div id="home-tryrhino">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 try-rhino-background">
+                <div class="row">
+                    <div class="col-lg-6 try-rhino-content">
+                        <h2 class="text-white">Try Rhinosite</h2>
+                        <p class="paragraph text-white">Subscribe with us today to create more business opportunities and build a long-term relationship with your clients via a hassle-free & transparent process.</p>
+                        <a href="{{ route('app.partner') }}" class="btn btn-round">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="home-s2">
     <div class="container">
         <div class="row">
@@ -65,7 +81,7 @@
                                     <p class="merchant-subtitle">{{ $project->user->name }}</p>
                                     <p class="merchant-subtitle">
                                         @foreach ($project->services as $service)
-                                        <span class="badge badge-pill badge-info">{{ $service->name }}</span>
+                                        <span class="badge badge-pill badge-info badge-padding">{{ $service->name }}</span>
                                         @endforeach
                                     </p>
                                 </div>
@@ -82,22 +98,20 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col text-center">
-            <a href="{{ route('app.project.index') }}" class="btn btn-orange">{{ __('app.btn_view_more') }}</a>
+        <div class="row">
+            <div class="col text-center">
+                <a href="{{ route('app.project.index') }}" class="btn btn-round">{{ __('app.btn_view_more') }}</a>
+            </div>
         </div>
     </div>
-
-</div>
 </div>
 
 <div id="home-s3">
     <img src="{{ asset('storage/assets/home/s3-left-update.jpg') }}" alt="s3_image" class="home-s3-left">
     <div class="home-s3-right">
-        <p>{{ __('app.home_text_join_merchant') }}</p>
-        <a href="{{ route('app.partner') }}" class="btn btn-orange">{{ __('app.home_btn_join_merchant') }}</a>
+        <p>{!! __('app.home_text_join_merchant') !!}</p>
+        <a href="{{ route('app.partner') }}" class="btn btn-round">{{ __('app.home_btn_join_merchant') }}</a>
     </div>
 </div>
 
@@ -117,12 +131,16 @@
             </div>
             <div class="col-lg-10">
                 <div class="row justify-content-center">
-                    @forelse ($merchants as $merchant)
-                    <div class="col-6 col-md">
-                        <img src="{{ $merchant->media->first()->full_file_path ?? $default_preview }}" alt="partner_image_1" class="home-s4-img">
+                    <div class="col-12">
+                        <div class="slider slider slider-home">
+                            @forelse ($merchants as $merchant)
+                            <div>
+                                <img src="{{ $merchant->media->first()->full_file_path ?? $default_preview }}" alt="partner_image_1" class="home-s4-img">
+                            </div>
+                            @empty
+                            @endforelse
+                        </div>
                     </div>
-                    @empty
-                    @endforelse
                 </div>
             </div>
         </div>
