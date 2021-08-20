@@ -4,6 +4,7 @@ namespace App\Tasks;
 
 use App\Models\UserSubscription;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\SubscriptionExpired;
 use App\Support\Facades\UserSubscriptionFacade;
 
 class DeactivateExpiredSubscription
@@ -23,7 +24,10 @@ class DeactivateExpiredSubscription
         try {
 
             foreach ($expired_subscriptions as $subscription) {
+
                 $subscription = UserSubscriptionFacade::setModel($subscription)->setSubscriptionStatus(UserSubscription::STATUS_INACTIVE)->getModel();
+
+                $subscription->user->notify(new SubscriptionExpired());
             }
 
             activity()->useLog('task_deactivate_expired_subscription')

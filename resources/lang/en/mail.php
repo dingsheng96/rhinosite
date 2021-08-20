@@ -71,9 +71,22 @@ return [
 
     'three_days_after_expired' => [
         'subject'   =>  'Your Subscription Expired',
-        'line_1'    =>   "We understand that you might be busy during this time. However, we would like to remind you that your subscription has already expired on Rhinosite.",
-        'line_2'    =>   "Please click the button below to select your subscription plan and thereafter proceed to payment in order to renew your account. No worries, your account is still with us but unfortunately it will not be publicly available until you have renewed your subscription.",
+        'line_1'    =>  "We understand that you might be busy during this time. However, we would like to remind you that your subscription has already expired on Rhinosite.",
+        'line_2'    =>  "Please click the button below to select your subscription plan and thereafter proceed to payment in order to renew your account. No worries, your account is still with us but unfortunately it will not be publicly available until you have renewed your subscription.",
         'line_3'    =>  "We would like to highlight that your account will be permanently removed from our system after 7 days of expiry.",
         'action'    =>  "PROCEED SUBSCRIPTION"
+    ],
+
+    'six_days_after_expired' => [
+        'subject'   =>  'Your Subscription Expired',
+        'line_1'    =>  "We would like to remind you that your subscription has already expired on Rhinosite. Please let us know if there is anything we can help to assist in speeding up your renewal process.",
+        'line_2'    =>  "Please click the button below to select your subscription plan and thereafter proceed to payment in order to renew your account. We would like to highlight that your account will be permanently removed from our system after 7 days of expiry.",
+        'action'    =>  "PROCEED SUBSCRIPTION"
+    ],
+
+    'account_deactivate' => [
+        'subject'   =>  'Your Account Has Been Deactivated',
+        'line_1'    =>  "We have not receive your intention to renew. Hence, we are sorry to inform that your account has been permanently removed from Rhinosite.",
+        'line_2'    =>  "If you have require any further assistance, please do not hesitate to get in touch with us or visit www.rhinosite.com.my for more information."
     ]
 ];

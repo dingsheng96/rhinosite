@@ -5,6 +5,8 @@ namespace App\Console;
 use App\Tasks\FailOverdueTransaction;
 use Illuminate\Console\Scheduling\Schedule;
 use App\Tasks\DeactivateExpiredSubscription;
+use App\Tasks\SendSubscriptionPreExpireNotification;
+use App\Tasks\SendSubscriptionPostExpireNotification;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
@@ -28,6 +30,9 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(new DeactivateExpiredSubscription)->daily();
         $schedule->call(new FailOverdueTransaction)->daily();
+        $schedule->call(new DeactivateExpiredSubscription)->daily();
+        $schedule->call(new SendSubscriptionPreExpireNotification)->daily();
+        $schedule->call(new SendSubscriptionPostExpireNotification)->daily();
     }
 
     /**
