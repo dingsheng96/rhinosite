@@ -62,8 +62,8 @@ return [
     'login_form_title' => 'Welcome to Rhinosite',
     'login_btn_forgot_password' => 'Forgot Password?',
     'login_btn_facebook' => 'Continue with Facebook',
-    'login_btn_register_member' => '<span class="login-text">New Member? </span><a href="' . route('register', ['role' => 'member']) . '" class="login-text text-underline txtorange"><u>Register Now</u></a>',
-    'login_btn_register_merchant' => '<span class="login-text">Wish to be a Contractor? </span><a href="' . route('register', ['role' => 'merchant']) . '" class="login-text text-underline txtorange"><u>Join Now</u></a>',
+    'login_btn_register_member' => '<span class="register-text">New Member? </span><a href="' . route('register', ['role' => 'member']) . '" class="register-text text-underline txtorange"><u>Register Now</u></a>',
+    'login_btn_register_merchant' => '<span class="register-text">New Contractor? </span><a href="' . route('register', ['role' => 'merchant']) . '" class="register-text text-underline txtorange"><u>Join Now</u></a>',
 
     'about_title_main' => 'About Rhinosite',
 
