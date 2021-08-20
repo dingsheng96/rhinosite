@@ -34,7 +34,7 @@ class CartRequest extends FormRequest
             return [
                 'item'  => ['required', 'array'],
                 'item.*.variant' => [
-                    'required',
+                    'nullable',
                     Rule::exists(ProductAttribute::class, 'id')->where('published', true)
                         ->where('status', ProductAttribute::STATUS_ACTIVE)
                 ],
