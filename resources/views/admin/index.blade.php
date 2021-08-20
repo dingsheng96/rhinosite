@@ -10,7 +10,7 @@
                 <div class="card-header bg-transparent">
                     @can('admin.create')
                     <span class="card-tools">
-                        <a href="#adminModal" class="btn btn-outline-primary btn-rounded-corner" data-toggle="modal">
+                        <a href="#createAdminModal" class="btn btn-outline-primary btn-rounded-corner" data-toggle="modal">
                             <i class="fas fa-plus"></i>
                             {{ __('modules.create', ['module' => trans_choice('modules.admin', 1)]) }}
                         </a>
@@ -26,9 +26,26 @@
 </div>
 
 @includeWhen(Auth::user()->can('admin.create'), 'admin.create', compact('statuses'))
+@includeWhen(Auth::user()->can('admin.update'), 'admin.edit', compact('statuses'))
 
 @endsection
 
 @push('scripts')
 {!! $dataTable->scripts() !!}
+
+@if ($errors->has('create.*'))
+<script type="text/javascript">
+    $(window).on('load', function () {
+        $('#createAdminModal').modal('show');
+    });
+</script>
+@endif
+
+@if ($errors->has('update.*'))
+<script type="text/javascript">
+    $(window).on('load', function () {
+        $('#updateAdminModal').modal('show');
+    });
+</script>
+@endif
 @endpush

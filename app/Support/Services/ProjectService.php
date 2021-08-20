@@ -128,7 +128,7 @@ class ProjectService extends BaseService
                     'filesize'  =>   $file->getSize(),
                 ];
 
-                $this->storeMedia(new Media(), $config, $file);
+                $media = $this->storeMedia(new Media(), $config, $file);
             }
         }
 

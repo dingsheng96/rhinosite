@@ -203,6 +203,7 @@ return [
         'ads_type' => 'ads type',
         'boosting_date_from' => 'boosting date from',
         'variant' => 'variant',
+        'profile_picture' => 'profile picture'
     ],
 
 ];

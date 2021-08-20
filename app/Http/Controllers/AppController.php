@@ -17,11 +17,10 @@ class AppController extends Controller
 {
     public function home()
     {
-        $merchants = User::with(['userDetail', 'media'])
+        $merchants = User::with(['userDetail', 'media', 'userSubscriptions'])
             ->merchant()->active()
-            ->whereHas('userDetail', function ($query) {
-                $query->approvedDetails();
-            })
+            ->withActiveSubscription()
+            ->withApprovedDetails()
             ->whereHas('media', function ($query) {
                 $query->logo();
             })->inRandomOrder()->limit(12)->get();
@@ -38,7 +37,8 @@ class AppController extends Controller
             'adsBoosters' => function ($query) {
                 $query->boosting();
             }
-        ])->published()->inRandomOrder()->limit(6)->get();
+        ])->published()->withValidMerchant()
+            ->inRandomOrder()->limit(6)->get();
 
         return view('app.home', compact('projects', 'merchants'));
     }
@@ -80,12 +80,7 @@ class AppController extends Controller
             'adsBoosters' => function ($query) {
                 $query->boosting();
             }
-        ])->whereHas('user', function ($query) {
-            $query->merchant()->active()
-                ->whereHas('userDetail', function ($query) {
-                    $query->approvedDetails();
-                });
-        })->published()->sortByCategoryBump()
+        ])->withValidMerchant()->published()->sortByCategoryBump()
             ->searchable($request->get('q'))->filterable($request)
             ->paginate(12, ['*'], 'page', $request->get('page', 1));
 
@@ -223,6 +218,50 @@ class AppController extends Controller
 
         return Response::instance()
             ->withStatusCode('modules.project', 'actions.' . $action . $status)
+            ->withStatus($status)
+            ->withMessage($message)
+            ->withData($data)
+            ->sendJson();
+    }
+
+    public function rateUser(Request $request)
+    {
+        $request->validate([
+            'merchant' => ['required', 'exists:' . User::class . ',id'],
+            'rating' => ['required', 'in:1,2,3,4,5']
+        ]);
+
+        $action     =   Permission::ACTION_CREATE;
+        $status     =   'fail';
+        $message    =   'Unable to rate contractor.';
+        $data       =   [];
+
+        DB::beginTransaction();
+
+        try {
+
+            Auth::user()->ratedBy()->attach([
+                $request->get('merchant') => ['scale' => $request->get('rating'), 'created_at' => now()]
+            ]);
+
+            DB::commit();
+
+            $rating = User::with('ratings')->where('id', $request->get('merchant'))->first();
+
+            $status = 'success';
+            $message = 'Contractor rated successfully.';
+            $data = [
+                'rated' => true,
+                'rating' => $rating->rating_stars
+            ];
+        } catch (\Error | \Exception $ex) {
+
+            DB::rollBack();
+            $message = $ex->getMessage();
+        }
+
+        return Response::instance()
+            ->withStatusCode('modules.merchant', 'actions.' . $action . $status)
             ->withStatus($status)
             ->withMessage($message)
             ->withData($data)

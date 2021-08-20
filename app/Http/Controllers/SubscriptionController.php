@@ -69,10 +69,13 @@ class SubscriptionController extends Controller
      */
     public function create()
     {
-        $merchants = User::with(['userDetail'])
+        $merchants = User::with(['userDetail', 'userSubscriptions'])
             ->merchant()
             ->whereHas('userDetail', function ($query) {
                 $query->approvedDetails();
+            })
+            ->whereDoesntHave('userSubscriptions', function ($query) {
+                $query->active();
             })
             ->orderBy('name')->get();
 

@@ -31,7 +31,30 @@ class AdminRequest extends FormRequest
     public function rules()
     {
         if ($this->route('admin')) {
-            return [];
+            return [
+                'update.name' => [
+                    'required',
+                    Rule::unique(User::class, 'name')
+                        ->ignore($this->route('admin'), 'id')
+                        ->whereNull('deleted_at')
+                ],
+                'update.email' => [
+                    'required',
+                    'email',
+                    Rule::unique(User::class, 'email')
+                        ->ignore($this->route('admin'), 'id')
+                        ->whereNull('deleted_at')
+                ],
+                'update.status' => [
+                    'required',
+                    Rule::in(array_keys(Status::instance()->activeStatus()))
+                ],
+                'update.password' => [
+                    'nullable',
+                    'confirmed',
+                    new PasswordFormat()
+                ]
+            ];
         }
 
         return [
@@ -75,16 +98,11 @@ class AdminRequest extends FormRequest
      */
     public function attributes()
     {
-        if ($this->route('currency')) {
-            return [
-                'update.name' => __('validation.attributes.name'),
-                'update.code' => __('validation.attributes.code')
-            ];
-        }
-
         return [
-            'create.name'           =>  __('validation.attributes.name'),
-            'create.description'    =>  __('validation.attributes.description')
+            '*.name'        =>  __('validation.attributes.name'),
+            '*.email'       =>  __('validation.attributes.email'),
+            '*.status'      =>  __('validation.attributes.status'),
+            '*.password'    =>  __('validation.attributes.password'),
         ];
     }
 }

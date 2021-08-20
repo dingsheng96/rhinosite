@@ -158,4 +158,43 @@ $(function () {
             }
         });
     });
+
+    if($('#ratingform ').length > 0) {
+
+        let form = $('#ratingform');
+
+        form.find("input[type=radio]").on('click', function () {
+
+            let rating = $(this).val();
+            let action = form.attr('action');
+            let method = form.attr('method');
+            let target = form.data('merchant');
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: action,
+                type: method,
+                data: {
+                    "merchant": target,
+                    "rating": rating
+                },
+                success: xhr => {
+
+                    if (xhr.status) {
+
+                        let data = xhr.data;
+
+                        if(data.rated == true) {
+                            $('#rating-stars').replaceWith('<p id="rating-stars">'+data.rating+'</p>');
+                            alert(xhr.message);
+                            return;
+                        }
+                    }
+                }
+            });
+        });
+    }
+
 });

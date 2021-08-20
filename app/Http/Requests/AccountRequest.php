@@ -65,7 +65,7 @@ class AccountRequest extends FormRequest
                 Rule::requiredIf($is_merchant || $is_member), 'nullable',
                 Rule::exists(City::class, 'id')->where('country_state_id', $this->get('country_state'))
             ],
-            'logo' =>  ['nullable', 'image', 'max:2000', 'mimes:jpg,jpeg,png', 'dimensions:max_height=1024,max_width=1024'],
+            'logo' =>  ['nullable', 'image', 'max:2000', 'mimes:jpg,jpeg,png'],
         ];
     }
 }

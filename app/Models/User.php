@@ -7,7 +7,6 @@ use App\Models\Role;
 use App\Helpers\Misc;
 use App\Models\Media;
 use App\Models\Order;
-use App\Models\Rating;
 use App\Helpers\Status;
 use App\Models\Address;
 use App\Models\Project;
@@ -71,11 +70,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->morphedByMany(Project::class, 'favourable', Favourable::class)->withPivot('created_at');
     }
 
-    public function ratings()
-    {
-        return $this->hasMany(Rating::class, 'user_id', 'id');
-    }
-
     public function userSubscriptions()
     {
         return $this->hasMany(UserSubscription::class, 'user_id', 'id');
@@ -101,9 +95,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasManyThrough(UserAdsQuotaHistory::class, UserAdsQuota::class, 'user_id', 'user_ads_quota_id', 'id', 'id');
     }
 
+    public function ratings()
+    {
+        return $this->morphToMany(self::class, 'rateable', Rateable::class)->withPivot('scale')->withTimestamps();
+    }
+
     public function ratedBy()
     {
-        return $this->morphMany(Rating::class, 'rateable');
+        return $this->morphedByMany(self::class, 'rateable', Rateable::class)->withPivot('scale')->withTimestamps();
     }
 
     public function projects()
@@ -159,7 +158,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function scopeFilterMerchantByRating($query, $value)
     {
         $tbl_user   =   $this->getTable();
-        $tbl_rating =   app(Rating::class)->getTable();
+        $tbl_rating =   app(Rateable::class)->getTable();
 
         return $query->select($tbl_user . '.id', DB::raw('AVG(' . $tbl_rating . '.scale) AS ratings'))
             ->join($tbl_rating, $tbl_user . '.id', '=', $tbl_rating . '.rateable_id')
@@ -171,7 +170,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function scopeSortMerchantByRating($query)
     {
         $tbl_users      =   $this->getTable();
-        $tbl_ratings    =   app(Rating::class)->getTable();
+        $tbl_ratings    =   app(Rateable::class)->getTable();
 
         return $query->select($tbl_users . '.id', $tbl_users . '.name', $tbl_users . '.status', DB::raw('AVG(' . $tbl_ratings . '.scale) AS ratings'))
             ->join($tbl_ratings, $tbl_users . '.id', '=', $tbl_ratings . '.rateable_id')
@@ -181,6 +180,20 @@ class User extends Authenticatable implements MustVerifyEmail
             ->groupBy($tbl_users . '.id', $tbl_users . '.name', $tbl_users . '.status')
             ->having('ratings', '>', 0)
             ->orderByDesc('ratings');
+    }
+
+    public function scopeWithActiveSubscription($query)
+    {
+        return $query->whereHas('userSubscriptions', function ($query) {
+            $query->active();
+        });
+    }
+
+    public function scopeWithApprovedDetails($query)
+    {
+        return $query->whereHas('userDetail', function ($query) {
+            $query->approvedDetails();
+        });
     }
 
     // Attributes
@@ -267,7 +280,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getRatingAttribute(): int
     {
-        return round($this->ratedBy()->avg('scale'));
+        return round($this->ratings()->avg('scale'));
     }
 
     public function getJoinedDateAttribute()
@@ -279,12 +292,13 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $total_stars    =   null;
         $max_stars      =   5;
+        $rating         =   floor($this->rating);
 
-        for ($i = 0; $i < $this->rating; $i++) {
+        for ($i = 0; $i < $rating; $i++) {
             $total_stars .= '<i class="fas fa-star star"></i>';
         }
 
-        for ($y = 0; $y < $max_stars - $this->rating; $y++) {
+        for ($y = 0; $y < $max_stars - $rating; $y++) {
             $total_stars .= '<i class="far fa-star star"></i>';
         }
 

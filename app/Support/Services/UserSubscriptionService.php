@@ -5,7 +5,6 @@ namespace App\Support\Services;
 use App\Models\Transaction;
 use App\Models\UserSubscription;
 use App\Models\TransactionDetail;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Support\Services\BaseService;
@@ -92,5 +91,13 @@ class UserSubscriptionService extends BaseService
         $signature = config('payment.merchant_code') . config('payment.merchant_key') . $this->model->transaction->transaction_no;
 
         return base64_encode(hex2bin(sha1($signature)));
+    }
+
+    public function setSubscriptionStatus(string $status = UserSubscription::STATUS_ACTIVE)
+    {
+        $this->model->status = $status;
+        $this->model->save();
+
+        return $this;
     }
 }

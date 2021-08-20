@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use Illuminate\Http\File;
 use Maatwebsite\Excel\Excel;
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 
 class FileManager
@@ -49,6 +50,10 @@ class FileManager
 
         if (!empty($old_file)) {
             $this->removeFile($old_file);
+        }
+
+        if ($this->checkImageMimes($save_file->getClientOriginalExtension())) {
+            return $this->resizeImage($store_path, $save_file);
         }
 
         return (empty($filename))
@@ -98,5 +103,31 @@ class FileManager
     public function putFileContent(string $store_path, $content): void
     {
         $this->getStorageDisk()->put($store_path, $content);
+    }
+
+    public function resizeImage($store_path, $image)
+    {
+        $max_width = 1024;
+        $max_height = 1024;
+        $filename = md5($image->getClientOriginalName() . uniqid() . time());
+        $save_path = $store_path . '/' . $filename . '.' . $image->extension();
+
+        $img = Image::make($image->path());
+        $img->height() > $img->width() ? $max_width = null : $max_height = null;
+
+        $img->resize($max_width, $max_height, function ($constraint) {
+            $constraint->aspectRatio();
+        })->save(public_path('storage/' . $save_path));
+
+        return $save_path;
+    }
+
+    private function checkImageMimes(string $mimes): bool
+    {
+        $mimes = strtolower($mimes);
+
+        $image_mimes = ['png', 'jpg', 'jpeg'];
+
+        return in_array($mimes, $image_mimes);
     }
 }

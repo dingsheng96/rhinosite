@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Requests\CountryStateRequest;
 use App\Imports\Settings\Country\CountryStateImport;
 use App\Imports\Settings\Country\CountryStateCityImport;
-use App\Http\Requests\CountryStateRequest;
 
 class CountryStateController extends Controller
 {

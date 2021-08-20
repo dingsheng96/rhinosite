@@ -28,7 +28,7 @@ class CheckVerifiedMerchant
             return $next($request);
         }
 
-        if ($user->userDetail()->where(function ($query) { // merchant with pending or rejected details, redirect to verification notify page
+        if (empty($user->userDetail) || $user->userDetail()->where(function ($query) { // merchant with pending or rejected details, redirect to verification notify page
             $query->pendingDetails();
         })->orWhere(function ($query) {
             $query->rejectedDetails();

@@ -4,6 +4,7 @@ namespace App\Tasks;
 
 use App\Models\UserSubscription;
 use Illuminate\Support\Facades\DB;
+use App\Support\Facades\UserSubscriptionFacade;
 
 class DeactivateExpiredSubscription
 {
@@ -11,18 +12,18 @@ class DeactivateExpiredSubscription
     {
         DB::beginTransaction();
 
-        $today = today()->startOfDay();
-
         $expired_subscriptions = UserSubscription::with(['userSubscriptionLogs'])
-            ->active()->whereHas('userSubscriptionLogs', function ($query) use ($today) {
-                $query->where('expired_at', '<', $today)->orderByDesc('created_at')->limit(1);
+            ->active()
+            ->whereHas('userSubscriptionLogs', function ($query) {
+                $query->where('expired_at', '<', today()->startOfDay())
+                    ->orderByDesc('created_at')
+                    ->limit(1);
             })->get();
 
         try {
 
             foreach ($expired_subscriptions as $subscription) {
-                $subscription->status = UserSubscription::STATUS_INACTIVE;
-                $subscription->save();
+                $subscription = UserSubscriptionFacade::setModel($subscription)->setSubscriptionStatus(UserSubscription::STATUS_INACTIVE)->getModel();
             }
 
             activity()->useLog('task_deactivate_expired_subscription')

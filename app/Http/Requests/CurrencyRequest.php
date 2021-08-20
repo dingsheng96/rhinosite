@@ -65,10 +65,6 @@ class CurrencyRequest extends FormRequest
      */
     public function attributes()
     {
-        return [
-            'name'  =>  __('validation.attributes.name'),
-            'code'  =>  __('validation.attributes.code'),
-            'rate'  =>  __('validation.attributes.rate')
-        ];
+        return [];
     }
 }

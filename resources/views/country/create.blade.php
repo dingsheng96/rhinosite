@@ -56,6 +56,12 @@
                         </span>
                         @enderror
                     </div>
+                    <div class="form-group">
+                        <div class="icheck-primary">
+                            <input type="checkbox" name="create[set_default]" id="create_set_default" {{ old('create.set_default') ? "checked" : null }}>
+                            <label for="create_set_default">{{ __('labels.default') }}</label>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light btn-rounded-corner" data-dismiss="modal">

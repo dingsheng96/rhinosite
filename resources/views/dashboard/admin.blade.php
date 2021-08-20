@@ -104,7 +104,7 @@
                     @forelse ($current_boosting_projects as $project)
                     <div class="col-md-3 col-12">
                         <a href="{{ route('projects.show', ['project' => $project->id]) }}">
-                            <div class="card shadow-lg border">
+                            <div class="card shadow-lg border h-100">
                                 <img src="{{ $project->thumbnail->full_file_path ?? $default_preview }}" alt="image" class="card-img-top" style="height: 250px; width: 100%; min-height: 210px; object-fit: cover;">
                                 <div class="card-body">
                                     <h5 class="card-title font-weight-bold text-secondary">{{ $project->english_title ?? '-' }}</h5>

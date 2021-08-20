@@ -62,7 +62,7 @@ class HomeController extends Controller
             DB::raw("DATE_FORMAT(created_at,'%M %Y') as months")
         )->whereYear('created_at', today()->format('Y'))
             ->groupBy('months')
-            ->orderBy('months')
+            ->orderByDesc('months')
             ->get()->toArray();
 
         $current_boosting_projects = (clone $listing_projects)
@@ -75,7 +75,7 @@ class HomeController extends Controller
             DB::raw("DATE_FORMAT(created_at,'%M %Y') as months")
         )->success()->whereYear('created_at', today()->format('Y'))
             ->groupBy('months')
-            ->orderBy('months')
+            ->orderByDesc('months')
             ->get()->toArray();
 
         return [

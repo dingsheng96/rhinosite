@@ -23,6 +23,12 @@
                                 {{ __('labels.terminate_plan') }}
                             </a>
                         </p>
+                        @else
+                        <p class="alert-heading text-md-right">
+                            <a href="{{ route('subscriptions.index') }}" role="button">
+                                {{ __('labels.change_plan') }}
+                            </a>
+                        </p>
                         @endif
                         <p class="alert-heading text-md-right">
                             <a href="#subscriptionLog" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="subscriptionLog">
@@ -420,7 +426,7 @@
                                                             <div class="custom-file">
                                                                 <input type="file" id="logo" name="logo" class="custom-file-input custom-img-input @error('logo') is-invalid @enderror" accept=".jpg,.jpeg,.png">
                                                                 <label class="custom-file-label" for="logo">Choose file</label>
-                                                                <ul>{!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG', 'dimension' => '1024 x 1024']) !!}</ul>
+                                                                <ul>{!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG']) !!}</ul>
                                                                 @error('logo')
                                                                 <span class="invalid-feedback" role="alert">
                                                                     <strong>{{ $message }}</strong>

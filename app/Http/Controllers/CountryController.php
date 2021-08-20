@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\DB;
 use App\DataTables\CountryDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\DataTables\CountryStateDataTable;
 use App\Http\Requests\CountryRequest;
+use App\DataTables\CountryStateDataTable;
 
 class CountryController extends Controller
 {
@@ -54,16 +54,21 @@ class CountryController extends Controller
 
         try {
 
-            [
-                'name' => $name,
-                'currency' => $currency,
-                'dial' => $dial
-            ] = $request->get('create');
+            $input = $request->get('create');
 
             $country = new Country();
-            $country->name          =   $name;
-            $country->currency_id   =   $currency;
-            $country->dial_code     =   $dial;
+            $country->name          =   $input['name'];
+            $country->currency_id   =   $input['currency'];
+            $country->dial_code     =   $input['dial'];
+
+            if (!empty($input['set_default'])) {
+                Country::defaultCountry()->first()->update([
+                    'set_default' => false
+                ]);
+
+                $country->set_default = true;
+            }
+
             $country->save();
 
             DB::commit();
@@ -140,6 +145,14 @@ class CountryController extends Controller
             $country->name          =   $request->get('name');
             $country->currency_id   =   $request->get('currency');
             $country->dial_code     =   $request->get('dial');
+
+            if ($request->has('set_default')) {
+                Country::defaultCountry()->first()->update([
+                    'set_default' => false
+                ]);
+
+                $country->set_default = true;
+            }
 
             if ($country->isDirty()) {
                 $country->save();

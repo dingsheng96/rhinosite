@@ -26,7 +26,6 @@ class TransactionDataTable extends DataTable
             ->eloquent($query)
             ->addIndexColumn()
             // ->addColumn('action', function ($data) {
-
             //     return view('components.action', [
             //         'no_action' => $this->no_action ?: null,
             //         'view' => [
