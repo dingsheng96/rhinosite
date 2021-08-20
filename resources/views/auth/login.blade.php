@@ -68,15 +68,14 @@
 
                         <button type="submit" class="btn login-btn mb-3">{{ __('labels.sign_in') }}</button>
                     </form>
-
                     <div class="tab-content">
                         <div class="tab-pane active" id="member">
-                            <div class="text-center login-text">
+                            {{-- <div class="text-center login-text">
                                 Continue with
                                 <a href="#"><img src="{{ asset('storage/assets/login/facebook.png') }}" class="login-icon"></a>
                                 <a href="#"><img src="{{ asset('storage/assets/login/google.png') }}" class="login-icon"></a>
-                            </div>
-                            <div class="text-center my-3">
+                            </div> --}}
+                            <div class="text-center">
                                 {!! __('app.login_btn_register_member') !!}
                             </div>
                         </div>

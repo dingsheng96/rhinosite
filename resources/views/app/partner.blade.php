@@ -120,14 +120,14 @@
         <div class="row text-center justify-content-center">
             <div class="col-12 col-lg-6 col-xl">
                 <img src="{{ asset('storage/assets/joinus/step-1.png') }}" class="step-img">
-                <h3 class="partner-steps">Steps 1</h3>
+                <h3 class="partner-steps">Step 1</h3>
                 <p class="paragraph">
                     Fill in an <a class="txtorange" href="{{ route('register', ['role' => 'merchant']) }}">Electronic Application Form</a> and verify your email address.
                 </p>
             </div>
             <div class="col-12 col-lg-6 col-xl">
                 <img src="{{ asset('storage/assets/joinus/step-2.png') }}" class="step-img">
-                <h3 class="partner-steps">Steps 2</h3>
+                <h3 class="partner-steps">Step 2</h3>
                 <p class="paragraph">
                     Log in to your dashboard, complete your profile by filling in mandatory fields and upload all required documents to avoid any issues/delay in your applications.
                     (This is a Rhinosite due-diligence process to ensure that our contractors are trustable and reliable for their potential customers)
@@ -135,14 +135,14 @@
             </div>
             <div class="col-12 col-lg-6 col-xl">
                 <img src="{{ asset('storage/assets/joinus/step-3.png') }}" class="step-img">
-                <h3 class="partner-steps">Steps 3</h3>
+                <h3 class="partner-steps">Step 3</h3>
                 <p class="paragraph">
                     Our team will take approximately 5-7 working days to process your application and once your application is approved, you can log into your contractor’s dashboard to proceed to subscription payment.
                 </p>
             </div>
             <div class="col-12 col-lg-6 col-xl">
                 <img src="{{ asset('storage/assets/joinus/step-4.png') }}" class="step-img">
-                <h3 class="partner-steps">Steps 4</h3>
+                <h3 class="partner-steps">Step 4</h3>
                 <p class="paragraph">
                     You are all set! You can now create projects and start receiving enquiries from your potential customers.
                     You may also read up on our <a class="txtorange" href="#join-5">FAQ</a> and <a class="txtorange" href="{{ route('app.term') }}" target="blank">Terms & Conditions</a> incorporated herein to understand our operation better.
@@ -150,7 +150,7 @@
             </div>
             <div class="col-12 col-lg-6 col-xl">
                 <img src="{{ asset('storage/assets/joinus/step-5.png') }}" class="step-img">
-                <h3 class="partner-steps">Steps 5</h3>
+                <h3 class="partner-steps">Step 5</h3>
                 <p class="paragraph">
                     If in any circumstances that you are still in doubt, we do have a support team to further assist you with your queries. Please drop us an email at <b>info@rhinosite.com.my</b> or call us at <b>016-303 1808</b>.
                 </p>

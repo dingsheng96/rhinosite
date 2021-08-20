@@ -1728,6 +1728,11 @@ a.user {
     margin: 0 auto;
 }
 
+.login-btn:hover {
+    background-color: rgb(50, 50, 50);
+    color: #FFF;
+}
+
 .login-icon {
     max-width: 25px;
     height: auto;
