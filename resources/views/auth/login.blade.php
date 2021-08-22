@@ -18,13 +18,25 @@
             <div class="col-lg-6 d-inline-flex">
                 <div class="login-container">
 
-                    <ul class="nav">
-                        <li class="user">
+                    <ul class="nav align-items-center mb-3">
+                        <li class="login-user">
                             <a class="user active" data-toggle="tab" href="#member">{{ __('app.login_option_member') }}</a>
                         </li>
-                        <li class="user">
+                        <li class="login-merchant">
                             <a class="user" data-toggle="tab" href="#merchant">{{ __('app.login_option_merchant') }}</a>
                         </li>
+                        <div class="tab-content register-tab">
+                            <div class="tab-pane active" id="member">
+                                <div>
+                                    {!! __('app.login_btn_register_member') !!}
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="merchant">
+                                <div>
+                                    {!! __('app.login_btn_register_merchant') !!}
+                                </div>
+                            </div>
+                        </div>
                     </ul>
 
                     <p class="login-title">{{ __('app.login_form_title') }}</p>
@@ -68,24 +80,6 @@
 
                         <button type="submit" class="btn login-btn mb-3">{{ __('labels.sign_in') }}</button>
                     </form>
-
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="member">
-                            <div class="text-center login-text">
-                                Continue with
-                                <a href="#"><img src="{{ asset('storage/assets/login/facebook.png') }}" class="login-icon"></a>
-                                <a href="#"><img src="{{ asset('storage/assets/login/google.png') }}" class="login-icon"></a>
-                            </div>
-                            <div class="text-center my-3">
-                                {!! __('app.login_btn_register_member') !!}
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="merchant">
-                            <div class="text-center">
-                                {!! __('app.login_btn_register_merchant') !!}
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="col-lg-6 d-lg-inline-flex px-0 d-none">
