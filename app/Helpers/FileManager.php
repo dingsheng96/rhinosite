@@ -44,6 +44,10 @@ class FileManager
     {
         $storage = $this->getStorageDisk();
 
+        if (!$storage->exists($store_path)) {
+            $storage->makeDirectory($store_path); // create new directory if not exists
+        }
+
         if (empty($save_file)) {
             return $old_file;
         }
