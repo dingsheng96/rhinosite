@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddPublishedInProductAttributesTable extends Migration
+class RemoveProjectServiceTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,7 @@ class AddPublishedInProductAttributesTable extends Migration
      */
     public function up()
     {
-        Schema::table('product_attributes', function (Blueprint $table) {
-            $table->boolean('published')->default(0)->after('status');
-        });
+        Schema::dropIfExists('project_service');
     }
 
     /**
@@ -25,8 +23,6 @@ class AddPublishedInProductAttributesTable extends Migration
      */
     public function down()
     {
-        Schema::table('product_attributes', function (Blueprint $table) {
-            $table->dropColumn('published');
-        });
+        //
     }
 }

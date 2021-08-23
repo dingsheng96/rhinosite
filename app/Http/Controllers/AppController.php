@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Project;
+use App\Models\Service;
 use App\Helpers\Message;
 use App\Helpers\Response;
 use App\Models\Permission;
@@ -26,8 +27,7 @@ class AppController extends Controller
             })->inRandomOrder()->limit(12)->get();
 
         $projects = Project::with([
-            'user.ratedBy', 'translations',
-            'unit', 'services', 'address.countryState',
+            'translations', 'unit', 'address.countryState',
             'prices' => function ($query) {
                 $query->defaultPrice();
             },
@@ -36,6 +36,9 @@ class AppController extends Controller
             },
             'adsBoosters' => function ($query) {
                 $query->boosting();
+            },
+            'user' => function ($query) {
+                $query->with(['ratedBy', 'service']);
             }
         ])->published()->withValidMerchant()
             ->inRandomOrder()->limit(6)->get();
@@ -70,7 +73,7 @@ class AppController extends Controller
             });
 
         $projects = Project::with([
-            'translations', 'address', 'unit', 'services', 'user.ratedBy',
+            'translations', 'address', 'unit', 'user.ratedBy',
             'prices' => function ($query) {
                 $query->defaultPrice();
             },
@@ -90,46 +93,48 @@ class AppController extends Controller
     public function showProject(Project $project)
     {
         $project = $project->load([
-            'translations', 'address',
-            'unit', 'media', 'services',
+            'translations', 'address', 'unit', 'media',
             'prices' => function ($query) {
                 $query->defaultPrice();
             },
-            'user.userDetail' => function ($query) {
-                $query->approvedDetails();
+            'user' => function ($query) {
+                $query->with([
+                    'userDetail' => function ($query) {
+                        $query->with(['service'])->approvedDetails();
+                    }
+                ]);
             }
         ]);
 
-        $project_services = $project->services;
-
         $similar_projects = Project::with([
-            'services',
             'prices' => function ($query) {
                 $query->defaultPrice();
             },
         ])->published()
-            ->where('user_id', '!=', $project->user_id)
-            ->whereHas('services', function ($query) use ($project_services) {
-                $query->whereIn('id', $project_services->pluck('id')->toArray());
-            })
-            ->whereHas('user', function ($query) {
-                $query->with(['userDetail'])->merchant()->active();
+            ->whereHas('user', function ($query) use ($project) {
+                $query->with(['userDetail'])->merchant()->active()
+                    ->where(app(User::class)->getTable() . '.id', '!=', $project->user_id)
+                    ->whereHas('service', function ($query) use ($project) {
+                        $query->where(app(Service::class)->getTable() . '.id', $project->user->userDetail->service->id);
+                    });
             })->inRandomOrder()->take(3)->get();
 
-        return view('app.project.show', compact('project', 'similar_projects', 'project_services'));
+        return view('app.project.show', compact('project', 'similar_projects'));
     }
 
     public function showMerchant(Request $request, User $merchant)
     {
         $merchant = $merchant->load([
-            'projects.services',
+            'projects' => function ($query) {
+                $query->published();
+            },
             'userDetail' => function ($query) {
-                $query->approvedDetails();
+                $query->with(['service'])->approvedDetails();
             }
         ]);
 
         $projects = Project::with([
-            'user.ratedBy', 'translations', 'address', 'unit', 'services',
+            'user.ratedBy', 'translations', 'address', 'unit',
             'prices' => function ($query) {
                 $query->defaultPrice();
             },
@@ -157,9 +162,12 @@ class AppController extends Controller
     {
         $compare_lists = Auth::user()->comparisons()
             ->with([
-                'user', 'media', 'translations', 'address', 'services',
+                'media', 'translations', 'address',
                 'prices' => function ($query) {
                     $query->defaultPrice();
+                },
+                'user.userDetail' => function ($query) {
+                    $query->with(['service'])->approvedDetails();
                 }
             ])->get();
 

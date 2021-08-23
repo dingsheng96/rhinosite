@@ -40,6 +40,26 @@
                                             </div>
                                         </div>
                                         <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label for="service" class="col-form-label">{{ __('labels.service') }} <span class="text-red">*</span></label>
+                                                    <select name="service" id="service" class="form-control @error('service') is-invalid @enderror">
+                                                        <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.service'))]) }} ---</option>
+                                                        @forelse($services as $service)
+                                                        <option value="{{ $service->id }}" {{ collect(old('service'))->contains($service->id) ? 'selected' : null }}>{{ $service->name }}</option>
+                                                        @empty
+                                                        @endforelse
+                                                    </select>
+                                                    @error('service')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="phone" class="col-form-label">{{ __('labels.contact_no') }} <span class="text-red">*</span></label>

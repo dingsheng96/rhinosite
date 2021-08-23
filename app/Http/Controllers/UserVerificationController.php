@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Helpers\Status;
 use App\Models\Package;
+use App\Models\Service;
 use App\Helpers\Message;
 use App\Helpers\Response;
 use App\Models\Permission;
@@ -47,7 +48,15 @@ class UserVerificationController extends Controller
      */
     public function create()
     {
-        $user = Auth::user()->load(['userDetail']);
+        $user       =   Auth::user()->load([
+            'media' => function ($query) {
+                $query->ssm();
+            },
+            'userDetail',
+            'address'
+        ]);
+
+        $services   =   Service::orderBy('name', 'asc')->get();
 
         if ($user->userDetail()->approvedDetails()->exists()) {
 
@@ -59,7 +68,7 @@ class UserVerificationController extends Controller
             return redirect()->route('verifications.notify');
         }
 
-        return view('verification.create', compact('user'));
+        return view('verification.create', compact('user', 'services'));
     }
 
     /**
@@ -289,14 +298,6 @@ class UserVerificationController extends Controller
 
     public function resubmit()
     {
-        $user = Auth::user()->load([
-            'media' => function ($query) {
-                $query->ssm();
-            },
-            'userDetail',
-            'address'
-        ]);
-
-        return view('verification.create', compact('user'));
+        return $this->create();
     }
 }

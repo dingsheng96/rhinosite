@@ -151,9 +151,7 @@
                                                 {{-- <p class="merchant-subtitle">{{ $project->chinese_title }}</p> --}}
                                                 <p class="merchant-subtitle">{{ $project->user->name }}</p>
                                                 <p class="merchant-subtitle">
-                                                    @foreach ($project->services as $service)
-                                                    <span class="badge badge-pill badge-info badge-padding">{{ $service->name }}</span>
-                                                    @endforeach
+                                                    <span class="badge badge-pill badge-info badge-padding">{{ $project->user->service->name }}</span>
                                                 </p>
                                             </div>
                                             <div class="merchant-footer">

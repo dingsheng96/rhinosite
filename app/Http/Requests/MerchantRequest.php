@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\City;
 use App\Helpers\Status;
 use App\Models\Country;
+use App\Models\Service;
 use App\Models\UserDetail;
 use App\Rules\PhoneFormat;
 use App\Models\CountryState;
@@ -48,6 +49,7 @@ class MerchantRequest extends FormRequest
             'country_state'     =>  ['required', Rule::exists(CountryState::class, 'id')->where('country_id', $this->get('country'))],
             'city'              =>  ['required', Rule::exists(City::class, 'id')->where('country_state_id', $this->get('country_state'))],
 
+            'service'           =>  ['required', Rule::exists(Service::class, 'id')->whereNull('deleted_at')],
             'reg_no'            =>  ['required', Rule::unique(UserDetail::class, 'reg_no')->ignore($this->route('merchant')->id ?? $this->route('merchant'), 'user_id')->whereNull('deleted_at')],
             'status'            =>  ['required', Rule::in(array_keys(Status::instance()->activeStatus()))],
             'website'           =>  ['nullable', 'url'],

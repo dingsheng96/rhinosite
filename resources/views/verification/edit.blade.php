@@ -26,6 +26,15 @@
                         </div>
 
                         <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="service" class="col-form-label">{{ __('labels.service') }}</label>
+                                    <p class="form-control" id="service">{{ $verification->userDetail->service->name ?? null }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="phone" class="col-form-label">{{ __('labels.contact_no') }}</label>

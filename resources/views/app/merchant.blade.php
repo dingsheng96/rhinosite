@@ -97,15 +97,12 @@
                 <p class="txtgrey">{{ __('app.merchant_service_title') }}</p>
             </div>
 
-            @forelse ($merchant->project_services as $service)
             <div class="col-md-6 col-lg-3">
                 <div class="provided-services">
                     <i class="fa fa-check" aria-hidden="true"></i>
-                    <span class="ml-3">{{ $service->name }}</span>
+                    <span class="ml-3">{{ $merchant->service->name }}</span>
                 </div>
             </div>
-            @empty
-            @endforelse
 
         </div>
     </div>
@@ -128,9 +125,7 @@
                             {{-- <p class="merchant-title">{{ $project->chinese_title }}</p> --}}
                             <p class="merchant-subtitle">{{ $project->user->name }}</p>
                             <p class="merchant-subtitle">
-                                @foreach ($project->services as $service)
-                                <span class="badge badge-pill badge-info badge-padding">{{ $service->name }}</span>
-                                @endforeach
+                                <span class="badge badge-pill badge-info badge-padding">{{ $project->user->service->name }}</span>
                             </p>
                         </div>
                         <div class="merchant-footer">

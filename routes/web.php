@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Project;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -131,4 +133,37 @@ Route::group(['prefix' => 'payment', 'as' => 'payment.'], function () {
     });
 
     Route::get('status', 'PaymentController@paymentStatus')->name('status');
+});
+
+Route::get('transfer-service', function () {
+
+    $projects = Project::with([
+        'services',
+        'user.userDetail' => function ($query) {
+            $query->approvedDetails();
+        }
+    ])->get()->unique('user_id');
+
+    DB::beginTransaction();
+
+    try {
+
+        foreach ($projects as $project) {
+
+            $user_details = $project->user->userDetail;
+
+            if ($user_details) {
+
+                $user_details->service_id = $project->services()->first()->id;
+                $user_details->save();
+            }
+        }
+
+        DB::commit();
+
+        return 'Transfer Success';
+    } catch (\Error | \Exception $ex) {
+        DB::rollBack();
+        return $ex->getMessage();
+    }
 });

@@ -41,6 +41,27 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label for="service" class="col-form-label">{{ __('labels.service') }} <span class="text-red">*</span></label>
+                                                    <select name="service" id="service" class="form-control select2 @error('service') is-invalid @enderror">
+                                                        <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.service'))]) }} ---</option>
+                                                        @forelse($services as $service)
+                                                        <option value="{{ $service->id }}" {{ old('service', $user_details->service_id) == $service->id ? 'selected' : null }}>{{ $service->name }}</option>
+                                                        @empty
+                                                        @endforelse
+                                                    </select>
+                                                    @error('service')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="row">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
@@ -149,7 +170,7 @@
                                                     <label for="status" class="col-form-label">{{ __('labels.status') }}</label>
                                                     <select name="status" id="status" class="form-control select2 @error('status') is-invalid @enderror">
                                                         @foreach ($statuses as $status => $display)
-                                                        <option value="{{ $status }}" {{ old('status', $merchant->status) == $status }}>{{ $display }}</option>
+                                                        <option value="{{ $status }}" {{ old('status', $merchant->status) == $status ? 'selected' : null }}>{{ $display }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('status')

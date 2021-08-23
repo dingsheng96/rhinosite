@@ -23,8 +23,8 @@ class UserDetail extends Model
     protected $table = 'user_details';
 
     protected $fillable = [
-        'user_id', 'business_since', 'website', 'facebook', 'whatsapp', 'pic_name',
-        'pic_phone', 'pic_email', 'validated_by', 'status', 'validated_at'
+        'user_id', 'service_id', 'business_since', 'website', 'facebook', 'whatsapp',
+        'pic_name', 'pic_phone', 'pic_email', 'validated_by', 'status', 'validated_at'
     ];
 
     protected $casts = [
@@ -54,6 +54,11 @@ class UserDetail extends Model
     public function media()
     {
         return $this->morphMany(Media::class, 'sourceable');
+    }
+
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'service_id', 'id');
     }
 
     // Scopes

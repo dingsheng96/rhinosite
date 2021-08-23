@@ -48,7 +48,6 @@ class ProjectController extends Controller
     public function create()
     {
         $max_files          =   Media::MAX_IMAGE_PROJECT;
-        $services           =   Service::orderBy('name', 'asc')->get();
         $statuses           =   Status::instance()->projectStatus();
         $default_currency   =   Currency::defaultCountryCurrency()->first();
         $ads_boosters       =   [];
@@ -62,7 +61,7 @@ class ProjectController extends Controller
                 })->orderBy('name')->get();
         }
 
-        return view('projects.create', compact('max_files', 'services', 'statuses', 'default_currency', 'ads_boosters'));
+        return view('projects.create', compact('max_files', 'statuses', 'default_currency', 'ads_boosters'));
     }
 
     /**
@@ -152,7 +151,6 @@ class ProjectController extends Controller
         $max_files          =   Media::MAX_IMAGE_PROJECT - $media->count();
         $default_price      =   $project->prices->first();
         $statuses           =   Status::instance()->projectStatus();
-        $services           =   Service::orderBy('name', 'asc')->get();
         $ads_boosters       =   Product::with(['userAdsQuotas'])
             ->filterCategory(ProductCategory::TYPE_ADS)
             ->active()
@@ -165,7 +163,7 @@ class ProjectController extends Controller
             })->orderBy('name')->get();
 
         return $dataTable->with(['project' => $project])
-            ->render('projects.edit', compact('project', 'max_files', 'media', 'default_price', 'statuses', 'services', 'ads_boosters'));
+            ->render('projects.edit', compact('project', 'max_files', 'media', 'default_price', 'statuses', 'ads_boosters'));
     }
 
     /**

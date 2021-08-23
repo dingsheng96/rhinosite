@@ -55,6 +55,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(UserDetail::class, 'user_id', 'id');
     }
 
+    public function service()
+    {
+        return $this->hasOneThrough(Service::class, UserDetail::class, 'user_id', 'id', 'id', 'service_id');
+    }
+
     public function address()
     {
         return $this->morphOne(Address::class, 'sourceable');
@@ -145,7 +150,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function scopeActive($query)
     {
-        return $query->where('status', self::STATUS_ACTIVE);
+        return $query->where($this->getTable() . '.status', self::STATUS_ACTIVE);
     }
 
     public function scopeHasAdsQuota($query)

@@ -16,7 +16,6 @@ use App\Models\Comparable;
 use App\Models\Favourable;
 use App\Models\Translation;
 use App\Models\CountryState;
-use App\Models\ProjectService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -76,11 +75,6 @@ class Project extends Model
         return $this->morphMany(AdsBooster::class, 'boostable');
     }
 
-    public function services()
-    {
-        return $this->belongsToMany(Service::class, ProjectService::class, 'project_id', 'service_id', 'id', 'id');
-    }
-
     public function userComparisons()
     {
         return $this->morphToMany(User::class, 'comparable', Comparable::class);
@@ -110,10 +104,11 @@ class Project extends Model
             $query->where(function ($query) use ($keyword) {
                 $query->orWhereHas('translations', function ($query) use ($keyword) {
                     $query->where('value', 'like', "%{$keyword}%");
-                })->orWhereHas('services', function ($query) use ($keyword) {
-                    $query->where(app(Service::class)->getTable() . '.name', 'like', "%{$keyword}%");
                 })->orWhereHas('user', function ($query) use ($keyword) {
-                    $query->where(app(User::class)->getTable() . '.name', 'like', "%{$keyword}%");
+                    $query->where(app(User::class)->getTable() . '.name', 'like', "%{$keyword}%")
+                        ->orWhereHas('service', function ($query) use ($keyword) {
+                            $query->where(app(Service::class)->getTable() . '.name', 'like', "%{$keyword}%");
+                        });
                 })->orWhereHas('address', function ($query) use ($keyword) {
                     $query->where(function ($query) use ($keyword) {
                         $query->orWhereHas('city', function ($query) use ($keyword) {

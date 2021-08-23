@@ -99,6 +99,7 @@ return [
     'boost_ads' => 'Boost Ads',
     'ads' => 'Ads',
     'services' => 'Services',
+    'service' => 'Service',
     'upload_thumbnail' => 'Upload Thumbnail',
     'upload_image' => 'Upload Image|Upload Images',
     'upload_profile_image' => 'Upload Profile Image',

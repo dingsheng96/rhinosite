@@ -27,7 +27,6 @@ class ProjectService extends BaseService
     {
         $this->storeDetails();
         $this->storeTitle();
-        $this->storeServices();
         $this->storeImages();
         $this->storePrice();
         $this->storeAddress();
@@ -51,13 +50,6 @@ class ProjectService extends BaseService
         }
 
         $this->setModel($this->model);
-
-        return $this;
-    }
-
-    public function storeServices()
-    {
-        $this->model->services()->sync($this->request->get('services'));
 
         return $this;
     }

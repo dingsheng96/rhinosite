@@ -86,6 +86,7 @@ class MerchantService extends BaseService
                 return new UserDetail();
             });
 
+        $details->service_id        =   $this->request->get('service');
         $details->reg_no            =   $this->request->get('reg_no');
         $details->business_since    =   $this->request->get('business_since');
         $details->website           =   $this->request->get('website');

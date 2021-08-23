@@ -77,11 +77,11 @@
                     </div>
 
                     <ul class="list-group list-group-unbordered mb-3">
-                        <li class="list-group-item">
-                            <strong><i class="fas fa-clock mr-1 text-orange"></i> {{ __('labels.last_login_at') }}</strong>
-                            <p class="text-muted">{{ $user->last_login_at->toDateTimeString() ?? '-' }}</p>
-                        </li>
                         @if (!empty($user_details))
+                        <li class="list-group-item">
+                            <strong><i class="fas fa-cube mr-1 text-cyan"></i> {{ __('labels.service') }}</strong>
+                            <p class="text-muted">{{ $user_details->service->name }}</p>
+                        </li>
                         <li class="list-group-item">
                             <strong><i class="fas fa-briefcase mr-1 text-purple"></i> {{ __('labels.years_of_experience') }}</strong>
                             <p class="text-muted">{{ trans_choice('labels.year', $user_details->years_of_experience, ['value' => $user_details->years_of_experience]) }}</p>
@@ -103,6 +103,10 @@
                             </p>
                         </li>
                         @endif
+                        <li class="list-group-item">
+                            <strong><i class="fas fa-clock mr-1 text-orange"></i> {{ __('labels.last_login_at') }}</strong>
+                            <p class="text-muted">{{ $user->last_login_at->toDateTimeString() ?? '-' }}</p>
+                        </li>
                     </ul>
                 </div>
             </div>

@@ -5,11 +5,10 @@ namespace App\Http\Requests;
 use App\Models\City;
 use App\Models\User;
 use App\Models\Country;
+use App\Models\Service;
 use App\Rules\PhoneFormat;
 use App\Models\CountryState;
-use App\Rules\UniqueMerchant;
 use Illuminate\Validation\Rule;
-use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -63,6 +62,7 @@ class VerificationRequest extends FormRequest
             'pic_name'  =>  ['required'],
             'pic_phone' =>  ['required', new PhoneFormat],
             'pic_email' =>  ['required', 'email'],
+            'service'   =>  ['required', Rule::exists(Service::class, 'id')->whereNull('deleted_at')]
         ];
     }
 

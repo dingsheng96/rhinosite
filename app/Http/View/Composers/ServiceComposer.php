@@ -26,10 +26,22 @@ class ServiceComposer
      */
     public function compose(View $view)
     {
-        $services = Service::withCount(['projects'])
-            ->with(['projects'])
-            ->whereHas('projects', function ($query) {
-                $query->published();
+        $services = Service::withCount(['users'])
+            ->with([
+                'users' => function ($query) {
+                    $query->with([
+                        'projects' => function ($query) {
+                            $query->published();
+                        }
+                    ])->merchant()->active()
+                        ->withApprovedDetails()
+                        ->withActiveSubscription();
+                }
+            ])
+            ->whereHas('users', function ($query) {
+                $query->merchant()->active()
+                    ->withApprovedDetails()
+                    ->withActiveSubscription();
             })
             ->inRandomOrder()
             ->get();

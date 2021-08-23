@@ -57,8 +57,6 @@ class ProjectRequest extends FormRequest
             'files.*'       =>  ['image', 'mimes:jpg,jpeg,png', 'max:10000'],
             'description'   =>  ['required'],
             'materials'     =>  ['nullable'],
-            'services'      =>  ['required', 'array'],
-            'services.*'    =>  ['exists:' . Service::class . ',id'],
             'address_1'     =>  ['required', 'min:3', 'max:255'],
             'address_2'     =>  ['nullable'],
             'country'       =>  ['required', 'exists:' . Country::class . ',id'],

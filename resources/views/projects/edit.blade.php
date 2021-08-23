@@ -80,7 +80,7 @@
                                         @endadmin
 
                                         <div class="row">
-                                            <div class="col-12 col-md-6">
+                                            <div class="col-12">
                                                 <div class="form-group">
                                                     <label for="status" class="col-form-label">{{ __('labels.status') }} <span class="text-red">*</span></label>
                                                     <select name="status" id="status" class="form-control select2 @error('status') is-invalid @enderror">
@@ -89,21 +89,6 @@
                                                         @endforeach
                                                     </select>
                                                     @error('status')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label for="services" class="col-form-label">{{ __('labels.services') }} <span class="text-red">*</span></label>
-                                                    <select name="services[]" id="services" class="form-control select2-multiple @error('services') is-invalid @enderror" multiple="multiple" data-placeholder="{{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.services'))]) }}">
-                                                        @foreach($services as $service)
-                                                        <option value="{{ $service->id }}" {{ collect(old('services', $project->services->pluck('id')))->contains($service->id) ? 'selected' : null }}>{{ $service->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('services')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>

@@ -44,11 +44,9 @@
                     </p>
 
                     <p>Services Provided</p>
-                    @foreach ($list->services as $service)
                     <div class="provided-services">
-                        <i class="fa fa-check" aria-hidden="true"></i><span class="ml-3">{{ $service->name }}</span>
+                        <i class="fa fa-check" aria-hidden="true"></i><span class="ml-3">{{ $list->user->service->name }}</span>
                     </div>
-                    @endforeach
                     @auth
                     @if (!Auth::user()->favouriteProjects()->get()->contains($list->id))
                     <button class="btn btn-orange w-100 mb-3 btn-add-wishlist" data-wishlist="{{ route('app.wishlist.store') }}" data-project="{{ $list->id }}">{{ __('app.project_details_btn_add_wishlist') }}</button>

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Helpers\Status;
 use App\Models\Package;
 use App\Models\Product;
+use App\Models\Service;
 use App\Helpers\Message;
 use App\Helpers\Response;
 use App\Models\Permission;
@@ -47,8 +48,9 @@ class MerchantController extends Controller
     public function create()
     {
         $statuses = Status::instance()->activeStatus();
+        $services = Service::orderBy('name', 'asc')->get();
 
-        return view('merchant.create', compact('statuses'));
+        return view('merchant.create', compact('statuses', 'services'));
     }
 
     /**
@@ -140,6 +142,7 @@ class MerchantController extends Controller
         $documents      =   $merchant->media()->ssm()->get();
         $subscription   =   $merchant->userSubscriptions->first();
         $statuses       =   Status::instance()->activeStatus();
+        $services       =   Service::orderBy('name', 'asc')->get();
 
         $plans = ProductAttribute::whereHas('product', function ($query) {
             $query->filterCategory(ProductCategory::TYPE_SUBSCRIPTION);
@@ -158,7 +161,7 @@ class MerchantController extends Controller
         }
 
         return $dataTable->with(['merchant_id', $merchant->id])
-            ->render('merchant.edit', compact('merchant', 'documents', 'user_details', 'statuses', 'logo', 'subscription', 'plans'));
+            ->render('merchant.edit', compact('merchant', 'documents', 'user_details', 'statuses', 'logo', 'subscription', 'plans', 'services'));
     }
 
     /**

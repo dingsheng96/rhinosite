@@ -36,4 +36,10 @@
         font-size: 18px;
         text-align: center;
     }
+
+    .badge-padding {
+        padding: 0.8rem 1.6rem;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
 </style>

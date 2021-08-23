@@ -130,9 +130,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title font-weight-bold text-secondary">{{ $project->english_title ?? '-' }}</h5>
                                     <p class="card-text">
-                                        @foreach ($project->services as $service)
-                                        <span class="badge badge-pill badge-info">{{ $service->name }}</span>
-                                        @endforeach
+                                        <span class="badge badge-pill badge-info badge-padding">{{ $project->user->service->name }}</span>
                                     </p>
                                 </div>
                                 <div class="card-footer bg-white">
@@ -173,9 +171,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title font-weight-bold text-secondary">{{ $project->english_title ?? '-' }}</h5>
                                     <p class="card-text">
-                                        @foreach ($project->services as $service)
-                                        <span class="badge badge-pill badge-info">{{ $service->name }}</span>
-                                        @endforeach
+                                        <span class="badge badge-pill badge-info">{{ $project->user->service->name }}</span>
                                     </p>
                                 </div>
                                 <div class="card-footer bg-white">
