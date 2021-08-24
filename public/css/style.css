@@ -512,7 +512,7 @@ input[type="text"].home-s1-searchbar:focus {
     left: 0;
     top: 0;
     height: 80%;
-    transform: translateY(-85%);
+    transform: translateY(-90%);
 }
 
 /* project/merchant image animation and container */
@@ -2020,9 +2020,10 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 1200px) and (max-width: 1439px) {
+
     .badge-padding {
-        padding: 0.5rem 1rem;
-        font-size: 0.7rem;
+        padding: 0.5rem 1rem !important;
+        font-size: 0.7rem !important;
     }
 
     .footer-right {
@@ -2237,6 +2238,11 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .badge-padding {
+        padding: 0.5rem 1rem !important;
+        font-size: 0.7rem !important;
+    }
+
     .register-text {
         font-size: 12px;
     }
@@ -2248,11 +2254,6 @@ a.user {
 
     .highlight-img {
         height: 60%;
-    }
-
-    .badge-padding {
-        padding: 0.5rem 1rem;
-        font-size: 0.7rem;
     }
 
     .footer-right {
@@ -2692,13 +2693,13 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 767px) and (max-width: 991px) {
-    .highlight-img {
-        height: 70%;
+    .badge-padding {
+        padding: 0.5rem 1rem !important;
+        font-size: 0.7rem !important;
     }
 
-    .badge-padding {
-        padding: 0.5rem 1rem;
-        font-size: 0.7rem;
+    .highlight-img {
+        height: 70%;
     }
 
     .partner-steps {
@@ -2865,8 +2866,8 @@ a.user {
     }
 
     .badge-padding {
-        padding: 0.5rem 1rem;
-        font-size: 0.8rem;
+        padding: 0.5rem 1rem !important;
+        font-size: 0.7rem !important;
     }
 
     .partner-steps {
@@ -3231,6 +3232,12 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (max-width: 599px) {
+
+    .highlight-img {
+        height: 60%;
+        max-height: 120px;
+    }
+
     .register-tab {
         margin: 0 auto;
         width: 100%;
@@ -3255,8 +3262,8 @@ a.user {
     }
 
     .badge-padding {
-        padding: 0.5rem 1rem;
-        font-size: 0.8rem;
+        padding: 0.5rem 1rem !important;
+        font-size: 0.7rem !important;
     }
 
     .step-img {
