@@ -108,10 +108,9 @@
                                 <img src="{{ $project->thumbnail->full_file_path ?? $default_preview }}" alt="image" class="card-img-top" style="height: 250px; width: 100%; min-height: 210px; object-fit: cover;">
                                 <div class="card-body">
                                     <h5 class="card-title font-weight-bold text-secondary">{{ $project->english_title ?? '-' }}</h5>
+                                    <p class="card-title">{{ $project->user->name }}</p>
                                     <p class="card-text">
-                                        @foreach ($project->services as $service)
-                                        <span class="badge badge-pill badge-info">{{ $service->name }}</span>
-                                        @endforeach
+                                        <span class="badge badge-pill badge-info badge-padding">{{ $project->user->service->name }}</span>
                                     </p>
                                 </div>
                                 <div class="card-footer bg-white">
