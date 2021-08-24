@@ -68,9 +68,9 @@
                 <button type="submit" class="btn btn-orange btn-lg mt-3 float-right ml-2" name="pay">
                     {{ strtoupper(__('labels.pay_now')) }}
                 </button>
-                <button type="submit" class="btn btn-black btn-lg mt-3 float-right mr-2" name="cancel">
+                <a href="{{ route('products.index') }}" class="btn btn-black btn-lg mt-3 float-right mr-2" name="cancel">
                     {{ strtoupper(__('labels.cancel')) }}
-                </button>
+                </a>
                 @endif
             </div>
         </div>

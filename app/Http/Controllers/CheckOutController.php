@@ -47,10 +47,6 @@ class CheckOutController extends Controller
 
     public function store(Request $request)
     {
-        if ($request->has('cancel')) {
-            return redirect()->route('check.index');
-        }
-
         DB::beginTransaction();
 
         $action     =   Permission::ACTION_CREATE;
