@@ -46,14 +46,7 @@ class HomeController extends Controller
             'user' => function ($query) {
                 $query->with(['userDetail', 'userSubscriptions']);
             }
-        ])->published()
-            ->whereHas('user', function ($query) {
-                $query->active()->whereHas('userDetail', function ($query) {
-                    $query->approvedDetails();
-                })->whereHas('userSubscriptions', function ($query) {
-                    $query->active();
-                });
-            });
+        ])->published()->withValidMerchant();
 
         $total_listing_projects = (clone $listing_projects)->count();
 

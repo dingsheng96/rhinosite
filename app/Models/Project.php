@@ -167,7 +167,8 @@ class Project extends Model
     {
         return $query->whereHas('user', function ($query) {
             $query->merchant()->active()
-                ->withActiveSubscription()->withApprovedDetails();
+                ->withActiveSubscription()->withApprovedDetails()
+                ->whereHas('service');
         });
     }
 
