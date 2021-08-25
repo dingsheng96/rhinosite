@@ -45,7 +45,7 @@
 
                     <p>Services Provided</p>
                     <div class="provided-services">
-                        <i class="fa fa-check" aria-hidden="true"></i><span class="ml-3">{{ $list->user->service->name }}</span>
+                        <i class="fa fa-check" aria-hidden="true"></i><span class="ml-3">{{ $list->user->service->name ?? '-' }}</span>
                     </div>
                     @auth
                     @if (!Auth::user()->favouriteProjects()->get()->contains($list->id))

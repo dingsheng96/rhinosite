@@ -110,14 +110,21 @@ class AppController extends Controller
             'prices' => function ($query) {
                 $query->defaultPrice();
             },
-        ])->published()
-            ->whereHas('user', function ($query) use ($project) {
-                $query->with(['userDetail'])->merchant()->active()
-                    ->where(app(User::class)->getTable() . '.id', '!=', $project->user_id)
-                    ->whereHas('service', function ($query) use ($project) {
-                        $query->where(app(Service::class)->getTable() . '.id', $project->user->userDetail->service->id);
-                    });
-            })->inRandomOrder()->take(3)->get();
+            'user' => function ($query) {
+                $query->with([
+                    'service',
+                    'userDetail' => function ($query) {
+                        $query->approvedDetails();
+                    }
+                ]);
+            }
+        ])->published()->whereHas('user', function ($query) use ($project) {
+            $query->merchant()->active()
+                ->where(app(User::class)->getTable() . '.id', '!=', $project->user_id)
+                ->whereHas('service', function ($query) use ($project) {
+                    $query->where(app(Service::class)->getTable() . '.id', $project->user->service->id);
+                });
+        })->inRandomOrder()->take(3)->get();
 
         return view('app.project.show', compact('project', 'similar_projects'));
     }

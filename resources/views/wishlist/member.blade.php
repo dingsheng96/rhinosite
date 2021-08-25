@@ -81,7 +81,7 @@
                                                 {{-- <p class="merchant-subtitle">{{ $project->chinese_title }}</p> --}}
                                                 <p class="merchant-subtitle">{{ $project->user->name }}</p>
                                                 <p class="merchant-subtitle">
-                                                    <span class="badge badge-pill badge-info badge-padding">{{ $project->user->service->name }}</span>
+                                                    <span class="badge badge-pill badge-info badge-padding">{{ $project->user->service->name ?? '-' }}</span>
                                                 </p>
                                             </div>
                                             <div class="merchant-footer">
