@@ -290,10 +290,11 @@ class MerchantService extends BaseService
 
         $initial_quantity = 0;
         if (!$user_ads_quota->wasRecentlyCreated) { // existing records
-            $initial_quantity = $user_ads_quota->userAdsQuotaHistories()
-                ->orderByDesc('created_at')
-                ->first()
-                ->remaining_quantity;
+
+            $history = $user_ads_quota->userAdsQuotaHistories()->orderByDesc('created_at')->first();
+            if ($history) {
+                $initial_quantity = $history->remaining_quantity;
+            }
         }
 
         // create new user ads quoata history

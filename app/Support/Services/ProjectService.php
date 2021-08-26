@@ -196,9 +196,13 @@ class ProjectService extends BaseService
             $ads_quota->decrement('quantity');
 
             // create ads quotas history
-            $latest_history     =   $ads_quota->userAdsQuotaHistories->first();
-            $initial_quantity   =   $latest_history->remaining_quantity;
+            $initial_quantity   =   0;
             $process_quantity   =   '-1';
+            $latest_history     =   $ads_quota->userAdsQuotaHistories->first();
+
+            if ($latest_history) {
+                $initial_quantity = $latest_history->remaining_quantity;
+            }
 
             $ads_quota_history  =   new UserAdsQuotaHistory();
             $ads_quota_history->initial_quantity    =   $initial_quantity;
