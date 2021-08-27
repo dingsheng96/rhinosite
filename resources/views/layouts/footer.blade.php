@@ -87,7 +87,8 @@
                 <div class="footer-content-container">
                     <div class="footer-left-content">
                         <img src="{{ asset('storage/logo-footer.png') }}" alt="rhinosite-footer_logo" class="footer-logo mb-5">
-                        <p class="mb-5">{{ __('app.tagline') }}</p>
+
+                        <p class="mb-5">{{ __('app.home_title_main') }}</p>
                         <p>{{ __('app.social_media') }}</p>
                         <div class="d-flex">
                             <a href="https://www.facebook.com/rhinositemy" target="blank">
