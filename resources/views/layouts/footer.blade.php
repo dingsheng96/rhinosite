@@ -36,8 +36,12 @@
                         <p class="mb-5">{{ __('app.tagline') }}</p>
                         <p>{{ __('app.social_media') }}</p>
                         <div class="d-flex">
-                            <img src="{{ asset('storage/facebook.png') }}" alt="facebook_icon" class="footer-social">
-                            <img src="{{ asset('storage/instagram.png') }}" alt="instagram_icon" class="footer-social">
+                            <a href="https://www.facebook.com/rhinositemy">
+                                <img src="{{ asset('storage/facebook.png') }}" alt="facebook_icon" class="footer-social">
+                            </a>
+                            <a href="https://www.instagram.com/rhinosite_my/">
+                                <img src="{{ asset('storage/instagram.png') }}" alt="instagram_icon" class="footer-social">
+                            </a>
                         </div>
                     </div>
                     <div class="footer-right">
@@ -86,8 +90,12 @@
                         <p class="mb-5">{{ __('app.tagline') }}</p>
                         <p>{{ __('app.social_media') }}</p>
                         <div class="d-flex">
-                            <img src="{{ asset('storage/facebook.png') }}" alt="facebook_icon" class="footer-social">
-                            <img src="{{ asset('storage/instagram.png') }}" alt="instagram_icon" class="footer-social">
+                            <a href="https://www.facebook.com/rhinositemy" target="blank">
+                                <img src="{{ asset('storage/facebook.png') }}" alt="facebook_icon" class="footer-social">
+                            </a>
+                            <a href="https://www.instagram.com/rhinosite_my/" target="blank">
+                                <img src="{{ asset('storage/instagram.png') }}" alt="instagram_icon" class="footer-social">
+                            </a>
                         </div>
                     </div>
                     <div class="footer-right">
