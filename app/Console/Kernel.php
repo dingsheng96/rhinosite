@@ -30,7 +30,6 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(new DeactivateExpiredSubscription)->daily();
         $schedule->call(new FailOverdueTransaction)->daily();
-        $schedule->call(new DeactivateExpiredSubscription)->daily();
         $schedule->call(new SendSubscriptionPreExpireNotification)->daily();
         $schedule->call(new SendSubscriptionPostExpireNotification)->daily();
     }
