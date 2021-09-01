@@ -30,6 +30,8 @@ class SendSubscriptionPostExpireNotification
             })
             ->unique('user_id');
 
+        $tasks_count = 0;
+
         try {
 
             foreach ($expired_subscriptions as $subscription) {
@@ -55,12 +57,14 @@ class SendSubscriptionPostExpireNotification
                         $subscription->user->notify(new DeactivateAccount());
                         break;
                 }
+
+                $tasks_count++;
             }
 
             activity()->useLog('task_send_subscription_post_expire_notification')
                 ->performedOn(new UserSubscription())
                 ->withProperties(['target_id' => $expired_subscriptions->pluck('id')->toArray()])
-                ->log('Successfully Processed Tasks: ' . $expired_subscriptions->count());
+                ->log('Successfully Processed Tasks: ' . $tasks_count);
 
             DB::commit();
         } catch (\Error | \Exception $ex) {
