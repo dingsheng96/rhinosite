@@ -1,9 +1,8 @@
 <?php
 
-namespace App\DataTables;
+namespace App\DataTables\Admin;
 
 use App\Models\Product;
-use Illuminate\Support\Str;
 use App\Models\ProductCategory;
 use App\Models\ProductAttribute;
 use Yajra\DataTables\Html\Button;
@@ -12,7 +11,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class ProductAttributeDataTable extends DataTable
+class ProductDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -30,37 +29,35 @@ class ProductAttributeDataTable extends DataTable
                     'no_action' => $this->no_action ?: null,
                     'view' => [
                         'permission' => 'product.read',
-                        'route' => route('products.attributes.show', ['product' => $this->product_id, 'attribute' => $data->id])
+                        'route' => route('products.show', ['product' => $data->id])
                     ],
                     'update' => [
                         'permission' => 'product.update',
-                        'route' => route('products.attributes.edit', ['product' => $this->product_id, 'attribute' => $data->id]),
+                        'route' => route('products.edit', ['product' => $data->id]),
                     ],
                     'delete' => [
                         'permission' => 'product.delete',
-                        'route' => route('products.attributes.destroy', ['product' => $this->product_id, 'attribute' => $data->id])
+                        'route' => route('products.destroy', ['product' => $data->id])
                     ]
                 ])->render();
             })
             ->addColumn('status', function ($data) {
-                return $data->status_label . ($data->published ? '<br> <span class="badge badge-pill badge-primary px-3">' . __('labels.published') . '</span>' : '');
+                return '<span>' . $data->status_label . '</span>';
             })
-            ->editColumn('stock_type', function ($data) {
-                return Str::title($data->stock_type);
+            ->addColumn('variation', function ($data) {
+                return $data->product_attributes_count ?? 0;
+            })
+            ->addColumn('category', function ($data) {
+                return $data->category_name;
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
-            ->editColumn('slot', function ($data) {
-                return $data->slot_with_type;
-            })
             ->filterColumn('status', function ($query, $keyword) {
-
-                $keyword = strtolower($keyword);
-
-                return $query->when($keyword == 'published', function ($query) {
-                    $query->where('published', true);
-                })->orWhere('status', 'like', "%{$keyword}%");
+                return $query->where('status', strtolower($keyword));
+            })
+            ->filterColumn('category', function ($query, $keyword) {
+                return $query->where(app(ProductCategory::class)->getTable() . '.name', 'like', "%{$keyword}%");
             })
             ->rawColumns(['action', 'status']);
     }
@@ -68,12 +65,22 @@ class ProductAttributeDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\ProductAttribute $model
+     * @param \App\Models\Product $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(ProductAttribute $model)
+    public function query(Product $model)
     {
-        return $model->where('product_id', $this->product_id)->newQuery();
+        $tbl_product = app(Product::class)->getTable();
+        $tbl_category = app(ProductCategory::class)->getTable();
+
+        return $model->select($tbl_product . '.*', $tbl_category . '.id AS category_id, ', $tbl_category . '.name AS category_name')
+            ->withCount(['productAttributes'])
+            ->join(
+                $tbl_category,
+                $tbl_product . '.product_category_id',
+                $tbl_category . '.id'
+            )
+            ->newQuery();
     }
 
     /**
@@ -84,11 +91,11 @@ class ProductAttributeDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('product-attribute-table')
+            ->setTableId('product-table')
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(6, 'asc')
+            ->orderBy(0, 'asc')
             ->responsive(true)
             ->autoWidth(true)
             ->processing(false);
@@ -103,13 +110,12 @@ class ProductAttributeDataTable extends DataTable
     {
         return [
             Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('sku')->title(__('labels.sku'))->width('15%'),
-            Column::make('stock_type')->title(__('labels.stock_type'))->width('15%'),
-            Column::make('quantity')->title(__('labels.quantity'))->width('10%'),
-            Column::make('slot')->title(__('labels.slot'))->width('15%'),
+            Column::make('name')->title(__('labels.name'))->width('30%'),
+            Column::make('category')->title(__('labels.category'))->width('20%'),
+            Column::make('variation')->title(trans_choice('labels.variation', 2))->width('10%'),
             Column::make('status')->title(__('labels.status'))->width('10%'),
             Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
-            Column::computed('action', __('labels.action'))->width('15%')
+            Column::computed('action', __('labels.action'))->width('10%')
                 ->exportable(false)
                 ->printable(false),
         ];
@@ -122,6 +128,6 @@ class ProductAttributeDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'ProductAttribute_' . date('YmdHis');
+        return 'Product_' . date('YmdHis');
     }
 }

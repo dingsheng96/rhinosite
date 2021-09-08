@@ -1,15 +1,16 @@
 <?php
 
-namespace App\DataTables;
+namespace App\DataTables\Admin\Admin;
 
-use App\Models\Currency;
+use App\Models\Role;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class CurrencyDataTable extends DataTable
+class RoleDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -24,18 +25,18 @@ class CurrencyDataTable extends DataTable
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return view('components.action', [
-                    'no_action' => $this->no_action ?: null,
+                    'no_action' => $this->no_action ?: ($data->name == Role::ROLE_SUPER_ADMIN),
                     'view' => [
-                        'permission' => 'currency.read',
-                        'route' => route('currencies.show', ['currency' => $data->id])
+                        'permission' => 'role.read',
+                        'route' => route('admin.roles.show', ['role' => $data->id])
                     ],
                     'update' => [
-                        'permission' => 'currency.update',
-                        'route' => route('currencies.edit', ['currency' => $data->id]),
+                        'permission' => 'role.update',
+                        'route' => route('admin.roles.edit', ['role' => $data->id]),
                     ],
                     'delete' => [
-                        'permission' => 'currency.delete',
-                        'route' => route('currencies.destroy', ['currency' => $data->id])
+                        'permission' => 'role.delete',
+                        'route' => route('admin.roles.destroy', ['role' => $data->id])
                     ]
                 ])->render();
             })
@@ -48,10 +49,10 @@ class CurrencyDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Currency $model
+     * @param \App\Models\Role $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Currency $model)
+    public function query(Role $model)
     {
         return $model->newQuery();
     }
@@ -64,7 +65,7 @@ class CurrencyDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('currency-table')
+            ->setTableId('role-table')
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -83,8 +84,8 @@ class CurrencyDataTable extends DataTable
     {
         return [
             Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('name')->title(__('labels.name'))->width('50%'),
-            Column::make('code')->title(__('labels.code'))->width('20%'),
+            Column::make('name')->title(__('labels.name'))->width('30%'),
+            Column::make('description')->title(__('labels.description'))->width('40%'),
             Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
             Column::computed('action', __('labels.action'))->width('10%')
                 ->exportable(false)
@@ -99,6 +100,6 @@ class CurrencyDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Country_' . date('YmdHis');
+        return 'Role_' . date('YmdHis');
     }
 }

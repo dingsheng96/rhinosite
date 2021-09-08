@@ -1,16 +1,15 @@
 <?php
 
-namespace App\DataTables;
+namespace App\DataTables\Admin;
 
-use Illuminate\Support\Str;
+use App\Models\Currency;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use Spatie\Activitylog\Models\Activity;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class ActivityLogDataTable extends DataTable
+class CurrencyDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -23,34 +22,36 @@ class ActivityLogDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->addColumn('caused_by', function ($data) {
-                $model  =   $data->causer_type;
-                $id     =   $data->causer_id;
-
-                return '<span>Caused Model: ' . $model . '<br/>Caused_ID: ' . $id . '</span>';
-            })
-            ->addColumn('subject_to', function ($data) {
-                $model  =   $data->subject_type;
-                $id     =   $data->subject_id;
-
-                return '<span>Subject Model: ' . $model . '<br/>Subject_ID: ' . $id . '</span>';
+            ->addColumn('action', function ($data) {
+                return view('components.action', [
+                    'no_action' => $this->no_action ?: null,
+                    'view' => [
+                        'permission' => 'currency.read',
+                        'route' => route('currencies.show', ['currency' => $data->id])
+                    ],
+                    'update' => [
+                        'permission' => 'currency.update',
+                        'route' => route('currencies.edit', ['currency' => $data->id]),
+                    ],
+                    'delete' => [
+                        'permission' => 'currency.delete',
+                        'route' => route('currencies.destroy', ['currency' => $data->id])
+                    ]
+                ])->render();
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
-            ->editColumn('description', function ($data) {
-                return Str::limit($data->description);
-            })
-            ->rawColumns(['action', 'caused_by', 'subject_to']);
+            ->rawColumns(['action']);
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \Spatie\Activitylog\Models\Activity $model
+     * @param \App\Models\Currency $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Activity $model)
+    public function query(Currency $model)
     {
         return $model->newQuery();
     }
@@ -63,11 +64,11 @@ class ActivityLogDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('activity-log-table')
+            ->setTableId('currency-table')
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(5, 'desc')
+            ->orderBy(0, 'asc')
             ->responsive(true)
             ->autoWidth(true)
             ->processing(false);
@@ -82,11 +83,12 @@ class ActivityLogDataTable extends DataTable
     {
         return [
             Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('log_name')->title(__('labels.log_name'))->width('10%'),
-            Column::make('subject_to')->title(__('labels.subject_to'))->width('20%'),
-            Column::make('caused_by')->title(__('labels.caused_by'))->width('20%'),
-            Column::make('description')->title(__('labels.description'))->width('30%'),
-            Column::make('created_at')->title(__('labels.created_at'))->width('15%')
+            Column::make('name')->title(__('labels.name'))->width('50%'),
+            Column::make('code')->title(__('labels.code'))->width('20%'),
+            Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
+            Column::computed('action', __('labels.action'))->width('10%')
+                ->exportable(false)
+                ->printable(false),
         ];
     }
 
@@ -97,6 +99,6 @@ class ActivityLogDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'ActivityLog_' . date('YmdHis');
+        return 'Country_' . date('YmdHis');
     }
 }

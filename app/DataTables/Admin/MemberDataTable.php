@@ -1,16 +1,15 @@
 <?php
 
-namespace App\DataTables;
+namespace App\DataTables\Admin;
 
 use App\Models\User;
-use Illuminate\Support\Arr;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class VerificationDataTable extends DataTable
+class MemberDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -24,29 +23,21 @@ class VerificationDataTable extends DataTable
             ->eloquent($query)
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
-
-                $options = [
-                    'no_action' =>  $this->no_action ?? null,
+                return view('components.action', [
+                    'no_action' => $this->no_action ?: null,
                     'view' => [
-                        'permission' => 'merchant.create',
-                        'route' => route('verifications.show', ['verification' => $data->id])
+                        'permission' => 'member.read',
+                        'route' => route('members.show', ['member' => $data->id])
                     ],
                     'update' => [
-                        'permission' => 'merchant.create',
-                        'route' => route('verifications.edit', ['verification' => $data->id]),
+                        'permission' => 'member.update',
+                        'route' => route('members.edit', ['member' => $data->id])
                     ],
                     'delete' => [
-                        'permission' => 'merchant.create',
-                        'route' => route('verifications.destroy', ['verification' => $data->id])
+                        'permission' => 'member.delete',
+                        'route' => route('members.destroy', ['member' => $data->id])
                     ]
-                ];
-
-                if (empty($data->userDetail)) {
-
-                    $options = Arr::only($options, ['delete']);
-                }
-
-                return view('components.action', $options)->render();
+                ])->render();
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
@@ -54,22 +45,13 @@ class VerificationDataTable extends DataTable
             ->editColumn('phone', function ($data) {
                 return $data->formatted_phone_number;
             })
-            ->addColumn('profile', function ($data) {
-                return $data->userDetail->status_label ?? '<span class="badge badge-info badge-pill px-3">' . __('labels.not_submit') . '</span>';
+            ->editColumn('status', function ($data) {
+                return '<span>' . $data->status_label . '</span>';
             })
-            ->filterColumn('profile', function ($query, $keyword) {
-
-                $keyword = strtolower($keyword);
-
-                $query->when($keyword == 'not submit', function ($query) {
-                    $query->doesntHave('userDetail');
-                })->when($keyword != 'not submit', function ($query) use ($keyword) {
-                    $query->whereHas('userDetail', function ($query) use ($keyword) {
-                        $query->where('status', $keyword);
-                    });
-                });
+            ->filterColumn('status', function ($query, $keyword) {
+                $query->where('status', strtolower($keyword));
             })
-            ->rawColumns(['action', 'profile']);
+            ->rawColumns(['action', 'status']);
     }
 
     /**
@@ -80,17 +62,7 @@ class VerificationDataTable extends DataTable
      */
     public function query(User $model)
     {
-        // Get merchants with not submitted user details, pending or rejected details
-        return $model->with(['userDetail'])
-            ->merchant()
-            ->doesntHave('userDetail')
-            ->orWhereHas('userDetail', function ($query) {
-                $query->pendingDetails()
-                    ->orWhere(function ($query) {
-                        $query->rejectedDetails();
-                    });
-            })
-            ->newQuery();
+        return $model->member()->newQuery();
     }
 
     /**
@@ -101,11 +73,11 @@ class VerificationDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('verification-table')
+            ->setTableId('member-table')
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(1, 'desc')
+            ->orderBy(5, 'desc')
             ->responsive(true)
             ->autoWidth(true)
             ->processing(false);
@@ -123,7 +95,7 @@ class VerificationDataTable extends DataTable
             Column::make('name')->title(__('labels.name'))->width('25%'),
             Column::make('email')->title(__('labels.email'))->width('20%'),
             Column::make('phone')->title(__('labels.contact_no'))->width('15%'),
-            Column::make('profile')->title(__('labels.profile'))->width('10%'),
+            Column::make('status')->title(__('labels.status'))->width('10%'),
             Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
             Column::computed('action', __('labels.action'))->width('10%')
                 ->exportable(false)
@@ -138,6 +110,6 @@ class VerificationDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Verfication_' . date('YmdHis');
+        return 'Member_' . date('YmdHis');
     }
 }

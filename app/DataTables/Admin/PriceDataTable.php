@@ -1,15 +1,17 @@
 <?php
 
-namespace App\DataTables;
+namespace App\DataTables\Admin;
 
-use App\Models\City;
+use App\Models\Price;
+use App\Models\Currency;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
+use Illuminate\Database\Eloquent\Builder;
 
-class CityDataTable extends DataTable
+class PriceDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -22,15 +24,8 @@ class CityDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->addColumn('action', function ($data) {
-
-                return view('components.action', [
-                    'no_action' => $this->no_action ?: null,
-                    'delete' => [
-                        'permission' => 'country.delete',
-                        'route' => route('countries.country-states.cities.destroy', ['country' => $this->country_id, 'country_state' => $this->country_state_id, 'city' => $data->id])
-                    ]
-                ])->render();
+            ->addColumn('currency', function ($data) {
+                return $data->currency->name_with_code;
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
@@ -41,12 +36,15 @@ class CityDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\City $model
+     * @param \App\Models\Price $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(City $model)
+    public function query(Price $model)
     {
-        return $model->where('country_state_id', $this->country_state_id)->newQuery();
+        return $model->whereHasMorph('priceable', $this->parent_class, function (Builder $query) {
+            $query->where('priceable_id', $this->parent_id);
+        })
+            ->newQuery();
     }
 
     /**
@@ -57,7 +55,7 @@ class CityDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('city-table')
+            ->setTableId('price-table')
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -75,12 +73,12 @@ class CityDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#')->width('10%'),
-            Column::make('name')->title(__('labels.name'))->width('50%'),
-            Column::make('created_at')->title(__('labels.created_at'))->width('25%'),
-            Column::computed('action', __('labels.action'))->width('15%')
-                ->exportable(false)
-                ->printable(false),
+            Column::computed('DT_RowIndex', '#')->width('5%'),
+            Column::make('currency')->title(__('labels.currency'))->width('20%'),
+            Column::make('unit_price')->title(__('labels.unit_price'))->width('20%'),
+            Column::make('discount')->title(__('labels.discount'))->width('20%'),
+            Column::make('selling_price')->title(__('labels.selling_price'))->width('20%'),
+            Column::make('created_at')->title(__('labels.created_at'))->width('15%')
         ];
     }
 
@@ -91,6 +89,6 @@ class CityDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'City_' . date('YmdHis');
+        return 'Price_' . date('YmdHis');
     }
 }

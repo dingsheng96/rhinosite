@@ -1,15 +1,18 @@
 <?php
 
-namespace App\DataTables;
+namespace App\DataTables\Admin;
 
-use App\Models\User;
+use App\Models\Order;
+use App\Models\UserDetail;
+use App\Models\Transaction;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class MemberDataTable extends DataTable
+class TransactionDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -22,31 +25,29 @@ class MemberDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->addColumn('action', function ($data) {
-                return view('components.action', [
-                    'no_action' => $this->no_action ?: null,
-                    'view' => [
-                        'permission' => 'member.read',
-                        'route' => route('members.show', ['member' => $data->id])
-                    ],
-                    'update' => [
-                        'permission' => 'member.update',
-                        'route' => route('members.edit', ['member' => $data->id])
-                    ],
-                    'delete' => [
-                        'permission' => 'member.delete',
-                        'route' => route('members.destroy', ['member' => $data->id])
-                    ]
-                ])->render();
+            // ->addColumn('action', function ($data) {
+            //     return view('components.action', [
+            //         'no_action' => $this->no_action ?: null,
+            //         'view' => [
+            //             'permission' => 'transaction.create',
+            //             'route' => route('transactions.show', ['transaction' => $data->id])
+            //         ],
+            //     ])->render();
+            // })
+            ->addColumn('order_no', function ($data) {
+                return optional($data->sourceable)->order_no ?? '-';
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
-            ->editColumn('phone', function ($data) {
-                return $data->formatted_phone_number;
-            })
             ->editColumn('status', function ($data) {
                 return '<span>' . $data->status_label . '</span>';
+            })
+            ->editColumn('amount', function ($data) {
+                return $data->amount_with_currency_code;
+            })
+            ->editColumn('payment_method', function ($data) {
+                return $data->paymentMethod->name;
             })
             ->filterColumn('status', function ($query, $keyword) {
                 $query->where('status', strtolower($keyword));
@@ -57,12 +58,12 @@ class MemberDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\User $model
+     * @param \App\Models\Transaction $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(User $model)
+    public function query(Transaction $model)
     {
-        return $model->member()->newQuery();
+        return $model->with(['sourceable', 'paymentMethod'])->newQuery();
     }
 
     /**
@@ -73,11 +74,11 @@ class MemberDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('member-table')
+            ->setTableId('transaction-table')
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(5, 'desc')
+            ->orderBy(6, 'desc')
             ->responsive(true)
             ->autoWidth(true)
             ->processing(false);
@@ -92,14 +93,15 @@ class MemberDataTable extends DataTable
     {
         return [
             Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('name')->title(__('labels.name'))->width('25%'),
-            Column::make('email')->title(__('labels.email'))->width('20%'),
-            Column::make('phone')->title(__('labels.contact_no'))->width('15%'),
+            Column::make('transaction_no')->title(__('labels.transaction_no'))->width('15%'),
+            Column::make('order_no')->title(__('labels.order_no'))->width('15%'),
+            Column::make('amount')->title(__('labels.amount'))->width('15%'),
+            Column::make('payment_method')->title(__('labels.payment_method'))->width('15%'),
             Column::make('status')->title(__('labels.status'))->width('10%'),
             Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
-            Column::computed('action', __('labels.action'))->width('10%')
-                ->exportable(false)
-                ->printable(false),
+            // Column::computed('action', __('labels.action'))->width('10%')
+            //     ->exportable(false)
+            //     ->printable(false),
         ];
     }
 
@@ -110,6 +112,6 @@ class MemberDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Member_' . date('YmdHis');
+        return 'Transaction_' . date('YmdHis');
     }
 }

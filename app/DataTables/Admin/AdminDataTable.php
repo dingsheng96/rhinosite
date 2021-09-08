@@ -1,16 +1,16 @@
 <?php
 
-namespace App\DataTables;
+namespace App\DataTables\Admin;
 
-use App\Models\Service;
-use Illuminate\Support\Str;
+use App\Models\User;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class ServiceDataTable extends DataTable
+class AdminDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -24,42 +24,43 @@ class ServiceDataTable extends DataTable
             ->eloquent($query)
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
-
                 return view('components.action', [
-                    'no_action' => $this->no_action ?: null,
-                    'view' => [
-                        'permission' => 'service.create',
-                        'route' => route('services.show', ['service' => $data->id])
-                    ],
+                    'no_action' => $this->no_action ?: $data->id == Auth::id(),
                     'update' => [
-                        'permission' => 'service.create',
-                        'route' => '#updateServiceModal',
-                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode(['id' => $data->id, 'name' => $data->name, 'description' => $data->description]) . "'"
+                        'permission' => 'admin.update',
+                        'route' => '#updateAdminModal',
+                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode($data) . "'" . ' data-route="' . route('admins.update', ['admin' => $data->id]) . '"'
                     ],
                     'delete' => [
-                        'permission' => 'service.delete',
-                        'route' => route('services.destroy', ['service' => $data->id])
+                        'permission' => 'admin.delete',
+                        'route' => route('admins.destroy', ['admin' => $data->id])
                     ]
                 ])->render();
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
-            ->editColumn('description', function ($data) {
-                return Str::limit($data->description ?? '-');
+            ->editColumn('last_login_at', function ($data) {
+                return optional($data->last_login_at)->toDateTimeString();
             })
-            ->rawColumns(['action']);
+            ->editColumn('status', function ($data) {
+                return '<span>' . $data->status_label . '</span>';
+            })
+            ->filterColumn('status', function ($query, $keyword) {
+                $query->where('status', strtolower($keyword));
+            })
+            ->rawColumns(['action', 'status']);
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Service $model
+     * @param \App\Models\User $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Service $model)
+    public function query(User $model)
     {
-        return $model->newQuery();
+        return $model->admin()->newQuery();
     }
 
     /**
@@ -70,7 +71,7 @@ class ServiceDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('service-table')
+            ->setTableId('admin-table')
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -89,12 +90,14 @@ class ServiceDataTable extends DataTable
     {
         return [
             Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('name')->title(__('labels.name'))->width('30%'),
-            Column::make('description')->title(__('labels.description'))->width('40%'),
+            Column::make('name')->title(__('labels.name'))->width('25%'),
+            Column::make('email')->title(__('labels.email'))->width('20%'),
+            Column::make('status')->title(__('labels.status'))->width('10%'),
+            Column::make('last_login_at')->title(__('labels.last_login_at'))->width('15%'),
             Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
             Column::computed('action', __('labels.action'))->width('10%')
                 ->exportable(false)
-                ->printable(false),
+                ->printable(false)
         ];
     }
 
@@ -105,6 +108,6 @@ class ServiceDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Service_' . date('YmdHis');
+        return 'Admin_' . date('YmdHis');
     }
 }

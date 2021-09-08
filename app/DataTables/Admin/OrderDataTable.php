@@ -1,16 +1,18 @@
 <?php
 
-namespace App\DataTables;
+namespace App\DataTables\Admin;
 
-use App\Models\User;
+use App\Models\Order;
+use Illuminate\Support\Arr;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
+use App\Support\Facades\PriceFacade;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class AdminDataTable extends DataTable
+class OrderDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -25,29 +27,31 @@ class AdminDataTable extends DataTable
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return view('components.action', [
-                    'no_action' => $this->no_action ?: $data->id == Auth::id(),
-                    'update' => [
-                        'permission' => 'admin.update',
-                        'route' => '#updateAdminModal',
-                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode($data) . "'" . ' data-route="' . route('admins.update', ['admin' => $data->id]) . '"'
+                    'no_action' => $this->no_action ?: null,
+                    'view' => [
+                        'permission' => 'order.read',
+                        'route' => route('orders.show', ['order' => $data->id])
                     ],
-                    'delete' => [
-                        'permission' => 'admin.delete',
-                        'route' => route('admins.destroy', ['admin' => $data->id])
-                    ]
+                    // 'update' => [
+                    //     'permission' => 'order.update',
+                    //     'route' => route('orders.edit', ['order' => $data->id]),
+                    // ]
                 ])->render();
             })
-            ->editColumn('created_at', function ($data) {
-                return $data->created_at->toDateTimeString();
-            })
-            ->editColumn('last_login_at', function ($data) {
-                return optional($data->last_login_at)->toDateTimeString();
+            ->addColumn('user', function ($data) {
+                return $data->user->name;
             })
             ->editColumn('status', function ($data) {
                 return '<span>' . $data->status_label . '</span>';
             })
-            ->filterColumn('status', function ($query, $keyword) {
-                $query->where('status', strtolower($keyword));
+            ->editColumn('created_at', function ($data) {
+                return $data->created_at->toDateTimeString();
+            })
+            ->editColumn('grand_total', function ($data) {
+                return $data->grand_total_with_currency;
+            })
+            ->filterColumn('grand_total', function ($query, $keyword) {
+                return $query->where('grand_total', PriceFacade::convertFloatToInt($keyword));
             })
             ->rawColumns(['action', 'status']);
     }
@@ -55,12 +59,14 @@ class AdminDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\User $model
+     * @param \App\Models\Order $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(User $model)
+    public function query(Order $model)
     {
-        return $model->admin()->newQuery();
+        return $model->when(Auth::user()->is_merchant, function ($query) {
+            $query->where('user_id', Auth::id());
+        })->newQuery();
     }
 
     /**
@@ -71,11 +77,11 @@ class AdminDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('admin-table')
+            ->setTableId('order-table')
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(0, 'asc')
+            ->orderBy(1, 'desc')
             ->responsive(true)
             ->autoWidth(true)
             ->processing(false);
@@ -88,17 +94,24 @@ class AdminDataTable extends DataTable
      */
     protected function getColumns()
     {
-        return [
+        $columns =  [
             Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('name')->title(__('labels.name'))->width('25%'),
-            Column::make('email')->title(__('labels.email'))->width('20%'),
+            Column::make('order_no')->title(__('labels.order_no'))->width('15%'),
+            Column::make('user')->title(__('labels.user'))->width('20%'),
+            Column::make('grand_total')->title(__('labels.grand_total'))->width('15%'),
+            Column::make('total_items')->title(trans_choice('labels.item', 2))->width('10%'),
             Column::make('status')->title(__('labels.status'))->width('10%'),
-            Column::make('last_login_at')->title(__('labels.last_login_at'))->width('15%'),
             Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
             Column::computed('action', __('labels.action'))->width('10%')
                 ->exportable(false)
-                ->printable(false)
+                ->printable(false),
         ];
+
+        if (Auth::user()->is_merchant) {
+            $columns = Arr::except($columns, 2);
+        }
+
+        return $columns;
     }
 
     /**
@@ -108,6 +121,6 @@ class AdminDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Admin_' . date('YmdHis');
+        return 'Order_' . date('YmdHis');
     }
 }

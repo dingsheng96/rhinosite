@@ -1,15 +1,15 @@
 <?php
 
-namespace App\DataTables;
+namespace App\DataTables\Admin;
 
-use App\Models\Package;
+use App\Models\Country;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class PackageDataTable extends DataTable
+class CountryDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -23,55 +23,53 @@ class PackageDataTable extends DataTable
             ->eloquent($query)
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
+
                 return view('components.action', [
                     'no_action' => $this->no_action ?: null,
                     'view' => [
-                        'permission' => 'package.read',
-                        'route' => route('packages.show', ['package' => $data->id])
+                        'permission' => 'country.read',
+                        'route' => route('countries.show', ['country' => $data->id])
                     ],
                     'update' => [
-                        'permission' => 'package.update',
-                        'route' => route('packages.edit', ['package' => $data->id]),
+                        'permission' => 'country.update',
+                        'route' => route('countries.edit', ['country' => $data->id])
                     ],
                     'delete' => [
-                        'permission' => 'package.delete',
-                        'route' => route('packages.destroy', ['package' => $data->id])
+                        'permission' => 'country.delete',
+                        'route' => route('countries.destroy', ['country' => $data->id])
                     ]
                 ])->render();
             })
-            ->addColumn('status', function ($data) {
-                return '<span>' . $data->status_label . '</span>';
+            ->addColumn('currency', function ($data) {
+                return $data->currency->name . ' (' . strtoupper($data->currency->code) . ')' ?? '-';
             })
-            ->addColumn('price', function ($data) {
-                return $data->prices->first()->currency->code . ' ' . $data->prices->first()->selling_price;
+            ->filterColumn('currency', function ($query, $keyword) {
+                $query->whereHas('currency', function ($query) use ($keyword) {
+                    $query->where('name', 'like', "%{$keyword}%")
+                        ->orWhere('code', 'like', "%{$keyword}%");
+                });
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
-            ->editColumn('quantity', function ($data) {
-                return $data->stock_type == Package::STOCK_TYPE_INFINITE ? '<span>&infin;</span>' : $data->quantity;
-            })
-            ->filterColumn('status', function ($query, $keyword) {
-                return $query->where('status', strtolower($keyword));
-            })
-            ->filterColumn('category', function ($query, $keyword) {
-                return $query->where(app(ProductCategory::class)->getTable() . '.name', 'like', "%{$keyword}%");
-            })
-            ->rawColumns(['action', 'status', 'quantity']);
+            ->rawColumns(['action']);
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Package $model
+     * @param \App\Models\Country $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Package $model)
+    public function query(Country $model)
     {
-        return $model->withCount(['products'])
-            ->with(['prices' => function ($query) {
-                $query->defaultPrice();
-            }])
+        return $model->withCount(['countryStates', 'cities'])
+            ->with(['currency'])
+            ->when(!empty($this->currency), function ($query) {
+                $query->whereHas('currency', function ($query) {
+                    $query->where('id', $this->currency->id);
+                });
+            })
             ->newQuery();
     }
 
@@ -83,7 +81,7 @@ class PackageDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('package-table')
+            ->setTableId('country-table')
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -102,11 +100,15 @@ class PackageDataTable extends DataTable
     {
         return [
             Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('name')->title(__('labels.name'))->width('25%'),
-            Column::make('products_count')->title(trans_choice('labels.item', 2))->width('10%'),
-            Column::make('price')->title(__('labels.price'))->width('15%'),
-            Column::make('quantity')->title(__('labels.quantity'))->width('10%'),
-            Column::make('status')->title(__('labels.status'))->width('10%'),
+            Column::make('name')->title(__('labels.name'))->width('20%'),
+            Column::make('dial_code')->title(__('labels.dial_code'))->width('10%'),
+            Column::make('currency')->title(__('labels.currency'))->width('20%'),
+            Column::make('country_states_count')
+                ->searchable(false)
+                ->title(trans_choice('labels.country_state', 2))->width('10%'),
+            Column::make('cities_count')
+                ->searchable(false)
+                ->title(trans_choice('labels.city', 2))->width('10%'),
             Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
             Column::computed('action', __('labels.action'))->width('10%')
                 ->exportable(false)
@@ -121,6 +123,6 @@ class PackageDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Product_' . date('YmdHis');
+        return 'Country_' . date('YmdHis');
     }
 }

@@ -1,16 +1,16 @@
 <?php
 
-namespace App\DataTables;
+namespace App\DataTables\Admin;
 
-use App\Models\Role;
+use App\Models\Service;
+use Illuminate\Support\Str;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class RoleDataTable extends DataTable
+class ServiceDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -24,24 +24,29 @@ class RoleDataTable extends DataTable
             ->eloquent($query)
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
+
                 return view('components.action', [
-                    'no_action' => $this->no_action ?: ($data->name == Role::ROLE_SUPER_ADMIN),
+                    'no_action' => $this->no_action ?: null,
                     'view' => [
-                        'permission' => 'role.read',
-                        'route' => route('roles.show', ['role' => $data->id])
+                        'permission' => 'service.create',
+                        'route' => route('services.show', ['service' => $data->id])
                     ],
                     'update' => [
-                        'permission' => 'role.update',
-                        'route' => route('roles.edit', ['role' => $data->id]),
+                        'permission' => 'service.create',
+                        'route' => '#updateServiceModal',
+                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode(['id' => $data->id, 'name' => $data->name, 'description' => $data->description]) . "'"
                     ],
                     'delete' => [
-                        'permission' => 'role.delete',
-                        'route' => route('roles.destroy', ['role' => $data->id])
+                        'permission' => 'service.delete',
+                        'route' => route('services.destroy', ['service' => $data->id])
                     ]
                 ])->render();
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
+            })
+            ->editColumn('description', function ($data) {
+                return Str::limit($data->description ?? '-');
             })
             ->rawColumns(['action']);
     }
@@ -49,10 +54,10 @@ class RoleDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Role $model
+     * @param \App\Models\Service $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Role $model)
+    public function query(Service $model)
     {
         return $model->newQuery();
     }
@@ -65,7 +70,7 @@ class RoleDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('role-table')
+            ->setTableId('service-table')
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -100,6 +105,6 @@ class RoleDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Role_' . date('YmdHis');
+        return 'Service_' . date('YmdHis');
     }
 }
