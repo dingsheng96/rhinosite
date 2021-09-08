@@ -74,8 +74,6 @@ class Currency extends Model
     // Functions
     public function getConversionRate(int $to_currency)
     {
-        return $this->fromCurrencyRates()
-            ->where('to_currency', $to_currency)
-            ->first();
+        return $this->fromCurrencyRates->where('to_currency', $to_currency)->first();
     }
 }

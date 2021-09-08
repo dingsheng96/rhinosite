@@ -16,7 +16,7 @@ class ViewServiceProvider extends ServiceProvider
             'projects.create', 'projects.edit'
         ],
         \App\Http\View\Composers\MerchantComposer::class => [
-            'projects.create', 'projects.edit'
+            'admin.projects.*'
         ],
         \App\Http\View\Composers\VerificationComposer::class => [
             'account.*', 'activity_log.*', 'admin.*', 'ads.*', 'cart.*',
@@ -28,11 +28,11 @@ class ViewServiceProvider extends ServiceProvider
             '*'
         ],
         \App\Http\View\Composers\CurrencyComposer::class => [
-            'projects.create', 'projects.edit', 'package.create', 'package.edit',
-            'product.attribute.create', 'product.attribute.edit'
+            'admin.package.*', 'admin.product.attribute.*', 'admin.currency.*',
+            'admin.projects.*', 'merchant.projects.*'
         ],
         \App\Http\View\Composers\CartComposer::class => [
-            'cart.index', 'checkout.index', 'checkout.recurring'
+            'cart.index', 'checkout.*'
         ],
         \App\Http\View\Composers\ServiceComposer::class => [
             'app.*', 'auth.login', 'auth.register'

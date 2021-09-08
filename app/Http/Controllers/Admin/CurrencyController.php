@@ -7,12 +7,11 @@ use App\Models\Currency;
 use App\Helpers\Response;
 use App\Models\Permission;
 use Illuminate\Support\Facades\DB;
-use App\DataTables\Admin\CountryDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\DataTables\Admin\CurrencyDataTable;
-use App\Http\Requests\CurrencyRequest;
 use App\Support\Facades\CurrencyFacade;
+use App\DataTables\Admin\CurrencyDataTable;
+use App\Http\Requests\Admin\CurrencyRequest;
 
 class CurrencyController extends Controller
 {
@@ -23,7 +22,7 @@ class CurrencyController extends Controller
      */
     public function index(CurrencyDataTable $dataTable)
     {
-        return $dataTable->render('currency.index');
+        return $dataTable->render('admin.currency.index');
     }
 
     /**
@@ -33,7 +32,7 @@ class CurrencyController extends Controller
      */
     public function create()
     {
-        return view('currency.create');
+        return view('admin.currency.create');
     }
 
     /**
@@ -58,7 +57,7 @@ class CurrencyController extends Controller
 
             $message = Message::instance()->format($action, $module, 'success');
 
-            activity()->useLog('web')
+            activity()->useLog('admin:currency')
                 ->causedBy(Auth::user())
                 ->performedOn($currency)
                 ->withProperties($request->all())
@@ -69,7 +68,7 @@ class CurrencyController extends Controller
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:currency')
                 ->causedBy(Auth::user())
                 ->performedOn(new Currency())
                 ->withProperties($request->all())
@@ -87,10 +86,11 @@ class CurrencyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Currency $currency, CountryDataTable $dataTable)
+    public function show(Currency $currency)
     {
-        return $dataTable->with(['currency' => $currency])
-            ->render('currency.show', compact('currency'));
+        $currency->load('toCurrencyRates');
+
+        return view('admin.currency.show', compact('currency'));
     }
 
     /**
@@ -101,7 +101,9 @@ class CurrencyController extends Controller
      */
     public function edit(Currency $currency)
     {
-        return view('currency.edit', compact('currency'));
+        $currency->load('toCurrencyRates');
+
+        return view('admin.currency.edit', compact('currency'));
     }
 
     /**
@@ -127,18 +129,18 @@ class CurrencyController extends Controller
 
             $message = Message::instance()->format($action, $module, 'success');
 
-            activity()->useLog('web')
+            activity()->useLog('admin:currency')
                 ->causedBy(Auth::user())
                 ->performedOn($currency)
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->route('currencies.index')->withSuccess($message);
+            return redirect()->route('admin.currencies.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:currency')
                 ->causedBy(Auth::user())
                 ->performedOn($currency)
                 ->withProperties($request->all())
@@ -174,7 +176,7 @@ class CurrencyController extends Controller
 
             $message = Message::instance()->format($action, $module, 'success');
 
-            activity()->useLog('web')
+            activity()->useLog('admin:currency')
                 ->causedBy(Auth::user())
                 ->performedOn($currency)
                 ->log($message);
@@ -184,7 +186,7 @@ class CurrencyController extends Controller
 
             $status = 'fail';
 
-            activity()->useLog('web')
+            activity()->useLog('admin:currency')
                 ->causedBy(Auth::user())
                 ->performedOn($currency)
                 ->log($e->getMessage());
@@ -195,7 +197,7 @@ class CurrencyController extends Controller
             ->withStatus($status)
             ->withMessage($message, true)
             ->withData([
-                'redirect_to' => route('countries.index')
+                'redirect_to' => route('admin.currencies.index')
             ])
             ->sendJson();
     }
