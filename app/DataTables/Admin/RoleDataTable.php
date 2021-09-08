@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DataTables\Admin\Admin;
+namespace App\DataTables\Admin;
 
 use App\Models\Role;
 use Yajra\DataTables\Html\Button;
@@ -83,11 +83,11 @@ class RoleDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('name')->title(__('labels.name'))->width('30%'),
-            Column::make('description')->title(__('labels.description'))->width('40%'),
-            Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
-            Column::computed('action', __('labels.action'))->width('10%')
+            Column::computed('DT_RowIndex', '#'),
+            Column::make('name')->title(__('labels.name')),
+            Column::make('description')->title(__('labels.description')),
+            Column::make('created_at')->title(__('labels.created_at')),
+            Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),
         ];

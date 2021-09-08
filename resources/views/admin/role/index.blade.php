@@ -10,7 +10,7 @@
                 <div class="card-header bg-transparent">
                     @can('role.create')
                     <span class="card-tools">
-                        <a href="#roleModal" class="btn btn-outline-primary btn-rounded-corner" data-toggle="modal">
+                        <a href="{{ route('admin.roles.create') }}" class="btn btn-outline-primary btn-rounded-corner">
                             <i class="fas fa-plus"></i>
                             {{ __('modules.create', ['module' => trans_choice('modules.role', 1)]) }}
                         </a>

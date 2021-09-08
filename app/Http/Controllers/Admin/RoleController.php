@@ -7,11 +7,12 @@ use App\Models\Module;
 use App\Helpers\Message;
 use App\Helpers\Response;
 use App\Models\Permission;
-use App\Http\Requests\RoleRequest;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\DataTables\Admin\Admin\RoleDataTable;
+use App\Support\Services\RoleService;
+use App\DataTables\Admin\RoleDataTable;
+use App\Http\Requests\Admin\RoleRequest;
 
 class RoleController extends Controller
 {
@@ -32,7 +33,20 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+        $actions = Permission::select('action')
+            ->groupBy('action')
+            ->orderBy('action', 'asc')
+            ->get();
+
+        $modules = Module::orderBy('name', 'asc')
+            ->with([
+                'permissions' => function ($query) {
+                    $query->orderBy('action', 'asc');
+                }
+            ])
+            ->get();
+
+        return view('admin.role.create', compact('actions', 'modules'));
     }
 
     /**
@@ -41,7 +55,7 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(RoleRequest $request)
+    public function store(RoleRequest $request, RoleService $role_service)
     {
         DB::beginTransaction();
 
@@ -51,19 +65,13 @@ class RoleController extends Controller
 
         try {
 
-            $input = $request->get('create');
-
-            $role = Role::create([
-                'name'          =>  $input['name'],
-                'description'   =>  $input['description'],
-                'guard'         =>  config('auth.default.guard')
-            ]);
+            $role = $role_service->setRequest($request)->store()->getModel();
 
             DB::commit();
 
             $message = Message::instance()->format($action, $module, 'success');
 
-            activity()->useLog('web')
+            activity()->useLog('admin:role')
                 ->causedBy(Auth::user())
                 ->performedOn($role)
                 ->withProperties($request->all())
@@ -74,15 +82,13 @@ class RoleController extends Controller
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:role')
                 ->causedBy(Auth::user())
                 ->performedOn(new Role())
                 ->withProperties($request->all())
                 ->log($e->getMessage());
 
-            return redirect()->back()
-                ->with('fail', $message)
-                ->withInput();
+            return redirect()->back()->with('fail', $message)->withInput();
         }
     }
 
@@ -166,7 +172,7 @@ class RoleController extends Controller
 
             $message = Message::instance()->format($action, $module, 'success');
 
-            activity()->useLog('web')
+            activity()->useLog('admin:role')
                 ->causedBy(Auth::user())
                 ->performedOn($role)
                 ->withProperties($request->all())
@@ -177,7 +183,7 @@ class RoleController extends Controller
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:role')
                 ->causedBy(Auth::user())
                 ->performedOn($role)
                 ->withProperties($request->all())
@@ -205,7 +211,7 @@ class RoleController extends Controller
         $role->syncPermissions([]);
         $role->delete();
 
-        activity()->useLog('web')
+        activity()->useLog('admin:role')
             ->causedBy(Auth::user())
             ->performedOn($role)
             ->log($message);

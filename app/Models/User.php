@@ -29,8 +29,6 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable, SoftDeletes, HasRoles;
 
-    protected $guard_name = 'web';
-
     protected $table = 'users';
 
     protected $fillable = [
@@ -46,6 +44,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'last_login_at' => 'datetime'
     ];
+
+    protected $guard_name = 'web';
 
     // Constants
     const STATUS_ACTIVE     =   'active';
