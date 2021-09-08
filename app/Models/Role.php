@@ -11,5 +11,5 @@ class Role extends SpatieRole
 
     const ROLE_SUPER_ADMIN = 'Super Admin';
 
-    public $guard_name = 'admin';
+    public $guard_name = 'web';
 }

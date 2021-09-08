@@ -26,14 +26,17 @@ class AdminDataTable extends DataTable
             ->addColumn('action', function ($data) {
                 return view('components.action', [
                     'no_action' => $this->no_action ?: $data->id == Auth::id(),
+                    'view' => [
+                        'permission' => 'admin.read',
+                        'route' => route('admin.admins.show', ['admin' => $data->id])
+                    ],
                     'update' => [
                         'permission' => 'admin.update',
-                        'route' => '#updateAdminModal',
-                        'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode($data) . "'" . ' data-route="' . route('admins.update', ['admin' => $data->id]) . '"'
+                        'route' => route('admin.admins.edit', ['admin' => $data->id])
                     ],
                     'delete' => [
                         'permission' => 'admin.delete',
-                        'route' => route('admins.destroy', ['admin' => $data->id])
+                        'route' => route('admin.admins.destroy', ['admin' => $data->id])
                     ]
                 ])->render();
             })

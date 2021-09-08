@@ -8,12 +8,13 @@ use App\Helpers\Status;
 use App\Helpers\Message;
 use App\Helpers\Response;
 use App\Models\Permission;
-use App\DataTables\Admin\AdminDataTable;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\AdminRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Support\Services\AdminService;
+use App\DataTables\Admin\AdminDataTable;
+use App\Http\Requests\Admin\AdminRequest;
 
 class AdminController extends Controller
 {
@@ -32,9 +33,9 @@ class AdminController extends Controller
      */
     public function index(AdminDataTable $dataTable)
     {
-        $statuses = Status::instance()->activeStatus();
 
-        return $dataTable->render('admin.index', compact('statuses'));
+
+        return $dataTable->render('admin.admin.index');
     }
 
     /**
@@ -44,7 +45,10 @@ class AdminController extends Controller
      */
     public function create()
     {
-        //
+        $roles    = Role::orderBy('name')->get();
+        $statuses = Status::instance()->activeStatus();
+
+        return view('admin.admin.create', compact('statuses', 'roles'));
     }
 
     /**
@@ -53,52 +57,42 @@ class AdminController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AdminRequest $request)
+    public function store(AdminRequest $request, AdminService $admin_service)
     {
         DB::beginTransaction();
 
         $action     =   Permission::ACTION_CREATE;
         $module     =   strtolower(trans_choice('modules.admin', 1));
-        $message    =   Message::instance()->format($action, $module);
+        $status     =   'fail';
+        $message    =   Message::instance()->format($action, $module, $status);
 
         try {
 
-            $input = $request->get('create');
+            $admin = $admin_service->setRequest($request)->store()->getModel();
 
-            $admin = User::create([
-                'name'      =>  $input['name'],
-                'email'     =>  $input['email'],
-                'password'  =>  Hash::make($input['password']),
-                'status'    =>  $input['status'],
-                'email_verified_at' => now(),
-            ]);
+            $status =   'success';
+            $message = Message::instance()->format($action, $module, $status);
 
-            $admin->assignRole(Role::ROLE_SUPER_ADMIN);
+            activity()->useLog('admin:admin')
+                ->causedBy(Auth::user())
+                ->performedOn($admin)
+                ->withProperties($request->except(['password', 'password_confirmation']))
+                ->log($message);
 
             DB::commit();
 
-            $message = Message::instance()->format($action, $module, 'success');
-
-            activity()->useLog('web')
-                ->causedBy(Auth::user())
-                ->performedOn($admin)
-                ->withProperties($request->all())
-                ->log($message);
-
-            return redirect()->route('admins.index')->withSuccess($message);
+            return redirect()->route('admin.admins.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:admin')
                 ->causedBy(Auth::user())
                 ->performedOn(new User())
-                ->withProperties($request->all())
+                ->withProperties($request->except(['password', 'password_confirmation']))
                 ->log($e->getMessage());
 
-            return redirect()->back()
-                ->with('fail', $message)
-                ->withInput();
+            return redirect()->back()->with('fail', $message)->withInput();
         }
     }
 
@@ -108,9 +102,11 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $admin)
     {
-        //
+        $admin->load('roles');
+
+        return view('admin.admin.show', compact('admin'));
     }
 
     /**
@@ -119,9 +115,14 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $admin)
     {
-        //
+        $roles    = Role::orderBy('name')->get();
+        $statuses = Status::instance()->activeStatus();
+
+        $admin->load('roles');
+
+        return view('admin.admin.edit', compact('statuses', 'roles', 'admin'));
     }
 
     /**
@@ -131,49 +132,42 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(AdminRequest $request, User $admin)
+    public function update(AdminRequest $request, User $admin, AdminService $admin_service)
     {
         DB::beginTransaction();
 
         $action     =   Permission::ACTION_UPDATE;
         $module     =   strtolower(trans_choice('modules.admin', 1));
-        $message    =   Message::instance()->format($action, $module);
+        $status     =   'fail';
+        $message    =   Message::instance()->format($action, $module, $status);
 
         try {
 
-            $input = $request->get('update');
+            $admin_service->setModel($admin)->setRequest($request)->store();
 
-            $admin->update([
-                'name'      =>  $input['name'],
-                'email'     =>  $input['email'],
-                'password'  =>  empty($input['password']) ? $admin->password : Hash::make($input['password']),
-                'status'    =>  $input['status'],
-            ]);
+            $status = 'success';
+            $message = Message::instance()->format($action, $module, $status);
+
+            activity()->useLog('admin:admin')
+                ->causedBy(Auth::user())
+                ->performedOn($admin)
+                ->withProperties($request->except(['password', 'password_confirmation']))
+                ->log($message);
 
             DB::commit();
 
-            $message = Message::instance()->format($action, $module, 'success');
-
-            activity()->useLog('web')
-                ->causedBy(Auth::user())
-                ->performedOn($admin)
-                ->withProperties($request->all())
-                ->log($message);
-
-            return redirect()->route('admins.index')->withSuccess($message);
+            return redirect()->route('admin.admins.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:admin')
                 ->causedBy(Auth::user())
                 ->performedOn($admin)
-                ->withProperties($request->all())
+                ->withProperties($request->except(['password', 'password_confirmation']))
                 ->log($e->getMessage());
 
-            return redirect()->back()
-                ->with('fail', $message)
-                ->withInput();
+            return redirect()->back()->with('fail', $message)->withInput();
         }
     }
 
@@ -192,7 +186,7 @@ class AdminController extends Controller
 
         $admin->delete();
 
-        activity()->useLog('web')
+        activity()->useLog('admin:admin')
             ->causedBy(Auth::user())
             ->performedOn($admin)
             ->log($message);
@@ -202,7 +196,7 @@ class AdminController extends Controller
             ->withStatus($status)
             ->withMessage($message, true)
             ->withData([
-                'redirect_to' => route('admins.index')
+                'redirect_to' => route('admin.admins.index')
             ])
             ->sendJson();
     }

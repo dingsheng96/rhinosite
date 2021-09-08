@@ -232,17 +232,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->media()->logo()->first();
     }
 
-    public function getFolderNameAttribute()
-    {
-        $folders = [
-            Role::ROLE_SUPER_ADMIN => 'admin',
-            Role::ROLE_MERCHANT => 'merchant',
-            Role::ROLE_MEMBER => 'member'
-        ];
-
-        return $folders[$this->roles()->first()->name];
-    }
-
     public function getIsSuperAdminAttribute()
     {
         return $this->roles->first()->name == Role::ROLE_SUPER_ADMIN;
