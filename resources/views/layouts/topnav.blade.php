@@ -1,4 +1,4 @@
-@if (Auth::check() && (!isset($guest_view) || !$guest_view))
+@if (Auth::guard('admin')->check() && (!isset($guest_view) || !$guest_view))
 
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <ul class="navbar-nav">
@@ -9,7 +9,6 @@
 
     <ul class="navbar-nav ml-auto">
 
-        {{-- CART --}}
         @merchant
         <li class="nav-item dropdown">
             <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
@@ -24,7 +23,7 @@
                 <i class="fas fa-th-large"></i>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-                <a href="{{ route('account.index') }}" class="dropdown-item">
+                <a href="{{ route('admin.account.index') }}" class="dropdown-item">
                     <i class="fas fa-user mr-2 text-cyan"></i>
                     <span>{{ __('labels.user_account') }}</span>
                 </a>
@@ -32,7 +31,7 @@
                     <i class="fas fa-sign-out-alt mr-2 text-red"></i>
                     <span>{{ __('labels.logout') }}</span>
                 </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
                     @csrf
                 </form>
             </div>
@@ -74,13 +73,13 @@
                 @elseif(!Auth::user()->has_approved_details)
                 @else
                 <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-button">{{ __('labels.return_dashboard') }}</a>
+                    <a href="{{ route('admin.dashboard') }}" class="nav-button">{{ __('labels.return_dashboard') }}</a>
                 </li>
                 @endif
 
                 @else {{-- NOT MERCHANT --}}
                 <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-button">{{ __('labels.return_dashboard') }}</a>
+                    <a href="{{ route('admin.dashboard') }}" class="nav-button">{{ __('labels.return_dashboard') }}</a>
                 </li>
                 @endmerchant
 
@@ -90,7 +89,7 @@
                     <a href="#" class="nav-button" onclick="event.preventDefault(); document.getElementById('logout-form').submit()">
                         {{ __('labels.logout') }}
                     </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
                 </li>
@@ -102,7 +101,7 @@
                     <a href="{{ route('app.partner') }}" class="nav-button">{{ __('modules.app.partner') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('login') }}" class="nav-button">{{ __('modules.login') }}</a>
+                    <a href="{{ route('admin.login') }}" class="nav-button">{{ __('modules.login') }}</a>
                 </li>
                 @endguest
             </ul>

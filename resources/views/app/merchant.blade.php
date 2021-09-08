@@ -78,7 +78,7 @@
             <div class="profile-line"></div>
             <div class="col-lg-8">
                 <div class="d-flex mb-3 align-items-center"><i class="fas fa-phone profile-icon" aria-hidden="true"></i><span class="ml-3">{{ $merchant->formatted_phone_number }}</span></div>
-                <div class="d-flex mb-3 align-items-center"><i class="fas fa-map-marker-alt profile-icon location" aria-hidden="true"></i><span class="ml-3">{{ $merchant->full_address }}</span></div>
+                <div class="d-flex mb-3 align-items-center"><i class="fas fa-map-marker-alt profile-icon location" aria-hidden="true"></i><span class="ml-3">{{ $merchant->address->full_address }}</span></div>
             </div>
             <div class="col-lg-4">
                 <div class="d-flex mb-3 align-items-center text-break"><i class="fas fa-envelope profile-icon mail" aria-hidden="true"></i><span class="ml-3">{{ $merchant->email }}</span></div>

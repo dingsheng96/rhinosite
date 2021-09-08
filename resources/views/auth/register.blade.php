@@ -19,7 +19,7 @@
                 <div class="login-container">
                     <p class="login-title">{{ __('app.register_form_title') }}</p>
 
-                    <form action="{{ route('register') }}" method="POST" enctype="multipart/form-data" role="form">
+                    <form action="{{ route('merchant.register') }}" method="POST" enctype="multipart/form-data" role="form">
                         @csrf
 
                         <input type="hidden" name="role" value="{{ request()->get('role') }}">

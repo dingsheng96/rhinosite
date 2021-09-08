@@ -57,6 +57,7 @@ return [
     'register_btn_submit' => 'Register',
 
     'login_title_main' => 'Login',
+    'admin_login_title_main' => 'Admin Login',
     'login_option_member' => 'Existing User',
     'login_option_merchant' => 'Contractor',
     'login_form_title' => 'Welcome to Rhinosite',

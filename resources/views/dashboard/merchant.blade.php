@@ -11,7 +11,7 @@
 
                 <div class="card-body box-profile p-0 bg-dark pb-3">
                     <div class="text-right p-0 pr-md-3 pt-md-3">
-                        <a href="{{ route('account.index') }}" role="button" class="btn bg-orange">
+                        <a href="{{ route('admin.account.index') }}" role="button" class="btn bg-orange">
                             <i class="fas fa-edit"></i>
                             {{ __('modules.edit', ['module' => __('labels.profile')]) }}
                         </a>
@@ -50,7 +50,7 @@
                         <div class="col-sm-4">
                             <div class="description-block">
                                 <h5 class="description-header mb-3"><i class="fas fa-map-marker-alt text-cyan"></i> <br> {{ __('labels.address') }}</h5>
-                                <span class="description-text">{{ $user->full_address }}</span>
+                                <span class="description-text">{{ $user->address->full_address }}</span>
                             </div>
                         </div>
                     </div>
