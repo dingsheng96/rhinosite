@@ -1,4 +1,4 @@
-@extends('layouts.master', ['title' => trans_choice('modules.merchant', 2)])
+@extends('admin.layouts.master', ['title' => trans_choice('modules.merchant', 2)])
 
 @section('content')
 
@@ -13,7 +13,7 @@
                     </h3>
                     @can('merchant.create')
                     <div class="card-tools">
-                        <a href="{{ route('merchants.create') }}" class="btn btn-outline-primary btn-rounded-corner">
+                        <a href="{{ route('admin.merchants.create') }}" class="btn btn-outline-primary btn-rounded-corner">
                             <i class="fas fa-plus"></i>
                             {{ __('modules.create', ['module' => trans_choice('modules.merchant', 1)]) }}
                         </a>

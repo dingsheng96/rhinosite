@@ -1,4 +1,4 @@
-@extends('layouts.master', ['title' => trans_choice('modules.merchant', 2)])
+@extends('admin.layouts.master', ['title' => trans_choice('modules.merchant', 2)])
 
 @section('content')
 
@@ -10,7 +10,7 @@
                     <h3 class="card-title">{{ __('modules.edit', ['module' => trans_choice('modules.merchant', 1)]) }}</h3>
                 </div>
 
-                <form action="{{ route('merchants.update', ['merchant' => $merchant->id]) }}" method="post" role="form" enctype="multipart/form-data">
+                <form action="{{ route('admin.merchants.update', ['merchant' => $merchant->id]) }}" method="post" role="form" enctype="multipart/form-data">
                     @csrf
                     @method('put')
 
@@ -49,7 +49,7 @@
                                                     <select name="service" id="service" class="form-control select2 @error('service') is-invalid @enderror">
                                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.service'))]) }} ---</option>
                                                         @forelse($services as $service)
-                                                        <option value="{{ $service->id }}" {{ old('service', $user_details->service_id) == $service->id ? 'selected' : null }}>{{ $service->name }}</option>
+                                                        <option value="{{ $service->id }}" {{ old('service', $merchant->userDetail->service_id) == $service->id ? 'selected' : null }}>{{ $service->name }}</option>
                                                         @empty
                                                         @endforelse
                                                     </select>
@@ -96,7 +96,7 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="reg_no" class="col-form-label">{{ __('labels.reg_no') }} <span class="text-red">*</span></label>
-                                                    <input type="text" name="reg_no" id="reg_no" value="{{ old('reg_no', $user_details->reg_no ?? null) }}" class="form-control @error('reg_no') is-invalid @enderror">
+                                                    <input type="text" name="reg_no" id="reg_no" value="{{ old('reg_no', $merchant->userDetail->reg_no ?? null) }}" class="form-control @error('reg_no') is-invalid @enderror">
                                                     @error('reg_no')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -108,7 +108,7 @@
                                                 <div class="form-group">
                                                     <label for="business_since" class="col-form-label">{{ __('labels.business_since') }} <span class="text-red">*</span></label>
                                                     <div class="input-group">
-                                                        <input type="text" name="business_since" id="business_since" value="{{ old('business_since', $user_details->business_since ?? null) }}" class="form-control date-picker @error('business_since') is-invalid @enderror bg-white" readonly>
+                                                        <input type="text" name="business_since" id="business_since" value="{{ old('business_since', $merchant->userDetail->business_since ?? null) }}" class="form-control date-picker @error('business_since') is-invalid @enderror bg-white" readonly>
                                                         <div class="input-group-append">
                                                             <div class="input-group-text bg-white">
                                                                 <i class="far fa-calendar"></i>
@@ -128,7 +128,7 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="website" class="col-form-label">{{ __('labels.website') }}</label>
-                                                    <input type="url" name="website" id="website" value="{{ old('website', $user_details->website ?? null) }}" class="form-control @error('website') is-invalid @enderror">
+                                                    <input type="url" name="website" id="website" value="{{ old('website', $merchant->userDetail->website ?? null) }}" class="form-control @error('website') is-invalid @enderror">
                                                     @error('website')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -139,7 +139,7 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="facebook" class="col-form-label">{{ __('labels.facebook') }}</label>
-                                                    <input type="url" name="facebook" id="facebook" value="{{ old('facebook', $user_details->facebook ?? null) }}" class="form-control @error('facebook') is-invalid @enderror">
+                                                    <input type="url" name="facebook" id="facebook" value="{{ old('facebook', $merchant->userDetail->facebook ?? null) }}" class="form-control @error('facebook') is-invalid @enderror">
                                                     @error('facebook')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -156,7 +156,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text bg-white">+</span>
                                                         </div>
-                                                        <input type="text" name="whatsapp" id="whatsapp" value="{{ old('whatsapp', $user_details->whatsapp) }}" class="form-control @error('whatsapp') is-invalid @enderror">
+                                                        <input type="text" name="whatsapp" id="whatsapp" value="{{ old('whatsapp', $merchant->userDetail->whatsapp) }}" class="form-control @error('whatsapp') is-invalid @enderror">
                                                     </div>
                                                     @error('whatsapp')
                                                     <span class="invalid-feedback" role="alert">
@@ -220,7 +220,7 @@
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     <label for="pic_name" class="col-form-label">{{ __('labels.pic_name') }} <span class="text-red">*</span></label>
-                                                    <input type="text" name="pic_name" id="pic_name" value="{{ old('pic_name', $user_details->pic_name ?? null) }}" class="form-control @error('pic_name') is-invalid @enderror">
+                                                    <input type="text" name="pic_name" id="pic_name" value="{{ old('pic_name', $merchant->userDetail->pic_name ?? null) }}" class="form-control @error('pic_name') is-invalid @enderror">
                                                     @error('pic_name')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -238,7 +238,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text bg-white">+</span>
                                                         </div>
-                                                        <input type="text" name="pic_phone" id="pic_phone" value="{{ old('pic_phone', $user_details->pic_phone ?? null)  }}" class="form-control @error('pic_phone') is-invalid @enderror">
+                                                        <input type="text" name="pic_phone" id="pic_phone" value="{{ old('pic_phone', $merchant->userDetail->pic_phone ?? null)  }}" class="form-control @error('pic_phone') is-invalid @enderror">
                                                     </div>
                                                     @error('pic_phone')
                                                     <span class="invalid-feedback" role="alert">
@@ -250,7 +250,7 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="pic_email" class="col-form-label">{{ __('labels.pic_email') }} <span class="text-red">*</span></label>
-                                                    <input type="email" name="pic_email" id="pic_email" value="{{ old('pic_email', $user_details->pic_email ?? null) }}" class="form-control @error('pic_email') is-invalid @enderror">
+                                                    <input type="email" name="pic_email" id="pic_email" value="{{ old('pic_email', $merchant->userDetail->pic_email ?? null) }}" class="form-control @error('pic_email') is-invalid @enderror">
                                                     @error('pic_email')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -263,33 +263,22 @@
                                         <hr>
 
                                         <div class="row">
-                                            <div class="col-12">
+                                            <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="logo" class="col-form-label">{{ __('labels.change_logo') }}</label>
-                                                    <div class="row">
-                                                        <div class="col-12 col-md-3">
-                                                            <img src="{{ $merchant->logo->full_file_path ?? $default_preview }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
-                                                        </div>
-                                                        <div class="col-12 col-md-9">
-                                                            <input type="file" id="logo" name="logo" class="form-control-file custom-img-input @error('logo') is-invalid @enderror" accept=".jpg,.jpeg,.png">
-                                                            @error('logo')
-                                                            <span class="invalid-feedback" role="alert">
-                                                                <strong>{{ $message }}</strong>
-                                                            </span>
-                                                            @enderror
-                                                            <ul class="pl-3 mt-3">{!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG']) !!}</ul>
-                                                        </div>
-                                                    </div>
+                                                    <input type="file" id="logo" name="logo" class="form-control-file custom-img-input @error('logo') is-invalid @enderror" accept=".jpg,.jpeg,.png">
+                                                    @error('logo')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                    <ul class="pl-3 my-3">{!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG']) !!}</ul>
+                                                    <img src="{{ $merchant->logo->full_file_path ?? $default_preview }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <hr>
-
-                                        <div class="row">
-                                            <div class="col-12 col-md-3">
+                                            <div class="col-12 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="file" class="col-form-label">{{ __('labels.ssm_cert') }}</label>
+                                                    <label for="file" class="col-form-label">{{ __('labels.change_ssm_cert') }}</label>
                                                     <input type="file" name="ssm_cert" id="ssm_cert" value="{{ old('ssm_cert') }}" class="form-control-file @error('ssm_cert') is-invalid @enderror" accept="application/pdf">
                                                     @error('ssm_cert')
                                                     <span class="invalid-feedback" role="alert">
@@ -299,46 +288,47 @@
                                                     <ul class="pl-3 mt-3">{!! trans_choice('messages.upload_file_rules', 1, ['maxsize' => '2mb', 'extensions' => 'PDF']) !!}</ul>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-md-9">
-                                                <div class="form-group table-responsive">
-                                                    <table class="table table-bordered table-hover">
-                                                        <thead>
-                                                            <tr>
-                                                                <th style="width: 10%;">{{ __('#') }}</th>
-                                                                <th style="width: 15%;">{{ __('labels.type') }}</th>
-                                                                <th style="width: 55%;">{{ __('labels.filename') }}</th>
-                                                                <th style="width: 20%">{{ __('labels.action') }}</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @forelse ($documents as $document)
-                                                            <tr>
-                                                                <td>{{ $loop->iteration }}</td>
-                                                                <td>{{ strtoupper($document->type) }}</td>
-                                                                <td>
-                                                                    <a href="{{ $document->full_file_path }}" target="_blank">
-                                                                        <i class="fas fa-external-link-alt"></i>
-                                                                        {{ $document->original_filename }}
-                                                                    </a>
-                                                                </td>
-                                                                <td>
-                                                                    @include('components.action', [
-                                                                    'download' => [
-                                                                    'route' => $document->full_file_path,
-                                                                    'attribute' => 'download'
-                                                                    ]
-                                                                    ])
-                                                                </td>
-                                                            </tr>
-                                                            @empty
-                                                            <tr>
-                                                                <td colspan="4" class="text-center">{{ __('messages.no_records') }}</td>
-                                                            </tr>
-                                                            @endforelse
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        <div class="form-group table-responsive">
+                                            <table class="table table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 10%;">{{ __('#') }}</th>
+                                                        <th style="width: 15%;">{{ __('labels.type') }}</th>
+                                                        <th style="width: 55%;">{{ __('labels.filename') }}</th>
+                                                        <th style="width: 20%">{{ __('labels.action') }}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @forelse ($merchant->media as $document)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ strtoupper($document->type) }}</td>
+                                                        <td>
+                                                            <a href="{{ $document->full_file_path }}" target="_blank">
+                                                                <i class="fas fa-external-link-alt"></i>
+                                                                {{ $document->original_filename }}
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            @include('components.action', [
+                                                            'download' => [
+                                                            'route' => $document->full_file_path,
+                                                            'attribute' => 'download'
+                                                            ]
+                                                            ])
+                                                        </td>
+                                                    </tr>
+                                                    @empty
+                                                    <tr>
+                                                        <td colspan="4" class="text-center">{{ __('messages.no_records') }}</td>
+                                                    </tr>
+                                                    @endforelse
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
 
@@ -436,31 +426,64 @@
                                     </div>
 
                                     <div class="tab-pane text-left fade show" id="vert-tabs-subscription" role="tabpanel" aria-labelledby="vert-tabs-subscription-tab">
+
                                         @if (!empty($subscription))
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="alert alert-info">
-                                                    <h6 class="alert-heading">{{ __('labels.current_plan') . ':' }}</h6>
-                                                    <h3 class="alert-heading">{{ $subscription->name }}</h3>
-                                                    <hr>
-                                                    <p>{{ trans_choice('labels.subscribed_at', 2, ['date' => $subscription->subscription_date]) }}</p>
-                                                    <p>{{ trans_choice('labels.expired_at', 2, ['date' => $subscription->expired_at]) }}</p>
-                                                    <p>{{ trans_choice('labels.next_billing_at', 2, ['date' => $subscription->next_billing_date ??'-']) }}</p>
-                                                </div>
+
+                                        <div class="form-group row">
+                                            <label for="current_plan" class="col-form-label col-sm-3">{{ __('labels.current_plan') }}</label>
+                                            <div class="col-sm-9">
+                                                <span id="current_plan" class="form-control-plaintext">{{ $subscription->subscribable->name ?? '-' }}</span>
                                             </div>
                                         </div>
-                                        @endif
+
+                                        <div class="form-group row">
+                                            <label for="subscribed_at" class="col-form-label col-sm-3">{{ trans_choice('labels.subscribed_at', 1) }}</label>
+                                            <div class="col-sm-9">
+                                                <span id="subscribed_at" class="form-control-plaintext">{{ $subscription->activated_at ?? '-' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="subscribed_at" class="col-form-label col-sm-3">{{ trans_choice('labels.next_billing_at', 1) }}</label>
+                                            <div class="col-sm-9">
+                                                <span id="subscribed_at" class="form-control-plaintext">{{ $subscription->next_billing_at ?? '-' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="terminated_at" class="col-form-label col-sm-3">{{ trans_choice('labels.terminated_at', 1) }}</label>
+                                            <div class="col-sm-9">
+                                                <span id="terminated_at" class="form-control-plaintext">{{ $subscription->terminated_at ?? '-' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="renewed_at" class="col-form-label col-sm-3">{{ trans_choice('labels.renewed_at', 1) }}</label>
+                                            <div class="col-sm-9">
+                                                <span id="renewed_at" class="form-control-plaintext">{{ $subscription_log->renewed_at ?? '-' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="subscribed_at" class="col-form-label col-sm-3">{{ trans_choice('labels.expired_at', 1) }}</label>
+                                            <div class="col-sm-9">
+                                                <span id="subscribed_at" class="form-control-plaintext">{{ $subscription_log->expired_at ?? '-' }}</span>
+                                            </div>
+                                        </div>
 
                                         <hr>
 
-                                        <div class="row">
+                                        @endif
+
+                                        <div class="form-group">
+                                            <label for="subscription_history" class="col-form-label">{{ __('labels.subscription_history') }}</label>
                                             <div class="col-12">
-                                                {!! $dataTable->table() !!}
+                                                <div class="table-responsive">
+                                                    {!! $dataTable->table() !!}
+                                                </div>
                                             </div>
                                         </div>
-
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -468,8 +491,8 @@
 
                     <div class="card-footer bg-transparent text-md-right text-center">
                         <a href="{{ route('admin.merchants.index') }}" role="button" class="btn btn-light mx-2 btn-rounded-corner">
-                            <i class="fas fa-times"></i>
-                            {{ __('labels.cancel') }}
+                            <i class="fas fa-caret-left"></i>
+                            {{ __('labels.back') }}
                         </a>
                         <button type="submit" class="btn btn-outline-primary btn-rounded-corner">
                             <i class="fas fa-paper-plane"></i>

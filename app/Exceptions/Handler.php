@@ -53,8 +53,10 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if ($exception instanceof TokenMismatchException) {
+
             return redirect()->route('login')->with('info', __('messages.session_expired'));
         } elseif ($exception instanceof InvalidSignatureException) {
+
             return redirect()->route('login')->with('info', __('messages.email_verification_link_expired'));
         }
 

@@ -91,13 +91,13 @@ class MemberDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('name')->title(__('labels.name'))->width('25%'),
-            Column::make('email')->title(__('labels.email'))->width('20%'),
-            Column::make('phone')->title(__('labels.contact_no'))->width('15%'),
-            Column::make('status')->title(__('labels.status'))->width('10%'),
-            Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
-            Column::computed('action', __('labels.action'))->width('10%')
+            Column::computed('DT_RowIndex', '#'),
+            Column::make('name')->title(__('labels.name')),
+            Column::make('email')->title(__('labels.email')),
+            Column::make('phone')->title(__('labels.contact_no')),
+            Column::make('status')->title(__('labels.status')),
+            Column::make('created_at')->title(__('labels.created_at')),
+            Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),
         ];

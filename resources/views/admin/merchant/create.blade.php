@@ -1,4 +1,4 @@
-@extends('layouts.master', ['title' => trans_choice('modules.merchant', 2)])
+@extends('admin.layouts.master', ['title' => trans_choice('modules.merchant', 2)])
 
 @section('content')
 
@@ -10,7 +10,7 @@
                     <h3 class="card-title">{{ __('modules.create', ['module' => trans_choice('modules.merchant', 1)]) }}</h3>
                 </div>
 
-                <form action="{{ route('merchants.store') }}" method="post" role="form" enctype="multipart/form-data">
+                <form action="{{ route('admin.merchants.store') }}" method="post" role="form" enctype="multipart/form-data">
                     @csrf
 
                     <div class="card-body">
@@ -43,7 +43,7 @@
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     <label for="service" class="col-form-label">{{ __('labels.service') }} <span class="text-red">*</span></label>
-                                                    <select name="service" id="service" class="form-control @error('service') is-invalid @enderror">
+                                                    <select name="service" id="service" class="form-control select2 @error('service') is-invalid @enderror">
                                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.service'))]) }} ---</option>
                                                         @forelse($services as $service)
                                                         <option value="{{ $service->id }}" {{ collect(old('service'))->contains($service->id) ? 'selected' : null }}>{{ $service->name }}</option>

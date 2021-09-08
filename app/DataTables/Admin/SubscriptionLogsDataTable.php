@@ -47,14 +47,11 @@ class SubscriptionLogsDataTable extends DataTable
                     'subscribable',
                     [Package::class, ProductAttribute::class],
                     function (Builder $query, $type) use ($keyword) {
-
                         if ($type == ProductAttribute::class) {
                             $query->whereHas('product', function ($query) use ($keyword) {
                                 $query->where('name', 'like', "%{$keyword}%");
                             });
-                        }
-
-                        if ($type == Package::class) {
+                        } elseif ($type == Package::class) {
                             $query->where('name', 'like', "%{$keyword}%");
                         }
                     }
@@ -83,9 +80,9 @@ class SubscriptionLogsDataTable extends DataTable
     {
         return $model->with([
             'userSubscriptionLogs' => function ($query) {
-                $query->orderByDesc('renewed_at');
+                $query->latest('renewed_at')->limit(1);
             }
-        ])->where('user_id', $this->merchant_id)->newQuery();
+        ])->where('user_id', $this->merchant->id)->newQuery();
     }
 
     /**
@@ -114,14 +111,11 @@ class SubscriptionLogsDataTable extends DataTable
     protected function getColumns()
     {
         $columns = [
-            Column::computed('DT_RowIndex', '#')->width('10%'),
-            Column::make('plan')->title(__('labels.plan'))->width('35%'),
-            Column::make('status')->title(__('labels.status'))->width('15%'),
-            Column::make('renewed_at')->title(trans_choice('labels.renewed_at', 1))->width('20%'),
-            Column::make('expired_at')->title(trans_choice('labels.expired_at', 1))->width('20%'),
-            // Column::computed('action', __('labels.action'))->width('10%')
-            //     ->exportable(false)
-            //     ->printable(false),
+            Column::computed('DT_RowIndex', '#'),
+            Column::make('plan')->title(__('labels.plan')),
+            Column::make('status')->title(__('labels.status')),
+            Column::make('renewed_at')->title(trans_choice('labels.renewed_at', 1)),
+            Column::make('expired_at')->title(trans_choice('labels.expired_at', 1)),
         ];
 
         return $columns;

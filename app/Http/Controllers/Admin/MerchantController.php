@@ -9,14 +9,15 @@ use App\Models\Service;
 use App\Helpers\Message;
 use App\Helpers\Response;
 use App\Models\Permission;
+use App\Models\UserDetail;
 use App\Models\ProductCategory;
 use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\DataTables\Admin\MerchantDataTable;
 use App\Http\Requests\MerchantRequest;
 use App\Support\Facades\MerchantFacade;
+use App\DataTables\Admin\MerchantDataTable;
 use App\DataTables\Admin\SubscriptionLogsDataTable;
 
 class MerchantController extends Controller
@@ -36,7 +37,7 @@ class MerchantController extends Controller
      */
     public function index(MerchantDataTable $dataTable)
     {
-        return $dataTable->render('merchant.index');
+        return $dataTable->render('admin.merchant.index');
     }
 
     /**
@@ -49,7 +50,7 @@ class MerchantController extends Controller
         $statuses = Status::instance()->activeStatus();
         $services = Service::orderBy('name', 'asc')->get();
 
-        return view('merchant.create', compact('statuses', 'services'));
+        return view('admin.merchant.create', compact('statuses', 'services'));
     }
 
     /**
@@ -64,22 +65,23 @@ class MerchantController extends Controller
 
         $action     =   Permission::ACTION_CREATE;
         $module     =   strtolower(trans_choice('modules.merchant', 1));
-        $message    =   Message::instance()->format($action, $module);
         $status     =   'fail';
+        $message    =   Message::instance()->format($action, $module, $status);
 
         try {
 
-            $merchant = MerchantFacade::setRequest($request)->storeData()->getModel();
+            $merchant = MerchantFacade::setRequest($request)->storeData()
+                ->setUserDetailStatus(UserDetail::STATUS_APPROVED)->verifiedEmail()->getModel();
 
             DB::commit();
 
             $status  = 'success';
             $message = Message::instance()->format($action, $module, $status);
 
-            activity()->useLog('web')
+            activity()->useLog('admin:merchant')
                 ->causedBy(Auth::user())
                 ->performedOn($merchant)
-                ->withProperties($request->all())
+                ->withProperties($request->except(['password', 'password_confirmation']))
                 ->log($message);
 
             return redirect()->route('admin.merchants.index')->withSuccess($message);
@@ -87,10 +89,10 @@ class MerchantController extends Controller
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:merchant')
                 ->causedBy(Auth::user())
                 ->performedOn(new User())
-                ->withProperties($request->all())
+                ->withProperties($request->except(['password', 'password_confirmation']))
                 ->log($e->getMessage());
 
             return redirect()->back()->withErrors($message)->withInput();
@@ -103,19 +105,30 @@ class MerchantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(User $merchant)
+    public function show(User $merchant, SubscriptionLogsDataTable $dataTable)
     {
-        $user_details = $merchant->userDetail()
-            ->approvedDetails()
-            ->with(['media'])
-            ->first();
+        $merchant->load([
+            'media' => function ($query) {
+                $query->ssm()->orWhere(function ($query) {
+                    $query->logo();
+                });
+            },
+            'userDetail' => function ($query) {
+                $query->approvedDetails();
+            },
+            'userSubscriptions' => function ($query) {
+                $query->with([
+                    'userSubscriptionLogs' => function ($query) {
+                        $query->latest('created_at')->limit(1);
+                    }
+                ])->active()->limit(1);
+            }
+        ]);
 
-        $documents = $merchant->media()
-            ->ssm()
-            ->orderBy('created_at', 'asc')
-            ->get();
+        $subscription       = optional($merchant->userSubscriptions)->first();
+        $subscription_log   = optional(optional($subscription)->userSubscriptionLogs)->first();
 
-        return view('merchant.show', compact('merchant', 'documents', 'user_details'));
+        return $dataTable->with(compact('merchant'))->render('admin.merchant.show', compact('merchant', 'subscription', 'subscription_log'));
     }
 
     /**
@@ -127,40 +140,29 @@ class MerchantController extends Controller
     public function edit(User $merchant, SubscriptionLogsDataTable $dataTable)
     {
         $merchant->load([
-            'media',
+            'media' => function ($query) {
+                $query->ssm()->orWhere(function ($query) {
+                    $query->logo();
+                });
+            },
             'userDetail' => function ($query) {
                 $query->approvedDetails();
             },
             'userSubscriptions' => function ($query) {
-                $query->with(['userSubscriptionLogs'])->active();
+                $query->with([
+                    'userSubscriptionLogs' => function ($query) {
+                        $query->latest('created_at')->limit(1);
+                    }
+                ])->active()->limit(1);
             }
         ]);
 
-        $user_details   =   $merchant->userDetail;
-        $logo           =   $merchant->media()->logo()->first();
-        $documents      =   $merchant->media()->ssm()->get();
-        $subscription   =   $merchant->userSubscriptions->first();
-        $statuses       =   Status::instance()->activeStatus();
-        $services       =   Service::orderBy('name', 'asc')->get();
+        $statuses           = Status::instance()->activeStatus();
+        $services           = Service::orderBy('name', 'asc')->get();
+        $subscription       = optional($merchant->userSubscriptions)->first();
+        $subscription_log   = optional(optional($subscription)->userSubscriptionLogs)->first();
 
-        $plans = ProductAttribute::whereHas('product', function ($query) {
-            $query->filterCategory(ProductCategory::TYPE_SUBSCRIPTION);
-        })->whereDoesntHave('userSubscriptions', function ($query) use ($merchant) {
-            $query->where('user_id', $merchant->id)->active();
-        })->get();
-
-        $packages = Package::with(['userSubscriptions'])
-            ->whereDoesntHave('userSubscriptions', function ($query) use ($merchant) {
-                $query->where('user_id', $merchant->id)->active(); // exlucde current merchant's active plan
-            })
-            ->get();
-
-        foreach ($packages as $package) {
-            $plans->push($package);
-        }
-
-        return $dataTable->with(['merchant_id', $merchant->id])
-            ->render('merchant.edit', compact('merchant', 'documents', 'user_details', 'statuses', 'logo', 'subscription', 'plans', 'services'));
+        return $dataTable->with(compact('merchant'))->render('admin.merchant.edit', compact('merchant', 'statuses', 'subscription', 'subscription_log', 'services'));
     }
 
     /**
@@ -182,29 +184,24 @@ class MerchantController extends Controller
         try {
 
             $merchant->load([
-                'media', 'address',
-                'userDetail' => function ($query) {
-                    $query->approvedDetails();
-                },
+                'media', 'address', 'userDetail',
                 'userSubscriptions' => function ($query) {
                     $query->active();
                 }
             ]);
 
-            $merchant = MerchantFacade::setModel($merchant)
-                ->setRequest($request)
-                ->storeData()
-                ->getModel();
+            $merchant = MerchantFacade::setModel($merchant)->setRequest($request)
+                ->storeData()->setUserDetailStatus(UserDetail::STATUS_APPROVED)->getModel();
 
             DB::commit();
 
             $status  = 'success';
             $message = Message::instance()->format($action, $module, $status);
 
-            activity()->useLog('web')
+            activity()->useLog('admin:merchant')
                 ->causedBy(Auth::user())
                 ->performedOn($merchant)
-                ->withProperties($request->all())
+                ->withProperties($request->except(['password', 'password_confirmation']))
                 ->log($message);
 
             return redirect()->route('admin.merchants.index')->withSuccess($message);
@@ -212,10 +209,10 @@ class MerchantController extends Controller
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:merchant')
                 ->causedBy(Auth::user())
                 ->performedOn(new User())
-                ->withProperties($request->all())
+                ->withProperties($request->except(['password', 'password_confirmation']))
                 ->log($e->getMessage());
 
             return redirect()->back()->withErrors($message)->withInput();
@@ -233,16 +230,16 @@ class MerchantController extends Controller
         $action     =   Permission::ACTION_DELETE;
         $module     =   strtolower(trans_choice('modules.merchant', 1));
         $status     =   'fail';
-        $message    =   Message::instance()->format($action, $module);
+        $message    =   Message::instance()->format($action, $module, $status);
 
         try {
 
             $merchant->delete();
 
-            $message = Message::instance()->format($action, $module, 'success');
             $status = 'success';
+            $message = Message::instance()->format($action, $module, $status);
 
-            activity()->useLog('web')
+            activity()->useLog('admin:merchant')
                 ->causedBy(Auth::user())
                 ->performedOn($merchant)
                 ->log($message);
@@ -250,7 +247,7 @@ class MerchantController extends Controller
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:merchant')
                 ->causedBy(Auth::user())
                 ->performedOn($merchant)
                 ->log($e->getMessage());
