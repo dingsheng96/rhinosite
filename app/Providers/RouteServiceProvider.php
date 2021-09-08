@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Helpers\Domain;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Support\Facades\Route;
@@ -62,6 +63,14 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
+        ['web' => $web, 'prefix' => $prefix] = (new Domain())->getConfig();
+
+        if ($prefix) {
+            $this->prefixRoutes($web);
+        } else {
+            $this->domainRoutes($web);
+        }
+
         Route::middleware(['web'])
             ->namespace($this->namespace)
             ->group(base_path('routes/web.php'));
@@ -82,30 +91,42 @@ class RouteServiceProvider extends ServiceProvider
             ->group(base_path('routes/api.php'));
     }
 
+    protected function prefixRoutes(array $web)
+    {
+        foreach ($web as $value) {
+
+            Route::prefix($value['prefix'])
+                ->middleware('web')
+                ->namespace($this->namespace . '\\' . $value['namespace'])
+                ->name($value['route']['name'] . '.')
+                ->group(base_path('routes/web/' . $value['route']['file']));
+        }
+    }
+
+    protected function domainRoutes(array $web)
+    {
+        foreach ($web as $value) {
+
+            Route::domain($value['url'])
+                ->middleware('web')
+                ->namespace($this->namespace . '\\' . $value['namespace'])
+                ->name($value['route']['name'] . '.')
+                ->group(base_path('routes/web/' . $value['route']['file']));
+        }
+    }
+
     protected function routeBindings()
     {
         Route::bind('admin', function ($value) {
-            return User::where('id', $value)
-                ->whereHas('roles', function ($query) {
-                    $query->where('name', Role::ROLE_SUPER_ADMIN);
-                })
-                ->firstOrFail();
+            return User::where('id', $value)->admin()->firstOrFail();
         });
 
         Route::bind('merchant', function ($value) {
-            return User::where('id', $value)
-                ->whereHas('roles', function ($query) {
-                    $query->where('name', Role::ROLE_MERCHANT);
-                })
-                ->firstOrFail();
+            return User::where('id', $value)->merchant()->firstOrFail();
         });
 
         Route::bind('member', function ($value) {
-            return User::where('id', $value)
-                ->whereHas('roles', function ($query) {
-                    $query->where('name', Role::ROLE_MEMBER);
-                })
-                ->firstOrFail();
+            return User::where('id', $value)->member()->firstOrFail();
         });
 
         Route::bind('ads', function ($value) {

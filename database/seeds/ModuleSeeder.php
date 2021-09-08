@@ -44,7 +44,6 @@ class ModuleSeeder extends Seeder
             ['name' => 'ads', 'display' => 'Ads', 'description' => 'Ads Module'],
             ['name' => 'order', 'display' => 'Order', 'description' => 'Order Module'],
             ['name' => 'service', 'display' => 'Service', 'description' => 'Service Module'],
-            ['name' => 'activity_log', 'display' => 'Activity Log', 'description' => 'Activity Log Module'],
             ['name' => 'package', 'display' => 'Package', 'description' => 'Package Module'],
             ['name' => 'product', 'display' => 'Product', 'description' => 'Product Module'],
             ['name' => 'transaction', 'display' => 'Transaction', 'description' => 'Transaction Module'],
