@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
+use App\Models\User;
 use App\Models\Country;
 use App\Models\Currency;
 use Illuminate\Validation\Rule;
@@ -18,7 +19,7 @@ class CountryRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::guard('web')->check()
+        return Auth::guard(User::TYPE_ADMIN)->check()
             && Gate::any(['country.create', 'country.update']);
     }
 

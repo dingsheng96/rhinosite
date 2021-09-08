@@ -8,12 +8,12 @@ use App\Helpers\Response;
 use App\Models\Permission;
 use App\Helpers\FileManager;
 use App\Models\CountryState;
-use App\DataTables\Admin\CityDataTable;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Http\Requests\CountryStateRequest;
+use App\DataTables\Admin\CityDataTable;
+use App\Http\Requests\Admin\CountryStateRequest;
 use App\Imports\Settings\Country\CountryStateImport;
 use App\Imports\Settings\Country\CountryStateCityImport;
 
@@ -75,19 +75,19 @@ class CountryStateController extends Controller
 
             $message = Message::instance()->format($action, $module, 'success');
 
-            activity()->useLog('web')
+            activity()->useLog('admin:country_state')
                 ->causedBy(Auth::user())
                 ->performedOn($country_state)
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->route('countries.index')
+            return redirect()->route('admin.countries.index')
                 ->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:country_state')
                 ->causedBy(Auth::user())
                 ->performedOn(new CountryState())
                 ->withProperties($request->all())
@@ -119,7 +119,7 @@ class CountryStateController extends Controller
     public function edit(Country $country, CountryState $country_state, CityDataTable $dataTable)
     {
         return $dataTable->with(['country_id' => $country->id, 'country_state_id' => $country_state->id])
-            ->render('country.country_state.edit', compact('country', 'country_state'));
+            ->render('admin.country.country_state.edit', compact('country', 'country_state'));
     }
 
     /**
@@ -148,19 +148,19 @@ class CountryStateController extends Controller
 
             $message = Message::instance()->format($action, $module, 'success');
 
-            activity()->useLog('web')
+            activity()->useLog('admin:country_state')
                 ->causedBy(Auth::user())
                 ->performedOn($country_state)
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->route('countries.edit', ['country' => $country->id])
+            return redirect()->route('admin.countries.edit', ['country' => $country->id])
                 ->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:country_state')
                 ->causedBy(Auth::user())
                 ->performedOn($country_state)
                 ->withProperties($request->all())
@@ -187,7 +187,7 @@ class CountryStateController extends Controller
 
         $country_state->delete();
 
-        activity()->useLog('web')
+        activity()->useLog('admin:country_state')
             ->causedBy(Auth::user())
             ->performedOn($country)
             ->log($message);
@@ -197,7 +197,7 @@ class CountryStateController extends Controller
             ->withStatus($status)
             ->withMessage($message, true)
             ->withData([
-                'redirect_to' => route('countries.index')
+                'redirect_to' => route('admin.countries.index')
             ])
             ->sendJson();
     }

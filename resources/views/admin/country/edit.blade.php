@@ -1,4 +1,4 @@
-@extends('layouts.master', ['title' => trans_choice('modules.country', 2)])
+@extends('admin.layouts.master', ['title' => trans_choice('modules.country', 2)])
 
 @section('content')
 
@@ -10,7 +10,7 @@
                     <h3 class="card-title">{{ __('modules.edit', ['module' => trans_choice('modules.country', 1)]) }}</h3>
                 </div>
 
-                <form action="{{ route('countries.update', ['country' => $country->id]) }}" method="POST" role="form" enctype="multipart/form-data">
+                <form action="{{ route('admin.countries.update', ['country' => $country->id]) }}" method="POST" role="form" enctype="multipart/form-data">
                     @csrf
                     @method('put')
 
@@ -55,9 +55,9 @@
                         </div>
                     </div>
                     <div class="card-footer bg-transparent text-md-right text-center">
-                        <a role="button" href="{{ route('countries.index') }}" class="btn btn-light mx-2 btn-rounded-corner">
-                            <i class="fas fa-times"></i>
-                            {{ __('labels.cancel') }}
+                        <a role="button" href="{{ route('admin.countries.index') }}" class="btn btn-light mx-2 btn-rounded-corner">
+                            <i class="fas fa-caret-left"></i>
+                            {{ __('labels.back') }}
                         </a>
                         <button type="submit" class="btn btn-outline-primary btn-rounded-corner">
                             <i class="fas fa-paper-plane"></i>
@@ -88,7 +88,7 @@
 
 </div>
 
-@include('country.country_state.create')
+@include('admin.country.country_state.create')
 
 @endsection
 

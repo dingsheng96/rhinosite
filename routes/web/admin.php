@@ -60,7 +60,7 @@ Route::group(['middleware' => ['auth:' . User::TYPE_ADMIN]], function () {
 
     Route::resource('currencies', 'CurrencyController');
 
-    Route::resource('countries', 'CountryController');
-    Route::resource('countries.country-states', 'CountryStateController');
-    Route::resource('countries.country-states.cities', 'CityController');
+    Route::resource('countries', 'CountryController')->except(['create']);
+    Route::resource('countries.country-states', 'CountryStateController')->except(['index', 'create']);
+    Route::resource('countries.country-states.cities', 'CityController')->only(['store', 'destroy']);
 });

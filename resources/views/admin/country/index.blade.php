@@ -1,4 +1,4 @@
-@extends('layouts.master', ['title' => trans_choice('modules.country', 2)])
+@extends('admin.layouts.master', ['title' => trans_choice('modules.country', 2)])
 
 @section('content')
 
@@ -25,7 +25,7 @@
     </div>
 </div>
 
-@includeWhen(Auth::user()->can('country.create'), 'country.create')
+@includeWhen(Auth::user()->can('country.create'), 'admin.country.create')
 
 @endsection
 

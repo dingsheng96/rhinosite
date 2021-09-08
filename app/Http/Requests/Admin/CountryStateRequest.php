@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
-use App\Models\City;
+use App\Models\User;
+use App\Models\CountryState;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CityRequest extends FormRequest
+class CountryStateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -17,7 +18,7 @@ class CityRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::guard('web')->check()
+        return Auth::guard(User::TYPE_ADMIN)->check()
             && Gate::any(['country.create', 'country.update']);
     }
 
@@ -28,14 +29,14 @@ class CityRequest extends FormRequest
      */
     public function rules()
     {
-        if (!empty($this->route('city'))) {
+        if (!empty($this->route('country_state'))) {
             return [
                 'name' => [
                     Rule::requiredIf(empty($this->file('file'))),
                     'nullable',
-                    Rule::unique(City::class, 'name')
-                        ->ignore($this->route('city'), 'id')
-                        ->where('country_state_id', $this->route('country_state'))
+                    Rule::unique(CountryState::class, 'name')
+                        ->ignore($this->route('country_state'), 'id')
+                        ->where('country_id', $this->route('country'))
                         ->whereNull('deleted_at')
                 ]
             ];
@@ -45,8 +46,8 @@ class CityRequest extends FormRequest
             'create.name' => [
                 Rule::requiredIf(!$this->hasFile('create.file')),
                 'nullable',
-                Rule::unique(City::class, 'name')
-                    ->where('country_state_id', $this->route('country_state'))
+                Rule::unique(CountryState::class, 'name')
+                    ->where('country_id', $this->route('country'))
                     ->whereNull('deleted_at')
             ],
             'create.file' => [
@@ -55,6 +56,9 @@ class CityRequest extends FormRequest
                 'file',
                 'mimes:txt,csv,xlsx',
                 'max:20000'
+            ],
+            'create.withCity' => [
+                'nullable'
             ]
         ];
     }

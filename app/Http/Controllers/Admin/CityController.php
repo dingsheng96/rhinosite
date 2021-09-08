@@ -10,11 +10,11 @@ use App\Models\Permission;
 use App\Helpers\FileManager;
 use App\Models\CountryState;
 use Illuminate\Http\Request;
-use App\Http\Requests\CityRequest;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Requests\Admin\CityRequest;
 use App\Imports\Settings\Country\CityImport;
 
 class CityController extends Controller
@@ -70,19 +70,18 @@ class CityController extends Controller
 
             $message = Message::instance()->format($action, $module, 'success');
 
-            activity()->useLog('web')
+            activity()->useLog('admin:city')
                 ->causedBy(Auth::user())
                 ->performedOn($city)
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->route('countries.edit', ['country' => $country->id])
-                ->withSuccess($message);
+            return redirect()->route('admin.countries.edit', ['country' => $country->id])->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:city')
                 ->causedBy(Auth::user())
                 ->performedOn(new City())
                 ->withProperties($request->all())
@@ -143,7 +142,7 @@ class CityController extends Controller
 
         $city->delete();
 
-        activity()->useLog('web')
+        activity()->useLog('admin:city')
             ->causedBy(Auth::user())
             ->performedOn($country)
             ->log($message);
@@ -153,7 +152,7 @@ class CityController extends Controller
             ->withStatus($status)
             ->withMessage($message, true)
             ->withData([
-                'redirect_to' => route('countries.edit', ['country' => $country->id])
+                'redirect_to' => route('admin.countries.edit', ['country' => $country->id])
             ])
             ->sendJson();
     }

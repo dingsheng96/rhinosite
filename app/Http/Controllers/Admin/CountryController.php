@@ -8,10 +8,10 @@ use App\Models\Currency;
 use App\Helpers\Response;
 use App\Models\Permission;
 use Illuminate\Support\Facades\DB;
-use App\DataTables\Admin\CountryDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\CountryRequest;
+use App\DataTables\Admin\CountryDataTable;
+use App\Http\Requests\Admin\CountryRequest;
 use App\DataTables\Admin\CountryStateDataTable;
 
 class CountryController extends Controller
@@ -25,7 +25,7 @@ class CountryController extends Controller
     {
         $currencies = Currency::orderBy('name', 'asc')->get();
 
-        return $dataTable->render('country.index', compact('currencies'));
+        return $dataTable->render('admin.country.index', compact('currencies'));
     }
 
     /**
@@ -75,19 +75,19 @@ class CountryController extends Controller
 
             $message = Message::instance()->format($action, $module, 'success');
 
-            activity()->useLog('web')
+            activity()->useLog('admin:country')
                 ->causedBy(Auth::user())
                 ->performedOn($country)
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->route('countries.index')
+            return redirect()->route('admin.countries.index')
                 ->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:country')
                 ->causedBy(Auth::user())
                 ->performedOn(new Country())
                 ->withProperties($request->all())
@@ -108,7 +108,7 @@ class CountryController extends Controller
     public function show(Country $country, CountryStateDataTable $dataTable)
     {
         return $dataTable->with(['country_id' => $country->id])
-            ->render('country.show', compact('country'));
+            ->render('admin.country.show', compact('country'));
     }
 
     /**
@@ -122,7 +122,7 @@ class CountryController extends Controller
         $currencies = Currency::orderBy('name', 'asc')->get();
 
         return $dataTable->with(['country_id' => $country->id])
-            ->render('country.edit', compact('currencies', 'country'));
+            ->render('admin.country.edit', compact('currencies', 'country'));
     }
 
     /**
@@ -138,7 +138,8 @@ class CountryController extends Controller
 
         $action     =   Permission::ACTION_UPDATE;
         $module     =   strtolower(trans_choice('modules.country', 1));
-        $message    =   Message::instance()->format($action, $module);
+        $status     =   'fail';
+        $message    =   Message::instance()->format($action, $module, $status);
 
         try {
 
@@ -160,29 +161,27 @@ class CountryController extends Controller
 
             DB::commit();
 
-            $message = Message::instance()->format($action, $module, 'success');
+            $status =   'success';
+            $message = Message::instance()->format($action, $module, $status);
 
-            activity()->useLog('web')
+            activity()->useLog('admin:country')
                 ->causedBy(Auth::user())
                 ->performedOn($country)
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->route('countries.index')
-                ->withSuccess($message);
+            return redirect()->route('admin.countries.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:country')
                 ->causedBy(Auth::user())
                 ->performedOn($country)
                 ->withProperties($request->all())
                 ->log($e->getMessage());
 
-            return redirect()->back()
-                ->with('fail', $message)
-                ->withInput();
+            return redirect()->back()->with('fail', $message)->withInput();
         }
     }
 
@@ -201,7 +200,7 @@ class CountryController extends Controller
 
         $country->delete();
 
-        activity()->useLog('web')
+        activity()->useLog('admin:country')
             ->causedBy(Auth::user())
             ->performedOn($country)
             ->log($message);
@@ -211,7 +210,7 @@ class CountryController extends Controller
             ->withStatus($status)
             ->withMessage($message, true)
             ->withData([
-                'redirect_to' => route('countries.index')
+                'redirect_to' => route('admin.countries.index')
             ])
             ->sendJson();
     }
