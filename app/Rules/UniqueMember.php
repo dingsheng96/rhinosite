@@ -2,7 +2,6 @@
 
 namespace App\Rules;
 
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Contracts\Validation\Rule;
 
@@ -39,10 +38,7 @@ class UniqueMember implements Rule
                 } else {
                     $query->where($this->ignore_column, '!=', $this->ignore_id);
                 }
-            })
-            ->whereHas('roles', function ($query) {
-                $query->where('name', Role::ROLE_MEMBER);
-            })->exists();
+            })->where('type', User::TYPE_MEMBER)->exists();
     }
 
     /**

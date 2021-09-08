@@ -1,4 +1,4 @@
-@extends('layouts.master', ['title' => trans_choice('modules.member', 2)])
+@extends('admin.layouts.master', ['title' => trans_choice('modules.member', 2)])
 
 @section('content')
 
@@ -10,7 +10,7 @@
                     <h3 class="card-title">{{ __('modules.create', ['module' => trans_choice('modules.member', 1)]) }}</h3>
                 </div>
 
-                <form action="{{ route('members.store') }}" method="post" role="form" enctype="multipart/form-data">
+                <form action="{{ route('admin.members.store') }}" method="post" role="form" enctype="multipart/form-data">
                     @csrf
 
                     <div class="card-body">
@@ -150,7 +150,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="address_2" class="col-form-label">{{ __('labels.address_2') }} <span class="text-red">*</span></label>
+                                            <label for="address_2" class="col-form-label">{{ __('labels.address_2') }}</label>
                                             <input type="text" name="address_2" id="address_2" class="form-control @error('address_2') is-invalid @enderror" value="{{ old('address_2') }}">
                                             @error('address_2')
                                             <span class="invalid-feedback" role="alert">

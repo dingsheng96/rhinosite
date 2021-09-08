@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Helpers\Status;
 use App\Rules\PasswordFormat;
@@ -19,7 +20,7 @@ class AdminRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::guard('web')->check()
+        return Auth::guard(User::TYPE_ADMIN)->check()
             && Gate::any(['admin.create', 'admin.update']);
     }
 
@@ -30,53 +31,35 @@ class AdminRequest extends FormRequest
      */
     public function rules()
     {
-        if ($this->route('admin')) {
-            return [
-                'update.name' => [
-                    'required',
-                    Rule::unique(User::class, 'name')
-                        ->ignore($this->route('admin'), 'id')
-                        ->whereNull('deleted_at')
-                ],
-                'update.email' => [
-                    'required',
-                    'email',
-                    Rule::unique(User::class, 'email')
-                        ->ignore($this->route('admin'), 'id')
-                        ->whereNull('deleted_at')
-                ],
-                'update.status' => [
-                    'required',
-                    Rule::in(array_keys(Status::instance()->activeStatus()))
-                ],
-                'update.password' => [
-                    'nullable',
-                    'confirmed',
-                    new PasswordFormat()
-                ]
-            ];
-        }
-
         return [
-            'create.name' => [
+            'name' => [
                 'required',
                 Rule::unique(User::class, 'name')
+                    ->ignore($this->route('admin'), 'id')
+                    ->where('type', User::TYPE_ADMIN)
                     ->whereNull('deleted_at')
             ],
-            'create.email' => [
+            'email' => [
                 'required',
                 'email',
                 Rule::unique(User::class, 'email')
+                    ->ignore($this->route('admin'), 'id')
+                    ->where('type', User::TYPE_ADMIN)
                     ->whereNull('deleted_at')
             ],
-            'create.status' => [
+            'status' => [
                 'required',
                 Rule::in(array_keys(Status::instance()->activeStatus()))
             ],
-            'create.password' => [
-                'required',
+            'password' => [
+                Rule::requiredIf(empty($this->route('member'))),
+                'nullable',
                 'confirmed',
                 new PasswordFormat()
+            ],
+            'role' => [
+                'required',
+                'exists:' . Role::class . ',id'
             ]
         ];
     }
@@ -99,10 +82,10 @@ class AdminRequest extends FormRequest
     public function attributes()
     {
         return [
-            '*.name'        =>  __('validation.attributes.name'),
-            '*.email'       =>  __('validation.attributes.email'),
-            '*.status'      =>  __('validation.attributes.status'),
-            '*.password'    =>  __('validation.attributes.password'),
+            'name'        =>  __('validation.attributes.name'),
+            'email'       =>  __('validation.attributes.email'),
+            'status'      =>  __('validation.attributes.status'),
+            'password'    =>  __('validation.attributes.password'),
         ];
     }
 }

@@ -8,11 +8,11 @@ use App\Helpers\Message;
 use App\Helpers\Response;
 use App\Models\Permission;
 use Illuminate\Support\Facades\DB;
-use App\DataTables\Admin\MemberDataTable;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MemberRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Support\Facades\MemberFacade;
+use App\DataTables\Admin\MemberDataTable;
+use App\Http\Requests\Admin\MemberRequest;
 
 class MemberController extends Controller
 {
@@ -31,7 +31,7 @@ class MemberController extends Controller
      */
     public function index(MemberDataTable $dataTable)
     {
-        return $dataTable->render('member.index');
+        return $dataTable->render('admin.member.index');
     }
 
     /**
@@ -43,7 +43,7 @@ class MemberController extends Controller
     {
         $statuses = Status::instance()->activeStatus();
 
-        return view('member.create', compact('statuses'));
+        return view('admin.member.create', compact('statuses'));
     }
 
     /**
@@ -58,22 +58,22 @@ class MemberController extends Controller
 
         $action     =   Permission::ACTION_CREATE;
         $module     =   strtolower(trans_choice('modules.member', 1));
-        $message    =   Message::instance()->format($action, $module);
         $status     =   'fail';
+        $message    =   Message::instance()->format($action, $module, $status);
 
         try {
 
-            $member = MemberFacade::setRequest($request)->storeData()->getModel();
+            $member = MemberFacade::setRequest($request)->storeData()->verifiedEmail()->getModel();
 
             DB::commit();
 
             $status  = 'success';
             $message = Message::instance()->format($action, $module, $status);
 
-            activity()->useLog('web')
+            activity()->useLog('admin:member')
                 ->causedBy(Auth::user())
                 ->performedOn($member)
-                ->withProperties($request->all())
+                ->withProperties($request->except(['password', 'password_confirmation']))
                 ->log($message);
 
             return redirect()->route('admin.members.index')->withSuccess($message);
@@ -81,10 +81,10 @@ class MemberController extends Controller
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:member')
                 ->causedBy(Auth::user())
                 ->performedOn(new User())
-                ->withProperties($request->all())
+                ->withProperties($request->except(['password', 'password_confirmation']))
                 ->log($e->getMessage());
 
             return redirect()->back()->withErrors($message)->withInput();
@@ -101,7 +101,7 @@ class MemberController extends Controller
     {
         $member->load(['address']);
 
-        return view('member.show', compact('member'));
+        return view('admin.member.show', compact('member'));
     }
 
     /**
@@ -116,7 +116,7 @@ class MemberController extends Controller
 
         $statuses = Status::instance()->activeStatus();
 
-        return view('member.edit', compact('member', 'statuses'));
+        return view('admin.member.edit', compact('member', 'statuses'));
     }
 
     /**
@@ -132,8 +132,8 @@ class MemberController extends Controller
 
         $action     =   Permission::ACTION_UPDATE;
         $module     =   strtolower(trans_choice('modules.member', 1));
-        $message    =   Message::instance()->format($action, $module);
         $status     =   'fail';
+        $message    =   Message::instance()->format($action, $module, $status);
 
         try {
 
@@ -149,7 +149,7 @@ class MemberController extends Controller
             $status  = 'success';
             $message = Message::instance()->format($action, $module, $status);
 
-            activity()->useLog('web')
+            activity()->useLog('admin:member')
                 ->causedBy(Auth::user())
                 ->performedOn($member)
                 ->withProperties($request->all())
@@ -160,7 +160,7 @@ class MemberController extends Controller
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:member')
                 ->causedBy(Auth::user())
                 ->performedOn(new User())
                 ->withProperties($request->all())
@@ -194,7 +194,7 @@ class MemberController extends Controller
             $message = Message::instance()->format($action, $module, 'success');
             $status = 'success';
 
-            activity()->useLog('web')
+            activity()->useLog('admin:member')
                 ->causedBy(Auth::user())
                 ->performedOn($member)
                 ->log($message);
@@ -202,7 +202,7 @@ class MemberController extends Controller
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:member')
                 ->causedBy(Auth::user())
                 ->performedOn($member)
                 ->log($e->getMessage());
