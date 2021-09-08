@@ -11,6 +11,7 @@ use App\Helpers\Status;
 use App\Models\Address;
 use App\Models\Project;
 use App\Models\Service;
+use App\Models\Rateable;
 use App\Models\Comparable;
 use App\Models\Favourable;
 use App\Models\UserDetail;
@@ -19,6 +20,7 @@ use App\Models\UserSubscription;
 use App\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\DB;
 use App\Models\UserAdsQuotaHistory;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -203,6 +205,11 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     // Attributes
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = (!empty($value)) ? Hash::make(trim($value)) : $this->password;
+    }
+
     public function setPhoneAttribute($value)
     {
         $this->attributes['phone'] = Misc::instance()->stripTagsAndAddCountryCodeToPhone($value);

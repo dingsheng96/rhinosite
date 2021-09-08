@@ -54,6 +54,8 @@ class AccountService extends BaseService
         }
 
         $this->setModel($this->model);
+
+        return $this;
     }
 
     public function storeDetails()

@@ -30,7 +30,7 @@ Route::group(['middleware' => ['auth:' . User::TYPE_ADMIN]], function () {
 
     Route::get('dashboard', 'HomeController@index')->name('dashboard');
 
-    Route::resource('account', 'AccountController');
+    Route::resource('account', 'AccountController')->only(['index', 'store']);
 
     Route::resource('ads-boosters', 'AdsBoosterController');
 

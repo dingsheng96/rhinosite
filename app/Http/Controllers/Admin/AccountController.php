@@ -7,10 +7,12 @@ use App\Helpers\Message;
 use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\AccountRequest;
 use App\Support\Facades\AccountFacade;
+use App\Support\Services\AdminService;
+use App\Http\Requests\Admin\AccountRequest;
 
 class AccountController extends Controller
 {
@@ -21,27 +23,9 @@ class AccountController extends Controller
      */
     public function index()
     {
-        $user = Auth::user()->load([
-            'address',
-            'userAdsQuotas' => function ($query) {
-                $query->orderBy('product_id');
-            },
-            'userDetail' => function ($query) {
-                $query->approvedDetails();
-            },
-            'userSubscriptions' => function ($query) {
-                $query->with([
-                    'userSubscriptionLogs' => function ($query) {
-                        $query->orderByDesc('renewed_at');
-                    }
-                ])->active();
-            }
-        ]);
+        $user = Auth::user();
 
-        $address = $user->address;
-        $user_details = $user->userDetail;
-
-        return view('account.' . Auth::user()->folder_name, compact('user', 'user_details', 'address'));
+        return view('admin.account', compact('user'));
     }
 
     /**
@@ -60,48 +44,41 @@ class AccountController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AccountRequest $request)
+    public function store(AccountRequest $request, AdminService $admin_service)
     {
         DB::beginTransaction();
 
-        $user       =   User::findOrFail(Auth::id());
         $action     =   Permission::ACTION_UPDATE;
         $module     =   strtolower(__('labels.user_account'));
         $status     =   'fail';
-        $message    =   Message::instance()->format($action, $module, $status);
 
         try {
 
-            $account = AccountFacade::setModel($user)->setRequest($request)->storeData()->getModel();
+            $account = $admin_service->setModel(Auth::user())->setRequest($request)->store()->getModel();
 
             DB::commit();
 
-            if ($request->get('new_password')) {
-                Auth::guard('web')->login($account);
-            }
-
-            $message =  Message::instance()->format($action, $module, 'success');
             $status  =  'success';
 
-            activity()->useLog('web')
-                ->causedBy(Auth::user())
-                ->performedOn($account)
-                ->withProperties($request->all())
-                ->log($message);
+            if (!empty($request->get('new_password'))) {
 
-            return redirect()->route('admin.account.index')->withSuccess($message);
+                Auth::guard(User::TYPE_ADMIN)->login($account);
+            }
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
-
-            activity()->useLog('web')
-                ->causedBy(Auth::user())
-                ->performedOn($user)
-                ->withProperties($request->all())
-                ->log($e->getMessage());
-
-            return redirect()->back()->with('fail', $message);
+            Log::error($e);
         }
+
+        $message =  Message::instance()->format($action, $module, $status);
+
+        activity()->useLog('admin:account')
+            ->causedBy(Auth::user())
+            ->performedOn(Auth::user())
+            ->withProperties($request->except(['new_password', 'new_password_confirmation']))
+            ->log($message);
+
+        return redirect()->route('admin.account.index')->with($status, $message);
     }
 
     /**
