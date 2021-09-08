@@ -1,4 +1,4 @@
-@extends('layouts.master', ['title' => trans_choice('modules.role', 2)])
+@extends('admin.layouts.master', ['title' => trans_choice('modules.role', 2)])
 
 @section('content')
 
@@ -18,31 +18,28 @@
                     @method('put')
 
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="name" class="col-form-label">{{ __('labels.name') }}</label>
-                                    <input type="text" id="name" name="name" value="{{ old('name', $role->name) }}" class="form-control ucfirst @error('name') is-invalid @enderror">
-                                    @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="description" class="col-form-label">{{ __('labels.description') }}</label>
-                                    <textarea name="description" id="description" cols="100" rows="5" class="form-control @error('description') is-invalid @enderror">{{ old('description', $role->description) }}</textarea>
-                                    @error('description')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                            </div>
+
+                        <div class="form-group">
+                            <label for="name" class="col-form-label">{{ __('labels.name') }}</label>
+                            <input type="text" id="name" name="name" value="{{ old('name', $role->name) }}" class="form-control ucfirst @error('name') is-invalid @enderror">
+                            @error('name')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="col-form-label">{{ __('labels.description') }}</label>
+                            <textarea name="description" id="description" cols="100" rows="5" class="form-control @error('description') is-invalid @enderror">{{ old('description', $role->description) }}</textarea>
+                            @error('description')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
 
-                        <div class="row">
-                            <div class="col-12">
+                        <div class="form-group">
+                            <div class="table-responsive">
                                 <label for="tbl_permission" class="col-form-label">{{ trans_choice('labels.permission', 2) }}</label>
                                 <div class="table-responsive" id="tbl_permission">
                                     <table class="table table-bordered table-striped table-hover">
@@ -71,7 +68,7 @@
                                                 @foreach ($module->permissions as $permission)
                                                 <td>
                                                     <div class="icheck-primary">
-                                                        <input type="checkbox" name="permissions[]" id="permission_{{ $permission->id }}" value="{{ $permission->id }}" {{ collect($role->permissions()->pluck('id'))->contains($permission->id) ? 'checked' : null }}>
+                                                        <input type="checkbox" name="permissions[]" id="permission_{{ $permission->id }}" value="{{ $permission->id }}" {{ collect($role->permissions->pluck('id'))->contains($permission->id) ? 'checked' : null }}>
                                                         <label for="permission_{{ $permission->id }}">{{ $permission->display }}</label>
                                                     </div>
                                                 </td>
@@ -99,7 +96,6 @@
                 </form>
             </div>
         </div>
-        <div class="col-12 col-md-7"></div>
     </div>
 
 </div>
