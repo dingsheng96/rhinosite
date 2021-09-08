@@ -29,14 +29,12 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable, SoftDeletes, HasRoles;
 
-    const STATUS_ACTIVE     =   'active';
-    const STATUS_INACTIVE   =   'inactive';
-    const STORE_PATH        =   '/users';
+    protected $guard_name = 'web';
 
     protected $table = 'users';
 
     protected $fillable = [
-        'name', 'phone', 'email', 'password',
+        'name', 'type', 'phone', 'email', 'password',
         'remember_token', 'status', 'last_login_at', 'email_verified_at'
     ];
 
@@ -48,6 +46,15 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'last_login_at' => 'datetime'
     ];
+
+    // Constants
+    const STATUS_ACTIVE     =   'active';
+    const STATUS_INACTIVE   =   'inactive';
+    const STORE_PATH        =   '/users';
+
+    const TYPE_ADMIN    = 'admin';
+    const TYPE_MERCHANT = 'merchant';
+    const TYPE_MEMBER   = 'member';
 
     // Relationships
     public function userDetail()
@@ -129,23 +136,17 @@ class User extends Authenticatable implements MustVerifyEmail
     // Scopes
     public function scopeAdmin($query)
     {
-        return $query->whereHas('roles', function ($query) {
-            $query->where('name', Role::ROLE_SUPER_ADMIN);
-        });
+        return $query->where('type', self::TYPE_ADMIN);
     }
 
     public function scopeMerchant($query)
     {
-        return $query->whereHas('roles', function ($query) {
-            $query->where('name', Role::ROLE_MERCHANT);
-        });
+        return $query->where('type', self::TYPE_MERCHANT);
     }
 
     public function scopeMember($query)
     {
-        return $query->whereHas('roles', function ($query) {
-            $query->where('name', Role::ROLE_MEMBER);
-        });
+        return $query->where('type', self::TYPE_MEMBER);
     }
 
     public function scopeActive($query)
@@ -207,20 +208,6 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->attributes['phone'] = Misc::instance()->stripTagsAndAddCountryCodeToPhone($value);
     }
 
-    public function getFullAddressAttribute()
-    {
-        if ($this->address) {
-            $full_address  =    $this->address->address_1 . ', ';
-            $full_address  .=   $this->address->address_2 . ', ';
-            $full_address  .=   $this->address->postcode . ', ';
-            $full_address  .=   $this->address->city->name . ', ';
-            $full_address  .=   $this->address->city->country_state_name . ', ';
-            $full_address  .=   $this->address->city->country_name;
-        }
-
-        return $full_address ?? null;
-    }
-
     public function getRoleNameAttribute()
     {
         return $this->getRoleNames()->first();
@@ -249,19 +236,24 @@ class User extends Authenticatable implements MustVerifyEmail
         return $folders[$this->roles()->first()->name];
     }
 
+    public function getIsSuperAdminAttribute()
+    {
+        return $this->roles->first()->name == Role::ROLE_SUPER_ADMIN;
+    }
+
     public function getIsAdminAttribute()
     {
-        return $this->role_name == Role::ROLE_SUPER_ADMIN;
+        return $this->type == self::TYPE_ADMIN;
     }
 
     public function getIsMerchantAttribute()
     {
-        return $this->role_name == Role::ROLE_MERCHANT;
+        return $this->type == self::TYPE_MERCHANT;
     }
 
     public function getIsMemberAttribute()
     {
-        return $this->role_name == Role::ROLE_MEMBER;
+        return $this->type == self::TYPE_MEMBER;
     }
 
     public function getCartItemsCountAttribute()
