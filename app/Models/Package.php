@@ -24,7 +24,7 @@ class Package extends Model
     protected $table = 'packages';
 
     protected $fillable = [
-        'name', 'description', 'stock_type', 'quantity', 'status', 'recurring', 'published'
+        'name', 'description', 'stock_type', 'stock_quantity', 'quantity', 'status', 'recurring', 'published'
     ];
 
     // Functions
