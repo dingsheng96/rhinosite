@@ -39,6 +39,9 @@ class ProjectObserver
         $project->address()->delete();
         $project->translations()->delete();
         $project->media()->delete();
+        $project->adsBoosters()->delete();
+        $project->userComparisons()->detach();
+        $project->wishlistedBy()->detach();
     }
 
     /**

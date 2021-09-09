@@ -1,4 +1,4 @@
-@extends('layouts.master', ['parent_title' => trans_choice('modules.project', 2), 'title' => __('modules.create', ['module' => trans_choice('modules.project', 1)])])
+@extends('admin.layouts.master', ['parent_title' => trans_choice('modules.project', 2), 'title' => __('modules.create', ['module' => trans_choice('modules.project', 1)])])
 
 @section('content')
 
@@ -13,7 +13,7 @@
                     <h3 class="card-title">{!! __('messages.complete_fields') !!}</h3>
                 </div>
 
-                <form action="{{ route('projects.store') }}" method="post" enctype="multipart/form-data" role="form">
+                <form action="{{ route('admin.projects.store') }}" method="post" enctype="multipart/form-data" role="form">
                     @csrf
                     <div class="card-body">
                         <div class="row">
@@ -57,7 +57,6 @@
                                             </div>
                                         </div>
 
-                                        @admin
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="form-group">
@@ -76,7 +75,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        @endadmin
 
                                         <div class="row">
                                             <div class="col-12">
@@ -375,19 +373,15 @@
 
                     </div>
 
-                    <div class="card-footer bg-transparent">
-                        <div class="row">
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-outline-primary btn-rounded-corner float-right">
-                                    <i class="fas fa-paper-plane"></i>
-                                    {{ __('labels.submit') }}
-                                </button>
-                                <a role="button" href="{{ route('projects.index') }}" class="btn btn-light mx-2 btn-rounded-corner float-right">
-                                    <i class="fas fa-times"></i>
-                                    {{ __('labels.cancel') }}
-                                </a>
-                            </div>
-                        </div>
+                    <div class="card-footer bg-transparent text-md-right text-center">
+                        <a role="button" href="{{ route('admin.projects.index') }}" class="btn btn-light mx-2 btn-rounded-corner">
+                            <i class="fas fa-caret-left"></i>
+                            {{ __('labels.back') }}
+                        </a>
+                        <button type="submit" class="btn btn-outline-primary btn-rounded-corner">
+                            <i class="fas fa-paper-plane"></i>
+                            {{ __('labels.submit') }}
+                        </button>
                     </div>
 
                 </form>

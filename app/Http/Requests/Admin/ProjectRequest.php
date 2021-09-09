@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
 use App\Models\City;
 use App\Models\Unit;
+use App\Models\User;
 use App\Models\Country;
 use App\Models\Product;
 use App\Models\Project;
-use App\Models\Service;
 use App\Models\Currency;
 use App\Models\CountryState;
 use App\Rules\ExistMerchant;
@@ -26,7 +26,7 @@ class ProjectRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::guard('web')->check()
+        return Auth::guard(User::TYPE_ADMIN)->check()
             && Gate::any(['project.create', 'project.update']);
     }
 
@@ -37,14 +37,12 @@ class ProjectRequest extends FormRequest
      */
     public function rules()
     {
-        $merchant_id = $this->get('merchant') ?? Auth::id();
-
         return [
             'title_en'      =>  [
                 'required', 'min:3', 'max:100',
                 Rule::unique(Project::class, 'title')
                     ->ignore($this->route('project'), 'id')
-                    ->where('user_id', $merchant_id)
+                    ->where('user_id', $this->get('merchant'))
                     ->whereNull('deleted_at')
             ],
             'title_cn'      =>  ['nullable', 'max:100'],
@@ -78,7 +76,7 @@ class ProjectRequest extends FormRequest
                     ->whereNull('deleted_at')
             ],
             'date_from'     =>  [Rule::requiredIf(!empty($this->get('ads_type'))), 'nullable', 'date', 'date_format:Y-m-d', 'after:today'],
-            'merchant'      =>  [Rule::requiredIf(Auth::user()->is_admin), 'nullable', new ExistMerchant()]
+            'merchant'      =>  ['required', 'nullable', new ExistMerchant()]
         ];
     }
 

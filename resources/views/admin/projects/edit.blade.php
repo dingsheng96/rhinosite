@@ -1,4 +1,4 @@
-@extends('layouts.master', ['parent_title' => trans_choice('modules.project', 2), 'title' => __('modules.edit', ['module' => trans_choice('modules.project', 1)])])
+@extends('admin.layouts.master', ['parent_title' => trans_choice('modules.project', 2), 'title' => __('modules.edit', ['module' => trans_choice('modules.project', 1)])])
 
 @section('content')
 
@@ -11,7 +11,7 @@
                     <h3 class="card-title">{!! __('messages.complete_fields') !!}</h3>
                 </div>
 
-                <form action="{{ route('projects.update', ['project' => $project->id]) }}" method="post" enctype="multipart/form-data" role="form">
+                <form action="{{ route('admin.projects.update', ['project' => $project->id]) }}" method="post" enctype="multipart/form-data" role="form">
                     @csrf
                     @method('put')
 
@@ -58,7 +58,6 @@
                                             </div>
                                         </div>
 
-                                        @admin
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="form-group">
@@ -77,7 +76,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        @endadmin
 
                                         <div class="row">
                                             <div class="col-12">
@@ -207,7 +205,7 @@
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <label for="address_2" class="col-form-label">{{ __('labels.address_2') }} <span class="text-red">*</span></label>
+                                                    <label for="address_2" class="col-form-label">{{ __('labels.address_2') }}</label>
                                                     <input type="text" name="address_2" id="address_2" class="form-control @error('address_2') is-invalid @enderror" value="{{ old('address_2', $project->address->address_2 ?? null) }}">
                                                     @error('address_2')
                                                     <span class="invalid-feedback" role="alert">
@@ -371,7 +369,7 @@
                                                                                         {{ __('labels.download') }}
                                                                                     </a>
                                                                                     <a role="button" href="#" class="dropdown-item" title="{{ __('labels.delete') }}" data-toggle="modal"
-                                                                                        onclick="event.preventDefault(); deleteAlert('{{ __('messages.confirm_question') }}', '{{ __('messages.delete_info') }}', '{{ route('projects.media.destroy', ['project' => $project->id, 'medium' => $image->id]) }}')">
+                                                                                        onclick="event.preventDefault(); deleteAlert('{{ __('messages.confirm_question') }}', '{{ __('messages.delete_info') }}', '{{ route('admin.projects.media.destroy', ['project' => $project->id, 'medium' => $image->id]) }}')">
                                                                                         <i class="fas fa-trash mr-2 text-red"></i>
                                                                                         {{ __('labels.delete') }}
                                                                                     </a>
@@ -455,19 +453,15 @@
                         </div>
                     </div>
 
-                    <div class="card-footer bg-transparent">
-                        <div class="row">
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-outline-primary btn-rounded-corner float-right">
-                                    <i class="fas fa-paper-plane"></i>
-                                    {{ __('labels.submit') }}
-                                </button>
-                                <a role="button" href="{{ route('projects.index') }}" class="btn btn-light mx-2 btn-rounded-corner float-right">
-                                    <i class="fas fa-times"></i>
-                                    {{ __('labels.cancel') }}
-                                </a>
-                            </div>
-                        </div>
+                    <div class="card-footer bg-transparent text-md-right text-center">
+                        <a role="button" href="{{ route('admin.projects.index') }}" class="btn btn-light mx-2 btn-rounded-corner">
+                            <i class="fas fa-caret-left"></i>
+                            {{ __('labels.back') }}
+                        </a>
+                        <button type="submit" class="btn btn-outline-primary btn-rounded-corner">
+                            <i class="fas fa-paper-plane"></i>
+                            {{ __('labels.submit') }}
+                        </button>
                     </div>
                 </form>
 

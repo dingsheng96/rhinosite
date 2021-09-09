@@ -131,90 +131,83 @@ class ProjectService extends BaseService
     {
         if ($this->request->has('ads_type')) {
 
-            $this->model->load(['user.userAdsQuotas']);
-
-            $ads = Product::with([
-                'productAttributes' => function ($query) {
-                    $query->select('product_id', 'slot', 'slot_type')->first();
+            $this->model->load([
+                'user.userAdsQuotas' => function ($query) {
+                    $query->with([
+                        'userAdsQuotaHistories' => function ($query) {
+                            $query->latest('created_at')->limit(1);
+                        }
+                    ]);
                 }
-            ])
+            ]);
+
+            $ads = Product::with(['productAttributes', 'adsBoosters'])
                 ->where('id', $this->request->get('ads_type'))
-                ->whereHas('productCategory', function ($query) {
-                    $query->where('name', ProductCategory::TYPE_ADS);
-                })
+                ->whereNotNull('slot_type')->whereNotNull('total_slots')
                 ->first();
 
             // check merchant's ads quota
-            $user       =   $this->model->user;
+            $user_ads_quota = $this->model->user->userAdsQuotas->where('product_id', $ads->id)->first();
 
-            $ads_quota  =   $user->userAdsQuotas()
-                ->with([
-                    'userAdsQuotaHistories' => function ($query) {
-                        $query->orderByDesc('created_at')->first();
-                    }
-                ])->where('product_id', $ads->id)->first();
-
-            throw_if(empty($ads_quota) || $ads_quota->quantity <= 0, new \Exception(__('messages.insufficient_quota')));
+            throw_if(empty($user_ads_quota) || $user_ads_quota->quantity <= 0, new \Exception(__('messages.insufficient_quota')));
 
             // get ads's product attributes
-            $date_from = Carbon::createFromFormat('Y-m-d', $this->request->get('date_from'));
+            $date_from  =   Carbon::createFromFormat('Y-m-d', $this->request->get('date_from'));
+            $date_end   =   $this->getLastDayOfBoosting($ads->slot_type, $date_from);
 
-            switch ($ads->productAttributes->first()->slot_type) {
-                case ProductAttribute::SLOT_TYPE_MONTHLY:
-                    $date_end = $date_from->copy()->addMonth();
-                    $total_boosting = 30;
-                    break;
-                case ProductAttribute::SLOT_TYPE_WEEKLY:
-                    $date_end = $date_from->copy()->addWeek();
-                    $total_boosting = 7;
-                    break;
-                default:
-                    $date_end = $date_from->copy()->addDay();
-                    $total_boosting = 1;
-                    break;
-            }
-
-            $booster_slots = AdsBooster::selectRaw('DATE(boosted_at) as boosted_date, COUNT(boosted_at) as day_count')
+            $booster_slots = AdsBooster::selectRaw('DATE(boosted_at) as boosted_date, COUNT(boosted_at) as used_slots_count')
                 ->whereBetween('boosted_at', [$date_from, $date_end])
                 ->where('product_id', $ads->id)
-                ->groupBy(DB::raw('DATE(boosted_at)'))
+                ->groupBy('boosted_date')
                 ->get();
 
             foreach ($booster_slots as $slot) {
-                throw_if($slot->day_count >= $ads->productAttributes->first()->slot, new \Exception(__('messages.no_slot_available')));
+                throw_if($slot->used_slots_count >= $ads->total_slots, new \Exception(__('messages.no_slot_available')));
             }
 
             // create boosters
-            for ($day = 0; $day < $total_boosting; $day++) {
-                $ads_booster = new AdsBooster();
-                $ads_booster->product_id = $ads->id;
-                $ads_booster->boosted_at = $date_from->copy()->addDays($day);
-                $this->model->adsBoosters()->save($ads_booster);
+            for ($day = 0; $day < $date_end->diffInDays($date_from); $day++) {
+
+                $this->model->adsBoosters()->create([
+                    'product_id' => $ads->id,
+                    'boosted_at' => $date_from->copy()->addDays($day)
+                ]);
             }
 
-            // decrement merchant's ads quota
-            $ads_quota->decrement('quantity');
+            // deduct merchant's ads quota by 1
+            $user_ads_quota->decrement('quantity');
 
             // create ads quotas history
-            $initial_quantity   =   0;
             $process_quantity   =   '-1';
-            $latest_history     =   $ads_quota->userAdsQuotaHistories->first();
+            $initial_quantity   =   optional($user_ads_quota->userAdsQuotaHistories->first())->remaining_quantity ?? 0; // latest user ads quota history
 
-            if ($latest_history) {
-                $initial_quantity = $latest_history->remaining_quantity;
-            }
-
-            $ads_quota_history  =   new UserAdsQuotaHistory();
-            $ads_quota_history->initial_quantity    =   $initial_quantity;
-            $ads_quota_history->process_quantity    =   $process_quantity;
-            $ads_quota_history->remaining_quantity  =   $initial_quantity + $process_quantity;
-            $ads_quota_history->sourceable_type     =   get_class($ads_quota);
-            $ads_quota_history->sourceable_id       =   $ads_quota->id;
-            $ads_quota_history->applicable_type     =   get_class($this->model);
-            $ads_quota_history->applicable_id       =   $this->model->id;
-            $ads_quota->userAdsQuotaHistories()->save($ads_quota_history);
+            $user_ads_quota->userAdsQuotaHistories()->create([
+                'initial_quantity'    =>   $initial_quantity,
+                'process_quantity'    =>   $process_quantity,
+                'remaining_quantity'  =>   $initial_quantity + $process_quantity,
+                'sourceable_type'     =>   get_class($user_ads_quota),
+                'sourceable_id'       =>   $user_ads_quota->id,
+                'applicable_type'     =>   get_class($this->model),
+                'applicable_id'       =>   $this->model->id,
+            ]);
         }
 
         return $this;
+    }
+
+    private function getLastDayOfBoosting(string $slot_type, $start_date)
+    {
+        if ($slot_type == Product::SLOT_TYPE_DAILY) { // calculate the last date from start date of boosting
+
+            $date_end = $start_date->copy()->addDay();
+        } elseif ($slot_type == Product::SLOT_TYPE_WEEKLY) {
+
+            $date_end = $start_date->copy()->addWeek();
+        } elseif ($slot_type == Product::SLOT_TYPE_MONTHLY) {
+
+            $date_end = $start_date->copy()->addMonth();
+        }
+
+        return $date_end;
     }
 }

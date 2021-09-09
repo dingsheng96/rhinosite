@@ -9,7 +9,6 @@ class AppServiceProvider extends ServiceProvider
 {
     protected $custom_facades = [
         'countryFacade' => \App\Support\Services\CountryService::class,
-        'userDetailFacade' => \App\Support\Services\UserDetailService::class,
         'projectFacade' => \App\Support\Services\ProjectService::class,
         'merchantFacade' => \App\Support\Services\MerchantService::class,
         'ratingFacade' => \App\Support\Services\RatingService::class,
@@ -53,9 +52,6 @@ class AppServiceProvider extends ServiceProvider
 
         // bind custom facades
         $this->bindFacades();
-
-        // observers
-        $this->registerObservers();
     }
 
     private function bindFacades()
@@ -65,14 +61,5 @@ class AppServiceProvider extends ServiceProvider
                 return new $class();
             });
         }
-    }
-
-    private function registerObservers()
-    {
-        \App\Models\Project::observe(\App\Observers\ProjectObserver::class);
-        \App\Models\Country::observe(\App\Observers\CountryObserver::class);
-        \App\Models\CountryState::observe(\App\Observers\CountryStateObserver::class);
-        \App\Models\Product::observe(\App\Observers\ProductObserver::class);
-        \App\Models\User::observe(\App\Observers\UserObserver::class);
     }
 }
