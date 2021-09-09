@@ -1,4 +1,4 @@
-@extends('layouts.master', [ 'title' => trans_choice('modules.order', 2)])
+@extends('admin.layouts.master', [ 'title' => trans_choice('modules.order', 2)])
 
 @section('content')
 
@@ -81,8 +81,8 @@
 
                 <div class="row no-print">
                     <div class="col-12">
-                        <a href="{{ route('orders.index') }}" role="button" class="btn btn-light btn-rounded-corner float-right">
-                            <i class="fas fa-chevron-left"></i>
+                        <a href="{{ route('admin.orders.index') }}" role="button" class="btn btn-light btn-rounded-corner float-right">
+                            <i class="fas fa-caret-left"></i>
                             {{ __('labels.back') }}
                         </a>
                     </div>

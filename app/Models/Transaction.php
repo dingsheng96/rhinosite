@@ -7,6 +7,7 @@ use App\Models\Currency;
 use App\Models\PaymentMethod;
 use App\Models\TransactionDetail;
 use App\Support\Facades\PriceFacade;
+use App\Observers\TransactionObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -25,6 +26,15 @@ class Transaction extends Model
         'transaction_no', 'sourceable_type', 'sourceable_id', 'currency_id',
         'amount', 'payment_method_id', 'status'
     ];
+
+    // Functions
+    // Functions
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::observe(TransactionObserver::class);
+    }
 
     // Relationships
     public function sourceable()

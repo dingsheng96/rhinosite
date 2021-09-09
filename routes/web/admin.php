@@ -19,20 +19,20 @@ Route::get('/', function () {
     return redirect()->route('admin.login');
 });
 
-Auth::routes(['verify' => false, 'reset' => false]);
+Auth::routes(['verify' => false, 'reset' => false, 'register' => false]);
 
 Route::group(['middleware' => ['auth:' . User::TYPE_ADMIN]], function () {
-
-    Route::resource('verifications', 'UserVerificationController');
-
-    Route::post('subscriptions/{subscription}/terminate', 'SubscriptionController@terminate')->name('subscriptions.terminate');
-    Route::resource('subscriptions', 'SubscriptionController');
 
     Route::get('dashboard', 'HomeController@index')->name('dashboard');
 
     Route::resource('account', 'AccountController')->only(['index', 'store']);
 
     Route::resource('ads-boosters', 'AdsBoosterController');
+
+    Route::resource('verifications', 'UserVerificationController')->except(['create', 'store']);
+
+    Route::post('subscriptions/{subscription}/terminate', 'SubscriptionController@terminate')->name('subscriptions.terminate');
+    Route::resource('subscriptions', 'SubscriptionController');
 
     Route::resource('projects', 'ProjectController');
     Route::resource('projects.media', 'ProjectMediaController')->only(['destroy']);
@@ -44,9 +44,9 @@ Route::group(['middleware' => ['auth:' . User::TYPE_ADMIN]], function () {
     Route::resource('packages', 'PackageController');
     Route::resource('packages.products', 'PackageProductController')->only(['destroy']);
 
-    Route::resource('orders', 'OrderController');
+    Route::resource('orders', 'OrderController')->only(['index', 'store', 'show']);
 
-    Route::resource('transactions', 'TransactionController');
+    Route::resource('transactions', 'TransactionController')->only(['index', 'show']);
 
     Route::resource('admins', 'AdminController');
 
@@ -56,7 +56,7 @@ Route::group(['middleware' => ['auth:' . User::TYPE_ADMIN]], function () {
 
     Route::resource('roles', 'RoleController');
 
-    Route::resource('services', 'ServiceController');
+    Route::resource('services', 'ServiceController')->except(['create', 'edit']);
 
     Route::resource('currencies', 'CurrencyController');
 

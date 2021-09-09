@@ -8,6 +8,7 @@ use App\Models\Currency;
 use App\Models\OrderItem;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
+use App\Observers\OrderObserver;
 use App\Support\Facades\PriceFacade;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -27,6 +28,14 @@ class Order extends Model
         'user_id', 'order_no', 'total_items', 'currency_id',
         'sub_total', 'discount', 'tax', 'grand_total', 'status'
     ];
+
+    // Functions
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::observe(OrderObserver::class);
+    }
 
     // Relationships
     public function orderItems()

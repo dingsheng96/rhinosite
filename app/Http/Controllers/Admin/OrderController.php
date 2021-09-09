@@ -7,12 +7,12 @@ use App\Models\Order;
 use App\Helpers\Message;
 use App\Models\Permission;
 use Illuminate\Http\Request;
-use App\DataTables\Admin\OrderDataTable;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\OrderRequest;
 use App\Http\Controllers\Controller;
 use App\Support\Facades\OrderFacade;
 use Illuminate\Support\Facades\Auth;
+use App\DataTables\Admin\OrderDataTable;
+use App\Http\Requests\Admin\OrderRequest;
 use App\Support\Facades\TransactionFacade;
 
 class OrderController extends Controller
@@ -24,7 +24,7 @@ class OrderController extends Controller
      */
     public function index(OrderDataTable $dataTable)
     {
-        return $dataTable->render('order.index');
+        return $dataTable->render('admin.order.index');
     }
 
     /**
@@ -95,7 +95,7 @@ class OrderController extends Controller
     {
         $order->load(['transaction.paymentMethod', 'orderItems', 'currency']);
 
-        return view('order.show', compact('order'));
+        return view('admin.order.show', compact('order'));
     }
 
     /**

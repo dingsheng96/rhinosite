@@ -1,4 +1,4 @@
-@extends('layouts.master', ['title' => trans_choice('modules.transaction', 2)])
+@extends('admin.layouts.master', ['title' => trans_choice('modules.transaction', 2)])
 
 @section('content')
 
@@ -6,7 +6,7 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="card">
+            <div class="card shadow">
                 <div class="card-header bg-transparent">
                     <h3 class="card-title">
                         {{ __('modules.list', ['module' => trans_choice('modules.transaction', 2)]) }}

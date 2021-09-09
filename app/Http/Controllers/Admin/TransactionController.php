@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\DataTables\Admin\TransactionDataTable;
+use App\DataTables\Admin\TransactionHistoryDataTable;
 
 class TransactionController extends Controller
 {
@@ -23,7 +25,7 @@ class TransactionController extends Controller
      */
     public function index(TransactionDataTable $dataTable)
     {
-        return $dataTable->render('transaction.index');
+        return $dataTable->render('admin.transaction.index');
     }
 
     /**
@@ -53,9 +55,11 @@ class TransactionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Transaction $transaction, TransactionHistoryDataTable $dataTable)
     {
-        //
+        $transaction->load(['sourceable', 'paymentMethod', 'transactionDetails']);
+
+        return $dataTable->with(compact('transaction'))->render('admin.transaction.show', compact('transaction'));
     }
 
     /**

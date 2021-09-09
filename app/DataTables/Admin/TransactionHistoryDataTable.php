@@ -2,7 +2,7 @@
 
 namespace App\DataTables\Admin;
 
-use App\Models\Transaction;
+use App\Models\TransactionDetail;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
@@ -10,7 +10,7 @@ use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class TransactionDataTable extends DataTable
+class TransactionHistoryDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -23,34 +23,16 @@ class TransactionDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->addColumn('action', function ($data) {
-                return view('components.action', [
-                    'no_action' => $this->no_action ?: null,
-                    'view' => [
-                        'permission' => 'transaction.read',
-                        'route' => route('admin.transactions.show', ['transaction' => $data->id])
-                    ],
-                ])->render();
-            })
-            ->addColumn('order_no', function ($data) {
-                return optional($data->sourceable)->order_no ?? '-';
-            })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
             ->editColumn('status', function ($data) {
                 return '<span>' . $data->status_label . '</span>';
             })
-            ->editColumn('amount', function ($data) {
-                return $data->amount_with_currency_code;
-            })
-            ->editColumn('payment_method', function ($data) {
-                return $data->paymentMethod->name;
-            })
             ->filterColumn('status', function ($query, $keyword) {
                 $query->where('status', strtolower($keyword));
             })
-            ->rawColumns(['action', 'status']);
+            ->rawColumns(['status']);
     }
 
     /**
@@ -59,9 +41,9 @@ class TransactionDataTable extends DataTable
      * @param \App\Models\Transaction $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Transaction $model)
+    public function query(TransactionDetail $model)
     {
-        return $model->with(['sourceable', 'paymentMethod'])->newQuery();
+        return $model->where('transaction_id', $this->transaction->id)->newQuery();
     }
 
     /**
@@ -72,7 +54,7 @@ class TransactionDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('transaction-table')
+            ->setTableId('transaction-history-table')
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -91,15 +73,13 @@ class TransactionDataTable extends DataTable
     {
         return [
             Column::computed('DT_RowIndex', '#'),
-            Column::make('transaction_no')->title(__('labels.transaction_no')),
-            Column::make('order_no')->title(__('labels.order_no')),
-            Column::make('amount')->title(__('labels.amount')),
-            Column::make('payment_method')->title(__('labels.payment_method')),
+            Column::make('subscription_reference')->title(__('labels.subscription_reference')),
+            Column::make('ipay_transaction_id')->title(__('labels.ipay_transaction_id')),
+            Column::make('auth_code')->title(__('labels.auth_code')),
+            Column::make('remark')->title(__('labels.remark')),
+            Column::make('description')->title(__('labels.description')),
             Column::make('status')->title(__('labels.status')),
             Column::make('created_at')->title(__('labels.created_at')),
-            Column::computed('action', __('labels.action'))
-                ->exportable(false)
-                ->printable(false),
         ];
     }
 
@@ -110,6 +90,6 @@ class TransactionDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Transaction_' . date('YmdHis');
+        return 'TransactionHistory_' . date('YmdHis');
     }
 }
