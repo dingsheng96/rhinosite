@@ -59,6 +59,7 @@ return [
     'dropdown_placeholder' => 'Please select :label',
     'change_profile_pic' => 'Change Profile Picture',
     'change_logo' => 'Change Logo',
+    'change_ssm_cert' => 'Change SSM Certificate',
     'sign_up_a_plan' => 'Sign up a plan',
     'optional' => 'Optional',
     'project' => 'Project|Projects',
@@ -237,5 +238,8 @@ return [
     'whatsapp' => 'Whatsapp',
     'first_boosting_date' => 'Boosting Date From',
     'ads_boosting_history' => 'Ads Boosting History',
+    'contractor_name' => 'Contractor Name',
+    'subscription_history' => 'Subscription History',
+    'items' => 'Items',
 
 ];

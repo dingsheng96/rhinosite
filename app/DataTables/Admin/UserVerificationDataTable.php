@@ -10,7 +10,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class VerificationDataTable extends DataTable
+class UserVerificationDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -29,15 +29,15 @@ class VerificationDataTable extends DataTable
                     'no_action' =>  $this->no_action ?? null,
                     'view' => [
                         'permission' => 'merchant.create',
-                        'route' => route('verifications.show', ['verification' => $data->id])
+                        'route' => route('admin.verifications.show', ['verification' => $data->id])
                     ],
                     'update' => [
                         'permission' => 'merchant.create',
-                        'route' => route('verifications.edit', ['verification' => $data->id]),
+                        'route' => route('admin.verifications.edit', ['verification' => $data->id]),
                     ],
                     'delete' => [
                         'permission' => 'merchant.create',
-                        'route' => route('verifications.destroy', ['verification' => $data->id])
+                        'route' => route('admin.verifications.destroy', ['verification' => $data->id])
                     ]
                 ];
 
