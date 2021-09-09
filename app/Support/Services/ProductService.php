@@ -2,10 +2,7 @@
 
 namespace App\Support\Services;
 
-use App\Models\Media;
 use App\Models\Product;
-use App\Helpers\FileManager;
-use App\Models\ProductAttribute;
 
 class ProductService extends BaseService
 {
@@ -17,7 +14,7 @@ class ProductService extends BaseService
     public function storeData()
     {
         $this->storeDetails();
-        $this->storeImages();
+        // $this->storeImages();
 
         return $this;
     }
@@ -28,6 +25,8 @@ class ProductService extends BaseService
         $this->model->description           =   $this->request->get('description');
         $this->model->status                =   $this->request->get('status');
         $this->model->product_category_id   =   $this->request->get('category');
+        $this->model->slot_type             =   $this->request->get('slot_type');
+        $this->model->total_slots           =   $this->request->get('slot');
 
         if ($this->model->isDirty()) {
             $this->model->save();
@@ -39,49 +38,49 @@ class ProductService extends BaseService
     }
 
 
-    public function storeImages()
-    {
-        if ($this->request->hasFile('thumbnail')) {
+    // public function storeImages()
+    // {
+    //     if ($this->request->hasFile('thumbnail')) {
 
-            $file  =   $this->request->file('thumbnail');
+    //         $file  =   $this->request->file('thumbnail');
 
-            $config = [
-                'save_path' =>   Product::STORE_PATH,
-                'type'      =>   Media::TYPE_THUMBNAIL,
-                'filemime'  =>   FileManager::instance()->getMimesType($file->getClientOriginalExtension()),
-                'filename'  =>   $file->getClientOriginalName(),
-                'extension' =>   $file->getClientOriginalExtension(),
-                'filesize'  =>   $file->getSize(),
-            ];
+    //         $config = [
+    //             'save_path' =>   Product::STORE_PATH,
+    //             'type'      =>   Media::TYPE_THUMBNAIL,
+    //             'filemime'  =>   FileManager::instance()->getMimesType($file->getClientOriginalExtension()),
+    //             'filename'  =>   $file->getClientOriginalName(),
+    //             'extension' =>   $file->getClientOriginalExtension(),
+    //             'filesize'  =>   $file->getSize(),
+    //         ];
 
-            $media = $this->model->media()->thumbnail()
-                ->firstOr(function () {
-                    return new Media();
-                });
+    //         $media = $this->model->media()->thumbnail()
+    //             ->firstOr(function () {
+    //                 return new Media();
+    //             });
 
-            $this->storeMedia($media, $config, $file);
-        }
+    //         $this->storeMedia($media, $config, $file);
+    //     }
 
-        if ($this->request->hasFile('files')) {
+    //     if ($this->request->hasFile('files')) {
 
-            $files = $this->request->file('files');
+    //         $files = $this->request->file('files');
 
-            throw_if((count($files) + $this->model->media()->image()->count()) > $this->model::MAX_IMAGES, new \Exception(__('messages.files_reached_limit')));
+    //         throw_if((count($files) + $this->model->media()->image()->count()) > $this->model::MAX_IMAGES, new \Exception(__('messages.files_reached_limit')));
 
-            foreach ($files as $file) {
-                $config = [
-                    'save_path' =>   Product::STORE_PATH,
-                    'type'      =>   Media::TYPE_IMAGE,
-                    'filemime'  =>   FileManager::instance()->getMimesType($file->getClientOriginalExtension()),
-                    'filename'  =>   $file->getClientOriginalName(),
-                    'extension' =>   $file->getClientOriginalExtension(),
-                    'filesize'  =>   $file->getSize(),
-                ];
+    //         foreach ($files as $file) {
+    //             $config = [
+    //                 'save_path' =>   Product::STORE_PATH,
+    //                 'type'      =>   Media::TYPE_IMAGE,
+    //                 'filemime'  =>   FileManager::instance()->getMimesType($file->getClientOriginalExtension()),
+    //                 'filename'  =>   $file->getClientOriginalName(),
+    //                 'extension' =>   $file->getClientOriginalExtension(),
+    //                 'filesize'  =>   $file->getSize(),
+    //             ];
 
-                $this->storeMedia(new Media(), $config, $file);
-            }
-        }
+    //             $this->storeMedia(new Media(), $config, $file);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 }

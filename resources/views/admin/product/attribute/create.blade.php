@@ -1,4 +1,4 @@
-@extends('layouts.master', [ 'title' => trans_choice('modules.product', 2)])
+@extends('admin.layouts.master', [ 'title' => trans_choice('modules.product', 2)])
 
 @section('content')
 
@@ -11,7 +11,7 @@
                     <h3 class="card-title">{{ __('modules.create', ['module' => trans_choice('labels.attribute', 1)]) }}</h3>
                 </div>
 
-                <form action="{{ route('products.attributes.store', ['product' => $product->id]) }}" method="post" enctype="multipart/form-data" role="form">
+                <form action="{{ route('admin.products.attributes.store', ['product' => $product->id]) }}" method="post" enctype="multipart/form-data" role="form">
                     @csrf
 
                     <div class="card-body">
@@ -60,7 +60,7 @@
                                 <div class="form-group">
                                     <div class="icheck-primary">
                                         <input type="checkbox" name="recurring" id="recurring" class="@error('recurring') is-invalid @enderror" {{ old('recurring') ? 'checked' : null }}>
-                                        <label for="recurring">{{ __('labels.recurring') }}</label>
+                                        <label for="recurring">{{ __('labels.require_recurring_payment') }}</label>
                                         @error('recurring')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -104,11 +104,11 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6">
+                            <div class="col-md-6 col-12">
                                 <div class="form-group">
-                                    <label for="quantity" class="col-form-label">{{ __('labels.quantity') }} <span class="text-red">*</span></label>
-                                    <input type="number" name="quantity" id="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity', 0) }}" min="0" step="1">
-                                    @error('quantity')
+                                    <label for="stock_quantity" class="col-form-label">{{ __('labels.stock_quantity') }}</label>
+                                    <input type="number" name="stock_quantity" id="stock_quantity" class="form-control @error('stock_quantity') is-invalid @enderror" value="{{ old('stock_quantity', 0) }}" min="0" step="1">
+                                    @error('stock_quantity')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -117,6 +117,35 @@
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="quantity" class="col-form-label">{{ __('labels.variation_quantity') }} <span class="text-red">*</span></label>
+                                    <input type="number" name="quantity" id="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity', 1) }}" min="1" step="1">
+                                    @error('quantity')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="status" class="col-form-label">{{ __('labels.status') }} <span class="text-red">*</span></label>
+                                    <select name="status" id="status" class="form-control select2 @error('status') is-invalid @enderror">
+                                        <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.status'))]) }} ---</option>
+                                        @foreach ($statuses as $status => $text)
+                                        <option value="{{ $status }}" {{ old('status', 'active') == $status ? 'selected' : null }}>{{ Str::title($text) }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('status')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="row">
                             <div class="col-12 col-md-6">
@@ -140,25 +169,6 @@
                                     <label for="validity" class="col-form-label">{{ __('labels.validity_in_validity_type') }}</label>
                                     <input type="number" name="validity" id="validity" class="form-control @error('validity') is-invalid @enderror" value="{{ old('validity') }}" step="1">
                                     @error('validity')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="status" class="col-form-label">{{ __('labels.status') }} <span class="text-red">*</span></label>
-                                    <select name="status" id="status" class="form-control select2 @error('status') is-invalid @enderror">
-                                        <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.status'))]) }} ---</option>
-                                        @foreach ($statuses as $status => $text)
-                                        <option value="{{ $status }}" {{ old('status', 'active') == $status ? 'selected' : null }}>{{ Str::title($text) }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('status')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -228,48 +238,12 @@
                             </div>
                         </div>
 
-                        @if ($product->productCategory->enable_slot)
-                        <hr>
-
-                        <div class="row">
-                            <div class="col-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="slot_type">{{ __('labels.slot_type') }}</label>
-                                    <select name="slot_type" id="slot_type" class="form-control select2 @error('slot_type') is-invalid @enderror">
-                                        <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.slot_type'))]) }} ---</option>
-                                        @foreach ($slot_types as $type)
-                                        <option value="{{ $type }}" {{ old('slot_type') == $type ? 'selected' : null }}>{{ Str::title($type) }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('slot_type')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="slot">{{ __('labels.total_listed_slots_per_slot_type') }}</label>
-                                    <input type="number" name="slot" id="slot" value="{{ old('slot', 0) }}" class="form-control @error('slot') is-invalid @enderror">
-                                    @error('slot')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        @endif
-
                     </div>
 
                     <div class="card-footer bg-transparent text-md-right text-center">
-                        <a role="button" href="{{ route('products.edit', ['product' => $product->id]) }}" class="btn btn-light mx-2 btn-rounded-corner">
-                            <i class="fas fa-times"></i>
-                            {{ __('labels.cancel') }}
+                        <a role="button" href="{{ route('admin.products.edit', ['product' => $product->id]) }}" class="btn btn-light mx-2 btn-rounded-corner">
+                            <i class="fas fa-caret-left"></i>
+                            {{ __('labels.back') }}
                         </a>
                         <button type="submit" class="btn btn-outline-primary btn-rounded-corner">
                             <i class="fas fa-paper-plane"></i>

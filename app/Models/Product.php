@@ -7,6 +7,7 @@ use App\Helpers\Status;
 use App\Models\UserAdsQuota;
 use App\Models\ProductCategory;
 use App\Models\ProductAttribute;
+use App\Observers\ProductObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -25,8 +26,16 @@ class Product extends Model
     protected $table = 'products';
 
     protected $fillable = [
-        'name', 'description', 'status', 'product_category_id'
+        'name', 'description', 'status', 'product_category_id', 'slot_type', 'total_slots'
     ];
+
+    // Functions
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::observe(ProductObserver::class);
+    }
 
     // Relationships
     public function productCategory()

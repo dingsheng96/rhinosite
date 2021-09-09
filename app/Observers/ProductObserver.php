@@ -36,14 +36,7 @@ class ProductObserver
      */
     public function deleted(Product $product)
     {
-        $attributes =   $product->productAttributes();
-
-        foreach ($attributes->get() as $attribute) {
-            $attribute->prices()->delete();
-        }
-
-        $attributes->delete();
-        $product->media()->delete();
+        $product->productAttributes()->delete();
     }
 
     /**

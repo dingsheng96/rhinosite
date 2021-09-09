@@ -29,12 +29,11 @@ class ProductAttributeService extends BaseService
 
         $attribute->sku                 =   $this->request->get('sku');
         $attribute->stock_type          =   $this->request->get('stock_type');
+        $attribute->stock_quantity      =   $this->request->get('stock_quantity');
         $attribute->quantity            =   $this->request->get('quantity');
         $attribute->status              =   $this->request->get('status');
         $attribute->validity_type       =   $this->request->get('validity_type');
         $attribute->validity            =   $this->request->get('validity');
-        $attribute->slot                =   $this->request->get('slot');
-        $attribute->slot_type           =   $this->request->get('slot_type');
         $attribute->recurring           =   $this->request->has('recurring');
         $attribute->published           =   $this->request->has('published');
         $attribute->trial_mode          =   $this->request->has('trial_mode');

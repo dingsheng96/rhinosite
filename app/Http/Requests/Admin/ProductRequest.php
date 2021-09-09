@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
+use App\Models\User;
+use App\Helpers\Misc;
 use App\Helpers\Status;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Validation\Rule;
-use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;
@@ -20,7 +21,7 @@ class ProductRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::guard('web')->check()
+        return Auth::guard(User::TYPE_ADMIN)->check()
             && Gate::any(['product.create', 'product.update']);
     }
 
@@ -31,6 +32,8 @@ class ProductRequest extends FormRequest
      */
     public function rules()
     {
+        $enable_slot = (bool) ProductCategory::find($this->get('category'))->enable_slot;
+
         return [
             'name' => [
                 'required',
@@ -48,18 +51,8 @@ class ProductRequest extends FormRequest
                 Rule::in(array_keys(Status::instance()->activeStatus()))
             ],
             'description' => ['nullable'],
-            'thumbnail' => [
-                'nullable',
-                'image',
-                'mimes:jpg,jpeg,png',
-                'max:2000'
-            ],
-            'files.*' => [
-                'nullable',
-                'image',
-                'mimes:jpg,jpeg,png',
-                'max:10000'
-            ],
+            'slot_type' => [Rule::requiredIf($enable_slot), Rule::in(Misc::instance()->adsSlotType())],
+            'slot'      => [Rule::requiredIf($enable_slot), 'nullable', 'integer', 'min:0']
         ];
     }
 
@@ -84,8 +77,6 @@ class ProductRequest extends FormRequest
             'name'                      =>  __('validation.attributes.name'),
             'type'                      =>  __('validation.attributes.type'),
             'description'               =>  __('validation.attributes.description'),
-            'thumbnail'                 =>  __('validation.attributes.thumbnail'),
-            'files.*'                   =>  __('validation.attributes.file'),
         ];
     }
 }

@@ -11,6 +11,7 @@ use App\Models\PackageItem;
 use App\Models\ProductCategory;
 use App\Models\UserSubscription;
 use Illuminate\Database\Eloquent\Model;
+use App\Observers\ProductAttributeObserver;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductAttribute extends Model
@@ -33,9 +34,17 @@ class ProductAttribute extends Model
     protected $table = 'product_attributes';
 
     protected $fillable = [
-        'product_id', 'sku', 'stock_type', 'quantity', 'status', 'published',
-        'validity_type', 'validity', 'recurring', 'trial_mode', 'slot', 'slot_type'
+        'product_id', 'sku', 'stock_type', 'stock_quantity', 'quantity', 'status', 'published',
+        'validity_type', 'validity', 'recurring', 'trial_mode',
     ];
+
+    // Functions
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::observe(ProductAttributeObserver::class);
+    }
 
     // Relationships
     public function product()
@@ -126,7 +135,7 @@ class ProductAttribute extends Model
     public function getNameAttribute()
     {
         if ($this->trial_mode) {
-            return $this->product->name . ' (.' . __('labels.free_trial') . '.)';
+            return $this->product->name . ' (' . __('labels.free_trial') . ')';
         }
 
         return $this->product->name;

@@ -1,4 +1,4 @@
-@extends('layouts.master', [ 'title' => trans_choice('modules.product', 2)])
+@extends('admin.layouts.master', [ 'title' => trans_choice('modules.product', 2)])
 
 @section('content')
 
@@ -11,7 +11,7 @@
                     <h3 class="card-title">{{ __('modules.create', ['module' => trans_choice('modules.product', 1)]) }}</h3>
                 </div>
 
-                <form action="{{ route('products.store') }}" method="post" enctype="multipart/form-data" role="form">
+                <form action="{{ route('admin.products.store') }}" method="post" enctype="multipart/form-data" role="form">
                     @csrf
 
                     <div class="card-body">
@@ -33,10 +33,10 @@
                             <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="category" class="col-form-label">{{ __('labels.category') }} <span class="text-red">*</span></label>
-                                    <select name="category" id="category" class="form-control select2 @error('category') is-invalid @enderror">
+                                    <select name="category" id="category" class="form-control select2 @error('category') is-invalid @enderror product-category-dropdown">
                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.category'))]) }} ---</option>
                                         @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}" {{ old('category') == $category->id ? 'selected' : null }}>{{ $category->name }}</option>
+                                        <option value="{{ $category->id }}" {{ old('category') == $category->id ? 'selected' : null }} data-toggle-slot="{{ $category->enable_slot }}">{{ $category->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('category')
@@ -78,54 +78,45 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="thumbnail" class="col-form-label">{{ __('labels.upload_thumbnail') }}</label>
-                                    <div class="row">
-                                        <div class="col-12 col-md-6">
-                                            <img src="{{ $default_preview }}" alt="preview" class="custom-img-preview img-thumbnail d-block mx-auto">
-                                        </div>
-                                        <div class="col-md-6 col-12">
-                                            <input type="file" id="thumbnail" name="thumbnail" class="form-control-file custom-img-input @error('thumbnail') is-invalid @enderror" accept=".jpg,.jpeg,.png">
-                                            @error('thumbnail')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                            <ul class="pl-3">{!! trans_choice('messages.upload_image_rules', 1, ['maxsize' => '2mb', 'extensions' => 'JPG,JPEG, PNG']) !!}</ul>
-                                        </div>
+                        <div id="slot_panel" class="d-none">
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="slot_type">{{ __('labels.slot_type') }}</label>
+                                        <select name="slot_type" id="slot_type" class="form-control select2 @error('slot_type') is-invalid @enderror">
+                                            <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.slot_type'))]) }} ---</option>
+                                            @foreach ($slot_types as $type)
+                                            <option value="{{ $type }}" {{ old('slot_type') == $type ? 'selected' : null }}>{{ Str::title($type) }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('slot_type')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="slot">{{ __('labels.total_listed_slots_per_slot_type') }}</label>
+                                        <input type="number" name="slot" id="slot" value="{{ old('slot', 0) }}" class="form-control @error('slot') is-invalid @enderror">
+                                        @error('slot')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="files" class="col-form-label">{{ trans_choice('labels.upload_image', 2) }}</label>
-                                    <div class="dropzone" id="myDropzone" data-max-files="{{ $max_files }}" data-accepted-files=".jpg,.jpeg,.png" data-action="update">
-                                        <div class="dz-default dz-message">
-                                            <h1><i class="fas fa-cloud-upload-alt"></i></h1>
-                                            <h4>{{ __('messages.drag_and_drop') }}</h4>
-                                            <ul class="list-unstyled">{!! trans_choice('messages.upload_image_rules', 2, ['maxsize' => '10mb', 'extensions' => 'JPG,JPEG, PNG', 'maxfiles' => $max_files]) !!}</ul>
-                                        </div>
-                                    </div>
-                                    @error('files')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="card-footer bg-transparent text-md-right text-center">
-                        <a role="button" href="{{ route('products.index') }}" class="btn btn-light mx-2 btn-rounded-corner">
-                            <i class="fas fa-times"></i>
-                            {{ __('labels.cancel') }}
+                        <a role="button" href="{{ route('admin.products.index') }}" class="btn btn-light mx-2 btn-rounded-corner">
+                            <i class="fas fa-caret-left"></i>
+                            {{ __('labels.back') }}
                         </a>
                         <button type="submit" class="btn btn-outline-primary btn-rounded-corner">
                             <i class="fas fa-paper-plane"></i>

@@ -102,7 +102,7 @@ class ProductMediaController extends Controller
             $status     =   'success';
             $message    =   Message::instance()->format($action, $module, $status);
 
-            activity()->useLog('web')
+            activity()->useLog('admin:product')
                 ->causedBy(Auth::user())
                 ->performedOn($medium)
                 ->log($message);
@@ -110,7 +110,7 @@ class ProductMediaController extends Controller
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:product')
                 ->causedBy(Auth::user())
                 ->performedOn($medium)
                 ->log($e->getMessage());

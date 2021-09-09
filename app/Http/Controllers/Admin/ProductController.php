@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\Misc;
 use App\Models\Media;
 use App\Helpers\Status;
 use App\Models\Product;
@@ -11,11 +12,11 @@ use App\Models\Permission;
 use App\Models\ProductCategory;
 use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\DB;
-use App\DataTables\Admin\ProductDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\ProductRequest;
 use App\Support\Facades\ProductFacade;
+use App\DataTables\Admin\ProductDataTable;
+use App\Http\Requests\Admin\ProductRequest;
 use App\DataTables\Admin\ProductAttributeDataTable;
 
 class ProductController extends Controller
@@ -28,7 +29,7 @@ class ProductController extends Controller
             ProductAttribute::STOCK_TYPE_FINITE => __('labels.finite'),
             ProductAttribute::STOCK_TYPE_INFINITE => __('labels.infinite')
         ];
-
+        $this->slot_types =   Misc::instance()->adsSlotType();
         $this->categories = ProductCategory::orderBy('name', 'asc')->get();
         $this->statuses   = Status::instance()->activeStatus();
     }
@@ -44,7 +45,7 @@ class ProductController extends Controller
             return $this->purchaseIndex();
         }
 
-        return $dataTable->render('product.index');
+        return $dataTable->render('admin.product.index');
     }
 
     /**
@@ -54,12 +55,12 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $max_files      =   Media::MAX_IMAGE_PRODUCT;
-        $statuses       =   $this->statuses;
-        $stock_types    =   $this->stock_types;
-        $categories     =   $this->categories;
-
-        return view('product.create', compact('categories', 'max_files', 'statuses', 'stock_types'));
+        return view('admin.product.create', [
+            'statuses' => $this->statuses,
+            'stock_types' => $this->stock_types,
+            'categories' => $this->categories,
+            'slot_types' => $this->slot_types
+        ]);
     }
 
     /**
@@ -143,9 +144,9 @@ class ProductController extends Controller
         $attributes     =   $product->productAttributes;
         $thumbnail      =   $product->thumbnail;
         $images         =   $product->images;
+        $no_action      =   true;
 
-        return $dataTable->with(['product_id' => $product->id])
-            ->render('product.show', compact('product', 'attributes', 'thumbnail', 'images'));
+        return $dataTable->with(compact('product', 'no_action'))->render('admin.product.show', compact('product', 'attributes', 'thumbnail', 'images'));
     }
 
     /**
@@ -157,7 +158,7 @@ class ProductController extends Controller
     public function edit(Product $product, ProductAttributeDataTable $dataTable)
     {
         $product->load([
-            'productAttributes',
+            'productAttributes', 'productCategory',
             'media' => function ($query) {
                 $query->thumbnail()
                     ->orWhere(function ($query) {
@@ -166,23 +167,12 @@ class ProductController extends Controller
             }
         ]);
 
-        $attributes     =   $product->productAttributes;
-        $thumbnail      =   $product->thumbnail;
-        $images         =   $product->images;
-
-        $max_files      =   Media::MAX_IMAGE_PRODUCT - $product->images->count();
         $statuses       =   $this->statuses;
         $stock_types    =   $this->stock_types;
         $categories     =   $this->categories;
+        $slot_types     =   $this->slot_types;
 
-        $slot_types     =   [
-            ProductAttribute::SLOT_TYPE_DAILY,
-            ProductAttribute::SLOT_TYPE_WEEKLY,
-            ProductAttribute::SLOT_TYPE_MONTHLY
-        ];
-
-        return $dataTable->with(['product_id' => $product->id])
-            ->render('product.edit', compact('product', 'max_files', 'statuses', 'stock_types', 'categories', 'thumbnail', 'images', 'attributes', 'slot_types'));
+        return $dataTable->with(compact('product'))->render('admin.product.edit', compact('product', 'statuses', 'stock_types', 'categories', 'slot_types'));
     }
 
     /**
@@ -225,7 +215,7 @@ class ProductController extends Controller
                     'redirect_to' => route('products.index')
                 ])
                 ->sendJson()
-                : redirect()->route('products.index')->withSuccess($message);
+                : redirect()->route('admin.products.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
@@ -254,6 +244,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        DB::beginTransaction();
+
         $action     =   Permission::ACTION_DELETE;
         $module     =   strtolower(trans_choice('modules.product', 1));
         $message    =   Message::instance()->format($action, $module);
@@ -261,10 +253,30 @@ class ProductController extends Controller
 
         try {
 
+            $product->loadCount([
+                'productAttributes' => function ($query) {
+                    $query->whereHas('userSubscriptions', function ($query) {
+                        $query->active();
+                    })->orWhereHas('package', function ($query) {
+                        $query->whereHas('userSubscriptions', function ($query) {
+                            $query->active();
+                        });
+                    });
+                },
+                'userAdsQuotas',
+            ]);
+
+            throw_if(
+                $product->product_attributes_count > 0 || $product->user_ads_quotas_count > 0,
+                new \Exception(__('messages.in_using', ['item' => $module]))
+            );
+
             $product->delete($product);
 
             $status     =   'success';
             $message    =   Message::instance()->format($action, $module, $status);
+
+            DB::commit();
 
             activity()->useLog('web')
                 ->causedBy(Auth::user())
@@ -278,6 +290,8 @@ class ProductController extends Controller
                 ->causedBy(Auth::user())
                 ->performedOn($product)
                 ->log($e->getMessage());
+
+            $message = $e->getMessage();
         }
 
         return Response::instance()
@@ -285,7 +299,7 @@ class ProductController extends Controller
             ->withStatus($status)
             ->withMessage($message, true)
             ->withData([
-                'redirect_to' => route('products.index')
+                'redirect_to' => route('admin.products.index')
             ])
             ->sendJson();
     }

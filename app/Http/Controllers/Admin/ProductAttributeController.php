@@ -12,8 +12,8 @@ use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\ProductAttributeRequest;
 use App\Support\Facades\ProductAttributeFacade;
+use App\Http\Requests\Admin\ProductAttributeRequest;
 
 class ProductAttributeController extends Controller
 {
@@ -22,19 +22,8 @@ class ProductAttributeController extends Controller
     public function __construct()
     {
         $this->stock_types      =   Misc::instance()->productStockTypes();
-        $this->slot_types       =   Misc::instance()->adsSlotType();
         $this->validity_types   =   Misc::instance()->validityType();
         $this->statuses         =   Status::instance()->activeStatus();
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
     }
 
     /**
@@ -44,11 +33,10 @@ class ProductAttributeController extends Controller
      */
     public function create(Product $product)
     {
-        return view('product.attribute.create', [
+        return view('admin.product.attribute.create', [
             'product' => $product,
             'stock_types' => $this->stock_types,
             'statuses' => $this->statuses,
-            'slot_types' => $this->slot_types,
             'validity_types' => $this->validity_types
         ]);
     }
@@ -65,34 +53,31 @@ class ProductAttributeController extends Controller
 
         $action     =   Permission::ACTION_CREATE;
         $module     =   strtolower(trans_choice('labels.attribute', 1));
-        $message    =   Message::instance()->format($action, $module);
         $status     =   'fail';
+        $message    =   Message::instance()->format($action, $module, $status);
 
         try {
 
             $attribute = ProductAttributeFacade::setParent($product)
-                ->setRequest($request)
-                ->storeData()
-                ->getModel();
+                ->setRequest($request)->storeData()->getModel();
 
             DB::commit();
 
             $status  =  'success';
             $message =  Message::instance()->format($action, $module, $status);
 
-            activity()->useLog('web')
+            activity()->useLog('admin:product_attribute')
                 ->causedBy(Auth::user())
                 ->performedOn($attribute)
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->route('products.edit', ['product' => $product->id])
-                ->withSuccess($message);
+            return redirect()->route('admin.products.edit', ['product' => $product->id])->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:product_attribute')
                 ->causedBy(Auth::user())
                 ->performedOn(new ProductAttribute())
                 ->withProperties($request->all())
@@ -118,7 +103,7 @@ class ProductAttributeController extends Controller
 
         $default_price = $attribute->prices->first();
 
-        return view('product.attribute.show', compact('product', 'attribute', 'default_price'));
+        return view('admin.product.attribute.show', compact('product', 'attribute', 'default_price'));
     }
 
     /**
@@ -137,7 +122,7 @@ class ProductAttributeController extends Controller
 
         $default_price = $attribute->prices->first();
 
-        return view('product.attribute.edit', [
+        return view('admin.product.attribute.edit', [
             'product' => $product,
             'attribute' => $attribute,
             'statuses' => $this->statuses,
@@ -161,37 +146,34 @@ class ProductAttributeController extends Controller
 
         $action     =   Permission::ACTION_UPDATE;
         $module     =   strtolower(trans_choice('labels.attribute', 1));
-        $message    =   Message::instance()->format($action, $module);
         $status     =   'fail';
+        $message    =   Message::instance()->format($action, $module, $status);
 
         try {
 
             $product->load(['productAttributes.prices']);
 
             $attribute = ProductAttributeFacade::setParent($product)
-                ->setModel($attribute)
-                ->setRequest($request)
-                ->storeData()
-                ->getModel();
+                ->setModel($attribute)->setRequest($request)
+                ->storeData()->getModel();
 
             DB::commit();
 
             $status  =  'success';
             $message =  Message::instance()->format($action, $module, $status);
 
-            activity()->useLog('web')
+            activity()->useLog('admin:product_attribute')
                 ->causedBy(Auth::user())
                 ->performedOn($attribute)
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->route('products.edit', ['product' => $product->id])
-                ->withSuccess($message);
+            return redirect()->route('admin.products.edit', ['product' => $product->id])->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:product_attribute')
                 ->causedBy(Auth::user())
                 ->performedOn($attribute)
                 ->withProperties($request->all())
@@ -216,13 +198,28 @@ class ProductAttributeController extends Controller
 
         try {
 
-            $attribute->prices()->delete();
-            $attribute->delete();
+            $attribute->loadCount([
+                'userSubscriptions' => function ($query) {
+                    $query->active();
+                },
+                'package' =>  function ($query) {
+                    $query->whereHas('userSubscriptions', function ($query) {
+                        $query->active();
+                    });
+                }
+            ]);
+
+            throw_if(
+                $attribute->user_subscriptions_count > 0 || $attribute->package_count > 0,
+                new \Exception(__('messages.in_using', ['item' => $module]))
+            );
+
+            $attribute->delete($attribute);
 
             $status     =   'success';
             $message    =   Message::instance()->format($action, $module, $status);
 
-            activity()->useLog('web')
+            activity()->useLog('admin:product_attribute')
                 ->causedBy(Auth::user())
                 ->performedOn($attribute)
                 ->log($message);
@@ -230,10 +227,12 @@ class ProductAttributeController extends Controller
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:product_attribute')
                 ->causedBy(Auth::user())
                 ->performedOn($attribute)
                 ->log($e->getMessage());
+
+            $message = $e->getMessage();
         }
 
         return Response::instance()
@@ -241,7 +240,7 @@ class ProductAttributeController extends Controller
             ->withStatus($status)
             ->withMessage($message, true)
             ->withData([
-                'redirect_to' => route('products.edit', ['product' => $product->id])
+                'redirect_to' => route('admin.products.edit', ['product' => $product->id])
             ])
             ->sendJson();
     }
