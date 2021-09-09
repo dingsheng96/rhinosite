@@ -1,4 +1,4 @@
-@extends('layouts.master', ['title' => trans_choice('modules.service', 2)])
+@extends('admin.layouts.master', ['title' => trans_choice('modules.service', 2)])
 
 @section('content')
 
@@ -25,8 +25,8 @@
     </div>
 </div>
 
-@includeWhen(Auth::user()->can('service.create'), 'service.create')
-@includeWhen(Auth::user()->can('service.update'), 'service.edit')
+@includeWhen(Auth::user()->can('service.create'), 'admin.service.create')
+@includeWhen(Auth::user()->can('service.update'), 'admin.service.edit')
 
 @endsection
 

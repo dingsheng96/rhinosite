@@ -21,7 +21,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('services.store') }}" method="POST" role="form" enctype="multipart/form-data">
+            <form action="{{ route('admin.services.store') }}" method="POST" role="form" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">

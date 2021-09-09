@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
+use App\Models\User;
 use App\Models\Service;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class ServiceRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::guard('web')->check()
+        return Auth::guard(User::TYPE_ADMIN)->check()
             && Gate::any(['service.create', 'service.update']);
     }
 

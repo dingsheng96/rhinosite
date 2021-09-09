@@ -29,16 +29,16 @@ class ServiceDataTable extends DataTable
                     'no_action' => $this->no_action ?: null,
                     'view' => [
                         'permission' => 'service.create',
-                        'route' => route('services.show', ['service' => $data->id])
+                        'route' => route('admin.services.show', ['service' => $data->id])
                     ],
                     'update' => [
-                        'permission' => 'service.create',
+                        'permission' => 'service.update',
                         'route' => '#updateServiceModal',
                         'attribute' => 'data-toggle="modal" data-object=' . "'" . json_encode(['id' => $data->id, 'name' => $data->name, 'description' => $data->description]) . "'"
                     ],
                     'delete' => [
                         'permission' => 'service.delete',
-                        'route' => route('services.destroy', ['service' => $data->id])
+                        'route' => route('admin.services.destroy', ['service' => $data->id])
                     ]
                 ])->render();
             })
@@ -88,11 +88,11 @@ class ServiceDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('name')->title(__('labels.name'))->width('30%'),
-            Column::make('description')->title(__('labels.description'))->width('40%'),
-            Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
-            Column::computed('action', __('labels.action'))->width('10%')
+            Column::computed('DT_RowIndex', '#'),
+            Column::make('name')->title(__('labels.name')),
+            Column::make('description')->title(__('labels.description')),
+            Column::make('created_at')->title(__('labels.created_at')),
+            Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),
         ];

@@ -7,10 +7,10 @@ use App\Helpers\Message;
 use App\Helpers\Response;
 use App\Models\Permission;
 use Illuminate\Support\Facades\DB;
-use App\DataTables\Admin\ServiceDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\ServiceRequest;
+use App\DataTables\Admin\ServiceDataTable;
+use App\Http\Requests\Admin\ServiceRequest;
 
 class ServiceController extends Controller
 {
@@ -21,17 +21,7 @@ class ServiceController extends Controller
      */
     public function index(ServiceDataTable $dataTable)
     {
-        return $dataTable->render('service.index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $dataTable->render('admin.service.index');
     }
 
     /**
@@ -61,18 +51,18 @@ class ServiceController extends Controller
 
             $message = Message::instance()->format($action, $module, 'success');
 
-            activity()->useLog('web')
+            activity()->useLog('admin:service')
                 ->causedBy(Auth::user())
                 ->performedOn($service)
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->route('services.index')->withSuccess($message);
+            return redirect()->route('admin.services.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:service')
                 ->causedBy(Auth::user())
                 ->performedOn(new Service())
                 ->withProperties($request->all())
@@ -88,20 +78,9 @@ class ServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Service $service)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return view('admin.service.show', compact('service'));
     }
 
     /**
@@ -117,7 +96,8 @@ class ServiceController extends Controller
 
         $action     =   Permission::ACTION_UPDATE;
         $module     =   strtolower(trans_choice('modules.service', 1));
-        $message    =   Message::instance()->format($action, $module);
+        $status     =   'fail';
+        $message    =   Message::instance()->format($action, $module, $status);
 
         try {
 
@@ -132,20 +112,21 @@ class ServiceController extends Controller
 
             DB::commit();
 
-            $message = Message::instance()->format($action, $module, 'success');
+            $status = 'success';
+            $message = Message::instance()->format($action, $module, $status);
 
-            activity()->useLog('web')
+            activity()->useLog('admin:service')
                 ->causedBy(Auth::user())
                 ->performedOn($service)
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->route('services.index')->withSuccess($message);
+            return redirect()->route('admin.services.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:service')
                 ->causedBy(Auth::user())
                 ->performedOn($service)
                 ->withProperties($request->all())
@@ -170,13 +151,16 @@ class ServiceController extends Controller
 
         try {
 
-            $service->projects()->detach();
+            $service->loadCount(['userDetails']);
+
+            throw_if($service->user_details_count > 0, new \Exception('Unable to delete! The service is being used.'));
+
             $service->delete();
 
             $message = Message::instance()->format($action, $module, 'success');
             $status = 'success';
 
-            activity()->useLog('web')
+            activity()->useLog('admin:service')
                 ->causedBy(Auth::user())
                 ->performedOn($service)
                 ->log($message);
@@ -184,7 +168,7 @@ class ServiceController extends Controller
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:service')
                 ->causedBy(Auth::user())
                 ->performedOn($service)
                 ->log($e->getMessage());
@@ -195,7 +179,7 @@ class ServiceController extends Controller
             ->withStatus($status)
             ->withMessage($message, true)
             ->withData([
-                'redirect_to' => route('services.index')
+                'redirect_to' => route('admin.services.index')
             ])
             ->sendJson();
     }

@@ -21,7 +21,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('services.update', '__REPLACE__') }}" method="POST" role="form" enctype="multipart/form-data">
+            <form action="{{ route('admin.services.update', '__REPLACE__') }}" method="POST" role="form" enctype="multipart/form-data">
                 @csrf
                 @method('put')
 
