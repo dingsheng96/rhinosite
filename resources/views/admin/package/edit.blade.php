@@ -1,4 +1,4 @@
-@extends('layouts.master', [ 'title' => trans_choice('modules.package', 2)])
+@extends('admin.layouts.master', [ 'title' => trans_choice('modules.package', 2)])
 
 @section('content')
 
@@ -11,7 +11,7 @@
                     <h3 class="card-title">{{ __('modules.edit', ['module' => trans_choice('modules.package', 1)]) }}</h3>
                 </div>
 
-                <form action="{{ route('packages.update', ['package' => $package->id]) }}" method="post" role="form" enctype="multipart/form-data">
+                <form action="{{ route('admin.packages.update', ['package' => $package->id]) }}" method="post" role="form" enctype="multipart/form-data">
                     @csrf
                     @method('put')
 
@@ -83,9 +83,9 @@
                             </div>
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
-                                    <label for="quantity" class="col-form-label">{{ __('labels.quantity') }}</label>
-                                    <input type="number" name="quantity" id="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity', $package->quantity) }}" min="0" step="1">
-                                    @error('quantity')
+                                    <label for="stock_quantity" class="col-form-label">{{ __('labels.stock_quantity') }}</label>
+                                    <input type="number" name="stock_quantity" id="stock_quantity" class="form-control @error('stock_quantity') is-invalid @enderror" value="{{ old('stock_quantity', $package->stock_quantity) }}" min="0" step="1">
+                                    @error('stock_quantity')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -95,6 +95,17 @@
                         </div>
 
                         <div class="row">
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="quantity" class="col-form-label">{{ __('labels.variation_quantity') }} <span class="text-red">*</span></label>
+                                    <input type="number" name="quantity" id="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity', $package->quantity) }}" min="1" step="1">
+                                    @error('quantity')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="status" class="col-form-label">{{ __('labels.status') }} <span class="text-red">*</span></label>
@@ -192,7 +203,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group table-responsive">
-                                    @include('package.items', ['items' => $items, 'no_action' => false])
+                                    @include('admin.package.items', ['items' => $items, 'no_action' => false])
                                 </div>
                             </div>
                         </div>
@@ -200,9 +211,9 @@
                     </div>
 
                     <div class="card-footer bg-transparent text-md-right text-center">
-                        <a role="button" href="{{ route('packages.index') }}" class="btn btn-light mx-2 btn-rounded-corner">
-                            <i class="fas fa-times"></i>
-                            {{ __('labels.cancel') }}
+                        <a role="button" href="{{ route('admin.packages.index') }}" class="btn btn-light mx-2 btn-rounded-corner">
+                            <i class="fas fa-caret-left"></i>
+                            {{ __('labels.back') }}
                         </a>
                         <button type="submit" class="btn btn-outline-primary btn-rounded-corner">
                             <i class="fas fa-paper-plane"></i>

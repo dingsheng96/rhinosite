@@ -28,7 +28,6 @@ class Transaction extends Model
     ];
 
     // Functions
-    // Functions
     protected static function boot()
     {
         parent::boot();

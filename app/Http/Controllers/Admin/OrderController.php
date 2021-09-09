@@ -75,7 +75,7 @@ class OrderController extends Controller
 
             DB::rollback();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:order')
                 ->causedBy(Auth::user())
                 ->performedOn(new Order())
                 ->withProperties($ex)

@@ -1,4 +1,4 @@
-@extends('layouts.master', [ 'title' => trans_choice('modules.package', 2)])
+@extends('admin.layouts.master', [ 'title' => trans_choice('modules.package', 2)])
 
 @section('content')
 

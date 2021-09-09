@@ -10,11 +10,11 @@ use App\Helpers\Message;
 use App\Helpers\Response;
 use App\Models\Permission;
 use Illuminate\Support\Facades\DB;
-use App\DataTables\Admin\PackageDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\PackageRequest;
 use App\Support\Facades\PackageFacade;
+use App\DataTables\Admin\PackageDataTable;
+use App\Http\Requests\Admin\PackageRequest;
 
 class PackageController extends Controller
 {
@@ -34,7 +34,7 @@ class PackageController extends Controller
      */
     public function index(PackageDataTable $dataTable)
     {
-        return $dataTable->render('package.index');
+        return $dataTable->render('admin.package.index');
     }
 
     /**
@@ -44,7 +44,7 @@ class PackageController extends Controller
      */
     public function create()
     {
-        return view('package.create', [
+        return view('admin.package.create', [
             'products' => $this->products,
             'stock_types' => $this->stock_types,
             'statuses' => $this->statuses
@@ -63,8 +63,8 @@ class PackageController extends Controller
 
         $action     =   Permission::ACTION_CREATE;
         $module     =   strtolower(trans_choice('modules.package', 1));
-        $message    =   Message::instance()->format($action, $module);
         $status     =   'fail';
+        $message    =   Message::instance()->format($action, $module, $status);
 
         try {
 
@@ -75,18 +75,18 @@ class PackageController extends Controller
             $status  =  'success';
             $message =  Message::instance()->format($action, $module, $status);
 
-            activity()->useLog('web')
+            activity()->useLog('admin:package')
                 ->causedBy(Auth::user())
                 ->performedOn($package)
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->route('packages.index')->withSuccess($message);
+            return redirect()->route('admin.packages.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:package')
                 ->causedBy(Auth::user())
                 ->performedOn(new Package())
                 ->withProperties($request->all())
@@ -114,11 +114,7 @@ class PackageController extends Controller
         $price = $package->prices->first();
         $items = $package->products;
 
-        return view('package.show', [
-            'package' => $package,
-            'price' => $price,
-            'items' => $items,
-        ]);
+        return view('admin.package.show', compact('package', 'price', 'items'));
     }
 
     /**
@@ -139,7 +135,7 @@ class PackageController extends Controller
         $price = $package->prices->first();
         $items = $package->products;
 
-        return view('package.edit', [
+        return view('admin.package.edit', [
             'package' => $package,
             'price' => $price,
             'items' => $items,
@@ -174,18 +170,18 @@ class PackageController extends Controller
             $status  =  'success';
             $message =  Message::instance()->format($action, $module, $status);
 
-            activity()->useLog('web')
+            activity()->useLog('admin:package')
                 ->causedBy(Auth::user())
                 ->performedOn($package)
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->route('packages.index')->withSuccess($message);
+            return redirect()->route('admin.packages.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:package')
                 ->causedBy(Auth::user())
                 ->performedOn($package)
                 ->withProperties($request->all())
@@ -212,19 +208,23 @@ class PackageController extends Controller
 
         try {
 
+            $package->loadCount([
+                'userSubscriptions' => function ($query) {
+                    $query->active();
+                }
+            ]);
+
             throw_if(
-                $package->userSubscriptions()->active()->count() > 0,
+                $package->user_subscriptions_count > 0,
                 new \Exception(__('messages.in_using', ['item' => $module]))
             );
 
-            $package->prices()->delete();
-            $package->carts()->delete();
-            $package->delete();
+            $package->delete($package);
 
             $status     =   'success';
             $message    =   Message::instance()->format($action, $module, $status);
 
-            activity()->useLog('web')
+            activity()->useLog('admin:package')
                 ->causedBy(Auth::user())
                 ->performedOn($package)
                 ->log($message);
@@ -236,7 +236,7 @@ class PackageController extends Controller
 
             $message = $e->getMessage();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:package')
                 ->causedBy(Auth::user())
                 ->performedOn($package)
                 ->log($e->getMessage());
@@ -247,7 +247,7 @@ class PackageController extends Controller
             ->withStatus($status)
             ->withMessage($message, true)
             ->withData([
-                'redirect_to' => route('packages.index')
+                'redirect_to' => route('admin.packages.index')
             ])
             ->sendJson();
     }

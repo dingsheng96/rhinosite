@@ -21,7 +21,7 @@
             <td>{{ $item->pivot->quantity }}</td>
             @if(!$no_action)
             <td>
-                <a role="button" href="#" class="btn btn-danger" onclick="event.preventDefault(); deleteAlert('{{ __('messages.confirm_question') }}', '{{ __('messages.delete_info') }}', '{{ route('packages.products.destroy', ['package' => $package->id, 'product' => $item->id]) }}')">
+                <a role="button" href="#" class="btn btn-danger" onclick="event.preventDefault(); deleteAlert('{{ __('messages.confirm_question') }}', '{{ __('messages.delete_info') }}', '{{ route('admin.packages.products.destroy', ['package' => $package->id, 'product' => $item->id]) }}')">
                     <i class="fas fa-trash"></i>
                 </a>
             </td>

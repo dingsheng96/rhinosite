@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
+use App\Models\User;
 use App\Helpers\Status;
 use App\Models\Package;
 use App\Models\Product;
@@ -22,7 +23,7 @@ class PackageRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::guard('web')->check()
+        return Auth::guard(User::TYPE_ADMIN)->check()
             && Gate::any(['package.create', 'package.update']);
     }
 
@@ -46,7 +47,8 @@ class PackageRequest extends FormRequest
             'stock_type' => [
                 'required',  Rule::in([Package::STOCK_TYPE_FINITE, Package::STOCK_TYPE_INFINITE])
             ],
-            'quantity' => ['required', 'integer', 'min:0'],
+            'stock_quantity' => ['required', 'integer', 'min:0'],
+            'quantity' => ['required', 'integer', 'min:1'],
             'currency' => ['required', 'exists:' . Currency::class . ',id'],
             'unit_price' => ['required', 'numeric', 'min:0'],
             'discount' => ['required', 'numeric', 'min:0'],
@@ -79,7 +81,8 @@ class PackageRequest extends FormRequest
             'name'              =>  __('validation.attributes.name'),
             'status'            =>  __('validation.attributes.status'),
             'stock_type'        =>  __('validation.attributes.stock_type'),
-            'quantity'          =>  __('validation.attributes.quantity'),
+            'stock_quantity'    =>  __('validation.attributes.stock_quantity'),
+            'quantity'          =>  __('validation.attributes.variation_quantity'),
             'unit_price'        =>  __('validation.attributes.unit_price'),
             'discount'          =>  __('validation.attributes.discount'),
             'description'       =>  __('validation.attributes.description'),

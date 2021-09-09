@@ -8,6 +8,7 @@ use App\Helpers\Status;
 use App\Models\PackageItem;
 use App\Models\ProductAttribute;
 use App\Models\UserSubscription;
+use App\Observers\PackageObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -25,6 +26,14 @@ class Package extends Model
     protected $fillable = [
         'name', 'description', 'stock_type', 'quantity', 'status', 'recurring', 'published'
     ];
+
+    // Functions
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::observe(PackageObserver::class);
+    }
 
     // Relationships
     public function products()

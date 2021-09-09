@@ -1,4 +1,4 @@
-@extends('layouts.master', [ 'title' => trans_choice('modules.package', 2)])
+@extends('admin.layouts.master', [ 'title' => trans_choice('modules.package', 2)])
 
 @section('content')
 
@@ -11,7 +11,7 @@
                     <h3 class="card-title">{{ __('modules.list', ['module' => trans_choice('modules.package', 2)]) }}</h3>
                     @can('package.create')
                     <span class="card-tools">
-                        <a href="{{ route('packages.create') }}" class="btn btn-outline-primary btn-rounded-corner">
+                        <a href="{{ route('admin.packages.create') }}" class="btn btn-outline-primary btn-rounded-corner">
                             <i class="fas fa-plus"></i>
                             {{ __('modules.create', ['module' => trans_choice('modules.package', 1)]) }}
                         </a>

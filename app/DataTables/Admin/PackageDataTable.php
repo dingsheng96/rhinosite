@@ -5,6 +5,7 @@ namespace App\DataTables\Admin;
 use App\Models\Package;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
+use App\Support\Facades\PriceFacade;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
@@ -27,15 +28,15 @@ class PackageDataTable extends DataTable
                     'no_action' => $this->no_action ?: null,
                     'view' => [
                         'permission' => 'package.read',
-                        'route' => route('packages.show', ['package' => $data->id])
+                        'route' => route('admin.packages.show', ['package' => $data->id])
                     ],
                     'update' => [
                         'permission' => 'package.update',
-                        'route' => route('packages.edit', ['package' => $data->id]),
+                        'route' => route('admin.packages.edit', ['package' => $data->id]),
                     ],
                     'delete' => [
                         'permission' => 'package.delete',
-                        'route' => route('packages.destroy', ['package' => $data->id])
+                        'route' => route('admin.packages.destroy', ['package' => $data->id])
                     ]
                 ])->render();
             })
@@ -48,14 +49,16 @@ class PackageDataTable extends DataTable
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
-            ->editColumn('quantity', function ($data) {
-                return $data->stock_type == Package::STOCK_TYPE_INFINITE ? '<span>&infin;</span>' : $data->quantity;
-            })
             ->filterColumn('status', function ($query, $keyword) {
                 return $query->where('status', strtolower($keyword));
             })
             ->filterColumn('category', function ($query, $keyword) {
                 return $query->where(app(ProductCategory::class)->getTable() . '.name', 'like', "%{$keyword}%");
+            })
+            ->filterColumn('price', function ($query, $keyword) {
+                return $query->whereHas('prices', function ($query) use ($keyword) {
+                    return $query->where('selling_price', 'like', PriceFacade::convertFloatToInt($keyword) . '%');
+                });
             })
             ->rawColumns(['action', 'status', 'quantity']);
     }
@@ -101,14 +104,13 @@ class PackageDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('name')->title(__('labels.name'))->width('25%'),
-            Column::make('products_count')->title(trans_choice('labels.item', 2))->width('10%'),
-            Column::make('price')->title(__('labels.price'))->width('15%'),
-            Column::make('quantity')->title(__('labels.quantity'))->width('10%'),
-            Column::make('status')->title(__('labels.status'))->width('10%'),
-            Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
-            Column::computed('action', __('labels.action'))->width('10%')
+            Column::computed('DT_RowIndex', '#'),
+            Column::make('name')->title(__('labels.name')),
+            Column::make('price')->title(__('labels.price')),
+            Column::make('products_count')->title(__('labels.package_include_items'))->searchable(false),
+            Column::make('status')->title(__('labels.status')),
+            Column::make('created_at')->title(__('labels.created_at')),
+            Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),
         ];
@@ -121,6 +123,6 @@ class PackageDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Product_' . date('YmdHis');
+        return 'Package_' . date('YmdHis');
     }
 }
