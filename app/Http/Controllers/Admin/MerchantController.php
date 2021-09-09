@@ -4,20 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use App\Helpers\Status;
-use App\Models\Package;
 use App\Models\Service;
 use App\Helpers\Message;
 use App\Helpers\Response;
 use App\Models\Permission;
 use App\Models\UserDetail;
-use App\Models\ProductCategory;
-use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\MerchantRequest;
 use App\Support\Facades\MerchantFacade;
 use App\DataTables\Admin\MerchantDataTable;
+use App\Http\Requests\Admin\MerchantRequest;
 use App\DataTables\Admin\SubscriptionLogsDataTable;
 
 class MerchantController extends Controller

@@ -14,27 +14,23 @@ use App\Models\UserAdsQuota;
 use App\Models\ProductCategory;
 use App\Models\ProductAttribute;
 use App\Models\UserSubscription;
-use App\Notifications\VerifyEmail;
 use App\Models\UserAdsQuotaHistory;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use App\Support\Services\BaseService;
+use App\Notifications\VerifyUserDetail;
 use Illuminate\Database\Eloquent\Builder;
 use App\Notifications\FreeTrialSubscription;
+use App\Support\Services\UserSubscriptionService;
 
 class MerchantService extends BaseService
 {
-    public $from_verification;
-
     public function __construct()
     {
         parent::__construct(User::class);
     }
 
-    public function storeData(bool $from_verification = false)
+    public function storeData()
     {
-        $this->from_verification = $from_verification;
-
         $this->storeProfile();
         $this->storeDetails();
         $this->storeAddress();
@@ -46,26 +42,16 @@ class MerchantService extends BaseService
 
     public function storeProfile()
     {
-        $this->model->name      =  $this->request->get('name');
-        $this->model->phone     =  $this->request->get('phone');
-        $this->model->email     =  $this->request->get('email');
-        $this->model->status    =  $this->request->get('status', User::STATUS_ACTIVE);
-
-        if ($this->request->has('password') && !empty($this->request->get('password'))) {
-            $this->model->password = Hash::make($this->request->get('password'));
-        }
-
-        if (!$this->from_verification) {
-            $this->model->email_verified_at = now();
-        }
+        $this->model->name      =   $this->request->get('name');
+        $this->model->phone     =   $this->request->get('phone');
+        $this->model->email     =   $this->request->get('email');
+        $this->model->status    =   $this->request->get('status', User::STATUS_ACTIVE);
+        $this->model->password  =   $this->request->get('password');
+        $this->model->type      =   User::TYPE_MERCHANT;
 
         if ($this->model->isDirty()) {
             $this->model->save();
         }
-
-        $this->setModel($this->model);
-
-        $this->model->syncRoles([Role::ROLE_MERCHANT]);
 
         return $this;
     }
@@ -73,15 +59,6 @@ class MerchantService extends BaseService
     public function storeDetails()
     {
         $details = $this->model->userDetail()
-            ->when($this->from_verification, function ($query) {
-                $query->pendingDetails()
-                    ->orWhere(function ($query) {
-                        $query->rejectedDetails();
-                    });
-            })
-            ->when(!$this->from_verification, function ($query) {
-                $query->approvedDetails();
-            })
             ->firstOr(function () {
                 return new UserDetail();
             });
@@ -95,7 +72,7 @@ class MerchantService extends BaseService
         $details->pic_name          =   $this->request->get('pic_name');
         $details->pic_phone         =   $this->request->get('pic_phone');
         $details->pic_email         =   $this->request->get('pic_email');
-        $details->status            =   ($this->from_verification) ? UserDetail::STATUS_PENDING : UserDetail::STATUS_APPROVED; // if details created from verification page, set pending, else set approved
+        $details->status            =   UserDetail::STATUS_PENDING;
 
         $this->model->userDetail()->save($details);
 
@@ -158,19 +135,19 @@ class MerchantService extends BaseService
     {
         if (!empty($plan)) {
 
-            $plan = json_decode($plan);
+            $plan = json_decode(base64_decode($plan));
 
             // calculate next billing date and expired date
-            $activation_date    =   Carbon::createFromFormat('Y-m-d', today()->toDateString());
-            $valid_until        =   $activation_date->copy();
-            $trial              =   false;
+            $activated_at   =   Carbon::createFromFormat('Y-m-d', $this->request->get('activated_at', today()->toDateString()));
+            $renewed_at     =   $activated_at->copy()->startOfDay();
+            $valid_until    =   $activated_at->copy()->startOfDay();
+            $is_trial       =   false;
 
-            if ($plan->class == Package::class) { // if plan is package
+            if ($plan->class == Package::class) { // if plan is a package
 
-                $package        =   Package::with(['products.productCategory'])->where('id', $plan->id)->firstOrFail();
-                $package_items  =   $package->products;
+                $package    =   Package::with(['products.productCategory'])->where('id', $plan->id)->firstOrFail();
 
-                foreach ($package_items as $attribute) {
+                foreach ($package->products as $attribute) {
 
                     $item_qty = $attribute->pivot->quantity;
 
@@ -178,7 +155,8 @@ class MerchantService extends BaseService
 
                         $item_qty--;
 
-                        if ($attribute->productCategory->name == ProductCategory::TYPE_SUBSCRIPTION && !empty($attribute->validity_type)) {
+                        if (!empty($attribute->validity_type)) {
+
                             switch ($attribute->validity_type) {
                                 case ProductAttribute::VALIDITY_TYPE_DAY:
                                     $valid_until = $valid_until->addDays($attribute->validity);
@@ -194,20 +172,20 @@ class MerchantService extends BaseService
                     }
 
                     // check item whether is ads products from package
-                    if ($attribute->productCategory->name  == ProductCategory::TYPE_ADS) {
+                    if (!($attribute->recurring) && empty($this->validity)) {
 
                         $this->storeAdsQuota($attribute, $attribute->pivot->quantity);
                     }
                 }
 
                 $next_bill_date = ($package->recurring) ? $valid_until->copy()->addDay()->startOfDay() : null;
-            }
+            } elseif ($plan->class == ProductAttribute::class) { // if plan is a product
 
-            if ($plan->class == ProductAttribute::class) { // if plan is product
+                $attribute  =   ProductAttribute::with(['product'])->where('id', $plan->id)->firstOrFail();
 
-                $attribute = ProductAttribute::with(['product'])->where('id', $plan->id)->firstOrFail();
+                $is_trial   =   $attribute->trial_mode;
 
-                if ($attribute->productCategory->name == ProductCategory::TYPE_SUBSCRIPTION && !empty($attribute->validity_type)) {
+                if (!empty($attribute->validity_type)) {
 
                     switch ($attribute->validity_type) {
                         case ProductAttribute::VALIDITY_TYPE_DAY:
@@ -221,12 +199,19 @@ class MerchantService extends BaseService
                             break;
                     }
 
-                    $next_bill_date = ($attribute->recurring) ? $valid_until->copy()->addDay()->startOfDay() : null;
+                    $next_billing_at    =   ($attribute->recurring) ? $valid_until->copy()->addDay()->startOfDay() : null;
+                    $expired_at         =   $valid_until->copy()->endOfDay();
+                }
 
-                    $trial = $attribute->trial_mode;
+                // update stock quantity
+                if ($attribute->stock_type != ProductAttribute::STOCK_TYPE_INFINITE) {
+
+                    $attribute->stock_quantity = $attribute->stock_quantity - $attribute->quantity;
+                    $attribute->save();
                 }
             }
 
+            // Subscription
             $subscription = $this->model->userSubscriptions()->active()
                 ->whereHasMorph('subscribable', $plan->class, function (Builder $query) use ($plan) {
                     $query->where('id', $plan->id);
@@ -234,31 +219,31 @@ class MerchantService extends BaseService
                     return new UserSubscription();
                 });
 
-            if (!$subscription) { // if different active subscription found, deactivate it
-                $this->model->userSubscriptions()
-                    ->active()->first()->update([
-                        'status' => UserSubscription::STATUS_INACTIVE
-                    ]);
+            if (!$subscription) { // if different active subscription found, deactivate it, then create a new record
+
+                $subscription->update([
+                    'status' => UserSubscription::STATUS_INACTIVE
+                ]);
             }
 
-            // save subscription
+            // save new subscription
             $subscription->subscribable_type =  $plan->class;
             $subscription->subscribable_id   =  $plan->id;
             $subscription->status            =  UserSubscription::STATUS_ACTIVE;
-            $subscription->activated_at      =  $activation_date->startOfDay();
-            $subscription->next_billing_at   =  $next_bill_date;
+            $subscription->activated_at      =  $activated_at->startOfDay();
+            $subscription->next_billing_at   =  $next_billing_at;
             $subscription->transaction_id    =  empty($transaction) ? null : $transaction->id;
 
             $this->model->userSubscriptions()->save($subscription);
 
             // save subscription logs
-            $subscription->userSubscriptionLogs()
-                ->create([
-                    'renewed_at' => $activation_date->startOfDay(),
-                    'expired_at' => $valid_until->endOfDay(),
-                ]);
+            $subscription->userSubscriptionLogs()->create([
+                'renewed_at' => $renewed_at,
+                'expired_at' => $expired_at,
+            ]);
 
-            if ($trial) {
+            if ($is_trial) {
+
                 $this->model->notify(new FreeTrialSubscription());
             }
         }
@@ -270,48 +255,96 @@ class MerchantService extends BaseService
     {
         $item->load(['product']);
 
-        if ($item->stock_type == ProductAttribute::STOCK_TYPE_INFINITE) {
-            $quantity = $item->quantity * $quantity;
-        } elseif ($item->stock_type == ProductAttribute::STOCK_TYPE_FINITE) {
-            $item->quantity -= $quantity;
+        $total_quantity = $item->quantity * $quantity;
+
+        // update stock quantity
+        if ($item->stock_type != ProductAttribute::STOCK_TYPE_INFINITE) {
+
+            $item->stock_quantity = $item->stock_quantity - $total_quantity;
             $item->save();
         }
 
+        // store user ads quota
         $user_ads_quota = $this->model->userAdsQuotas()
-            ->where('product_id', $item->product->id)
-            ->firstOr(function () {
+            ->where('product_id', $item->product->id)->firstOr(function () {
                 return new UserAdsQuota();
             });
 
         $user_ads_quota->product_id =   $item->product->id;
-        $user_ads_quota->quantity   +=  $quantity;
-
+        $user_ads_quota->quantity   +=  $total_quantity;
         $this->model->userAdsQuotas()->save($user_ads_quota);
 
+        // store user ads quoata history
         $initial_quantity = 0;
+
         if (!$user_ads_quota->wasRecentlyCreated) { // existing records
 
             $history = $user_ads_quota->userAdsQuotaHistories()->orderByDesc('created_at')->first();
+
             if ($history) {
                 $initial_quantity = $history->remaining_quantity;
             }
         }
 
         // create new user ads quoata history
-        $sourceable_type    =   Auth::user();
-        $sourceable_id      =   Auth::id();
-        $applicable_type    =   $user_ads_quota;
-        $applicable_id      =   $user_ads_quota->id;
+        $user_ads_quota->userAdsQuotaHistories()->create([
+            'initial_quantity'   =>   $initial_quantity,
+            'process_quantity'   =>   $total_quantity,
+            'remaining_quantity' =>   $user_ads_quota->quantity,
+            'sourceable_type'    =>   get_class(Auth::user()),
+            'sourceable_id'      =>   Auth::id(),
+            'applicable_type'    =>   get_class($user_ads_quota),
+            'applicable_id'      =>   $user_ads_quota->id
+        ]);
 
-        $new_user_ads_quota_history = new UserAdsQuotaHistory();
-        $new_user_ads_quota_history->initial_quantity   =   $initial_quantity;
-        $new_user_ads_quota_history->process_quantity   =   $quantity;
-        $new_user_ads_quota_history->remaining_quantity =   $user_ads_quota->quantity;
-        $new_user_ads_quota_history->sourceable_type    =   get_class($sourceable_type);
-        $new_user_ads_quota_history->sourceable_id      =   $sourceable_id;
-        $new_user_ads_quota_history->applicable_type    =   get_class($applicable_type);
-        $new_user_ads_quota_history->applicable_id      =   $applicable_id;
-        $user_ads_quota->userAdsQuotaHistories()->save($new_user_ads_quota_history);
+        return $this;
+    }
+
+    public function verifiedEmail()
+    {
+        $this->model->email_verified_at = now();
+
+        if ($this->model->isDirty()) {
+
+            $this->model->save();
+        }
+
+        return $this;
+    }
+
+    public function setUserDetailStatus(string $status)
+    {
+        $detail = $this->model->userDetail()->first();
+
+        $detail->status = $status;
+
+        if ($detail->isDirty('status')) {
+
+            $this->model->userDetail()->save($detail);
+        }
+
+        return $this;
+    }
+
+    public function verifyUserDetail()
+    {
+        $detail =   $this->model->userDetail()->first();
+        $status =   $this->request->get('status');
+
+        if ($status != UserDetail::STATUS_PENDING) {
+
+            $detail->validated_by  =   Auth::id();
+            $detail->status        =   $status;
+            $detail->validated_at  =   now();
+            $detail->save();
+
+            if (!empty($this->request->get('plan')) && $status == UserDetail::STATUS_APPROVED) {
+
+                return $this->storeSubscription($this->request->get('plan'));
+            }
+
+            $this->model->user->notify(new VerifyUserDetail());
+        }
 
         return $this;
     }

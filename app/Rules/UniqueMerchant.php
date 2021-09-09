@@ -3,7 +3,6 @@
 namespace App\Rules;
 
 use App\Models\User;
-use App\Models\Role;
 use Illuminate\Contracts\Validation\Rule;
 
 class UniqueMerchant implements Rule
@@ -39,10 +38,7 @@ class UniqueMerchant implements Rule
                 } else {
                     $query->where($this->ignore_column, '!=', $this->ignore_id);
                 }
-            })
-            ->whereHas('roles', function ($query) {
-                $query->where('name', Role::ROLE_MERCHANT);
-            })->exists();
+            })->where('type', User::TYPE_MERCHANT)->exists();
     }
 
     /**

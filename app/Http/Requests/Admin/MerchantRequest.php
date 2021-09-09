@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
 use App\Models\City;
+use App\Models\User;
 use App\Helpers\Status;
 use App\Models\Country;
 use App\Models\Service;
@@ -25,7 +26,7 @@ class MerchantRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::guard('web')->check()
+        return Auth::guard(User::TYPE_ADMIN)->check()
             && Gate::any(['merchant.create', 'merchant.update']);
     }
 

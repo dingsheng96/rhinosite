@@ -4,23 +4,23 @@ namespace App\Rules;
 
 use App\Models\User;
 use App\Models\Package;
-use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductAttribute;
 use Illuminate\Contracts\Validation\Rule;
 
 class CheckSubscriptionPlanExists implements Rule
 {
-    private $merchant;
+    private $merchant, $check_trial;
 
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct(User $merchant)
+    public function __construct(User $merchant = null, bool $check_trial = false)
     {
         $this->merchant = $merchant;
+        $this->check_trial = $check_trial;
     }
 
     /**
@@ -32,25 +32,34 @@ class CheckSubscriptionPlanExists implements Rule
      */
     public function passes($attribute, $value)
     {
-        $value = json_decode($value);
+        $plan = json_decode(base64_decode($value));
 
-        if ($value->class == ProductAttribute::class) {
+        if ($plan->class == ProductAttribute::class) {
 
             return ProductAttribute::with(['product', 'userSubscriptions'])
-                ->where('id', $value->id)
+                ->where('id', $plan->id)
                 ->whereHas('product', function ($query) {
                     $query->filterCategory(ProductCategory::TYPE_SUBSCRIPTION);
                 })
-                ->whereDoesntHave('userSubscriptions', function ($query) {
-                    $query->where('user_id', $this->merchant->id)->active();
-                })->exists();
+                ->when(!empty($this->merchant), function ($query) {
+                    $query->whereDoesntHave('userSubscriptions', function ($query) {
+                        $query->where('user_id', $this->merchant->id)->active();
+                    });
+                })
+                ->when($this->check_trial, function ($query) {
+                    $query->where('trial_mode', $this->check_trial);
+                })
+                ->exists();
         }
 
         return Package::with(['userSubscriptions'])
-            ->where('id', $value->id)
-            ->whereDoesntHave('userSubscriptions', function ($query) {
-                $query->where('user_id', $this->merchant->id)->active();
-            })->exists();
+            ->where('id', $plan->id)
+            ->when(!empty($this->merchant), function ($query) {
+                $query->whereDoesntHave('userSubscriptions', function ($query) {
+                    $query->where('user_id', $this->merchant->id)->active();
+                });
+            })
+            ->exists();
     }
 
     /**
