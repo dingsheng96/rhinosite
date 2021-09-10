@@ -73,4 +73,12 @@ $(function () {
 
     }
 
+    if($('.project-dropdown').length > 0 && $('.ads-date-filter').length > 0) {
+
+        $('.project-dropdown').on('change', function () {
+
+            $('.ads-date-filter').trigger('change');
+        });
+    }
+
 });

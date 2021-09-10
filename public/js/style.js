@@ -152,5 +152,19 @@ $(function() {
             input.val(value+1);
         });
     }
+
+    if($('.product-category-dropdown').length > 0) {
+
+        $('.product-category-dropdown').on('change',function() {
+
+            let data = $(this).find('option:selected').data('toggle-slot');
+
+            if(data == 1) {
+                $('#slot_panel').removeClass('d-none');
+            } else {
+                $('#slot_panel').addClass('d-none');
+            }
+        });
+    }
 });
 
