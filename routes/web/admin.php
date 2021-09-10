@@ -27,7 +27,7 @@ Route::group(['middleware' => ['auth:' . User::TYPE_ADMIN]], function () {
 
     Route::resource('account', 'AccountController')->only(['index', 'store']);
 
-    Route::resource('ads-boosters', 'AdsBoosterController');
+    Route::resource('ads-boosters', 'AdsBoosterController')->except(['edit', 'update']);
 
     Route::resource('verifications', 'UserVerificationController')->except(['create', 'store']);
 
