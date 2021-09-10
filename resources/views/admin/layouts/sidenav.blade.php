@@ -39,7 +39,7 @@
 
                 @canany(['merchant.update'])
                 <li class="nav-item">
-                    <a href="{{ route('admin.subscriptions.index') }}" class="nav-link {{ Nav::hasSegment('subscriptions', 1, 'active') }}">
+                    <a href="{{ route('admin.subscriptions.create') }}" class="nav-link {{ Nav::hasSegment('subscriptions', 1, 'active') }}">
                         <i class="nav-icon fas fa-bookmark"></i>
                         <p>{{ trans_choice('modules.subscription', 1) }}</p>
                     </a>

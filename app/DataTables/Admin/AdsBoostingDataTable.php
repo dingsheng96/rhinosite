@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\AdsBooster;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
@@ -29,27 +30,10 @@ class AdsBoostingDataTable extends DataTable
                 return $data->product->name;
             })
             ->addColumn('status', function ($data) {
-                return $data->status_label;
+                return $data->boosting_date_range_status_label;
             })
             ->editColumn('boosted_at', function ($data) {
-                return $data->boosted_at->toDateTimeString();
-            })
-            ->filterColumn('ads_type', function ($query, $keyword) {
-                return $query->whereHas('product', function ($query) use ($keyword) {
-                    $query->where('name', 'like', "%{$keyword}%");
-                });
-            })
-            ->filterColumn('status', function ($query, $keyword) {
-
-                $keyword = strtolower($keyword);
-
-                return $query->when($keyword == 'expired', function ($query) {
-                    $query->whereDate('boosted_at', '<', today());
-                })->when($keyword == 'boosting', function ($query) {
-                    $query->whereDate('boosted_at', today());
-                })->when($keyword == 'upcoming', function ($query) {
-                    $query->whereDate('boosted_at', '>', today());
-                });
+                return $data->min_date . ' ~ ' . $data->max_date;
             })
             ->rawColumns(['status']);
     }
@@ -57,18 +41,17 @@ class AdsBoostingDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Project $model
+     * @param \App\Models\AdsBooster $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query(AdsBooster $model)
     {
         return $model->with(['product', 'boostable'])
             ->whereHasMorph('boostable', [Project::class], function (Builder $query) {
-                $query->where('id', $this->project->id)
-                    ->when(Auth::user()->is_merchant, function ($query) {
-                        $query->where('user_id', Auth::id());
-                    });
+                $query->where('id', $this->project->id);
             })
+            ->selectRaw('boost_index, DATE(MIN(boosted_at)) AS min_date, DATE(MAX(boosted_at)) AS max_date, product_id')
+            ->groupBy('boost_index', 'product_id')
             ->newQuery();
     }
 
@@ -84,10 +67,11 @@ class AdsBoostingDataTable extends DataTable
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(0, 'desc')
+            ->orderBy(3, 'desc')
             ->responsive(true)
             ->autoWidth(true)
-            ->processing(false);
+            ->processing(false)
+            ->searching(false);
     }
 
     /**
@@ -98,7 +82,7 @@ class AdsBoostingDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#')->width('10%'),
+            Column::computed('DT_RowIndex', '#'),
             Column::make('ads_type')->title(__('labels.ads_type')),
             Column::make('status')->title(__('labels.status')),
             Column::make('boosted_at')->title(trans_choice('labels.boosted_at', 1)),

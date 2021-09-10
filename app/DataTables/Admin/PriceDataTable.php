@@ -73,12 +73,12 @@ class PriceDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('currency')->title(__('labels.currency'))->width('20%'),
-            Column::make('unit_price')->title(__('labels.unit_price'))->width('20%'),
-            Column::make('discount')->title(__('labels.discount'))->width('20%'),
-            Column::make('selling_price')->title(__('labels.selling_price'))->width('20%'),
-            Column::make('created_at')->title(__('labels.created_at'))->width('15%')
+            Column::computed('DT_RowIndex', '#'),
+            Column::make('currency')->title(__('labels.currency')),
+            Column::make('unit_price')->title(__('labels.unit_price')),
+            Column::make('discount')->title(__('labels.discount')),
+            Column::make('selling_price')->title(__('labels.selling_price')),
+            Column::make('created_at')->title(__('labels.created_at'))
         ];
     }
 

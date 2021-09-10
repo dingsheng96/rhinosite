@@ -99,18 +99,18 @@ class CountryDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('name')->title(__('labels.name'))->width('20%'),
-            Column::make('dial_code')->title(__('labels.dial_code'))->width('10%'),
-            Column::make('currency')->title(__('labels.currency'))->width('20%'),
+            Column::computed('DT_RowIndex', '#'),
+            Column::make('name')->title(__('labels.name')),
+            Column::make('dial_code')->title(__('labels.dial_code')),
+            Column::make('currency')->title(__('labels.currency')),
             Column::make('country_states_count')
                 ->searchable(false)
-                ->title(trans_choice('labels.country_state', 2))->width('10%'),
+                ->title(trans_choice('labels.country_state', 2)),
             Column::make('cities_count')
                 ->searchable(false)
-                ->title(trans_choice('labels.city', 2))->width('10%'),
-            Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
-            Column::computed('action', __('labels.action'))->width('10%')
+                ->title(trans_choice('labels.city', 2)),
+            Column::make('created_at')->title(__('labels.created_at')),
+            Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),
         ];

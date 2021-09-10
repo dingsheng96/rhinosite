@@ -188,13 +188,15 @@ class SubscriptionController extends Controller
                 ->log($e->getMessage());
         }
 
-        return Response::instance()
+        return ($request->ajax())
+            ? Response::instance()
             ->withStatusCode('modules.user', 'actions.' . $action . $status)
             ->withStatus($status)
             ->withMessage($message, true)
             ->withData([
-                'redirect_to' => route('admin.account.index')
+                'redirect_to' => route('admin.merchants.index')
             ])
-            ->sendJson();
+            ->sendJson()
+            : redirect()->route('admin.merchants.index')->with($status, $message);
     }
 }

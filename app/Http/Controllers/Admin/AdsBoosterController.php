@@ -5,17 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Models\User;
 use App\Models\Project;
 use App\Helpers\Message;
+use App\Helpers\Response;
 use App\Models\AdsBooster;
 use App\Models\Permission;
-use App\Models\UserAdsQuota;
 use Illuminate\Http\Request;
-use App\DataTables\Admin\AdsDataTable;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\DataTables\Admin\AdsDataTable;
 use App\Support\Facades\ProjectFacade;
-use App\DataTables\Admin\AdsBoostingDataTable;
-use App\Http\Requests\AdsBoosterRequest;
+use App\Support\Facades\MerchantFacade;
+use App\Http\Requests\Admin\AdsBoosterRequest;
 
 class AdsBoosterController extends Controller
 {
@@ -34,7 +34,7 @@ class AdsBoosterController extends Controller
      */
     public function index(AdsDataTable $dataTable)
     {
-        return $dataTable->render('ads.index');
+        return $dataTable->render('admin.ads.index');
     }
 
     /**
@@ -44,31 +44,13 @@ class AdsBoosterController extends Controller
      */
     public function create()
     {
-        $user       =   Auth::user();
         $projects   =   [];
         $ads_types  =   [];
         $merchants  =   [];
 
-        if ($user->is_admin) {
+        $merchants  =   User::validMerchant()->hasAdsQuota()->orderBy('name')->get();
 
-            $merchants  =   User::merchant()->active()->hasAdsQuota()->orderBy('name', 'asc')->get();
-        } elseif ($user->is_merchant) {
-            $projects = Project::published()
-                ->where('user_id', Auth::id())
-                ->orderBy('title', 'asc')
-                ->get();
-
-            $ads_types = UserAdsQuota::with(['product'])
-                ->whereHas('product', function ($query) {
-                    $query->active();
-                })
-                ->where('quantity', '>', 0)
-                ->where('user_id', Auth::id())
-                ->orderBy('product_id')
-                ->get();
-        }
-
-        return view('ads.create', compact('projects', 'ads_types', 'merchants'));
+        return view('admin.ads.create', compact('projects', 'ads_types', 'merchants'));
     }
 
     /**
@@ -88,7 +70,7 @@ class AdsBoosterController extends Controller
         try {
 
             $project  = Project::where('id', $request->get('project'))
-                ->where('user_id', $request->get('merchant', Auth::id()))
+                ->where('user_id', $request->get('merchant'))
                 ->published()->firstOrFail();
 
             $project = ProjectFacade::setModel($project)->setRequest($request)->storeBoostAds()->getModel();
@@ -97,26 +79,24 @@ class AdsBoosterController extends Controller
 
             $message = Message::instance()->format($action, $module, 'success');
 
-            activity()->useLog('web')
+            activity()->useLog('admin:ads_booster')
                 ->causedBy(Auth::user())
                 ->performedOn($project)
                 ->withProperties($request->all())
                 ->log($message);
 
-            return redirect()->route('ads-boosters.index')->withSuccess($message);
+            return redirect()->route('admin.ads-boosters.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:ads_booster')
                 ->causedBy(Auth::user())
                 ->performedOn(new AdsBooster())
                 ->withProperties($request->all())
                 ->log($e->getMessage());
 
-            return redirect()->back()
-                ->with('fail', $message)
-                ->withInput();
+            return redirect()->back()->with('fail', $message)->withInput();
         }
     }
 
@@ -126,16 +106,28 @@ class AdsBoosterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $ads_booster, AdsBoostingDataTable $dataTable)
+    public function show($ads_booster)
     {
-        $ads_booster->load([
-            'adsBoosters' => function ($query) {
-                $query->with(['product', 'boostable']);
-            }
-        ]);
+        $booster = json_decode(base64_decode($ads_booster));
 
-        return $dataTable->with(['project' => $ads_booster])
-            ->render('ads.show', compact('ads_booster'));
+        $project = Project::with([
+            'user' => function ($query) {
+                $query->with(['projects', 'userAdsQuotas']);
+            },
+            'adsBoosters' => function ($query) use ($booster) {
+                $query->with('product')->where('boost_index', $booster->boost_index)->orderBy('boosted_at');
+            }
+        ])
+            ->where('id', $booster->boostable_id)
+            ->whereHas('adsBoosters', function ($query) use ($booster) {
+                $query->where('boost_index', $booster->boost_index)->orderBy('boosted_at');
+            })->first();
+
+        $projects   =   $project->user->projects;
+        $ads_types  =   $project->userAdsQuotas;
+        $merchants  =   User::validMerchant()->hasAdsQuota()->orderBy('name')->get();
+
+        return view('admin.ads.show', compact('project', 'projects', 'ads_types', 'merchants'));
     }
 
     /**
@@ -144,7 +136,7 @@ class AdsBoosterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Project $ads_booster)
+    public function edit($ads_booster)
     {
         //
     }
@@ -156,7 +148,7 @@ class AdsBoosterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $ads_booster)
     {
         //
     }
@@ -167,8 +159,45 @@ class AdsBoosterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($ads_booster)
     {
-        //
+        $action     =   Permission::ACTION_DELETE;
+        $module     =   strtolower(trans_choice('modules.ads', 1));
+        $status     =   'success';
+        $message    =   Message::instance()->format($action, $module, 'success');
+
+        $booster = json_decode(base64_decode($ads_booster));
+
+        $project = Project::with([
+            'user',
+            'adsBoosters' => function ($query) use ($booster) {
+                $query->with('product')->where('boost_index', $booster->boost_index)->orderBy('boosted_at');
+            }
+        ])->where('id', $booster->boostable_id)->whereHas('adsBoosters', function ($query) use ($booster) {
+            $query->where('boost_index', $booster->boost_index)->orderBy('boosted_at');
+        })->first();
+
+        $products = [];
+        foreach ($project->adsBoosters as $item) {
+            $products[] = $item->product;
+            $item->delete();
+        }
+
+        $product = collect($products)->unique()->first();
+
+        MerchantFacade::setModel($project->user)->refundAdsQuota($product);
+
+        activity()->useLog('admin:ads_booster')
+            ->causedBy(Auth::user())
+            ->performedOn(new AdsBooster())
+            ->log($message);
+
+        return Response::instance()
+            ->withStatus($status)
+            ->withMessage($message, true)
+            ->withData([
+                'redirect_to' => route('admin.ads-boosters.index')
+            ])
+            ->sendJson();
     }
 }

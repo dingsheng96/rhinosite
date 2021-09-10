@@ -3,10 +3,12 @@
 namespace App\DataTables\Admin;
 
 use App\Models\Project;
+use App\Models\AdsBooster;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
@@ -28,28 +30,56 @@ class AdsDataTable extends DataTable
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
 
-                return view('components.action', [
+                $options = [
                     'no_action' => $this->no_action ?: null,
                     'view' => [
-                        'permission' => 'ads.create',
-                        'route' => route('ads-boosters.show', ['ads_booster' => $data->id])
-                    ]
-                ])->render();
+                        'permission' => 'ads.read',
+                        'route' => route('admin.ads-boosters.show', ['ads_booster' => base64_encode(json_encode(['boost_index' => $data->boost_index, 'boostable_type' => $data->boostable_type, 'boostable_id' => $data->boostable_id]))])
+                    ],
+                ];
+
+                if (!$data->is_in_boosting_date_range) {
+                    $options = array_merge($options, [
+                        'delete' => [
+                            'permission' => 'ads.delete',
+                            'route' => route('admin.ads-boosters.destroy', ['ads_booster' => base64_encode(json_encode(['boost_index' => $data->boost_index, 'boostable_type' => $data->boostable_type, 'boostable_id' => $data->boostable_id]))])
+                        ]
+                    ]);
+                }
+
+                return view('components.action', $options)->render();
             })
             ->editColumn('title', function ($data) {
 
+                if (!$data->boostable) {
+                    return '-';
+                }
+
                 return  '<div class="d-flex justify-content-start">
-                <div>
-                <img src="' . $data->thumbnail->full_file_path . '" alt="' . $data->thumbnail->filename . '" class="table-img-preview">
-                </div>
-                <div class="pl-3">' . Str::limit($data->english_title, 50, '...') . '<br/>' . Str::limit($data->chinese_title ?? null, 50, '...') . '</div>
-                </div>';
+                    <div>
+                    <img src="' . $data->boostable->thumbnail->full_file_path . '" alt="' . $data->boostable->thumbnail->filename . '" class="table-img-preview">
+                    </div>
+                    <div class="pl-3">' . Str::limit($data->boostable->english_title, 50, '...') . '<br/>' . Str::limit($data->boostable->chinese_title ?? null, 50, '...') . '</div>
+                    </div>';
+            })
+            ->editColumn('boosted_at', function ($data) {
+                return $data->min_date . ' ~ ' . $data->max_date;
             })
             ->addColumn('merchant', function ($data) {
-                return $data->user->name;
+                return $data->boostable->user->name ?? '-';
             })
             ->addColumn('status', function ($data) {
-                return $data->boosting_status;
+                return $data->boosting_date_range_status_label;
+            })
+            ->addColumn('ads_type', function ($data) {
+                return $data->product->name;
+            })
+            ->filterColumn('title', function ($query, $keyword) {
+                $query->whereHasMorph('boostable', [Project::class], function (Builder $query) use ($keyword) {
+                    $query->whereHas('translations', function ($query) use ($keyword) {
+                        $query->where('value', 'like', "%{$keyword}%");
+                    });
+                });
             })
             ->filterColumn('merchant', function ($query, $keyword) {
                 $query->whereHasMorph('boostable', [Project::class], function (Builder $query) use ($keyword) {
@@ -58,22 +88,25 @@ class AdsDataTable extends DataTable
                     });
                 });
             })
+            ->filterColumn('boosted_at', function ($query, $keyword) {
+                $query->selectRaw('DATE(MIN(boosted_at)) AS min_date, DATE(MAX(boosted_at)) AS max_date')
+                    ->whereDate('min_date', 'like', "%{$keyword}%")
+                    ->orWhereDate('max_date', 'like', "%{$keyword}%");
+            })
             ->rawColumns(['action', 'title', 'status']);
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Project $model
+     * @param \App\Models\AdsBooster $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Project $model)
+    public function query(AdsBooster $model)
     {
-        return $model->with(['adsBoosters.product', 'media', 'translations'])
-            ->when(Auth::user()->is_merchant, function ($query) {
-                $query->where('user_id', Auth::id());
-            })
-            ->whereHas('adsBoosters')
+        return $model->with(['product', 'boostable'])
+            ->selectRaw('boost_index, DATE(MIN(boosted_at)) AS min_date, DATE(MAX(boosted_at)) AS max_date, product_id, boostable_type, boostable_id')
+            ->groupBy('boost_index', 'product_id', 'boostable_type', 'boostable_id')
             ->newQuery();
     }
 
@@ -89,10 +122,11 @@ class AdsDataTable extends DataTable
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(2, 'desc')
+            ->orderBy(5, 'desc')
             ->responsive(true)
             ->autoWidth(true)
-            ->processing(false);
+            ->processing(false)
+            ->searching(false);
     }
 
     /**
@@ -103,18 +137,16 @@ class AdsDataTable extends DataTable
     protected function getColumns()
     {
         $columns = [
-            Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('title')->title(trans_choice('labels.project', 1))->width('35%'),
-            Column::make('status')->title(__('labels.status'))->width('20%'),
-            Column::make('merchant')->title(__('labels.merchant'))->width('30%'),
-            Column::computed('action', __('labels.action'))->width('10%')
+            Column::computed('DT_RowIndex', '#'),
+            Column::make('title')->title(trans_choice('labels.project', 1)),
+            Column::make('merchant')->title(__('labels.merchant')),
+            Column::make('ads_type')->title(__('labels.ads_type')),
+            Column::make('status')->title(__('labels.status'))->searchable(false),
+            Column::make('boosted_at')->title(trans_choice('labels.boosted_at', 1)),
+            Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),
         ];
-
-        if (Auth::user()->is_merchant) {
-            $columns = Arr::except($columns, 3);
-        }
 
         return $columns;
     }

@@ -91,14 +91,14 @@ class OrderDataTable extends DataTable
     protected function getColumns()
     {
         $columns =  [
-            Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('order_no')->title(__('labels.order_no'))->width('15%'),
-            Column::make('user')->title(__('labels.user'))->width('20%'),
-            Column::make('grand_total')->title(__('labels.grand_total'))->width('15%'),
-            Column::make('total_items')->title(trans_choice('labels.item', 2))->width('10%'),
-            Column::make('status')->title(__('labels.status'))->width('10%'),
-            Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
-            Column::computed('action', __('labels.action'))->width('10%')
+            Column::computed('DT_RowIndex', '#'),
+            Column::make('order_no')->title(__('labels.order_no')),
+            Column::make('user')->title(__('labels.user')),
+            Column::make('grand_total')->title(__('labels.grand_total')),
+            Column::make('total_items')->title(trans_choice('labels.item', 2)),
+            Column::make('status')->title(__('labels.status')),
+            Column::make('created_at')->title(__('labels.created_at')),
+            Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),
         ];

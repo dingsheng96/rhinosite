@@ -80,13 +80,13 @@ class CountryStateDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex', '#')->width('10%'),
-            Column::make('name')->title(__('labels.name'))->width('35%'),
-            Column::make('cities_count')->width('15%')
+            Column::computed('DT_RowIndex', '#'),
+            Column::make('name')->title(__('labels.name')),
+            Column::make('cities_count')
                 ->searchable(false)
                 ->title(trans_choice('labels.city', 2)),
-            Column::make('created_at')->title(__('labels.created_at'))->width('25%'),
-            Column::computed('action', __('labels.action'))->width('15%')
+            Column::make('created_at')->title(__('labels.created_at')),
+            Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),
         ];

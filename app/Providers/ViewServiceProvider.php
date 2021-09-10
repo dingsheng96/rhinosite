@@ -8,21 +8,18 @@ class ViewServiceProvider extends ServiceProvider
 {
     protected $composers = [
         \App\Http\View\Composers\CountryComposer::class => [
-            'projects.create', 'projects.edit', 'merchant.edit', 'merchant.create',
-            'account.merchant', 'verification.create', 'auth.register', 'account.member',
-            'checkout.recurring', 'member.edit', 'member.create'
+            'admin.projects.*', 'admin.merchant.*', 'admin.member.*',
+            'admin.verification.*', 'merchant.auth.register', 'merchant.account',
+            'checkout.recurring', 'merchant.account',
         ],
         \App\Http\View\Composers\UnitComposer::class => [
-            'projects.create', 'projects.edit'
+            'admin.projects.*', 'merchant.projects.*'
         ],
         \App\Http\View\Composers\MerchantComposer::class => [
             'admin.projects.*'
         ],
         \App\Http\View\Composers\VerificationComposer::class => [
-            'account.*', 'activity_log.*', 'admin.*', 'ads.*', 'cart.*',
-            'country.*', 'currency.*', 'dashboard.admin', 'member.*', 'merchant.*',
-            'order.*', 'package.*', 'role.*', 'service.*', 'product.*', 'projects.*',
-            'transaction.*', 'verification.*', 'wishlist.*', 'subscription.create'
+            'admin.*',
         ],
         \App\Http\View\Composers\DefaultPreviewComposer::class => [
             '*'

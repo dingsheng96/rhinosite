@@ -52,9 +52,6 @@ class ProductAttributeDataTable extends DataTable
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
-            ->editColumn('slot', function ($data) {
-                return $data->slot_with_type;
-            })
             ->filterColumn('status', function ($query, $keyword) {
 
                 $keyword = strtolower($keyword);

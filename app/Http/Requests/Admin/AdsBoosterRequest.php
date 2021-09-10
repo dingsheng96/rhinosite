@@ -1,17 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
-use App\Models\City;
-use App\Models\Unit;
-use App\Models\Country;
+use App\Models\User;
 use App\Models\Product;
 use App\Models\Project;
-use App\Models\Service;
-use App\Models\Currency;
-use App\Models\CountryState;
 use App\Rules\ExistMerchant;
-use App\Models\ProductCategory;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -26,7 +20,7 @@ class AdsBoosterRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::guard('web')->check()
+        return Auth::guard(User::TYPE_ADMIN)->check()
             && Gate::any(['ads.create', 'ads.update']);
     }
 
@@ -42,15 +36,11 @@ class AdsBoosterRequest extends FormRequest
         return [
             'project' => [
                 'required',
-                Rule::exists(Project::class, 'id')
-                    ->where('user_id', $merchant_id)
-                    ->whereNull('deleted_at')
+                Rule::exists(Project::class, 'id')->where('user_id', $merchant_id)->whereNull('deleted_at')
             ],
             'ads_type' =>  [
                 'required',
-                Rule::exists(Product::class, 'id')
-                    ->where('product_category_id', ProductCategory::select('id')->where('name', ProductCategory::TYPE_ADS)->first()->id)
-                    ->whereNull('deleted_at')
+                Rule::exists(Product::class, 'id')->whereNotNull('total_slots')->whereNotNull('slot_type')->whereNull('deleted_at')
             ],
             'date_from'     =>  [Rule::requiredIf(!empty($this->get('ads_type'))), 'nullable', 'date', 'date_format:Y-m-d', 'after:today'],
             'merchant'      =>  [Rule::requiredIf(Auth::user()->is_admin), 'nullable', new ExistMerchant()]

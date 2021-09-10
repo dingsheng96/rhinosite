@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Models\Country;
 use App\Models\Package;
+use App\Models\Product;
 use App\Models\ProductAttribute;
 
 class Misc

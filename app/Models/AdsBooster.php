@@ -21,7 +21,7 @@ class AdsBooster extends Model
     protected $table = 'ads_boosters';
 
     protected $fillable = [
-        'product_id', 'boostable_type', 'boostable_id', 'boosted_at'
+        'product_id', 'boost_index', 'boostable_type', 'boostable_id', 'boosted_at'
     ];
 
     protected $casts = [
@@ -125,5 +125,44 @@ class AdsBooster extends Model
         }
 
         return $color;
+    }
+
+    public function getBoostingDateRangeStatusLabelAttribute()
+    {
+        $today = today()->toDateString();
+
+        $index = 'boosting';
+
+        if ($today < $this->min_date) {
+            $index = 'upcoming';
+        } elseif ($today > $this->max_date) {
+            $index = 'expired';
+        }
+
+        $status = Status::instance()->statusLabel($index);
+
+        return '<span class="px-3 ' . $status['class'] . '">' . $status['text'] . '</span>';
+    }
+
+    public function getIsInBoostingDateRangeAttribute()
+    {
+        $today = today()->toDateString();
+
+        if ($today >= $this->min_date && $today <= $this->max_date) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getIsInUpcomingBoostingDateRangeAttribute()
+    {
+        $today = today()->toDateString();
+
+        if ($today < $this->min_date) {
+            return true;
+        }
+
+        return false;
     }
 }
