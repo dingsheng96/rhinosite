@@ -16,6 +16,7 @@ use App\Models\Comparable;
 use App\Models\Favourable;
 use App\Models\UserDetail;
 use App\Models\UserAdsQuota;
+use App\Observers\UserObserver;
 use App\Models\UserSubscription;
 use App\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\DB;
@@ -57,6 +58,14 @@ class User extends Authenticatable implements MustVerifyEmail
     const TYPE_ADMIN    = 'admin';
     const TYPE_MERCHANT = 'merchant';
     const TYPE_MEMBER   = 'member';
+
+    // Functions
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::observe(UserObserver::class);
+    }
 
     // Relationships
     public function userDetail()
@@ -229,7 +238,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getLogoAttribute()
     {
-        return $this->media()->logo()->first();
+        return $this->media->where('type', Media::TYPE_LOGO)->first();
+    }
+
+    public function getSsmAttribute()
+    {
+        return $this->media->where('type', Media::TYPE_SSM)->first();
     }
 
     public function getIsSuperAdminAttribute()

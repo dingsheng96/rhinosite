@@ -32,14 +32,14 @@ Route::group(['middleware' => ['auth:' . User::TYPE_ADMIN]], function () {
     Route::resource('verifications', 'UserVerificationController')->except(['create', 'store']);
 
     Route::post('subscriptions/{subscription}/terminate', 'SubscriptionController@terminate')->name('subscriptions.terminate');
-    Route::resource('subscriptions', 'SubscriptionController');
+    Route::resource('subscriptions', 'SubscriptionController')->only(['create', 'store']);
 
     Route::resource('projects', 'ProjectController');
     Route::resource('projects.media', 'ProjectMediaController')->only(['destroy']);
 
     Route::resource('products', 'ProductController');
     Route::resource('products.media', 'ProductMediaController');
-    Route::resource('products.attributes', 'ProductAttributeController');
+    Route::resource('products.attributes', 'ProductAttributeController')->except(['index']);
 
     Route::resource('packages', 'PackageController');
     Route::resource('packages.products', 'PackageProductController')->only(['destroy']);

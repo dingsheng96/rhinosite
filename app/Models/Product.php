@@ -23,6 +23,10 @@ class Product extends Model
     const NAME_CATEGORY_HIGHLIGHT = 'Category Highlight';
     const NAME_BANNER_ADVERTISEMENT = 'Banner Advertisement';
 
+    const SLOT_TYPE_DAILY = 'daily';
+    const SLOT_TYPE_WEEKLY = 'weekly';
+    const SLOT_TYPE_MONTHLY = 'monthly';
+
     protected $table = 'products';
 
     protected $fillable = [

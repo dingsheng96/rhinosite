@@ -16,9 +16,9 @@ class Misc
     public function adsSlotType(): array
     {
         return [
-            ProductAttribute::SLOT_TYPE_DAILY,
-            ProductAttribute::SLOT_TYPE_WEEKLY,
-            ProductAttribute::SLOT_TYPE_MONTHLY
+            Product::SLOT_TYPE_DAILY,
+            Product::SLOT_TYPE_WEEKLY,
+            Product::SLOT_TYPE_MONTHLY
         ];
     }
 

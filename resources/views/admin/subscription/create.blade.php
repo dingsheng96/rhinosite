@@ -1,4 +1,4 @@
-@extends('layouts.master', ['title' => trans_choice('modules.subscription', 1)])
+@extends('admin.layouts.master', ['title' => trans_choice('modules.subscription', 1)])
 
 @section('content')
 
@@ -15,7 +15,7 @@
                     </h3>
                 </div>
 
-                <form action="{{ route('subscriptions.store') }}" method="post" enctype="multipart/form-data" role="form">
+                <form action="{{ route('admin.subscriptions.store') }}" method="post" enctype="multipart/form-data" role="form">
                     @csrf
 
                     <div class="card-body">
@@ -40,18 +40,38 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="plan">{{ __('labels.plan') }} <span class="text-red">*</span></label>
                                     <select name="plan" id="plan" class="form-control select2 @error('plan') is-invalid @enderror">
                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.plan'))]) }} ---</option>
                                         @forelse ($plans as $plan)
-                                        <option value="{{ json_encode(['id' => $plan->id, 'class' => get_class($plan), 'trial' => $plan->trial_mode]) }}" {{ old('plan') == json_encode(['id' => $plan->id, 'class' => get_class($plan), 'trial' => $plan->trial_mode]) ? 'selected' : null }}>
-                                            {{ $plan->name }}</option>
+                                        <option value="{{ base64_encode(json_encode(['id' => $plan->id, 'class' => get_class($plan), 'trial' => $plan->trial_mode])) }}"
+                                            {{ old('plan') == base64_encode(json_encode(['id' => $plan->id, 'class' => get_class($plan), 'trial' => $plan->trial_mode])) ? 'selected' : null }}>
+                                            {{ $plan->name }}
+                                        </option>
                                         @empty
                                         @endforelse
                                     </select>
                                     @error('plan')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="activated_at">{{ __('labels.start_from') }} <span class="text-red">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" name="activated_at" id="activated_at" value="{{ old('activated_at', today()->toDateString()) }}" class="form-control date-picker @error('activated_at') is-invalid @enderror bg-white" readonly>
+                                        <div class="input-group-append">
+                                            <div class="input-group-text bg-white">
+                                                <i class="far fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @error('activated_at')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -90,15 +110,11 @@
 
                     </div>
 
-                    <div class="card-footer bg-transparent">
-                        <div class="row">
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-outline-primary btn-rounded-corner float-right">
-                                    <i class="fas fa-paper-plane"></i>
-                                    {{ __('labels.submit') }}
-                                </button>
-                            </div>
-                        </div>
+                    <div class="card-footer bg-transparent text-md-right text-center">
+                        <button type="submit" class="btn btn-outline-primary btn-rounded-corner">
+                            <i class="fas fa-paper-plane"></i>
+                            {{ __('labels.submit') }}
+                        </button>
                     </div>
 
                 </form>

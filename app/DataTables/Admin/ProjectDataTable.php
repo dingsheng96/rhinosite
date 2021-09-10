@@ -33,11 +33,11 @@ class ProjectDataTable extends DataTable
                     ],
                     'update' => [
                         'permission' => 'project.update',
-                        'route' => route('projects.edit', ['project' => $data->id]),
+                        'route' => route('admin.projects.edit', ['project' => $data->id]),
                     ],
                     'delete' => [
                         'permission' => 'project.delete',
-                        'route' => route('projects.destroy', ['project' => $data->id])
+                        'route' => route('admin.projects.destroy', ['project' => $data->id])
                     ]
                 ])->render();
             })
@@ -88,9 +88,7 @@ class ProjectDataTable extends DataTable
      */
     public function query(Project $model)
     {
-        return $model->when(Auth::user()->is_merchant, function ($query) {
-            $query->where('user_id', Auth::id());
-        })->newQuery();
+        return $model->newQuery();
     }
 
     /**
@@ -100,14 +98,12 @@ class ProjectDataTable extends DataTable
      */
     public function html()
     {
-        $order_column = Auth::user()->is_merchant ? 4 : 5;
-
         return $this->builder()
             ->setTableId('project-table')
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy($order_column, 'desc')
+            ->orderBy(4, 'desc')
             ->responsive(true)
             ->autoWidth(true)
             ->processing(false);
@@ -121,19 +117,15 @@ class ProjectDataTable extends DataTable
     protected function getColumns()
     {
         $columns = [
-            Column::computed('DT_RowIndex', '#')->width('5%'),
-            Column::make('title')->title(__('labels.title'))->width('30%'),
-            Column::make('merchant')->title(__('labels.merchant'))->width('25%'),
-            Column::make('status')->title(__('labels.status'))->width('15%'),
-            Column::make('created_at')->title(__('labels.created_at'))->width('15%'),
-            Column::computed('action', __('labels.action'))->width('10%')
+            Column::computed('DT_RowIndex', '#'),
+            Column::make('title')->title(__('labels.title')),
+            Column::make('merchant')->title(__('labels.merchant')),
+            Column::make('status')->title(__('labels.status')),
+            Column::make('created_at')->title(__('labels.created_at')),
+            Column::computed('action', __('labels.action'))
                 ->exportable(false)
                 ->printable(false),
         ];
-
-        if (Auth::user()->is_merchant) {
-            $columns = Arr::except($columns, 2);
-        }
 
         return $columns;
     }

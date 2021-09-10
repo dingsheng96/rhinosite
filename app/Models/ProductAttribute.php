@@ -23,10 +23,6 @@ class ProductAttribute extends Model
     const STATUS_ACTIVE = 'active';
     const STATUS_INACTIVE = 'inactive';
 
-    const SLOT_TYPE_DAILY = 'daily';
-    const SLOT_TYPE_WEEKLY = 'weekly';
-    const SLOT_TYPE_MONTHLY = 'monthly';
-
     const VALIDITY_TYPE_DAY = 'day';
     const VALIDITY_TYPE_MONTH = 'month';
     const VALIDITY_TYPE_YEAR = 'year';

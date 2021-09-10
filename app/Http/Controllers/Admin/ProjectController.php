@@ -12,11 +12,11 @@ use App\Helpers\Response;
 use App\Models\Permission;
 use App\Models\ProductCategory;
 use Illuminate\Support\Facades\DB;
-use App\DataTables\Admin\ProjectDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\ProjectRequest;
 use App\Support\Facades\ProjectFacade;
+use App\DataTables\Admin\ProjectDataTable;
+use App\Http\Requests\Admin\ProjectRequest;
 use App\DataTables\Admin\AdsBoostingDataTable;
 
 class ProjectController extends Controller
@@ -36,7 +36,7 @@ class ProjectController extends Controller
      */
     public function index(ProjectDataTable $dataTable)
     {
-        return $dataTable->render('projects.index');
+        return $dataTable->render('admin.projects.index');
     }
 
     /**
@@ -51,16 +51,7 @@ class ProjectController extends Controller
         $default_currency   =   Currency::defaultCountryCurrency()->first();
         $ads_boosters       =   [];
 
-        if (Auth::user()->is_merchant) {
-            $ads_boosters   =   Product::with(['userAdsQuotas'])
-                ->filterCategory(ProductCategory::TYPE_ADS)
-                ->active()
-                ->whereHas('userAdsQuotas', function ($query) {
-                    $query->where('user_id', Auth::id());
-                })->orderBy('name')->get();
-        }
-
-        return view('projects.create', compact('max_files', 'statuses', 'default_currency', 'ads_boosters'));
+        return view('admin.projects.create', compact('max_files', 'statuses', 'default_currency', 'ads_boosters'));
     }
 
     /**
@@ -87,35 +78,39 @@ class ProjectController extends Controller
             $message =  Message::instance()->format($action, $module, 'success');
             $status  =  'success';
 
-            activity()->useLog('web')
+            activity()->useLog('admin:project')
                 ->causedBy(Auth::user())
                 ->performedOn($project)
                 ->withProperties($request->all())
                 ->log($message);
 
-            return Response::instance()
+            return $request->ajax()
+                ? Response::instance()
                 ->withStatusCode('modules.project', 'actions.' . $action . $status)
                 ->withStatus($status)
                 ->withMessage($message, true)
                 ->withData([
-                    'redirect_to' => route('projects.index')
+                    'redirect_to' => route('admin.projects.index')
                 ])
-                ->sendJson();
+                ->sendJson()
+                : redirect()->route('admin.projects.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:project')
                 ->causedBy(Auth::user())
                 ->performedOn(new Project())
                 ->withProperties($request->all())
                 ->log($e->getMessage());
 
-            return Response::instance()
+            return $request->ajax()
+                ? Response::instance()
                 ->withStatusCode('modules.project', 'actions.' . $action . $status)
                 ->withStatus($status)
                 ->withMessage($message, true)
-                ->sendJson();
+                ->sendJson()
+                : redirect()->back()->with($status, $message);
         }
     }
 
@@ -139,7 +134,7 @@ class ProjectController extends Controller
     public function edit(Project $project, AdsBoostingDataTable $dataTable)
     {
         $project->load([
-            'media',
+            'media', 'address',
             'prices' => function ($query) {
                 $query->defaultPrice();
             }
@@ -150,19 +145,13 @@ class ProjectController extends Controller
         $max_files          =   Media::MAX_IMAGE_PROJECT - $media->count();
         $default_price      =   $project->prices->first();
         $statuses           =   Status::instance()->projectStatus();
-        $ads_boosters       =   Product::with(['userAdsQuotas'])
-            ->filterCategory(ProductCategory::TYPE_ADS)
-            ->active()
+        $ads_boosters       =   Product::with(['userAdsQuotas'])->active()
+            ->whereNotNull('slot_type')->whereNotNull('total_slots')
             ->whereHas('userAdsQuotas', function ($query) use ($project) {
-                $query->when(Auth::user()->is_merchant, function ($query) {
-                    $query->where('user_id', Auth::id());
-                })->when(Auth::user()->is_admin, function ($query) use ($project) {
-                    $query->where('user_id', $project->user_id);
-                });
+                $query->where('user_id', $project->user_id)->where('quantity', '>', 0);
             })->orderBy('name')->get();
 
-        return $dataTable->with(['project' => $project])
-            ->render('projects.edit', compact('project', 'max_files', 'media', 'default_price', 'statuses', 'ads_boosters'));
+        return $dataTable->with(compact('project'))->render('admin.projects.edit', compact('project', 'max_files', 'media', 'default_price', 'statuses', 'ads_boosters'));
     }
 
     /**
@@ -178,8 +167,8 @@ class ProjectController extends Controller
 
         $action     =   Permission::ACTION_UPDATE;
         $module     =   strtolower(trans_choice('modules.project', 1));
-        $message    =   Message::instance()->format($action, $module);
         $status     =   'fail';
+        $message    =   Message::instance()->format($action, $module, $status);
 
         try {
 
@@ -190,7 +179,7 @@ class ProjectController extends Controller
             $message =  Message::instance()->format($action, $module, 'success');
             $status  =  'success';
 
-            activity()->useLog('web')
+            activity()->useLog('admin:project')
                 ->causedBy(Auth::user())
                 ->performedOn($project)
                 ->withProperties($request->all())
@@ -202,25 +191,27 @@ class ProjectController extends Controller
                 ->withStatus($status)
                 ->withMessage($message, true)
                 ->withData([
-                    'redirect_to' => route('projects.index')
+                    'redirect_to' => route('admin.projects.index')
                 ])
                 ->sendJson()
-                : redirect()->route('projects.index')->withSuccess($message);
+                : redirect()->route('admin.projects.index')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:project')
                 ->causedBy(Auth::user())
                 ->performedOn($project)
                 ->withProperties($request->all())
                 ->log($e->getMessage());
 
-            return Response::instance()
+            return ($request->ajax())
+                ? Response::instance()
                 ->withStatusCode('modules.project', 'actions.' . $action . $status)
                 ->withStatus($status)
                 ->withMessage($message, true)
-                ->sendJson();
+                ->sendJson()
+                : redirect()->back()->with($status, $message);
         }
     }
 
@@ -239,12 +230,20 @@ class ProjectController extends Controller
 
         try {
 
+            $project->loadCount([
+                'adsBoosters' => function ($query) {
+                    $query->whereDate('boosted_at', '>=', today());
+                }
+            ]);
+
+            throw_if($project->ads_boosters_count > 0, new \Exception('This project has upcoming boosting schedule.'));
+
             $project->delete();
 
             $message = Message::instance()->format($action, $module, 'success');
             $status = 'success';
 
-            activity()->useLog('web')
+            activity()->useLog('admin:project')
                 ->causedBy(Auth::user())
                 ->performedOn($project)
                 ->log($message);
@@ -252,10 +251,12 @@ class ProjectController extends Controller
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:project')
                 ->causedBy(Auth::user())
                 ->performedOn($project)
                 ->log($e->getMessage());
+
+            $message = $e->getMessage();
         }
 
         return Response::instance()
@@ -263,7 +264,7 @@ class ProjectController extends Controller
             ->withStatus($status)
             ->withMessage($message, true)
             ->withData([
-                'redirect_to' => route('projects.index')
+                'redirect_to' => route('admin.projects.index')
             ])
             ->sendJson();
     }

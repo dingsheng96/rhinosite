@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\City;
 use App\Models\Address;
 use App\Models\Country;
+use App\Observers\CountryStateObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -17,6 +18,14 @@ class CountryState extends Model
     protected $fillable = [
         'name', 'country_id'
     ];
+
+    // Functions
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::observe(CountryStateObserver::class);
+    }
 
     // Relationships
     public function cities()

@@ -20,48 +20,12 @@ use App\Http\Controllers\Controller;
 use App\Support\Facades\OrderFacade;
 use Illuminate\Support\Facades\Auth;
 use App\Support\Facades\MerchantFacade;
-use App\Http\Requests\SubscriptionRequest;
 use App\Support\Facades\TransactionFacade;
 use App\Support\Facades\UserSubscriptionFacade;
+use App\Http\Requests\Admin\SubscriptionRequest;
 
 class SubscriptionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $user = Auth::user();
-
-        abort_if(!$user->is_merchant && !$user->is_admin, 404);
-
-        if ($user->is_merchant) {
-
-            $user->load([
-                'userSubscriptions' => function ($query) {
-                    $query->active();
-                }
-            ]);
-
-            $subscription = $user->userSubscriptions->first();
-
-            $plans = ProductAttribute::with([
-                'prices' => function ($query) {
-                    $query->defaultPrice();
-                }
-            ])->published()->trialMode(false)
-                ->whereHas('product', function ($query) {
-                    $query->filterCategory(ProductCategory::TYPE_SUBSCRIPTION);
-                })->get();
-
-            return view('subscription.index', compact('subscription', 'plans', 'user'));
-        }
-
-        return $this->create();
-    }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -95,7 +59,7 @@ class SubscriptionController extends Controller
 
         $payment_methods = PaymentMethod::where('system_default', false)->orderBy('name')->get();
 
-        return view('subscription.create', compact('plans', 'merchants', 'payment_methods'));
+        return view('admin.subscription.create', compact('plans', 'merchants', 'payment_methods'));
     }
 
     /**
@@ -116,52 +80,47 @@ class SubscriptionController extends Controller
 
         try {
 
-            $item   =   json_decode($request->get('plan'));
-            $trial  =   false;
-            $transaction = null;
+            $item           =   json_decode(base64_decode($request->get('plan')));
+            $trial          =   false;
+            $transaction    =   null;
 
             // get item model
             switch ($item->class) {
                 case ProductAttribute::class:
                     $item_model =   ProductAttribute::findOrFail($item->id);
-                    $trial      =   $item_model->trial_mode;
+                    $trial      =   $item->trial ?? false;
                     break;
                 case Package::class:
                     $item_model =   Package::findOrFaiL($item->id);
+                    $trial      =   $item->trial ?? false;
                     break;
             }
 
-            CartFacade::setBuyer($user)->addToCart($item_model)->getModel();
+            CartFacade::setBuyer($user)->addToCart($item_model);
 
-            if (empty($request->get('merchant')) && Auth::user()->is_merchant) {
-                DB::commit();
-                return redirect()->route('checkout.index');
-            }
-
-            if (!$trial && Auth::user()->is_admin) {
+            if (!$trial) {
                 // store order
                 $order = OrderFacade::setRequest($request)
-                    ->setBuyer($user)
-                    ->createOrder()
+                    ->setBuyer($user)->createOrder()
                     ->setOrderStatus(Order::STATUS_PAID)
                     ->getModel();
 
                 // create new transaction from order
                 $transaction = TransactionFacade::setParent($order)
-                    ->setRequest($request)
-                    ->newTransaction()
+                    ->setRequest($request)->newTransaction()
                     ->setTransactionStatus(Transaction::STATUS_SUCCESS)
                     ->getModel();
             }
 
             $merchant  = MerchantFacade::setModel($user)
+                ->setRequest($request)
                 ->storeSubscription($request->get('plan'), $transaction)
                 ->getModel();
 
             $status  =  'success';
             $message =  Message::instance()->format($action, $module, $status);
 
-            activity()->useLog('web')
+            activity()->useLog('admin:subscription')
                 ->causedBy(Auth::user())
                 ->performedOn($merchant)
                 ->withProperties($request->all())
@@ -169,16 +128,12 @@ class SubscriptionController extends Controller
 
             DB::commit();
 
-            return redirect()->route('subscriptions.create')->withSuccess($message);
+            return redirect()->route('admin.subscriptions.create')->withSuccess($message);
         } catch (\Error | \Exception $e) {
 
             DB::rollBack();
 
-            if (!$request->has('merchant') || empty($request->get('merchant'))) {
-                return redirect()->back()->with('fail', $e->getMessage());
-            }
-
-            activity()->useLog('web')
+            activity()->useLog('admin:subscription')
                 ->causedBy(Auth::user())
                 ->performedOn($user)
                 ->withProperties($request->all())
@@ -186,51 +141,6 @@ class SubscriptionController extends Controller
 
             return redirect()->back()->withErrors($message)->withInput();
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, UserSubscription $subscription)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 
     /**
@@ -260,7 +170,7 @@ class SubscriptionController extends Controller
                 $message =  'Subscription terminated successfully!';
             }
 
-            activity()->useLog('web')
+            activity()->useLog('admin:subscription')
                 ->causedBy(Auth::user())
                 ->performedOn($subscription)
                 ->withProperties($request->all())
@@ -271,7 +181,7 @@ class SubscriptionController extends Controller
 
             DB::rollBack();
 
-            activity()->useLog('web')
+            activity()->useLog('admin:subscription')
                 ->causedBy(Auth::user())
                 ->performedOn($subscription)
                 ->withProperties($request->all())

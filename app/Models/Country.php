@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\City;
 use App\Models\Currency;
 use App\Models\CountryState;
+use App\Observers\CountryObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -17,6 +18,14 @@ class Country extends Model
     protected $fillable = [
         'name', 'code', 'set_default', 'currency_id', 'dial_code'
     ];
+
+    // Functions
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::observe(CountryObserver::class);
+    }
 
     // Relationships
     public function currency()

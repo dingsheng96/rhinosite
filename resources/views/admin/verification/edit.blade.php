@@ -140,7 +140,7 @@
                                         <option value="0" disabled selected>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.free_trial_plan'))]) }} ---</option>
                                         @foreach ($plans as $plan)
                                         <option value="{{ base64_encode(json_encode(['id' => $plan->id, 'class' => get_class($plan), 'trial' => $plan->trial_mode])) }}"
-                                            {{ base64_decode(old('plan')) == json_encode(['id' => $plan->id, 'class' => get_class($plan), 'trial' => $plan->trial_mode]) ? 'selected' : null }}>
+                                            {{ old('plan') == base64_encode(json_encode(['id' => $plan->id, 'class' => get_class($plan), 'trial' => $plan->trial_mode])) ? 'selected' : null }}>
                                             {{ $plan->name }}
                                         </option>
                                         @endforeach

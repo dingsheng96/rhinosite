@@ -84,64 +84,34 @@ class DataController extends Controller
 
         try {
 
-            $ads->load([
-                'productAttributes' => function ($query) {
-                    $query->orderBy('slot');
-                }
-            ]);
+            $ads->load(['productAttributes', 'adsBoosters']);
 
             throw_if(
                 $ads->status == Product::STATUS_INACTIVE,
                 new \Exception('This ads is not available')
             );
 
-            // get attribute
-            $attribute = $ads->productAttributes
-                ->map(function ($item) {
-                    return ['slot' => $item->slot, 'slot_type' => $item->slot_type];
-                })
-                ->unique()->first();
-
-            // get all unavailable dates (full slots, same project on same date)
-            $boost_ads_list = AdsBooster::selectRaw('DATE(boosted_at) as boosted_date, COUNT(boosted_at) as day_count')
-                ->whereDate('boosted_at', '>',  today())
+            // get all unavailable dates (included full slots and the same date of the project boosting with same ads)
+            $boost_ads_list = AdsBooster::selectRaw('DATE(boosted_at) as boosted_date, COUNT(boosted_at) as used_slots_count')
                 ->where('product_id', $ads->id)
-                ->groupBy(DB::raw('DATE(boosted_at)'))
-                ->having('day_count', '=', $attribute['slot'])
-                ->get();
+                ->whereDate('boosted_at', '>',  today())
+                ->groupBy('boosted_date')
+                ->orderBy('boosted_date');
+
+            $filtered_boost_ads_list = (clone $boost_ads_list)->having('used_slots_count', '>=', $ads->total_slots)->get();
 
             if (!empty($request->get('project'))) {
-
-                $project_taken_slots = AdsBooster::selectRaw('DATE(boosted_at) as boosted_date')
-                    ->whereDate('boosted_at', '>',  today())
-                    ->where('product_id', $ads->id)->whereHasMorph('boostable', [Project::class], function (Builder $query) use ($request) {
-                        $query->where('id', $request->get('project'));
-                    })->get();
-
-                foreach ($project_taken_slots as $taken_slot) {
-                    $boost_ads_list->push($taken_slot);
-                }
+                $filtered_boost_ads_list = (clone $boost_ads_list)->whereHasMorph('boostable', [Project::class], function (Builder $query) use ($request) {
+                    $query->where('id', $request->get('project'));
+                })->get()->each(function ($taken_slot) use ($filtered_boost_ads_list) {
+                    $filtered_boost_ads_list->push($taken_slot);
+                });
             }
 
-            switch ($attribute['slot_type']) {
-                case ProductAttribute::SLOT_TYPE_DAILY:
-                    $difference = 1;
-                    break;
-                case ProductAttribute::SLOT_TYPE_WEEKLY:
-                    $difference = 7;
-                    break;
-                case ProductAttribute::SLOT_TYPE_MONTHLY:
-                    $difference = 30;
-                    break;
-                default:
-                    $difference = 1;
-                    break;
-            }
-
-            foreach ($boost_ads_list as $list) {
+            foreach ($filtered_boost_ads_list as $list) {
 
                 if (count($data) < 1) {
-                    $data[] = $list->boosted_date;
+                    $data[] = today()->toDateString();
                     continue;
                 }
 
@@ -149,7 +119,19 @@ class DataController extends Controller
                 $listed_date    =   Carbon::createFromFormat('Y-m-d', $list->boosted_date);
                 $periods        =   [];
 
-                if ($end_date->diffInDays($listed_date) <= $difference) {
+                if ($ads->slot_type == Product::SLOT_TYPE_DAILY) {
+
+                    $difference = $end_date->diffInDays($listed_date);
+                } elseif ($ads->slot_type == Product::SLOT_TYPE_WEEKLY) {
+
+                    $difference = $end_date->diffInWeeks($listed_date);
+                } elseif ($ads->slot_type == Product::SLOT_TYPE_MONTHLY) {
+
+                    $difference = $end_date->diffInMonths($listed_date);
+                }
+
+                if ($difference <= 1) { // check the difference of the boosting date and the end date (if <= 1, get the difference period)
+
                     $period = $end_date->daysUntil($listed_date)->toArray();
 
                     foreach ($period as $date) {

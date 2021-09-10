@@ -16,6 +16,7 @@ use App\Models\Comparable;
 use App\Models\Favourable;
 use App\Models\Translation;
 use App\Models\CountryState;
+use App\Observers\ProjectObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -33,6 +34,14 @@ class Project extends Model
         'title', 'description', 'user_id', 'services', 'materials',
         'unit_id', 'unit_value', 'published'
     ];
+
+    // Functions
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::observe(ProjectObserver::class);
+    }
 
     // Relationships
     public function address()
