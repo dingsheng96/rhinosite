@@ -24,7 +24,7 @@ class AdminDataTable extends DataTable
             ->eloquent($query)
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
-                return view('components.action', [
+                return view('admin.components.btn_action', [
                     'no_action' => $this->no_action ?: $data->id == Auth::id(),
                     'view' => [
                         'permission' => 'admin.read',

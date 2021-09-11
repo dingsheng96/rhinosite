@@ -47,7 +47,7 @@ class AdsDataTable extends DataTable
                     ]);
                 }
 
-                return view('components.action', $options)->render();
+                return view('admin.components.btn_action', $options)->render();
             })
             ->editColumn('title', function ($data) {
 

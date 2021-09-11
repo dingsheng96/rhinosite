@@ -46,7 +46,7 @@ class UserVerificationDataTable extends DataTable
                     $options = Arr::only($options, ['delete']);
                 }
 
-                return view('components.action', $options)->render();
+                return view('admin.components.btn_action', $options)->render();
             })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
