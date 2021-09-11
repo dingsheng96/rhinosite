@@ -23,7 +23,7 @@
                     With the advance technology in today’s world, listing with Rhinosite enables you to
                     increase your exposure and presence online.
                 </h2>
-                <a href="{{ route('register', ['role' => 'merchant']) }}" class="btn btn-round">{{ __('app.partner_btn_application') }}</a>
+                <a href="{{ route('merchant.register') }}" class="btn btn-round">{{ __('app.partner_btn_application') }}</a>
             </div>
         </div>
     </div>
@@ -122,7 +122,7 @@
         <img src="{{ asset('storage/assets/joinus/step-1.png') }}" class="step-img">
         <h3 class="partner-steps">Step 1</h3>
         <p class="paragraph">
-            Fill in an <a class="txtorange" href="{{ route('register', ['role' => 'merchant']) }}">Electronic Application Form</a> and verify your email address.
+            Fill in an <a class="txtorange" href="{{ route('merchant.register', ['role' => 'merchant']) }}">Electronic Application Form</a> and verify your email address.
         </p>
     </div>
     <div class="col-12 col-lg-6 col-xl">
@@ -291,7 +291,7 @@
                     <div class="card-body">
                         Contractors are able to bump up their company's listing to the first top 3 listing in first page of the Listing Category.
                         There are three (3) Category Bump slots available each week, so book an secure your slots in advance.
-                        <a href="{{ route('register', ['role' => 'merchant']) }}"> Click here</a>
+                        <a href="{{ route('merchant.register') }}"> Click here</a>
                     </div>
                 </div>
             </div>
@@ -309,7 +309,7 @@
                         In addition to the above, Category highlight allows contractors to move up their company listing onto the first page of the Listing Category.
                         However, do keep in mind that these Category Highlights are arranged in random sequence (unlike the Category Bump). Simlarly, there are three (3) Category Highlights slots available each week,
                         so book and secure your slots as well!
-                        <a href="{{ route('register', ['role' => 'merchant']) }}"> Click here</a>
+                        <a href="{{ route('merchant.register') }}"> Click here</a>
                     </div>
                 </div>
             </div>
@@ -326,7 +326,7 @@
                     <div class="card-body">
                         Banner Advertisement allows Contractors to advertise their company and services on Rhinosite to increase their visibility.
                         There are eight (8) slots available each week, so book and secure your slots as soon as possible!
-                        <a href="{{ route('register', ['role' => 'merchant']) }}"> Click here</a>
+                        <a href="{{ route('merchant.register') }}"> Click here</a>
                     </div>
                 </div>
             </div>

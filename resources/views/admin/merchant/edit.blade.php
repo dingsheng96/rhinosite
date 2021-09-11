@@ -428,7 +428,6 @@
                                     <div class="tab-pane text-left fade show" id="vert-tabs-subscription" role="tabpanel" aria-labelledby="vert-tabs-subscription-tab">
 
                                         @if (!empty($subscription))
-
                                         <div class="form-group row">
                                             <label for="current_plan" class="col-form-label col-sm-3">{{ __('labels.current_plan') }}</label>
                                             <div class="col-sm-9">
@@ -453,7 +452,13 @@
                                         <div class="form-group row">
                                             <label for="terminated_at" class="col-form-label col-sm-3">{{ trans_choice('labels.terminated_at', 1) }}</label>
                                             <div class="col-sm-9">
-                                                <span id="terminated_at" class="form-control-plaintext">{{ $subscription->terminated_at ?? '-' }}</span>
+                                                @if ($subscription->terminated_at)
+                                                <span id="terminated_at" class="form-control-plaintext">{{ $subscription->terminated_at }}</span>
+                                                @else
+                                                <span id="terminated_at" class="form-control-plaintext">
+                                                    <a href="#" onclick="event.preventDefault(); document.getElementById('subscriptionTerminateForm').submit()">{{ __('labels.click_here_to_terminate') }}</a>
+                                                </span>
+                                                @endif
                                             </div>
                                         </div>
 
@@ -505,6 +510,11 @@
         </div>
     </div>
 </div>
+
+
+<form action="{{ route('admin.subscriptions.terminate', ['subscription' => $subscription->id]) }}" method="post" id="subscriptionTerminateForm">
+    @csrf
+</form>
 
 @endsection
 

@@ -1,4 +1,4 @@
-@extends('layouts.master', ['title' => __('modules.dashboard'), 'guest_view' => true, 'body' => 'enduser'])
+@extends('layouts.master', ['title' => __('modules.account'), 'guest_view' => true, 'body' => 'enduser'])
 
 @section('content')
 
@@ -23,10 +23,10 @@
             </li>
             <div class="collapse" id="userdirectory">
                 <li class="{{ Nav::hasSegment('dashboard', 1, 'active') }}">
-                    <a href="{{ route('dashboard') }}">{{ __('app.user_dashboard_sidebar_profile') }}</a>
+                    <a href="{{ route('app.dashboard') }}">{{ __('app.user_dashboard_sidebar_profile') }}</a>
                 </li>
                 <li class="{{ Nav::hasSegment('account', 1, 'active') }}">
-                    <a href="{{ route('admin.account.index') }}">{{ __('app.user_dashboard_sidebar_profile') }}</a>
+                    <a href="{{ route('app.account.index') }}">{{ __('app.user_dashboard_sidebar_profile') }}</a>
                 </li>
                 <li class="{{ Nav::hasSegment('wishlist', 1, 'active') }}">
                     <a href="{{ route('app.wishlist.index') }}">{{ __('app.user_dashboard_sidebar_wishlist') }}</a>
@@ -43,10 +43,10 @@
                 <ul class="account">
                     <li class="title">{{ __('app.user_dashboard_sidebar_title') }}</li>
                     <li class="{{ Nav::hasSegment('dashboard', 1, 'active') }}">
-                        <a href="{{ route('dashboard') }}">{{ __('app.user_dashboard_sidebar_dashboard') }}</a>
+                        <a href="{{ route('app.dashboard') }}">{{ __('app.user_dashboard_sidebar_dashboard') }}</a>
                     </li>
                     <li class="{{ Nav::hasSegment('account', 1, 'active') }}">
-                        <a href="{{ route('admin.account.index') }}">{{ __('app.user_dashboard_sidebar_profile') }}</a>
+                        <a href="{{ route('app.account.index') }}">{{ __('app.user_dashboard_sidebar_profile') }}</a>
                     </li>
                     <li class="{{ Nav::hasSegment('wishlist', 1, 'active') }}">
                         <a href="{{ route('app.wishlist.index') }}">{{ __('app.user_dashboard_sidebar_wishlist') }}</a>
@@ -71,7 +71,7 @@
                     @endif
 
                     <!-- forms start here -->
-                    <form action="{{ route('account.store') }}" method="POST" role="form" enctype="multipart/form-data">
+                    <form action="{{ route('app.account.store') }}" method="POST" role="form" enctype="multipart/form-data">
                         @csrf
 
                         <div class="input-group mb-3">
@@ -120,7 +120,7 @@
                         <hr>
                         <div class="input-group mb-3">
                             <label class="font-medium" for="address_1">{{ __('labels.address_1') }} <span class="text-danger">*</span></label>
-                            <input type="text" name="address_1" id="address_1" value="{{ old('address_1', $address->address_1) }}" class="@error('address_1') is-invalid @enderror">
+                            <input type="text" name="address_1" id="address_1" value="{{ old('address_1', $user->address->address_1) }}" class="@error('address_1') is-invalid @enderror">
                             @error('address_1')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -130,7 +130,7 @@
 
                         <div class="input-group mb-3">
                             <label class="font-medium" for="address_2">{{ __('labels.address_2') }} <span class="text-danger">*</span></label>
-                            <input type="text" name="address_2" id="address_2" value="{{ old('address_2', $address->address_2) }}" class="@error('address_2') is-invalid @enderror">
+                            <input type="text" name="address_2" id="address_2" value="{{ old('address_2', $user->address->address_2) }}" class="@error('address_2') is-invalid @enderror">
                             @error('address_2')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -142,7 +142,7 @@
                             <div class="col-12 col-md-6">
                                 <div class="input-group mb-3">
                                     <label class="font-medium" for="postcode">{{ __('labels.postcode') }} <span class="text-danger">*</span></label>
-                                    <input type="text" name="postcode" id="postcode" value="{{ old('postcode', $address->postcode) }}" class="@error('postcode') is-invalid @enderror">
+                                    <input type="text" name="postcode" id="postcode" value="{{ old('postcode', $user->address->postcode) }}" class="@error('postcode') is-invalid @enderror">
                                     @error('postcode')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -156,7 +156,7 @@
                                     <select name="country" id="country" class="@error('country') is-invalid @enderror country-state-filter">
                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.country', 1))]) }} ---</option>
                                         @foreach ($countries as $country)
-                                        <option value="{{ $country->id }}" {{ (old('country', $address->city->country->id) == $country->id || $country->set_default) ? 'selected' : null }}>{{ $country->name }}</option>
+                                        <option value="{{ $country->id }}" {{ (old('country', $user->address->city->country->id) == $country->id || $country->set_default) ? 'selected' : null }}>{{ $country->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('country')
@@ -172,7 +172,7 @@
                             <div class="col-12 col-md-6">
                                 <div class="input-group mb-3">
                                     <label class="font-medium" for="country_state">{{ trans_choice('labels.country_state', 1) }} <span class="text-danger">*</span></label>
-                                    <select name="country_state" id="country_state" class="@error('country_state') is-invalid @enderror country-state-dropdown city-filter" data-selected="{{ old('country_state', $address->countryState->id) }}"
+                                    <select name="country_state" id="country_state" class="@error('country_state') is-invalid @enderror country-state-dropdown city-filter" data-selected="{{ old('country_state', $user->address->countryState->id) }}"
                                         data-country-state-route="{{ route('data.countries.country-states', ['__REPLACE__']) }}">
                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.country_state', 1))]) }} ---</option>
                                     </select>
@@ -186,7 +186,7 @@
                             <div class="col-12 col-md-6">
                                 <div class="input-group mb-3">
                                     <label class="font-medium" for="city">{{ trans_choice('labels.city', 1) }} <span class="text-danger">*</span></label>
-                                    <select name="city" id="city" class="@error('city') is-invalid @enderror city-dropdown" data-selected="{{ old('city', $address->city->id) }}" data-city-route="{{ route('data.countries.country-states.cities', ['__FIRST_REPLACE__', '__SECOND_REPLACE__']) }}">
+                                    <select name="city" id="city" class="@error('city') is-invalid @enderror city-dropdown" data-selected="{{ old('city', $user->address->city->id) }}" data-city-route="{{ route('data.countries.country-states.cities', ['__FIRST_REPLACE__', '__SECOND_REPLACE__']) }}">
                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.city', 1))]) }} ---</option>
                                     </select>
                                     @error('city')

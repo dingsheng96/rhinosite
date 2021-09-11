@@ -10,7 +10,7 @@ class ViewServiceProvider extends ServiceProvider
         \App\Http\View\Composers\CountryComposer::class => [
             'admin.projects.*', 'admin.merchant.*', 'admin.member.*',
             'admin.verification.*', 'merchant.auth.register', 'merchant.account',
-            'checkout.recurring', 'merchant.account',
+            'checkout.recurring', 'merchant.account', 'auth.*', 'member.*'
         ],
         \App\Http\View\Composers\UnitComposer::class => [
             'admin.projects.*', 'merchant.projects.*'

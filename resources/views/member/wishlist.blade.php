@@ -23,10 +23,10 @@
             </li>
             <div class="collapse" id="userdirectory">
                 <li class="{{ Nav::hasSegment('dashboard', 1, 'active') }}">
-                    <a href="{{ route('dashboard') }}">{{ __('app.user_dashboard_sidebar_profile') }}</a>
+                    <a href="{{ route('app.dashboard') }}">{{ __('app.user_dashboard_sidebar_profile') }}</a>
                 </li>
                 <li class="{{ Nav::hasSegment('account', 1, 'active') }}">
-                    <a href="{{ route('admin.account.index') }}">{{ __('app.user_dashboard_sidebar_profile') }}</a>
+                    <a href="{{ route('app.account.index') }}">{{ __('app.user_dashboard_sidebar_profile') }}</a>
                 </li>
                 <li class="{{ Nav::hasSegment('wishlist', 1, 'active') }}">
                     <a href="{{ route('app.wishlist.index') }}">{{ __('app.user_dashboard_sidebar_wishlist') }}</a>
@@ -43,10 +43,10 @@
                 <ul class="account">
                     <li class="title">{{ __('app.user_dashboard_sidebar_title') }}</li>
                     <li class="{{ Nav::hasSegment('dashboard', 1, 'active') }}">
-                        <a href="{{ route('dashboard') }}">{{ __('app.user_dashboard_sidebar_dashboard') }}</a>
+                        <a href="{{ route('app.dashboard') }}">{{ __('app.user_dashboard_sidebar_dashboard') }}</a>
                     </li>
                     <li class="{{ Nav::hasSegment('account', 1, 'active') }}">
-                        <a href="{{ route('admin.account.index') }}">{{ __('app.user_dashboard_sidebar_profile') }}</a>
+                        <a href="{{ route('app.account.index') }}">{{ __('app.user_dashboard_sidebar_profile') }}</a>
                     </li>
                     <li class="{{ Nav::hasSegment('wishlist', 1, 'active') }}">
                         <a href="{{ route('app.wishlist.index') }}">{{ __('app.user_dashboard_sidebar_wishlist') }}</a>
@@ -54,47 +54,13 @@
                 </ul>
             </div>
             <div class="content">
-                <div id="user-credential">
-                    <div class="row">
-                        <div class="col-12">
-                            <h2>{{ __('modules.dashboard') }}</h2>
-                        </div>
-                    </div>
-                    <div class="row align-items-top mb-5 pb-4 border-bottom">
-                        <div class="col-md-3 col-xl-2">
-                            <img src="{{ $user->logo->full_file_path ?? $default_preview }}" class="user-img rounded-circle img-thumbnail">
-                        </div>
-                        <div class="col-md-9 col-xl-10">
-                            <div class="row my-3 my-sm-0">
-                                <div class="col-sm-4 col-lg-3">
-                                    <p>{{ __('labels.name') }}:
-                                </div>
-                                <div class="col-sm-8 col-lg-9">
-                                    <p>{{ $user->name }}</p>
-                                </div>
-                            </div>
-                            <div class="row mb-3 mb-sm-0">
-                                <div class="col-sm-4 col-lg-3">
-                                    <p>{{ __('labels.email') }}:</p>
-                                </div>
-                                <div class="col-sm-8 col-lg-9">
-                                    <p>{{ $user->email }}</p>
-                                </div>
-                            </div>
-                            <div class="row mb-3 mb-sm-0">
-                                <div class="col-sm-4 col-lg-3">
-                                    <p>{{ __('labels.contact_no') }}:</p>
-                                </div>
-                                <div class="col-sm-8 col-lg-9">{{ $user->formatted_phone_number }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <div id="user-profile">
-                    <div class="mb-5">
-                        <h3 class="d-inline">{{ __('app.user_dashboard_wishlist') }}</h3>
-                        <a href="{{ route('app.wishlist.index') }}" class="float-md-right">{{ __('app.btn_view_more') }} &raquo;</a>
+
+                    <div class="row align-items-end mt-md-4 mb-4">
+                        <div class="col-md-8">
+                            <h3>{{ __('app.user_dashboard_wishlist') }}</h3>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -105,7 +71,7 @@
                                     <div class="merchant-card {{ $project->has_active_highlight ? 'highlight' : null }}">
                                         <a href="{{ route('app.project.show', ['project' => $project->id]) }}">
                                             <div class="merchant-image-container">
-                                                <img src="{{ $project->media->first()->full_file_path }}" alt="{{ $project->user->name }}" class="merchant-image">
+                                                <img src="{{ $project->media()->first()->full_file_path }}" alt="{{ $project->media()->first()->filename }}" class="merchant-image">
                                             </div>
                                             <div class="merchant-body">
                                                 @if ($project->has_active_highlight)
@@ -120,20 +86,34 @@
                                             </div>
                                             <div class="merchant-footer">
                                                 {{-- <span class="merchant-footer-left">{{ __('app.price_from') . ' ' .$project->price_without_unit }}</span> --}}
-                                                <span class="merchant-footer-right">
-                                                    <i class="fas fa-map-marker-alt text-danger mr-1"></i> {{ $project->location }}
-                                                </span>
+                                                <span class="merchant-footer-right"><i class="fas fa-map-marker-alt text-danger mr-1"></i> {{ $project->location }}</span>
                                             </div>
                                         </a>
+
+                                        @if (!$user->favouriteProjects->contains($project->id))
+                                        <button class="btn btn-orange w-100 btn-custom-wishlist" data-wishlist="{{ route('app.wishlist.store', ['refresh_page' => 1]) }}" data-project="{{ $project->id }}"
+                                            data-btn-text="{{ __('app.project_details_btn_remove_wishlist') }}">{{ __('app.project_details_btn_add_wishlist') }}</button>
+                                        @else
+                                        <button class="btn btn-orange w-100 btn-custom-wishlist bg-danger" data-wishlist="{{ route('app.wishlist.store', ['refresh_page' => 1]) }}" data-project="{{ $project->id }}"
+                                            data-btn-text="{{ __('app.project_details_btn_add_wishlist') }}">{{ __('app.project_details_btn_remove_wishlist') }}</button>
+                                        @endif
                                     </div>
                                 </div>
                                 @empty
-                                <div class="col-12 d-inline-flex justify-content-center">{{ __('messages.wishlist_empty') }}</div>
+                                <div class="col-12 d-flex justify-content-center">
+                                    {{ __('messages.wishlist_empty') }}
+                                </div>
                                 <div class="col-12 d-flex justify-content-center my-5">
                                     <a href="{{ route('app.project.index') }}" class="btn btn-orange">{{ __('app.user_dashboard_wishlist_btn_explore_service') }}</a>
                                 </div>
                                 @endforelse
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            {!! $projects->withQueryString()->links() !!}
                         </div>
                     </div>
                 </div>

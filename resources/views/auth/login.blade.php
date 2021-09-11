@@ -20,18 +20,18 @@
 
                     <ul class="nav align-items-center mb-3">
                         <li class="login-user">
-                            <a class="user active" data-toggle="tab" href="#member">{{ __('app.login_option_member') }}</a>
+                            <a class="user active btn-toggle-tab" data-toggle="tab" href="#member" data-route="{{ route('login') }}">{{ __('app.login_option_member') }}</a>
                         </li>
                         <li class="login-merchant">
-                            <a class="user" data-toggle="tab" href="#merchant">{{ __('app.login_option_merchant') }}</a>
+                            <a class="user btn-toggle-tab" data-toggle="tab" href="#merchant" data-route="{{ route('merchant.login') }}">{{ __('app.login_option_merchant') }}</a>
                         </li>
                         <div class="tab-content register-tab">
-                            <div class="tab-pane active" id="member">
+                            <div class="tab-pane active member" id="member">
                                 <div>
                                     {!! __('app.login_btn_register_member') !!}
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="merchant">
+                            <div class="tab-pane fade merchant" id="merchant">
                                 <div>
                                     {!! __('app.login_btn_register_merchant') !!}
                                 </div>
@@ -53,7 +53,7 @@
                     </div>
                     @endif
 
-                    <form action="{{ route('login') }}" method="post" role="form" enctype="multipart/form-data">
+                    <form action="{{ route('login') }}" method="post" role="form" enctype="multipart/form-data" id="loginForm">
                         @csrf
 
                         <div class="input-group">
@@ -80,10 +80,11 @@
 
                         <button type="submit" class="btn login-btn mb-3">{{ __('labels.sign_in') }}</button>
                     </form>
+
                 </div>
             </div>
             <div class="col-lg-6 d-lg-inline-flex px-0 d-none">
-                <img src="{{ asset('storage/assets/login/login_image.jpg') }}" alt="login_image" class="res-img right-img" loading="lazy">
+                <img src="{{ asset('storage/assets/login/login_image.jpg') }}" alt="login_image" class="res-img right-img">
             </div>
         </div>
     </div>

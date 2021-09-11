@@ -1,4 +1,4 @@
-@extends('layouts.master', ['title' => 'Reset Password', 'body' => 'enduser'])
+@extends('admin.layouts.master', ['title' => 'Reset Password', 'body' => 'enduser'])
 
 @section('content')
 <div class="container" style="padding-top: 7rem; padding-bottom: 5rem;">

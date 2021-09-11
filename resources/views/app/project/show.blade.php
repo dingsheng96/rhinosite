@@ -68,7 +68,7 @@
                         </div>
                         <div class="col-sm-5 text-sm-right">
                             @auth
-                            <button type="button" class="btn btn-add-wishlist" data-wishlist="{{ route('app.wishlist.store') }}" data-project="{{ $project->id }}">
+                            <button type="button" class="btn btn-custom-wishlist" data-wishlist="{{ route('app.wishlist.store') }}" data-project="{{ $project->id }}">
                                 @if (Auth::user()->favouriteProjects()->get()->contains($project->id))
                                 <i class="fas fa-heart txtorange services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_add_wishlist') }}"></i>
                                 @else
@@ -76,7 +76,7 @@
                                 @endif
                             </button>
                             @else
-                            <button type="button" class="btn btn-add-wishlist" data-wishlist="{{ route('login') }}">
+                            <button type="button" class="btn btn-custom-wishlist" data-wishlist="{{ route('login') }}">
                                 <i class="far fa-heart txtorange services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_add_wishlist') }}"></i>
                             </button>
                             @endauth
