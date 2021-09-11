@@ -107,17 +107,15 @@
                             <div class="card shadow-lg border h-100">
                                 <img src="{{ $project->thumbnail->full_file_path ?? $default_preview }}" alt="image" class="card-img-top" style="height: 250px; width: 100%; min-height: 210px; object-fit: cover;">
                                 <div class="card-body">
-                                    <h5 class="card-title font-weight-bold text-secondary">{{ $project->english_title ?? '-' }}</h5>
-                                    <p class="card-title">{{ $project->user->name }}</p>
-                                    <p class="card-text">
-                                        <span class="badge badge-pill badge-info badge-padding">{{ $project->user->service->name ?? '-' }}</span>
-                                    </p>
+                                    <h5 class="card-text font-weight-bold text-muted">{{ $project->english_title ?? '-' }}</h5>
+                                    <h6 class="card-text text-muted">{{ $project->user->name }}</h6>
+                                    <span class="badge badge-pill badge-info badge-padding mt-3">{{ $project->user->service->name ?? '-' }}</span>
                                 </div>
                                 <div class="card-footer bg-white">
                                     <p class="card-text text-muted"><i class="fas fa-map-marker-alt text-danger mr-1"></i> {{ $project->location ?? '-' }}</p>
                                 </div>
                                 <div class="card-footer bg-white">
-                                    @foreach ($project->adsBoosters()->boosting()->get() as $booster)
+                                    @foreach ($project->adsBoosters->unique() as $booster)
                                     <span class="badge badge-pill badge-light {{ $booster->badge_color }}">{{ $booster->product->name }}</span>
                                     @endforeach
                                 </div>

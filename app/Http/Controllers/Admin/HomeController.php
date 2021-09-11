@@ -12,16 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-    public $user;
-
     public function index()
-    {
-        $data = $this->adminDashboard();
-
-        return view('admin.dashboard', $data);
-    }
-
-    private function adminDashboard(): array
     {
         $total_contractors = User::with(['userDetail'])
             ->merchant()->active()
@@ -35,6 +26,9 @@ class HomeController extends Controller
             ->success()->sum('amount');
 
         $listing_projects = Project::with([
+            'adsBoosters' => function ($query) {
+                $query->boosting();
+            },
             'user' => function ($query) {
                 $query->with(['userDetail', 'userSubscriptions']);
             }
@@ -63,7 +57,7 @@ class HomeController extends Controller
             ->orderByDesc('months')
             ->get()->toArray();
 
-        return [
+        return view('admin.dashboard', [
             'total_contractors' => $total_contractors,
             'total_members' => $total_members,
             'weekly_transaction_amount' => number_format(PriceFacade::convertIntToFloat($weekly_transaction_amount), 2),
@@ -71,6 +65,6 @@ class HomeController extends Controller
             'monthly_listing_projects' => $monthly_listing_projects,
             'current_boosting_projects' => $current_boosting_projects,
             'monthly_sales_data' => $monthly_sales_data,
-        ];
+        ]);
     }
 }

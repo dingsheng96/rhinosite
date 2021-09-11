@@ -47,11 +47,11 @@
                         <hr>
 
                         <div class="form-group row">
-                            <label for="new_password" class="col-form-label col-sm-2">{{ __('labels.new_password') }}</label>
+                            <label for="password" class="col-form-label col-sm-2">{{ __('labels.new_password') }}</label>
                             <div class="col-sm-10">
-                                <input type="password" name="new_password" id="new_password" class="form-control @error('new_password') is-invalid @enderror">
+                                <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror">
                                 <p>* {{ __('messages.password_format') }}</p>
-                                @error('new_password')
+                                @error('password')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -60,10 +60,10 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="new_password_confirmation" class="col-form-label col-sm-2">{{ __('labels.new_password_confirmation') }}</label>
+                            <label for="password_confirmation" class="col-form-label col-sm-2">{{ __('labels.new_password_confirmation') }}</label>
                             <div class="col-sm-10">
-                                <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="form-control @error('new_password_confirmation') is-invalid @enderror">
-                                @error('new_password_confirmation')
+                                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror">
+                                @error('password_confirmation')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>

@@ -35,7 +35,14 @@ class AccountRequest extends FormRequest
             'email' => [
                 'required', 'email', Rule::unique(User::class, 'email')->ignore(Auth::id(), 'id')->whereNull('deleted_at')
             ],
-            'new_password' => ['nullable', new PasswordFormat, 'confirmed']
+            'password' => ['nullable', new PasswordFormat, 'confirmed']
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'password' => __('validation.attributes.new_password')
         ];
     }
 }

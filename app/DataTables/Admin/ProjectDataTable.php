@@ -29,7 +29,8 @@ class ProjectDataTable extends DataTable
                     'no_action' => $this->no_action ?: null,
                     'view' => [
                         'permission' => 'project.read',
-                        'route' => route('app.project.show', ['project' => $data->id])
+                        'route' => route('app.project.show', ['project' => $data->id]),
+                        'attribute' => 'target="_blank"'
                     ],
                     'update' => [
                         'permission' => 'project.update',

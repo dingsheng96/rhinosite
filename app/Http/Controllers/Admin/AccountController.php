@@ -59,7 +59,7 @@ class AccountController extends Controller
 
             $status  =  'success';
 
-            if (!empty($request->get('new_password'))) {
+            if (!empty($request->get('password'))) {
 
                 Auth::guard(User::TYPE_ADMIN)->login($account);
             }
