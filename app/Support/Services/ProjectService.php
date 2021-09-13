@@ -131,23 +131,26 @@ class ProjectService extends BaseService
     {
         if ($this->request->has('ads_type')) {
 
-            $this->model->load([
-                'user.userAdsQuotas' => function ($query) {
-                    $query->with([
-                        'userAdsQuotaHistories' => function ($query) {
-                            $query->latest('created_at')->limit(1);
-                        }
-                    ]);
-                }
-            ]);
-
             $ads = Product::with(['productAttributes', 'adsBoosters'])
                 ->where('id', $this->request->get('ads_type'))
                 ->whereNotNull('slot_type')->whereNotNull('total_slots')
                 ->first();
 
+            $this->model->load([
+                'user.userAdsQuotas' => function ($query) use ($ads) {
+                    $query->with([
+                        'userAdsQuotaHistories' => function ($query) {
+                            $query->latest('created_at')->limit(1);
+                        }
+                    ])->where('product_id', $ads->id);
+                },
+                'adsBoosters' => function ($query) {
+                    $query->orderByDesc('boost_index')->limit(1);
+                }
+            ]);
+
             // check merchant's ads quota
-            $user_ads_quota = $this->model->user->userAdsQuotas->where('product_id', $ads->id)->first();
+            $user_ads_quota = $this->model->user->userAdsQuotas->first();
 
             throw_if(empty($user_ads_quota) || $user_ads_quota->quantity <= 0, new \Exception(__('messages.insufficient_quota')));
 
@@ -166,11 +169,13 @@ class ProjectService extends BaseService
             }
 
             // create boosters
-            for ($day = 0; $day < $date_end->diffInDays($date_from); $day++) {
+            $max_index = optional($this->model->adsBoosters->first())->boost_index ?? 0;
 
+            for ($day = 0; $day < $date_end->diffInDays($date_from); $day++) {
                 $this->model->adsBoosters()->create([
-                    'product_id' => $ads->id,
-                    'boosted_at' => $date_from->copy()->addDays($day)
+                    'boost_index'   => $max_index + 1,
+                    'product_id'    => $ads->id,
+                    'boosted_at'    => $date_from->copy()->addDays($day)
                 ]);
             }
 

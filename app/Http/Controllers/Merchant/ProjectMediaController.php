@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Merchant;
 
 use App\Models\Media;
 use App\Models\Project;
@@ -102,7 +102,7 @@ class ProjectMediaController extends Controller
             $message = Message::instance()->format($action, $module, 'success');
             $status = 'success';
 
-            activity()->useLog('admin:project')
+            activity()->useLog('merchant:project')
                 ->causedBy(Auth::user())
                 ->performedOn($medium)
                 ->log($message);
@@ -110,7 +110,7 @@ class ProjectMediaController extends Controller
 
             DB::rollBack();
 
-            activity()->useLog('admin:project')
+            activity()->useLog('merchant:project')
                 ->causedBy(Auth::user())
                 ->performedOn($medium)
                 ->log($e->getMessage());
@@ -121,7 +121,7 @@ class ProjectMediaController extends Controller
             ->withStatus($status)
             ->withMessage($message, true)
             ->withData([
-                'redirect_to' => route('admin.projects.edit', ['project' => $project->id])
+                'redirect_to' => route('merchant.projects.edit', ['project' => $project->id])
             ])
             ->sendJson();
     }
