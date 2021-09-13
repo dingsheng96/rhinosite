@@ -380,7 +380,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getActiveSubscriptionAttribute()
     {
-        return $this->userSubscriptions()->active()->first();
+        return $this->userSubscriptions->where('status', UserSubscription::STATUS_ACTIVE)->first();
     }
 
     public function getActiveSubscriptionLatestLogAttribute()

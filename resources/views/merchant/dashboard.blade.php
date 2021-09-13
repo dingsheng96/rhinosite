@@ -1,4 +1,4 @@
-@extends('layouts.master', ['title' => __('modules.dashboard')])
+@extends('merchant.layouts.master', ['title' => __('modules.dashboard')])
 
 @section('content')
 
@@ -11,7 +11,7 @@
 
                 <div class="card-body box-profile p-0 bg-dark pb-3">
                     <div class="text-right p-0 pr-md-3 pt-md-3">
-                        <a href="{{ route('admin.account.index') }}" role="button" class="btn bg-orange">
+                        <a href="{{ route('merchant.account.index') }}" role="button" class="btn bg-orange">
                             <i class="fas fa-edit"></i>
                             {{ __('modules.edit', ['module' => __('labels.profile')]) }}
                         </a>
@@ -115,7 +115,7 @@
                 <div class="row">
                     <div class="col-12">
                         <h5 class="font-weight-bold d-inline">{{ __('labels.listed_projects') }}</h5>
-                        <a role="button" href="{{ route('projects.index') }}" class="float-right">{{ __('labels.view_all') . ' >' }}</a>
+                        <a role="button" href="{{ route('merchant.projects.index') }}" class="float-right">{{ __('labels.view_all') . ' >' }}</a>
                     </div>
                 </div>
 
@@ -124,14 +124,12 @@
                 <div class="row">
                     @forelse ($projects as $project)
                     <div class="col-md-3 col-12">
-                        <a href="{{ route('projects.show', ['project' => $project->id]) }}">
+                        <a href="{{ route('merchant.projects.show', ['project' => $project->id]) }}" target="_blank">
                             <div class="card shadow-lg border h-100">
                                 <img src="{{ $project->thumbnail->full_file_path ?? $default_preview }}" alt="image" class="card-img-top" style="height: 250px; width: 100%; min-height: 210px; object-fit: cover;">
                                 <div class="card-body">
-                                    <h5 class="card-title font-weight-bold text-secondary">{{ $project->english_title ?? '-' }}</h5>
-                                    <p class="card-text">
-                                        <span class="badge badge-pill badge-info badge-padding">{{ $project->user->service->name ?? '-' }}</span>
-                                    </p>
+                                    <h5 class="card-text font-weight-bold text-muted">{{ $project->english_title ?? '-' }}</h5>
+                                    <span class="badge badge-pill badge-info badge-padding mt-3">{{ $project->user->service->name ?? '-' }}</span>
                                 </div>
                                 <div class="card-footer bg-white">
                                     <p class="card-text text-muted"><i class="fas fa-map-marker-alt text-danger mr-1"></i> {{ $project->location ?? '-' }}</p>
@@ -165,20 +163,18 @@
                 <div class="row">
                     @forelse ($boosting_projects as $project)
                     <div class="col-md-3 col-12">
-                        <a href="{{ route('projects.show', ['project' => $project->id]) }}">
+                        <a href="{{ route('merchant.projects.show', ['project' => $project->id]) }}" target="_blank">
                             <div class="card shadow-lg border h-100">
                                 <img src="{{ $project->thumbnail->full_file_path ?? $default_preview }}" alt="image" class="card-img-top" style="height: 250px; width: 100%; min-height: 210px; object-fit: cover;">
                                 <div class="card-body">
-                                    <h5 class="card-title font-weight-bold text-secondary">{{ $project->english_title ?? '-' }}</h5>
-                                    <p class="card-text">
-                                        <span class="badge badge-pill badge-info">{{ $project->user->service->name ?? '-' }}</span>
-                                    </p>
+                                    <h5 class="card-text font-weight-bold text-muted">{{ $project->english_title ?? '-' }}</h5>
+                                    <span class="badge badge-pill badge-info badge-padding mt-3">{{ $project->user->service->name ?? '-' }}</span>
                                 </div>
                                 <div class="card-footer bg-white">
                                     <p class="card-text text-muted"><i class="fas fa-map-marker-alt text-danger mr-1"></i> {{ $project->location ?? '-' }}</p>
                                 </div>
                                 <div class="card-footer bg-white">
-                                    @foreach ($project->adsBoosters()->boosting()->get() as $booster)
+                                    @foreach ($project->adsBoosters->unique() as $booster)
                                     <span class="badge badge-pill badge-light {{ $booster->badge_color }}">{{ $booster->product->name }}</span>
                                     @endforeach
                                 </div>
@@ -191,6 +187,7 @@
                     </div>
                     @endforelse
                 </div>
+
             </div>
         </div>
     </div>

@@ -78,6 +78,11 @@ class UserDetail extends Model
     }
 
     // Attributes
+    public function setServiceIdAttribute($value)
+    {
+        $this->attributes['service_id'] = (!empty($value)) ? $value : $this->service_id;
+    }
+
     public function setPicPhoneAttribute($value)
     {
         $this->attributes['pic_phone'] = Misc::instance()->stripTagsAndAddCountryCodeToPhone($value);
