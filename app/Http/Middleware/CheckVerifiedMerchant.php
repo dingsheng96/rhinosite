@@ -29,12 +29,11 @@ class CheckVerifiedMerchant
             }
         ])->with(['userDetail'])->where('id', Auth::id())->merchant()->active()->first();
 
-        if ($merchant->user_detail_count > 0 && $merchant->userDetail->status != UserDetail::STATUS_APPROVED) { // merchant without user detail, redirect to details form
+        if ($merchant->user_detail_count < 1) {
+            return redirect()->route('merchant.verifications.create');
+        } elseif ($merchant->user_detail_count > 0 && $merchant->userDetail->status != UserDetail::STATUS_APPROVED) { // merchant without user detail, redirect to details form
 
             return redirect()->route('merchant.verifications.notify');
-        } else {
-
-            return redirect()->route('merchant.verifications.create');
         }
 
         if ($merchant->user_subscriptions_count < 1) { // merchant without any subscriptions, redirect to subscription list

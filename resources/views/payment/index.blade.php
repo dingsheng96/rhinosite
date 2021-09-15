@@ -2,8 +2,6 @@
 
 @section('content')
 
-@dd($payment_url, $credentials)
-
 <form method="post" name="ePayment" action="{{ $payment_url }}">
 
     @foreach ($credentials as $key => $value)
