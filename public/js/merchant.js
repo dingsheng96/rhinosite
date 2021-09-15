@@ -216,11 +216,4 @@ $(function () {
             });
         });
     }
-
-    $('body').on('click', '.btn-toggle-tab', function () {
-
-        let route = $(this).data('route');
-
-        $('#loginForm').attr('action', route);
-    });
 });

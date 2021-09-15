@@ -115,8 +115,8 @@
                                         <div class="row">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="reg_no" class="col-form-label">{{ __('labels.reg_no') }} <span class="text-red">*</span></label>
-                                                    <input type="text" name="reg_no" id="reg_no" value="{{ old('reg_no', $user->userDetail->reg_no ?? null) }}" class="form-control @error('reg_no') is-invalid @enderror">
+                                                    <label for="reg_no" class="col-form-label">{{ __('labels.reg_no') }}</label>
+                                                    <input type="reg_no" name="reg_no" id="reg_no" value="{{ old('reg_no', $user->userDetail->reg_no ?? null) }}" class="form-control @error('reg_no') is-invalid @enderror">
                                                     @error('reg_no')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -432,7 +432,7 @@
                                 </p>
                                 @else
                                 <p class="alert-heading text-md-right">
-                                    <a href="{{ route('subscriptions.index') }}" role="button">
+                                    <a href="{{ route('merchant.subscriptions.index') }}" role="button">
                                         {{ __('labels.change_plan') }}
                                     </a>
                                 </p>
@@ -472,7 +472,7 @@
                         @endif
 
                         <div class="form-group row">
-                            <label for="expired_at" class="col-form-label col-sm-2">{{ trans_choice('labels.expired_at', 1) }}</label>
+                            <label for="expired_at" class="col-form-label col-sm-2">{{ __('labels.valid_till') }}</label>
                             <div class="col-sm-10">
                                 <span id="expired_at" class="form-control-plaintext text-white">{{ $user->active_subscription_latest_log->expired_date ?? '-' }}</span>
                             </div>
@@ -485,7 +485,7 @@
                             <div class="col-12 text-center">
                                 <h4>{{ __('messages.no_subscription') }}</h4>
 
-                                <a role="button" href="{{ route('merchant.subscriptions.index') }}" class="btn btn-outline-primary btn-rounded-corner my-3">
+                                <a role="button" href="{{ route('merchant.merchant.subscriptions.index') }}" class="btn btn-outline-primary btn-rounded-corner my-3">
                                     {{ __('labels.sign_up_a_plan') }}
                                 </a>
                             </div>

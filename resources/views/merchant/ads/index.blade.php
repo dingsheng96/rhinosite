@@ -1,4 +1,4 @@
-@extends('layouts.master', ['title' => __('modules.ads')])
+@extends('merchant.layouts.master', ['title' => __('modules.ads')])
 
 @section('content')
 
@@ -10,14 +10,12 @@
                 <div class="card-header bg-transparent">
                     <h3 class="card-title">{{ __('modules.list', ['module' => __('modules.ads')]) }}</h3>
 
-                    @can('ads.create')
                     <span class="card-tools">
-                        <a href="{{ route('ads-boosters.create') }}" class="btn btn-outline-primary btn-rounded-corner">
+                        <a href="{{ route('merchant.ads-boosters.create') }}" class="btn btn-outline-primary btn-rounded-corner">
                             <i class="fas fa-plus"></i>
                             {{ __('modules.create', ['module' => __('modules.ads')]) }}
                         </a>
                     </span>
-                    @endcan
                 </div>
                 <div class="card-body">
                     {!! $dataTable->table() !!}

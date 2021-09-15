@@ -1,4 +1,4 @@
-@extends('layouts.master', ['title' => __('modules.checkout'), 'guest_view' => true, 'body' => 'enduser'])
+@extends('layouts.master', ['title' => __('modules.checkout'), 'body' => 'enduser'])
 
 @section('content')
 
@@ -6,12 +6,12 @@
 
     @include('components.alert')
 
-    <form action="{{ route('checkout.recurring') }}" method="post" enctype="multipart/form-data" role="form">
+    <form action="{{ route('merchant.checkout.recurring') }}" method="post" enctype="multipart/form-data" role="form">
         @csrf
 
         <div class="row mt-3">
             <div class="col-12">
-                <div class="card card-body p-4 shadow-lg">
+                <div class="card card-body p-4 border">
                     <h5 class="card-title">{{ __('labels.order_summary') }}</h5>
                     <div class="table-responsive my-3">
                         <table class="table" role="presentation">
@@ -63,7 +63,7 @@
 
         <div class="row mt-3">
             <div class="col-12">
-                <div class="card card-body p-4 shadow-lg">
+                <div class="card card-body p-4 border">
                     <h5 class="card-title">{{ __('messages.fill_in_recurring_form') }}</h5>
 
                     <div class="row">
@@ -178,7 +178,7 @@
                             <div class="form-group">
                                 <label for="country_state" class="col-form-label">{{ trans_choice('labels.country_state', 1) }} <span class="text-red">*</span></label>
                                 <select name="country_state" id="country_state" class="form-control select2 @error('country_state') is-invalid @enderror country-state-dropdown city-filter" data-selected="{{ old('country_state', 0) }}"
-                                    data-country-state-route="{{ route('data.countries.country-states', ['__REPLACE__']) }}">
+                                    data-country-state-route="{{ route('merchant.data.countries.country-states', ['__REPLACE__']) }}">
                                     <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.country_state', 1))]) }} ---</option>
                                 </select>
                                 @error('country_state')
@@ -191,7 +191,8 @@
                         <div class="col-md-6 col-12">
                             <div class="form-group">
                                 <label for="city" class="col-form-label">{{ trans_choice('labels.city', 1) }} <span class="text-red">*</span></label>
-                                <select name="city" id="city" class="form-control select2 @error('city') is-invalid @enderror city-dropdown" data-selected="{{ old('city', 0) }}" data-city-route="{{ route('data.countries.country-states.cities', ['__FIRST_REPLACE__', '__SECOND_REPLACE__']) }}">
+                                <select name="city" id="city" class="form-control select2 @error('city') is-invalid @enderror city-dropdown" data-selected="{{ old('city', 0) }}"
+                                    data-city-route="{{ route('merchant.data.countries.country-states.cities', ['__FIRST_REPLACE__', '__SECOND_REPLACE__']) }}">
                                     <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.city', 1))]) }} ---</option>
                                 </select>
                                 @error('city')
@@ -202,23 +203,22 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="row mt-3">
-                        <div class="col-12">
-                            @if (count($carts) > 0)
-                            <button type="submit" class="btn btn-orange btn-lg mt-3 float-right ml-2" name="pay">
-                                {{ strtoupper(__('labels.pay_now')) }}
-                            </button>
-                            <button type="submit" class="btn btn-black btn-lg mt-3 float-right mr-2" name="cancel">
-                                {{ strtoupper(__('labels.cancel')) }}
-                            </button>
-                            @endif
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
 
+        <div class="row mt-3">
+            <div class="col-12">
+                @if (count($carts) > 0)
+                <button type="submit" class="btn btn-orange btn-lg mt-3 float-right ml-2" name="pay">
+                    {{ strtoupper(__('labels.pay_now')) }}
+                </button>
+                <button type="submit" class="btn btn-black btn-lg mt-3 float-right mr-2" name="cancel">
+                    {{ strtoupper(__('labels.cancel')) }}
+                </button>
+                @endif
+            </div>
+        </div>
     </form>
 
 </div>

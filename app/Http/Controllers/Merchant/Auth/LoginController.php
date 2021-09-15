@@ -35,7 +35,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest:' . User::TYPE_ADMIN)->except('logout');
+        $this->middleware('guest:' . User::TYPE_MERCHANT)->except('logout');
     }
 
     /**
@@ -45,7 +45,7 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-        return view('admin.auth.login');
+        return view('merchant.auth.login');
     }
 
     /**
@@ -58,7 +58,7 @@ class LoginController extends Controller
     {
         $credentials = array_merge(
             $request->only($this->username(), 'password'),
-            ['status' => User::STATUS_ACTIVE, 'type' => User::TYPE_ADMIN]
+            ['status' => User::STATUS_ACTIVE, 'type' => User::TYPE_MERCHANT]
         );
 
         return $credentials;
@@ -77,13 +77,13 @@ class LoginController extends Controller
             'last_login_at' => now()
         ]);
 
-        activity()->useLog('admin:login')
+        activity()->useLog('merchant:login')
             ->causedByAnonymous()
             ->performedOn($user)
             ->withProperties($request->except(['password']))
             ->log(__('messages.login_success'));
 
-        return redirect()->route('dashboard');
+        return redirect()->route('merchant.dashboard');
     }
 
     /**
@@ -96,7 +96,7 @@ class LoginController extends Controller
     {
         $message = __('messages.logout_success');
 
-        activity()->useLog('admin:logout')
+        activity()->useLog('merchant:logout')
             ->causedBy(Auth::user())
             ->withProperties($request->all())
             ->log($message);
@@ -113,7 +113,7 @@ class LoginController extends Controller
 
         return $request->wantsJson()
             ? new JsonResponse([], 204)
-            : redirect()->route('admin.login')->withSuccess($message);
+            : redirect()->route('merchant.login')->withSuccess($message);
     }
 
     /**
@@ -123,20 +123,6 @@ class LoginController extends Controller
      */
     protected function guard()
     {
-        return Auth::guard(User::TYPE_ADMIN);
-    }
-
-    /**
-     * Attempt to log the user into the application.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return bool
-     */
-    protected function attemptLogin(Request $request)
-    {
-        return $this->guard()->attempt(
-            $this->credentials($request),
-            $request->filled('remember')
-        );
+        return Auth::guard(User::TYPE_MERCHANT);
     }
 }

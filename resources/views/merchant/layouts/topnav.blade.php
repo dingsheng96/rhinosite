@@ -8,9 +8,15 @@
     <ul class="navbar-nav ml-auto">
 
         <li class="nav-item dropdown">
+            <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="badge badge-danger navbar-badge rounded-circle">{{ Auth::user()->cart_items_count }}</span>
+            </a>
+        </li>
+
+        <li class="nav-item dropdown">
             <a data-toggle="dropdown" class="nav-link" href="#">
                 <img src="https://ui-avatars.com/api/?background=f6993f&color=ffffff&size=30&rounded=true&name={{ str_replace(' ', '+', Auth::user()->name) }}" class="img-circle elevation-2" alt="user">
-                <span>{{ Str::limit(Str::title(Auth::user()->name), 20, '...') }}</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
                 <a href="{{ route('merchant.account.index') }}" class="dropdown-item">

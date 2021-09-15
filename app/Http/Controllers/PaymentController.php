@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\City;
+use App\Models\User;
 use App\Helpers\Misc;
 use App\Models\Order;
 use App\Models\Country;
@@ -31,13 +32,11 @@ class PaymentController extends Controller
     public function redirect(Request $request)
     {
         $trans = Transaction::with([
-            'currency',
-            'paymentMethod',
+            'currency', 'paymentMethod',
             'sourceable' => function ($query) {
                 $query->with(['user', 'orderItems.orderable']);
             },
-        ])->where('id', $request->get('transaction_id'))
-            ->pending()->first();
+        ])->where('id', $request->get('transaction_id'))->pending()->first();
 
         if ($request->get('recurring')) {
 
@@ -71,8 +70,8 @@ class PaymentController extends Controller
             'BackendURL'    =>  route('payment.backend'),
         ];
 
-        activity()->useLog('onetime_payment')
-            ->causedBy(Auth::user())
+        activity()->useLog('onetime_payment:redirect')
+            ->causedBy($transaction->sourceable->user)
             ->withProperties(json_encode($credentials))
             ->log('Redirecting Ipay88 payment gateway');
 
@@ -95,7 +94,8 @@ class PaymentController extends Controller
             },
         ])->where('transaction_no', $ref_no)->first();
 
-        activity()->useLog('onetime_payment')
+        activity()->useLog('onetime_payment:response_url')
+            ->causedBy($transaction->sourceable->user)
             ->performedOn($transaction)
             ->withProperties($request->all())
             ->log('Response from Ipay88 payment gateway');
@@ -113,9 +113,14 @@ class PaymentController extends Controller
             ->setOrderStatus($order_status)
             ->getModel();
 
-        Auth::guard('web')->login($order->user);
+        $route_name = 'payment.status';
 
-        return redirect()->route('payment.status', ['ref_no' => $transaction->transaction_no]);
+        if ($order->user->type != User::TYPE_MEMBER) {
+
+            $route_name = $order->user->type . '.payment.status';
+        }
+
+        return redirect()->route($route_name, ['ref_no' => $transaction->transaction_no]);
     }
 
     public function backend(Request $request)
@@ -133,7 +138,8 @@ class PaymentController extends Controller
             },
         ])->where('transaction_no', $ref_no)->first();
 
-        activity()->useLog('onetime_payment')
+        activity()->useLog('onetime_payment:backend_url')
+            ->causedBy($transaction->sourceable->user)
             ->performedOn($transaction)
             ->withProperties($request->all())
             ->log('Backend Response from Ipay88 payment gateway');
@@ -164,14 +170,23 @@ class PaymentController extends Controller
 
                 foreach ($order_items as $item) {
 
-                    if ($item->orderable_type == Package::class || ($item->orderable_type == ProductAttribute::class && $item->orderable->productCategory->name == ProductCategory::TYPE_SUBSCRIPTION)) {
+                    if (
+                        $item->orderable_type == Package::class ||
+                        ($item->orderable_type == ProductAttribute::class
+                            && (empty($item->orderable->product->total_slots)
+                                && empty($item->orderable->product->slot_type)))
+                    ) {
 
                         $merchant = MerchantFacade::setModel($transaction->sourceable->user)
-                            ->storeSubscription(json_encode(['id' => $item->orderable_id, 'class' => $item->orderable_type]), $transaction)
+                            ->storeSubscription(base64_encode(json_encode(['id' => $item->orderable_id, 'class' => $item->orderable_type])), $transaction)
                             ->getModel();
                     }
 
-                    if ($item->orderable_type == ProductAttribute::class && $item->orderable->productCategory->name == ProductCategory::TYPE_ADS) {
+                    if (
+                        $item->orderable_type == ProductAttribute::class
+                        && (!empty($item->orderable->product->total_slots)
+                            && !empty($item->orderable->product->slot_type))
+                    ) {
 
                         $merchant = MerchantFacade::setModel($transaction->sourceable->user)
                             ->storeAdsQuota($item->orderable, $item->quantity)
@@ -252,8 +267,9 @@ class PaymentController extends Controller
             ]),
         ];
 
-        activity()->useLog('recurring_payment')
-            ->causedBy(Auth::user())
+        activity()->useLog('recurring_payment:redirect')
+            ->causedBy($transaction->sourceable->user)
+            ->performedOn($transaction)
             ->withProperties(json_encode($credentials))
             ->log('Redirecting Ipay88 payment gateway');
 
@@ -269,14 +285,14 @@ class PaymentController extends Controller
         $ref_no =   $request->get('RefNo');
 
         $transaction = Transaction::with([
-            'currency',
-            'paymentMethod',
+            'currency', 'paymentMethod',
             'sourceable' => function ($query) {
                 $query->with(['user', 'orderItems.orderable']);
             },
         ])->where('transaction_no', $ref_no)->first();
 
-        activity()->useLog('recurring_payment')
+        activity()->useLog('recurring_payment:response_url')
+            ->causedBy($transaction->sourceable->user)
             ->performedOn($transaction)
             ->withProperties($request->all())
             ->log('Response from Ipay88 payment gateway');
@@ -294,9 +310,14 @@ class PaymentController extends Controller
             ->setOrderStatus($order_status)
             ->getModel();
 
-        Auth::guard('web')->login($order->user);
+        $route_name = 'payment.status';
 
-        return redirect()->route('payment.status', ['ref_no' => $transaction->transaction_no]);
+        if ($order->user->type != User::TYPE_MEMBER) {
+
+            $route_name = $order->user->type . '.payment.status';
+        }
+
+        return redirect()->route($route_name, ['ref_no' => $transaction->transaction_no]);
     }
 
     public function recurringBackend(Request $request)
@@ -307,14 +328,14 @@ class PaymentController extends Controller
         $ref_no         =   $request->get('RefNo');
 
         $transaction = Transaction::with([
-            'currency',
-            'paymentMethod',
+            'currency', 'paymentMethod',
             'sourceable' => function ($query) {
                 $query->with(['user', 'orderItems.orderable']);
             },
         ])->where('transaction_no', $recurring_ref)->first();
 
-        activity()->useLog('recurring_payment')
+        activity()->useLog('recurring_payment:backend_url')
+            ->causedBy($transaction->sourceable->user)
             ->performedOn($transaction)
             ->withProperties($request->all())
             ->log('Backend Response from Ipay88 payment gateway');
@@ -344,7 +365,7 @@ class PaymentController extends Controller
                 $order_item = $order->orderItems->first();
 
                 $merchant = MerchantFacade::setModel($transaction->sourceable->user)
-                    ->storeSubscription(json_encode(['id' => $order_item->orderable_id, 'class' => $order_item->orderable_type]), $transaction)
+                    ->storeSubscription(base64_encode(json_encode(['id' => $order_item->orderable_id, 'class' => $order_item->orderable_type])), $transaction)
                     ->getModel();
             }
 
@@ -358,7 +379,6 @@ class PaymentController extends Controller
 
         return $message;
     }
-
 
     private function getRecurringFrequency($recurring_item)
     {
@@ -415,14 +435,17 @@ class PaymentController extends Controller
     public function paymentStatus(Request $request)
     {
         $transaction = Transaction::with([
-            'currency',
-            'paymentMethod',
+            'currency', 'paymentMethod',
             'sourceable' => function ($query) {
                 $query->with(['user', 'orderItems.orderable']);
             },
         ])->where('transaction_no', $request->get('ref_no'))->first();
 
         $status = $transaction->status == Transaction::STATUS_SUCCESS ? true : false;
+
+        $guard_type = $transaction->sourceable->user->type != User::TYPE_MEMBER ? $transaction->sourceable->user->type : 'web';
+
+        Auth::guard($guard_type)->login($transaction->sourceable->user);
 
         return view('payment.status', compact('transaction', 'status'));
     }

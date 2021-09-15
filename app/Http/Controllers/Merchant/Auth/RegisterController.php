@@ -16,6 +16,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use App\Providers\RouteServiceProvider;
+use App\Support\Facades\MerchantFacade;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -58,7 +59,7 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        return view('admin.auth.register');
+        return view('merchant.auth.register');
     }
 
     /**
@@ -70,7 +71,6 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'role'          =>  ['required', 'in:member,merchant'],
             'name'          =>  ['required', 'string', 'max:255', Rule::unique(User::class, 'name')->whereNull('deleted_at')],
             'email'         =>  ['required', 'string', 'email', 'max:255', Rule::unique(User::class, 'email')->whereNull('deleted_at')],
             'phone'         =>  ['required', 'string', new PhoneFormat],
@@ -140,12 +140,38 @@ class RegisterController extends Controller
     {
         $this->validator($request->all())->validate();
 
-        event(new Registered($user = $this->create($request->all())));
+        DB::beginTransaction();
 
-        if ($response = $this->registered($request, $user)) {
-            return $response;
+        try {
+
+            $user = MerchantFacade::setRequest($request)->storeProfile()->storeAddress()->getModel();
+
+            DB::commit();
+
+            event(new Registered($user));
+
+            if ($response = $this->registered($request, $user)) {
+                return $response;
+            }
+
+            activity()->useLog('merchant:register')
+                ->causedByAnonymous()
+                ->performedOn($user)
+                ->withProperties($request->except(['password', 'password_confirmation']))
+                ->log(__('messages.register_success'));
+
+            return redirect()->route('merchant.login')->withSuccess(__('messages.register_success'));
+        } catch (\Error | \Exception $e) {
+
+            DB::rollBack();
+
+            activity()->useLog('merchant:register')
+                ->causedByAnonymous()
+                ->performedOn(new User())
+                ->withProperties($request->except(['password', 'password_confirmation']))
+                ->log($e->getMessage());
+
+            return redirect()->back()->with('fail', __('messages.contact_support'));
         }
-
-        return redirect()->route()->withSuccess(__('messages.register_success'));
     }
 }

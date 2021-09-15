@@ -1,4 +1,4 @@
-@extends('layouts.master', ['title' => '', 'guest_view' => true, 'body' => 'enduser'])
+@extends('layouts.master', ['title' => 'Payment Status', 'body' => 'enduser'])
 
 @section('content')
 
@@ -21,7 +21,7 @@
                 </div>
 
                 <div class="row justify-content-center">
-                    <a href="{{ route('dashboard') }}" role="button" class="btn btn-lg btn-orange">
+                    <a href="{{ route('merchant.dashboard') }}" role="button" class="btn btn-lg btn-orange">
                         {{ strtoupper(__('labels.return_dashboard')) }}
                     </a>
                 </div>

@@ -404,7 +404,7 @@
                                                     <label for="date_from" class="col-form-label">{{ __('labels.first_boosting_date') }}</label>
                                                     <div class="input-group">
                                                         <input type="text" id="date_from" name="date_from" class="form-control ads-date-picker @error('date_from') is-invalid @enderror" placeholder="yyyy-mm-dd" value="{{ old('start_from') }}" {{ old('start_from') ? null : 'disabled' }}
-                                                            data-ads-date-filter-route="{{ route('data.ads.unavailable-date', ['ads' => '__REPLACE__']) }}" data-project="{{ $project->id }}">
+                                                            data-ads-date-filter-route="{{ route('merchant.data.ads.unavailable-date', ['ads' => '__REPLACE__']) }}" data-project="{{ $project->id }}">
                                                         <div class="input-group-append">
                                                             <span class="input-group-text bg-white"><i class="far fa-calendar"></i></span>
                                                         </div>

@@ -5,7 +5,7 @@
             <span class="font-weight-bold">__REPLACE_ITEM_NAME__</span>
         </div>
         <div class="col-2">
-            <a href="#" role="button" class="float-right btn-delete-cart-item" data-delete-route="{{ route('carts.destroy', ['cart' => '__REPLACE_ITEM_ID__']) }}">
+            <a href="#" role="button" class="float-right btn-delete-cart-item" data-delete-route="{{ route('merchant.carts.destroy', ['cart' => '__REPLACE_ITEM_ID__']) }}">
                 <i class="fas fa-trash text-red"></i>
             </a>
         </div>
@@ -22,7 +22,7 @@
 
     <div class="row mt-3" id="enable_quantity_input_template">
         <div class="col-6">
-            <div class="input-group input-group-sm" data-qty-route="{{ route('carts.update', ['cart' => '__REPLACE_ITEM_ID__']) }}">
+            <div class="input-group input-group-sm" data-qty-route="{{ route('merchant.carts.update', ['cart' => '__REPLACE_ITEM_ID__']) }}">
                 <div class="input-group-prepend">
                     <button class="btn btn-outline-secondary btn-qty-decrement" type="button">-</button>
                 </div>

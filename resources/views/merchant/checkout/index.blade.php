@@ -1,10 +1,10 @@
-@extends('layouts.master', ['title' => __('modules.checkout'), 'guest_view' => true])
+@extends('layouts.master', ['title' => __('modules.checkout')])
 
 @section('content')
 
 <div class="container" style="padding-top: 7rem; padding-bottom: 5rem;">
 
-    <form action="{{ route('checkout.store') }}" method="post" enctype="multipart/form-data" role="form">
+    <form action="{{ route('merchant.checkout.store') }}" method="post" enctype="multipart/form-data" role="form">
         @csrf
 
         <div class="row mt-3">
@@ -68,7 +68,7 @@
                 <button type="submit" class="btn btn-orange btn-lg mt-3 float-right ml-2" name="pay">
                     {{ strtoupper(__('labels.pay_now')) }}
                 </button>
-                <a href="{{ route('products.index') }}" class="btn btn-black btn-lg mt-3 float-right mr-2" name="cancel">
+                <a href="{{ route('merchant.products.index') }}" class="btn btn-black btn-lg mt-3 float-right mr-2" name="cancel">
                     {{ strtoupper(__('labels.cancel')) }}
                 </a>
                 @endif

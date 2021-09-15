@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Models\User;
+use App\Models\UserDetail;
 use Illuminate\Support\Facades\Auth;
 
 class CheckVerifiedMerchant
@@ -16,32 +18,26 @@ class CheckVerifiedMerchant
      */
     public function handle($request, Closure $next)
     {
-        $user = Auth::user()->load([
-            'userDetail',
-            'userSubscriptions' => function ($query) {
-                $query->active();
-            }
-        ]);
-
-        if (!$user->is_merchant || ($user->is_merchant && $user->userDetail()->approvedDetails()->exists() && $user->userSubscriptions->first())) { // non-merchant or merchant with approved details, and active subsriptions
+        if (User::where('id', Auth::id())->validMerchant()->exists()) { // Valid Merchant: merchant type, active, active subscription, approved details, has service
 
             return $next($request);
         }
 
-        if (empty($user->userDetail) || $user->userDetail()->where(function ($query) { // merchant with pending or rejected details, redirect to verification notify page
-            $query->pendingDetails();
-        })->orWhere(function ($query) {
-            $query->rejectedDetails();
-        })->exists()) {
+        $merchant = User::withCount([
+            'userDetail', 'userSubscriptions' => function ($query) {
+                $query->active();
+            }
+        ])->with(['userDetail'])->where('id', Auth::id())->merchant()->active()->first();
 
-            return redirect()->route('verifications.notify');
+        if ($merchant->user_detail_count > 0 && $merchant->userDetail->status != UserDetail::STATUS_APPROVED) { // merchant without user detail, redirect to details form
+
+            return redirect()->route('merchant.verifications.notify');
         }
 
-        if (!$user->userSubscriptions->first()) { // merchant without any subscriptions, redirect to subscription list
-
-            return redirect()->route('subscriptions.index');
+        if ($merchant->user_subscriptions_count < 1) { // merchant without any subscriptions, redirect to subscription list
+            return redirect()->route('merchant.subscriptions.index');
         }
 
-        return redirect()->route('verifications.create');
+        return redirect()->route('merchant.verifications.create');
     }
 }

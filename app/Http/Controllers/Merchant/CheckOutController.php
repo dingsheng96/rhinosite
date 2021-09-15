@@ -14,7 +14,8 @@ use App\Http\Controllers\Controller;
 use App\Support\Facades\OrderFacade;
 use Illuminate\Support\Facades\Auth;
 use App\Support\Facades\TransactionFacade;
-use App\Http\Requests\RecurringPaymentRequest;
+use App\Http\Controllers\PaymentController;
+use App\Http\Requests\Merchant\RecurringPaymentRequest;
 
 class CheckOutController extends Controller
 {
@@ -32,10 +33,10 @@ class CheckOutController extends Controller
 
         if ($has_recurring) {
 
-            return view('checkout.recurring');
+            return view('merchant.checkout.recurring');
         }
 
-        return view('checkout.index');
+        return view('merchant.checkout.index');
     }
 
     public function store(Request $request)
@@ -74,7 +75,7 @@ class CheckOutController extends Controller
 
             DB::rollback();
 
-            activity()->useLog('web')
+            activity()->useLog('merchant:checkout')
                 ->causedBy(Auth::user())
                 ->performedOn(new Order())
                 ->withProperties($ex)
@@ -87,8 +88,10 @@ class CheckOutController extends Controller
     public function recurring(RecurringPaymentRequest $request)
     {
         if ($request->has('cancel')) {
+
             Auth::user()->carts()->delete();
-            return redirect()->route('subscriptions.index')->withSuccess(__('messages.order_cancelled'));
+
+            return redirect()->route('merchant.subscriptions.index')->withSuccess(__('messages.order_cancelled'));
         }
 
         DB::beginTransaction();
@@ -125,7 +128,7 @@ class CheckOutController extends Controller
 
             DB::rollback();
 
-            activity()->useLog('web')
+            activity()->useLog('merchant:checkout')
                 ->causedBy(Auth::user())
                 ->performedOn(new Order())
                 ->withProperties($ex)

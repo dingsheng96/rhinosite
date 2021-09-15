@@ -1,6 +1,8 @@
-@extends('layouts.master', ['title' => '', 'guest_view' => true, 'blank' => true])
+@extends('layouts.master', ['title' => 'Redirect payment', 'guest_view' => true, 'blank' => true])
 
 @section('content')
+
+@dd($payment_url, $credentials)
 
 <form method="post" name="ePayment" action="{{ $payment_url }}">
 

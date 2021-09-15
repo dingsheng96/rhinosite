@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Merchant;
 
 use App\Models\City;
+use App\Models\User;
 use App\Models\Country;
 use App\Rules\PhoneFormat;
 use App\Models\CountryState;
@@ -20,7 +21,7 @@ class RecurringPaymentRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::guard('web')->check() && Auth::user()->is_merchant;
+        return Auth::guard(User::TYPE_MERCHANT)->check();
     }
 
     /**

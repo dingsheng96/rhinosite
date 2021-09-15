@@ -21,7 +21,7 @@
                             <span class="font-weight-bold">{{ $item['name'] }}</span>
                         </div>
                         <div class="col-2">
-                            <a href="#" role="button" class="float-right btn-delete-cart-item" data-delete-route="{{ route('carts.destroy', ['cart' => $item['id']]) }}">
+                            <a href="#" role="button" class="float-right btn-delete-cart-item" data-delete-route="{{ route('merchant.carts.destroy', ['cart' => $item['id']]) }}">
                                 <i class="fas fa-trash text-red"></i>
                             </a>
                         </div>
@@ -38,7 +38,7 @@
                     @if ($item['enable_quantity_input'])
                     <div class="row mt-3">
                         <div class="col-6">
-                            <div class="input-group input-group-sm" data-qty-route="{{ route('carts.update', ['cart' => $item['id']]) }}">
+                            <div class="input-group input-group-sm" data-qty-route="{{ route('merchant.carts.update', ['cart' => $item['id']]) }}">
                                 <div class="input-group-prepend">
                                     <button class="btn btn-outline-secondary btn-qty-decrement" type="button">-</button>
                                 </div>
@@ -72,7 +72,7 @@
                 </li>
                 @endforelse
 
-                @include('cart.template')
+                @include('merchant.cart.template')
             </ul>
         </div>
 
@@ -84,7 +84,7 @@
                 <span class="float-right" id="cart-subtotal">{{ $cart_currency . number_format($sub_total ?? 0, 2, '.', '') }}</span>
             </p>
 
-            <a href="{{ route('checkout.index') }}" role="button" class="btn btn-block btn-outline-primary btn-rounded-corner text-center">
+            <a href="{{ route('merchant.checkout.index') }}" role="button" class="btn btn-block btn-outline-primary btn-rounded-corner text-center">
                 {{ strtoupper(__('labels.check_out')) }}
             </a>
         </div>

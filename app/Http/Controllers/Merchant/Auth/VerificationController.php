@@ -41,7 +41,7 @@ class VerificationController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware('auth');
+        $this->middleware('auth:' . User::TYPE_MERCHANT)->only(['show', 'resend']);
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
     }
@@ -59,9 +59,10 @@ class VerificationController extends Controller
         }
 
         if ($user->hasVerifiedEmail()) {
+
             return $request->wantsJson()
                 ? new JsonResponse([], 204)
-                : redirect($this->redirectPath());
+                : redirect()->route('merchant.login')->with('info', __('messages.email_verified'));
         }
 
         if ($user->markEmailAsVerified()) {
@@ -74,6 +75,40 @@ class VerificationController extends Controller
 
         return $request->wantsJson()
             ? new JsonResponse([], 204)
-            : redirect($this->redirectPath())->with('verified', true);
+            : redirect()->route('merchant.login')->with('info', __('messages.email_verified'));
+    }
+
+    /**
+     * Resend the email verification notification.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    public function resend(Request $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return $request->wantsJson()
+                ? new JsonResponse([], 204)
+                : redirect()->route('merchant.login')->with('info', __('messages.email_verified'));
+        }
+
+        $request->user()->sendEmailVerificationNotification();
+
+        return $request->wantsJson()
+            ? new JsonResponse([], 202)
+            : back()->with('resent', true);
+    }
+
+    /**
+     * Show the email verification notice.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
+    public function show(Request $request)
+    {
+        return $request->user()->hasVerifiedEmail()
+            ? redirect()->route('merchant.dashboard')
+            : view('merchant.auth.verify');
     }
 }
