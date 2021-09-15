@@ -62,7 +62,7 @@ class FreeTrialSubscription extends Notification
             ->line($line_2)
             ->line($line_3)
             ->line($line_4)
-            ->action($action, route('projects.index'));
+            ->action($action, route('merchant.login'));
     }
 
     /**

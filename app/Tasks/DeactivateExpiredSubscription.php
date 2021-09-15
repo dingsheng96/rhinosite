@@ -16,9 +16,7 @@ class DeactivateExpiredSubscription
         $expired_subscriptions = UserSubscription::with(['userSubscriptionLogs'])
             ->active()
             ->whereHas('userSubscriptionLogs', function ($query) {
-                $query->where('expired_at', '<', today()->startOfDay())
-                    ->orderByDesc('created_at')
-                    ->limit(1);
+                $query->where('expired_at', '<', today()->startOfDay())->orderByDesc('created_at')->limit(1);
             })->get();
 
         try {

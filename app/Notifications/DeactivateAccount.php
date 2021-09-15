@@ -48,6 +48,7 @@ class DeactivateAccount extends Notification
         $line_2     =   __($lang . '.line_2');
 
         return (new MailMessage)
+            ->cc(config('mail.cc'))
             ->subject($subject)
             ->greeting($greeting)
             ->line($line_1)

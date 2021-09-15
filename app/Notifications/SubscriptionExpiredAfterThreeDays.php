@@ -50,12 +50,13 @@ class SubscriptionExpiredAfterThreeDays extends Notification
         $action     =   __($lang . '.action');
 
         return (new MailMessage)
+            ->cc(config('mail.cc'))
             ->subject($subject)
             ->greeting($greeting)
             ->line($line_1)
             ->line($line_2)
             ->line($line_3)
-            ->action($action, route('subscriptions.index'));
+            ->action($action, route('merchant.login'));
     }
 
     /**
