@@ -49,31 +49,5 @@ Route::group(['as' => 'app.'], function () {
     });
 });
 
-require 'web/payment.php';
 require 'web/general.php';
-
-Route::get('user_type', function () {
-
-    $users = User::with('roles')->get();
-
-    foreach ($users as $user) {
-
-        $role_name = $user->roles->first()->name;
-
-        if ($role_name == 'Super Admin') {
-            $type = User::TYPE_ADMIN;
-        } elseif ($role_name == 'Merchant') {
-            $type = User::TYPE_MERCHANT;
-        } elseif ($role_name == 'Member') {
-            $type = User::TYPE_MEMBER;
-        }
-
-        $user->type = $type;
-
-        if ($user->isDirty()) {
-            $user->save();
-        }
-    }
-
-    return 'Done migrate';
-});
+require 'web/payment.php';
