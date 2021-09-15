@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use App\Models\Module;
 use App\Models\Permission;
 use Illuminate\Support\Str;
@@ -46,7 +47,7 @@ class PermissionSeeder extends Seeder
             foreach ($actions as $action) {
                 $all_data[] = [
                     'name'          =>  $module->name . '.' . $action,
-                    'guard_name'    =>  config('auth.defaults.guard'),
+                    'guard_name'    =>  User::TYPE_ADMIN,
                     'display'       =>  Str::title($action) . ' ' . $module->display,
                     'description'   =>  Str::title($action) . ' ' . $module->display,
                     'module_id'     =>  $module->id,

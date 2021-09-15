@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -30,7 +31,7 @@ class RoleSeeder extends Seeder
     private function getData()
     {
         return [
-            ['name' => 'Super Admin', 'guard_name' => config('auth.defaults.guard'), 'description' => 'User account used for system administration.'],
+            ['name' => 'Super Admin', 'guard_name' => User::TYPE_ADMIN, 'description' => 'User account used for system administration.'],
         ];
     }
 }

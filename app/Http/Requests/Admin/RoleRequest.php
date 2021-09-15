@@ -31,23 +31,10 @@ class RoleRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
-                'required',
-                Rule::unique(Role::class, 'name')
-                    ->ignore($this->route('role'), 'id')
-                    ->whereNull('deleted_at')
-            ],
-            'description' => [
-                'nullable'
-            ],
-            'permissions' => [
-                'nullable',
-                'array'
-            ],
-            'permissions.*' => [
-                Rule::exists(Permission::class, 'id')
-                    ->whereNull('deleted_at')
-            ]
+            'name'          => ['required', Rule::unique(Role::class, 'name')->ignore($this->route('role'), 'id')->whereNull('deleted_at')],
+            'description'   => ['nullable'],
+            'permissions'   => ['nullable', 'array'],
+            'permissions.*' => [Rule::exists(Permission::class, 'id')->whereNull('deleted_at')]
         ];
     }
 

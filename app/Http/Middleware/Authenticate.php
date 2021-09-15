@@ -18,20 +18,17 @@ class Authenticate extends Middleware
     {
         if (!$request->expectsJson()) {
 
-            $route_name = "login";
+            $route_name = 'login';
 
             if (is_array($guards) && count($guards) > 0) {
-
                 if ((in_array(User::TYPE_ADMIN, $guards))) {
-
-                    $route_name = "admin." . $route_name;
+                    $route_name = 'admin.' . $route_name;
                 } elseif ((in_array(User::TYPE_MERCHANT, $guards))) {
-
-                    $route_name = "merchant." . $route_name;
+                    $route_name = 'merchant.' . $route_name;
                 }
             }
 
-            return redirect()->route($route_name, $request->route()->parameters());
+            return route($route_name, $request->route()->parameters());
         }
     }
 

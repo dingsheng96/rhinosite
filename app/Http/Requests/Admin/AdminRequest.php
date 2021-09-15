@@ -32,35 +32,11 @@ class AdminRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
-                'required',
-                Rule::unique(User::class, 'name')
-                    ->ignore($this->route('admin'), 'id')
-                    ->where('type', User::TYPE_ADMIN)
-                    ->whereNull('deleted_at')
-            ],
-            'email' => [
-                'required',
-                'email',
-                Rule::unique(User::class, 'email')
-                    ->ignore($this->route('admin'), 'id')
-                    ->where('type', User::TYPE_ADMIN)
-                    ->whereNull('deleted_at')
-            ],
-            'status' => [
-                'required',
-                Rule::in(array_keys(Status::instance()->activeStatus()))
-            ],
-            'password' => [
-                Rule::requiredIf(empty($this->route('member'))),
-                'nullable',
-                'confirmed',
-                new PasswordFormat()
-            ],
-            'role' => [
-                'required',
-                'exists:' . Role::class . ',id'
-            ]
+            'name'      => ['required', Rule::unique(User::class, 'name')->ignore($this->route('admin'), 'id')->where('type', User::TYPE_ADMIN)->whereNull('deleted_at')],
+            'email'     => ['required', 'email', Rule::unique(User::class, 'email')->ignore($this->route('admin'), 'id')->where('type', User::TYPE_ADMIN)->whereNull('deleted_at')],
+            'status'    => ['required', Rule::in(array_keys(Status::instance()->activeStatus()))],
+            'password'  => [Rule::requiredIf(empty($this->route('admin'))), 'nullable', 'confirmed', new PasswordFormat()],
+            'role'      => ['required', 'exists:' . Role::class . ',id']
         ];
     }
 

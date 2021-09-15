@@ -25,7 +25,7 @@ class AdminDataTable extends DataTable
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return view('admin.components.btn_action', [
-                    'no_action' => $this->no_action ?: $data->id == Auth::id(),
+                    'no_action' => $this->no_action ?: ($data->id == Auth::id() || $data->is_super_admin),
                     'view' => [
                         'permission' => 'admin.read',
                         'route' => route('admin.admins.show', ['admin' => $data->id])
@@ -40,6 +40,9 @@ class AdminDataTable extends DataTable
                     ]
                 ])->render();
             })
+            ->addColumn('role', function ($data) {
+                return $data->roles->first()->name;
+            })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->toDateTimeString();
             })
@@ -52,6 +55,11 @@ class AdminDataTable extends DataTable
             ->filterColumn('status', function ($query, $keyword) {
                 $query->where('status', strtolower($keyword));
             })
+            ->filterColumn('role', function ($query, $keyword) {
+                $query->whereHas('roles', function ($query) use ($keyword) {
+                    $query->where('name', 'like', "%{$keyword}%");
+                });
+            })
             ->rawColumns(['action', 'status']);
     }
 
@@ -63,7 +71,7 @@ class AdminDataTable extends DataTable
      */
     public function query(User $model)
     {
-        return $model->admin()->newQuery();
+        return $model->with('roles')->admin()->newQuery();
     }
 
     /**
@@ -95,6 +103,7 @@ class AdminDataTable extends DataTable
             Column::computed('DT_RowIndex', '#'),
             Column::make('name')->title(__('labels.name')),
             Column::make('email')->title(__('labels.email')),
+            Column::make('role')->title(__('labels.role')),
             Column::make('status')->title(__('labels.status')),
             Column::make('last_login_at')->title(__('labels.last_login_at')),
             Column::make('created_at')->title(__('labels.created_at')),

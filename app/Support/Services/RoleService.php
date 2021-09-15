@@ -3,7 +3,8 @@
 namespace App\Support\Services;
 
 use App\Models\Role;
-use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use App\Support\Services\BaseService;
 
 class RoleService extends BaseService
 {
@@ -14,9 +15,9 @@ class RoleService extends BaseService
 
     public function store()
     {
-        $this->model->name = $this->request->get('name');
-        $this->model->description = $this->request->get('description');
-        $this->model->guard_name = config('auth.defaults.guard');
+        $this->model->name          = $this->request->get('name');
+        $this->model->description   = $this->request->get('description');
+        $this->model->guard_name    = $this->getGuardFromUserType(Auth::user()->type);
 
         if ($this->model->isDirty()) {
             $this->model->save();
@@ -32,5 +33,15 @@ class RoleService extends BaseService
         $this->model->syncPermissions($this->request->get('permissions'));
 
         return $this;
+    }
+
+    private function getGuardFromUserType(string $user_type)
+    {
+        $guards =  [
+            'admin' => 'admin',
+            'merchant' => 'merchant'
+        ];
+
+        return $guards[$user_type] ?? config('auth.defaults.guard');
     }
 }

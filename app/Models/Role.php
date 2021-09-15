@@ -10,6 +10,4 @@ class Role extends SpatieRole
     use SoftDeletes;
 
     const ROLE_SUPER_ADMIN = 'Super Admin';
-
-    public $guard_name = 'web';
 }

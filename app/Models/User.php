@@ -33,6 +33,15 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable, SoftDeletes, HasRoles;
 
+    // Constants
+    const STATUS_ACTIVE     =   'active';
+    const STATUS_INACTIVE   =   'inactive';
+    const STORE_PATH        =   '/users';
+
+    const TYPE_ADMIN    = 'admin';
+    const TYPE_MERCHANT = 'merchant';
+    const TYPE_MEMBER   = 'member';
+
     protected $table = 'users';
 
     protected $fillable = [
@@ -48,17 +57,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'last_login_at' => 'datetime'
     ];
-
-    protected $guard_name = 'web';
-
-    // Constants
-    const STATUS_ACTIVE     =   'active';
-    const STATUS_INACTIVE   =   'inactive';
-    const STORE_PATH        =   '/users';
-
-    const TYPE_ADMIN    = 'admin';
-    const TYPE_MERCHANT = 'merchant';
-    const TYPE_MEMBER   = 'member';
 
     // Functions
     protected static function boot()
