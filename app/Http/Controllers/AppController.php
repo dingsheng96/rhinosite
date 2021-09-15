@@ -5,14 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Project;
 use App\Models\Service;
-use App\Helpers\Response;
-use App\Models\Permission;
 use App\Models\CountryState;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-
-use Illuminate\Support\Facades\Auth;
 
 class AppController extends Controller
 {

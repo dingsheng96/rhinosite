@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\Media;
 use App\Models\Package;
+use App\Models\Product;
 use App\Models\UserDetail;
 use App\Models\Transaction;
 use App\Helpers\FileManager;
@@ -138,14 +139,14 @@ class MerchantService extends BaseService
             $plan = json_decode(base64_decode($plan));
 
             // calculate next billing date and expired date
-            $activated_at   =   Carbon::createFromFormat('Y-m-d', $this->request->get('activated_at', today()->toDateString()));
+            $activated_at   =   Carbon::createFromFormat('Y-m-d', (!empty($this->request) && !empty($this->request->get('activated_at'))) ? $this->request->get('activated_at') : today()->toDateString());
             $renewed_at     =   $activated_at->copy()->startOfDay();
             $valid_until    =   $activated_at->copy()->startOfDay();
             $is_trial       =   false;
 
             if ($plan->class == Package::class) { // if plan is a package
 
-                $package    =   Package::with(['products.productCategory'])->where('id', $plan->id)->firstOrFail();
+                $package = Package::with(['products.productCategory'])->where('id', $plan->id)->firstOrFail();
 
                 foreach ($package->products as $attribute) {
 
@@ -157,28 +158,34 @@ class MerchantService extends BaseService
 
                         if (!empty($attribute->validity_type)) {
 
-                            switch ($attribute->validity_type) {
-                                case ProductAttribute::VALIDITY_TYPE_DAY:
-                                    $valid_until = $valid_until->addDays($attribute->validity);
-                                    break;
-                                case ProductAttribute::VALIDITY_TYPE_MONTH:
-                                    $valid_until = $valid_until->addMonths($attribute->validity);
-                                    break;
-                                case ProductAttribute::VALIDITY_TYPE_YEAR:
-                                    $valid_until = $valid_until->addYears($attribute->validity);
-                                    break;
+                            if ($attribute->validity_type == ProductAttribute::VALIDITY_TYPE_DAY) {
+
+                                $valid_until = $valid_until->addDays($attribute->validity);
+                            } elseif ($attribute->validity_type == ProductAttribute::VALIDITY_TYPE_MONTH) {
+
+                                $valid_until = $valid_until->addMonths($attribute->validity);
+                            } elseif ($attribute->validity_type == ProductAttribute::VALIDITY_TYPE_YEAR) {
+
+                                $valid_until = $valid_until->addYears($attribute->validity);
                             }
                         }
                     }
 
                     // check item whether is ads products from package
-                    if (!($attribute->recurring) && empty($this->validity)) {
+                    if (!empty($attribute->product->slot_type) && !empty($attribute->product->total_slots)) {
 
                         $this->storeAdsQuota($attribute, $attribute->pivot->quantity);
                     }
                 }
 
-                $next_bill_date = ($package->recurring) ? $valid_until->copy()->addDay()->startOfDay() : null;
+                $next_billing_at =  ($package->recurring) ? $valid_until->copy()->addDay()->startOfDay() : null;
+                $expired_at      =   $valid_until->copy()->endOfDay();
+
+                if ($attribute->stock_type != ProductAttribute::STOCK_TYPE_INFINITE) {
+
+                    $attribute->stock_quantity = $attribute->stock_quantity - $attribute->quantity;
+                    $attribute->save();
+                }
             } elseif ($plan->class == ProductAttribute::class) { // if plan is a product
 
                 $attribute  =   ProductAttribute::with(['product'])->where('id', $plan->id)->firstOrFail();
@@ -187,16 +194,15 @@ class MerchantService extends BaseService
 
                 if (!empty($attribute->validity_type)) {
 
-                    switch ($attribute->validity_type) {
-                        case ProductAttribute::VALIDITY_TYPE_DAY:
-                            $valid_until = $valid_until->addDays($attribute->validity);
-                            break;
-                        case ProductAttribute::VALIDITY_TYPE_MONTH:
-                            $valid_until = $valid_until->addMonths($attribute->validity);
-                            break;
-                        case ProductAttribute::VALIDITY_TYPE_YEAR:
-                            $valid_until = $valid_until->addYears($attribute->validity);
-                            break;
+                    if ($attribute->validity_type == ProductAttribute::VALIDITY_TYPE_DAY) {
+
+                        $valid_until = $valid_until->addDays($attribute->validity);
+                    } elseif ($attribute->validity_type == ProductAttribute::VALIDITY_TYPE_MONTH) {
+
+                        $valid_until = $valid_until->addMonths($attribute->validity);
+                    } elseif ($attribute->validity_type == ProductAttribute::VALIDITY_TYPE_YEAR) {
+
+                        $valid_until = $valid_until->addYears($attribute->validity);
                     }
 
                     $next_billing_at    =   ($attribute->recurring) ? $valid_until->copy()->addDay()->startOfDay() : null;
@@ -212,25 +218,29 @@ class MerchantService extends BaseService
             }
 
             // Subscription
-            $subscription = $this->model->userSubscriptions()->active()
-                ->whereHasMorph('subscribable', $plan->class, function (Builder $query) use ($plan) {
-                    $query->where('id', $plan->id);
-                })->firstOr(function () {
-                    return new UserSubscription();
-                });
+            $current_subscription = $this->model->userSubscriptions()->with('subscribable')->active()->first();
 
-            if (!$subscription) { // if different active subscription found, deactivate it, then create a new record
+            if (!empty($current_subscription->subscribable)) {
 
-                $subscription->update([
-                    'status' => UserSubscription::STATUS_INACTIVE
-                ]);
+                if ($current_subscription->subscribable_id != $plan->id && $current_subscription->subscribable_type != $plan->class) { // if different active subscription found, deactivate it, then create a new record
+
+                    $current_subscription->update([
+                        'status' => UserSubscription::STATUS_INACTIVE
+                    ]);
+
+                    $subscription = new UserSubscription();
+                } else {
+                    $subscription = $current_subscription;
+                }
+            } else {
+                $subscription = new UserSubscription();
             }
 
             // save new subscription
             $subscription->subscribable_type =  $plan->class;
             $subscription->subscribable_id   =  $plan->id;
             $subscription->status            =  UserSubscription::STATUS_ACTIVE;
-            $subscription->activated_at      =  $activated_at->startOfDay();
+            $subscription->activated_at      =  empty($subscription->activated_at) ? $activated_at->startOfDay() : $subscription->activated_at;
             $subscription->next_billing_at   =  $next_billing_at;
             $subscription->transaction_id    =  empty($transaction) ? null : $transaction->id;
 
@@ -291,8 +301,8 @@ class MerchantService extends BaseService
             'initial_quantity'   =>   $initial_quantity,
             'process_quantity'   =>   $total_quantity,
             'remaining_quantity' =>   $user_ads_quota->quantity,
-            'sourceable_type'    =>   get_class(Auth::user()),
-            'sourceable_id'      =>   Auth::id(),
+            'sourceable_type'    =>   get_class($user_ads_quota->user),
+            'sourceable_id'      =>   $user_ads_quota->user->id,
             'applicable_type'    =>   get_class($user_ads_quota),
             'applicable_id'      =>   $user_ads_quota->id
         ]);
@@ -338,13 +348,42 @@ class MerchantService extends BaseService
             $detail->validated_at  =   now();
             $detail->save();
 
+            $this->model->notify(new VerifyUserDetail());
+
             if (!empty($this->request->get('plan')) && $status == UserDetail::STATUS_APPROVED) {
 
                 return $this->storeSubscription($this->request->get('plan'));
             }
-
-            $this->model->user->notify(new VerifyUserDetail());
         }
+
+        return $this;
+    }
+
+    public function refundAdsQuota(Product $product)
+    {
+        $user_ads_quota = $this->model->userAdsQuotas()
+            ->where('product_id', $product->id)->firstOrFail();
+
+        $user_ads_quota->product_id =   $product->id;
+        $user_ads_quota->quantity   +=  1;
+        $this->model->userAdsQuotas()->save($user_ads_quota);
+
+        $history = $user_ads_quota->userAdsQuotaHistories()->orderByDesc('created_at')->first();
+
+        if ($history) {
+            $initial_quantity = $history->remaining_quantity;
+        }
+
+        // create new user ads quoata history
+        $user_ads_quota->userAdsQuotaHistories()->create([
+            'initial_quantity'   =>   $initial_quantity,
+            'process_quantity'   =>   1,
+            'remaining_quantity' =>   $user_ads_quota->quantity,
+            'sourceable_type'    =>   get_class(Auth::user()),
+            'sourceable_id'      =>   Auth::id(),
+            'applicable_type'    =>   get_class($user_ads_quota),
+            'applicable_id'      =>   $user_ads_quota->id
+        ]);
 
         return $this;
     }

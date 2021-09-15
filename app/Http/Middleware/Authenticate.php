@@ -22,7 +22,13 @@ class Authenticate extends Middleware
 
             if (is_array($guards) && count($guards) > 0) {
 
-                $route_name = (in_array(User::TYPE_ADMIN, $guards)) ? "admin.login" : "login";
+                if ((in_array(User::TYPE_ADMIN, $guards))) {
+
+                    $route_name = "admin." . $route_name;
+                } elseif ((in_array(User::TYPE_MERCHANT, $guards))) {
+
+                    $route_name = "merchant." . $route_name;
+                }
             }
 
             return redirect()->route($route_name, $request->route()->parameters());

@@ -20,22 +20,13 @@
 
                     <ul class="nav align-items-center mb-3">
                         <li class="login-user">
-                            <a class="user active btn-toggle-tab" data-toggle="tab" href="#member" data-route="{{ route('login') }}">{{ __('app.login_option_member') }}</a>
+                            <a class="user active btn-toggle-tab" href="{{ route('login') }}">{{ __('app.login_option_member') }}</a>
                         </li>
                         <li class="login-merchant">
-                            <a class="user btn-toggle-tab" data-toggle="tab" href="#merchant" data-route="{{ route('merchant.login') }}">{{ __('app.login_option_merchant') }}</a>
+                            <a class="user btn-toggle-tab" href="{{ route('merchant.login') }}">{{ __('app.login_option_merchant') }}</a>
                         </li>
                         <div class="tab-content register-tab">
-                            <div class="tab-pane active member" id="member">
-                                <div>
-                                    {!! __('app.login_btn_register_member') !!}
-                                </div>
-                            </div>
-                            <div class="tab-pane fade merchant" id="merchant">
-                                <div>
-                                    {!! __('app.login_btn_register_merchant') !!}
-                                </div>
-                            </div>
+                            {!! __('app.login_btn_register_member') !!}
                         </div>
                     </ul>
 

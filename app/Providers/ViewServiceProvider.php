@@ -8,15 +8,15 @@ class ViewServiceProvider extends ServiceProvider
 {
     protected $composers = [
         \App\Http\View\Composers\CountryComposer::class => [
-            'admin.projects.*', 'admin.merchant.*', 'admin.member.*',
-            'admin.verification.*', 'merchant.auth.register', 'merchant.account',
-            'checkout.recurring', 'merchant.account', 'auth.*', 'member.*'
+            'admin.project.*', 'admin.merchant.*', 'admin.member.*',
+            'merchant.auth.register', 'merchant.account', 'merchant.verification.*', 'merchant.project.*',
+            'merchant.checkout.recurring', 'auth.*', 'member.account'
         ],
         \App\Http\View\Composers\UnitComposer::class => [
-            'admin.projects.*', 'merchant.projects.*'
+            'admin.project.*', 'merchant.project.*'
         ],
         \App\Http\View\Composers\MerchantComposer::class => [
-            'admin.projects.*'
+            'admin.project.*'
         ],
         \App\Http\View\Composers\VerificationComposer::class => [
             'admin.*',
@@ -26,13 +26,13 @@ class ViewServiceProvider extends ServiceProvider
         ],
         \App\Http\View\Composers\CurrencyComposer::class => [
             'admin.package.*', 'admin.product.attribute.*', 'admin.currency.*',
-            'admin.projects.*', 'merchant.projects.*'
+            'admin.project.*', 'merchant.project.*'
         ],
         \App\Http\View\Composers\CartComposer::class => [
-            'cart.index', 'checkout.*'
+            'merchant.cart.index', 'merchant.checkout.*'
         ],
         \App\Http\View\Composers\ServiceComposer::class => [
-            'app.*', 'auth.login', 'auth.register'
+            'app.*', 'auth.*', 'admin.auth.*', 'merchant.auth.*'
         ],
     ];
 

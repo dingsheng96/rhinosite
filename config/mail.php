@@ -88,6 +88,8 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    'cc' => env('MAIL_CC_ADDRESS', 'info@rhinosite.com.my'),
+
     /*
     |--------------------------------------------------------------------------
     | Markdown Mail Settings

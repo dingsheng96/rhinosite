@@ -40,7 +40,7 @@ return [
     'compare_list_reached_limit' => 'Compare list has reached the maximum limit.',
     'wishlist_empty' => 'Your wishlist is empty',
     'session_expired' => 'Your session is expired. Please login again.',
-    'in_using' => 'This :item is in using.',
+    'in_using' => 'This :item is being used by other module.',
     'fill_in_recurring_form' => "Please fill in following details of Credit Card's Holder for recurring payment.",
     'fill_in_credit_card_details' => "Please fill in credit card details for recurring payment.",
     'order_cancelled' => 'Order has been cancelled',
@@ -52,5 +52,6 @@ return [
     'whatsapp_message' => "Hi :name, I found your project listing (:link) on " . config('app.url') . " and am interested to find out more.",
     'no_slot_available' => 'No slot available',
     'insufficient_quota' => 'Insufficient Quota',
-    'complete_fields' => 'Please complete the fields below.'
+    'complete_fields' => 'Please complete the fields below.',
+    'email_verified' => 'Email verified successfully. You may login with your account.',
 ];

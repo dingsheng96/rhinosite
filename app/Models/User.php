@@ -26,6 +26,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -65,6 +66,16 @@ class User extends Authenticatable implements MustVerifyEmail
         parent::boot();
 
         self::observe(UserObserver::class);
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail);
     }
 
     // Relationships
@@ -136,12 +147,6 @@ class User extends Authenticatable implements MustVerifyEmail
     public function comparisons()
     {
         return $this->morphedByMany(Project::class, 'comparable', Comparable::class);
-    }
-
-    // Functions
-    public function sendEmailVerificationNotification()
-    {
-        $this->notify(new VerifyEmail);
     }
 
     // Scopes
@@ -385,9 +390,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getActiveSubscriptionLatestLogAttribute()
     {
-        return $this->active_subscription
-            ->userSubscriptionLogs()
-            ->orderByDesc('renewed_at')
-            ->first();
+        return $this->active_subscription->userSubscriptionLogs->first();
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Role;
 use App\Models\User;
 use App\Helpers\Domain;
 use App\Models\Product;
@@ -49,9 +48,16 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-        $this->mapApiRoutes();
+        ['web' => $web, 'prefix' => $prefix] = (new Domain())->getConfig();
 
-        $this->mapWebRoutes();
+        // $this->mapApiRoutes();
+        // $this->mapWebRoutes();
+
+        if ($prefix) {
+            $this->prefixRoutes($web);
+        } else {
+            $this->domainRoutes($web);
+        }
     }
 
     /**
@@ -63,14 +69,6 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
-        ['web' => $web, 'prefix' => $prefix] = (new Domain())->getConfig();
-
-        if ($prefix) {
-            $this->prefixRoutes($web);
-        } else {
-            $this->domainRoutes($web);
-        }
-
         Route::middleware(['web'])
             ->namespace($this->namespace)
             ->group(base_path('routes/web.php'));
@@ -93,25 +91,57 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function prefixRoutes(array $web)
     {
+        $prefix = '';
+        $route_name         =   '';
+        $route_namespace    =   $this->namespace;
+
         foreach ($web as $value) {
 
-            Route::prefix($value['prefix'])
+            if (!empty($value['prefix'])) {
+                $prefix = $value['prefix'];
+            }
+
+            if (!empty($value['namespace'])) {
+                $route_namespace = $this->namespace . '\\' . $value['namespace'];
+            }
+
+            if (!empty($value['route']['name'])) {
+                $route_name = $value['route']['name'] . '.';
+            }
+
+            Route::prefix($prefix)
                 ->middleware('web')
-                ->namespace($this->namespace . '\\' . $value['namespace'])
-                ->name($value['route']['name'] . '.')
-                ->group(base_path('routes/web/' . $value['route']['file']));
+                ->namespace($route_namespace)
+                ->name($route_name)
+                ->group(base_path('routes/' . $value['route']['file']));
         }
     }
 
     protected function domainRoutes(array $web)
     {
+        $domain = '';
+        $route_name         =   '';
+        $route_namespace    =   $this->namespace;
+
         foreach ($web as $value) {
 
-            Route::domain($value['url'])
+            if (!empty($value['url'])) {
+                $domain = $value['url'];
+            }
+
+            if (!empty($value['namespace'])) {
+                $route_namespace = $this->namespace . '\\' . $value['namespace'];
+            }
+
+            if (!empty($value['route']['name'])) {
+                $route_name = $value['route']['name'] . '.';
+            }
+
+            Route::domain($domain)
                 ->middleware('web')
-                ->namespace($this->namespace . '\\' . $value['namespace'])
-                ->name($value['route']['name'] . '.')
-                ->group(base_path('routes/web/' . $value['route']['file']));
+                ->namespace($route_namespace)
+                ->name($route_name)
+                ->group(base_path('routes/' . $value['route']['file']));
         }
     }
 
@@ -130,11 +160,7 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         Route::bind('ads', function ($value) {
-            return Product::where('id', $value)
-                ->whereHas('productCategory', function ($query) {
-                    $query->where('name', ProductCategory::TYPE_ADS);
-                })
-                ->firstOrFail();
+            return Product::where('id', $value)->whereNotNull('slot_type')->whereNotNull('total_slots')->firstOrFail();
         });
     }
 }

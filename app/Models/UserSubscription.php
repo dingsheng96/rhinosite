@@ -87,6 +87,7 @@ class UserSubscription extends Model
     public function getNameAttribute()
     {
         if ($this->subscribable) {
+
             if ($this->subscribable_type == ProductAttribute::class) {
                 if ($this->subscribable->trial_mode) {
                     return $this->subscribable->product->name . ' (' . __('labels.free_trial') . ')';

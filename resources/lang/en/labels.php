@@ -222,7 +222,7 @@ return [
     'free_trial_plan' => 'Free Trial Plan',
     'transaction_no' => 'Transaction No.',
     'payment_method' => 'Payment Method',
-    'enable_trial' => 'Enable Trial',
+    'enable_trial' => 'Free Trial Plan',
     'on_listing' => 'Show on Listing',
     'subscribe_plan' => 'Subscribe Plan',
     'company_name' => 'Company Name',
@@ -241,5 +241,16 @@ return [
     'contractor_name' => 'Contractor Name',
     'subscription_history' => 'Subscription History',
     'items' => 'Items',
-
+    'subscription_reference' => 'Subscription Reference',
+    'ipay_transaction_id' => 'IPay Transaction ID',
+    'auth_code' => 'Auth Code',
+    'remark' => 'Remark',
+    'transaction_details' => 'Transaction Details',
+    'package_include_items' => 'Package Include Items',
+    'require_recurring_payment' => 'Require Recurring Payment',
+    'stock_quantity' => 'Stock Quantity',
+    'variation_quantity' => 'Variation Unit',
+    'click_here_to_terminate' => 'Click here to terminate',
+    'change_new_boosting_date' => 'Change New Boosting Date',
+    'valid_till' => 'Valid Till'
 ];

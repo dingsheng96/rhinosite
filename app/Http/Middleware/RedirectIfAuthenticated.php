@@ -19,6 +19,11 @@ class RedirectIfAuthenticated
     {
         if (Auth::guard($guard)->check()) {
 
+            if ($guard == config('auth.defaults.guard')) {
+
+                return redirect()->route('app.dashboard');
+            }
+
             return redirect()->route($guard . '.dashboard');
         }
 

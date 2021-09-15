@@ -16,10 +16,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+
     return redirect()->route('app.home');
 });
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 Route::group(['as' => 'app.'], function () {
 
@@ -33,34 +34,25 @@ Route::group(['as' => 'app.'], function () {
     Route::get('project', 'AppController@project')->name('project.index');
     Route::get('project/{project}/details', 'AppController@showProject')->name('project.show');
     Route::get('project/{merchant}/profile', 'AppController@showMerchant')->name('merchant.show');
-});
 
-Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
+    Route::group(['middleware' => ['auth:web', 'verified']], function () {
 
-    Route::post('products/{product}/sku', 'DataController@getSkuFromProduct')->name('products.sku');
-    Route::post('boosters/{ads}/unavailable-date', 'DataController@getAdsUnavailableDate')->name('ads.unavailable-date');
-    Route::post('merchants/{merchant}/boosters-quota', 'DataController@getMerchantAdsQuota')->name('merchants.ads-quota');
-    Route::post('merchants/{merchant}/projects', 'DataController@getMerchantProjects')->name('merchants.projects');
+        Route::get('dashboard', 'HomeController@index')->name('dashboard');
 
-    Route::group(['prefix' => 'countries/{country}', 'as' => 'countries.'], function () {
-        Route::post('country-states', 'DataController@getCountryStateFromCountry')->name('country-states');
-        Route::post('country-states/{country_state}/cities', 'DataController@getCityFromCountryState')->name('country-states.cities');
+        Route::resource('account', 'AccountController')->only(['index', 'store']);
+
+        Route::resource('comparisons', 'CompareController')->only(['index', 'store']);
+
+        Route::resource('ratings', 'RatingController')->only(['store']);
+
+        Route::resource('wishlist', 'WishlistController')->only(['index', 'store']);
     });
 });
 
-Route::group(['prefix' => 'payment', 'as' => 'payment.'], function () {
+require 'web/payment.php';
+require 'web/general.php';
 
-    Route::get('redirect', 'PaymentController@redirect')->name('redirect');
-    Route::post('response', 'PaymentController@response')->name('response');
-    Route::post('backend', 'PaymentController@backend')->name('backend');
-
-    Route::post('recurring/response', 'PaymentController@recurringResponse')->name('recurring.response');
-    Route::post('recurring/backend', 'PaymentController@recurringBackend')->name('recurring.backend');
-
-    Route::get('status', 'PaymentController@paymentStatus')->name('status');
-});
-
-Route::get('set_user_type', function () {
+Route::get('user_type', function () {
 
     $users = User::with('roles')->get();
 

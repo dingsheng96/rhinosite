@@ -1,26 +1,3 @@
-@if (Auth::check() && (!isset($guest_view) || !$guest_view))
-
-<footer class="main-footer d-flex flex-md-row flex-column">
-
-    <div class="px-md-2">
-        <a href="{{ route('app.term') }}" target="_blank">
-            {{ __('labels.terms_policy') }}
-        </a>
-    </div>
-
-    <div class="px-md-2">
-        <a href="{{ route('app.privacy') }}" target="_blank">
-            {{ __('labels.privacy_policy') }}
-        </a>
-    </div>
-
-    <div class="px-md-2 ml-md-auto">
-        {!! __('labels.copyright') !!}
-    </div>
-</footer>
-
-@else
-
 <div id="mobilefooter" class="navbar navbar-expand-lg navbar-light">
     <div class="container px-4 py-3">
         <a class="navbar-brand" href="{{ route('app.home') }}"><img src="{{ asset('storage/logo-footer.png') }}" alt="rhinosite_logo" class="footer-logo"></a>
@@ -148,5 +125,3 @@
         </div>
     </div>
 </div>
-
-@endif

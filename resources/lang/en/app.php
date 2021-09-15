@@ -48,6 +48,7 @@ return [
     'project_details_subtitle_material' => 'Materials Used',
     'project_details_subtitle_similar_projects' => 'Similar Projects',
     'project_details_btn_add_wishlist' => 'Add to wishlist',
+    'project_details_btn_remove_wishlist' => 'Remove from wishlist',
     'project_details_btn_call' => 'Call Us',
     'project_details_btn_whatsapp' => 'Whatsapp Us',
 
@@ -63,8 +64,8 @@ return [
     'login_form_title' => 'Welcome to Rhinosite',
     'login_btn_forgot_password' => 'Forgot Password?',
     'login_btn_facebook' => 'Continue with Facebook',
-    'login_btn_register_member' => '<span class="register-text">New Member? </span><a href="' . route('register', ['role' => 'member']) . '" class="register-text text-underline txtorange"><u>Register Now</u></a>',
-    'login_btn_register_merchant' => '<span class="register-text">New Contractor? </span><a href="' . route('register', ['role' => 'merchant']) . '" class="register-text text-underline txtorange"><u>Join Now</u></a>',
+    'login_btn_register_member' => '<span class="register-text">New Member? </span><a href="' . route('register') . '" class="register-text text-underline txtorange"><u>Register Now</u></a>',
+    'login_btn_register_merchant' => '<span class="register-text">New Contractor? </span><a href="' . route('merchant.register') . '" class="register-text text-underline txtorange"><u>Join Now</u></a>',
 
     'about_title_main' => 'About Rhinosite',
 

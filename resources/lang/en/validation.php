@@ -205,7 +205,14 @@ return [
         'variant' => 'variant',
         'profile_picture' => 'profile picture',
         'service' => 'service',
-        'permission' => 'permission'
+        'permission' => 'permission',
+        'password' => 'password',
+        'status' => 'status',
+        'role' => 'role',
+        'plan' => 'plan',
+        'free_trial_plan' => 'free trial plan',
+        'stock_quantity' => 'stock quantity',
+        'variation_quantity' => 'variation unit'
     ],
 
 ];
