@@ -149,11 +149,9 @@ body.enduser h4 {
 }
 
 .footer-background {
-    background: linear-gradient(
-            90deg,
+    background: linear-gradient(90deg,
             rgba(0, 0, 0, 0.7) calc(50vw - 400px),
-            rgba(0, 0, 0, 0.4) calc(50vw - 400px)
-        ),
+            rgba(0, 0, 0, 0.4) calc(50vw - 400px)),
         url("../storage/assets/home/footer-new.jpg");
     background-repeat: no-repeat;
     background-size: cover;
@@ -216,12 +214,12 @@ body.enduser h4 {
     max-width: auto;
 }
 
-.footer-right-content > ul > li {
+.footer-right-content>ul>li {
     list-style: none;
     padding-bottom: 1rem;
 }
 
-.footer-right-content > ul > li.header {
+.footer-right-content>ul>li.header {
     font-weight: 700;
     text-decoration: underline;
 }
@@ -231,7 +229,7 @@ body.enduser h4 {
     padding: 1rem 0;
 }
 
-.footer-bottom ul > li,
+.footer-bottom ul>li,
 .footer-bottom ul {
     font-size: 14px;
     display: inline-block;
@@ -240,11 +238,11 @@ body.enduser h4 {
     padding-left: 0;
 }
 
-.footer-bottom ul > li:not(:first-child) {
+.footer-bottom ul>li:not(:first-child) {
     margin-left: 10px;
 }
 
-.footer-bottom ul > li > a {
+.footer-bottom ul>li>a {
     color: #000;
 }
 
@@ -438,6 +436,10 @@ input[type="text"].home-s1-searchbar:focus {
     transition: 0.4s ease-in-out;
 }
 
+#home-whyrhino {
+    padding: 64px 0 16px 0;
+}
+
 #home-tryrhino {
     padding: 64px 0 0 0;
 }
@@ -455,11 +457,9 @@ input[type="text"].home-s1-searchbar:focus {
     position: relative;
     border-radius: 18px;
     color: #fff;
-    background: linear-gradient(
-        90deg,
-        rgba(0, 0, 0, 0.5) 0%,
-        rgba(0, 0, 0, 0.3) 100%
-    );
+    background: linear-gradient(90deg,
+            rgba(0, 0, 0, 0.5) 0%,
+            rgba(0, 0, 0, 0.3) 100%);
     z-index: 1;
 }
 
@@ -1119,7 +1119,7 @@ ul.pagination li {
     color: #000;
 }
 
-.breadcrumb-item + .breadcrumb-item::before {
+.breadcrumb-item+.breadcrumb-item::before {
     color: #000000;
     content: ">";
 }
@@ -1370,12 +1370,12 @@ ul.pagination li {
     width: 100%;
 }
 
-.rate:not(:checked) > input {
+.rate:not(:checked)>input {
     position: absolute;
     top: -9999px;
 }
 
-.rate:not(:checked) > label {
+.rate:not(:checked)>label {
     float: right;
     width: 1em;
     overflow: hidden;
@@ -1385,24 +1385,24 @@ ul.pagination li {
     color: #ccc;
 }
 
-.rate:not(:checked) > label:before {
+.rate:not(:checked)>label:before {
     content: "★ ";
 }
 
-.rate > input:checked ~ label {
+.rate>input:checked~label {
     color: #ffbc05;
 }
 
-.rate:not(:checked) > label:hover,
-.rate:not(:checked) > label:hover ~ label {
+.rate:not(:checked)>label:hover,
+.rate:not(:checked)>label:hover~label {
     color: #ffbc05;
 }
 
-.rate > input:checked + label:hover,
-.rate > input:checked + label:hover ~ label,
-.rate > input:checked ~ label:hover,
-.rate > input:checked ~ label:hover ~ label,
-.rate > label:hover ~ input:checked ~ label {
+.rate>input:checked+label:hover,
+.rate>input:checked+label:hover~label,
+.rate>input:checked~label:hover,
+.rate>input:checked~label:hover~label,
+.rate>label:hover~input:checked~label {
     color: #ffbc05;
 }
 
@@ -1495,12 +1495,10 @@ ul.pagination li {
 /* join-2 */
 #join-header {
     padding: 6rem 0;
-    background-image: linear-gradient(
-            90deg,
+    background-image: linear-gradient(90deg,
             rgba(0, 0, 0, 1) 0%,
             30%,
-            rgba(0, 0, 0, 0.3) 100%
-        ),
+            rgba(0, 0, 0, 0.3) 100%),
         url("../storage/assets/joinus/partnerheader.jpg");
     background-repeat: no-repeat;
     background-size: cover;
@@ -1537,9 +1535,7 @@ ul.pagination li {
 }
 
 .join-bar {
-    background: transparent
-        linear-gradient(90deg, #ff8c08 0%, #f9cb7d 31%, #fdca00 100%) 0% 0%
-        no-repeat padding-box;
+    background: transparent linear-gradient(90deg, #ff8c08 0%, #f9cb7d 31%, #fdca00 100%) 0% 0% no-repeat padding-box;
     padding-top: 30px;
     width: 100%;
     margin-left: auto;
@@ -1618,11 +1614,9 @@ ul.pagination li {
     position: relative;
     border-radius: 18px;
     color: #fff;
-    background: linear-gradient(
-        90deg,
-        rgba(0, 0, 0, 0.5) 0%,
-        rgba(0, 0, 0, 0.3) 100%
-    );
+    background: linear-gradient(90deg,
+            rgba(0, 0, 0, 0.5) 0%,
+            rgba(0, 0, 0, 0.3) 100%);
     z-index: 1;
 }
 
@@ -1639,12 +1633,10 @@ ul.pagination li {
 --------------------------------------------------------------*/
 #login-header {
     padding: 6rem 0;
-    background-image: linear-gradient(
-            90deg,
+    background-image: linear-gradient(90deg,
             rgba(0, 0, 0, 1) 0%,
             20%,
-            rgba(0, 0, 0, 0.3) 100%
-        ),
+            rgba(0, 0, 0, 0.3) 100%),
         url("../storage/assets/login/login_banner.jpg");
     background-repeat: no-repeat;
     background-size: cover;
@@ -1794,11 +1786,11 @@ a.user {
     margin-bottom: 3rem;
 }
 
-#privacy-1 ol > li > ol {
+#privacy-1 ol>li>ol {
     margin-top: 1.5rem;
 }
 
-#privacy-1 ol > li > ol > li {
+#privacy-1 ol>li>ol>li {
     margin-bottom: 1.5rem;
 }
 
@@ -1817,11 +1809,11 @@ a.user {
     margin-bottom: 3rem;
 }
 
-#terms-1 ol > li > ol {
+#terms-1 ol>li>ol {
     margin-top: 1.5rem;
 }
 
-#terms-1 ol > li > ol > li {
+#terms-1 ol>li>ol>li {
     margin-bottom: 1.5rem;
 }
 
@@ -2060,7 +2052,8 @@ a.user {
         width: 60%;
     }
 
-    #about-2 h3 {
+    #about-2 h3,
+    #home-whyrhino h3 {
         font-size: 18px;
     }
 
@@ -2087,7 +2080,7 @@ a.user {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li {
+    .footer-bottom ul>li {
         font-size: 0.8rem;
     }
 
@@ -2171,6 +2164,7 @@ a.user {
     }
 
     #about-2,
+    #home-whyrhino,
     #merchant-category,
     .services-details,
     #profile-1 {
@@ -2224,11 +2218,9 @@ a.user {
     }
 
     .footer-background {
-        background-image: linear-gradient(
-                90deg,
+        background-image: linear-gradient(90deg,
                 rgba(0, 0, 0, 0.7) calc(50vw - 300px),
-                rgba(0, 0, 0, 0.4) calc(50vw - 300px)
-            ),
+                rgba(0, 0, 0, 0.4) calc(50vw - 300px)),
             url("../storage/assets/home/footer-new.jpg");
     }
 
@@ -2293,11 +2285,9 @@ a.user {
     }
 
     .footer-background {
-        background-image: linear-gradient(
-                90deg,
+        background-image: linear-gradient(90deg,
                 rgba(0, 0, 0, 0.7) calc(50vw - 200px),
-                rgba(0, 0, 0, 0.4) calc(50vw - 200px)
-            ),
+                rgba(0, 0, 0, 0.4) calc(50vw - 200px)),
             url("../storage/assets/home/footer-new.jpg");
     }
 
@@ -2305,7 +2295,8 @@ a.user {
         padding: 60px;
     }
 
-    #about-2 h3 {
+    #about-2 h3,
+    #home-whyrhino h3 {
         font-size: 18px;
     }
 
@@ -2345,7 +2336,7 @@ a.user {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li {
+    .footer-bottom ul>li {
         font-size: 0.8rem;
     }
 
@@ -2468,6 +2459,7 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (max-width: 1199px) {
+
     #user .sidebar,
     #user {
         background-color: #fff;
@@ -2557,7 +2549,7 @@ a.user {
         display: none;
     }
 
-    #merchant-category ul > li,
+    #merchant-category ul>li,
     #merchant-category span {
         padding-left: 0;
         margin-bottom: 20px;
@@ -2587,7 +2579,8 @@ a.user {
         padding: 20px;
     }
 
-    #about-2 .res-img {
+    #about-2 .res-img,
+    #home-whyrhino .res-img {
         max-width: 400px;
         margin: 0 auto;
         display: block;
@@ -2611,7 +2604,8 @@ a.user {
         padding: 32px 0;
     }
 
-    #about-2 {
+    #about-2,
+    #home-whyrhino {
         padding: 64px 0 32px 0;
     }
 
@@ -2666,7 +2660,7 @@ a.user {
         font-size: 25px;
     }
 
-    .services-3-price > span {
+    .services-3-price>span {
         display: block;
     }
 
@@ -2744,11 +2738,9 @@ a.user {
     }
 
     .footer-background {
-        background-image: linear-gradient(
-                90deg,
+        background-image: linear-gradient(90deg,
                 rgba(0, 0, 0, 0.7) calc(50vw - 150px),
-                rgba(0, 0, 0, 0.4) calc(50vw - 150px)
-            ),
+                rgba(0, 0, 0, 0.4) calc(50vw - 150px)),
             url("../storage/assets/home/footer-new.jpg");
     }
 
@@ -2762,7 +2754,8 @@ a.user {
         padding: 50px;
     }
 
-    #about-2 h3 {
+    #about-2 h3,
+    #home-whyrhino h3 {
         font-size: 18px;
     }
 
@@ -2819,7 +2812,7 @@ a.user {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li {
+    .footer-bottom ul>li {
         font-size: 0.7rem;
     }
 
@@ -2917,7 +2910,8 @@ a.user {
         padding: 10px;
     }
 
-    #about-2 h3 {
+    #about-2 h3,
+    #home-whyrhino h3 {
         font-size: 18px;
     }
 
@@ -2977,7 +2971,7 @@ a.user {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li {
+    .footer-bottom ul>li {
         font-size: 0.7rem;
     }
 
@@ -2994,11 +2988,9 @@ a.user {
     }
 
     .footer-background {
-        background-image: linear-gradient(
-                180deg,
+        background-image: linear-gradient(180deg,
                 rgba(0, 0, 0, 0.7) 270px,
-                rgba(0, 0, 0, 0.5) 270px
-            ),
+                rgba(0, 0, 0, 0.5) 270px),
             url("../storage/assets/home/mobilefooter-2.jpg");
         background-position: center 80%;
     }
@@ -3011,7 +3003,7 @@ a.user {
         margin-bottom: 70px;
     }
 
-    .footer-right-content > ul {
+    .footer-right-content>ul {
         padding-left: 0;
     }
 
@@ -3330,7 +3322,8 @@ a.user {
         margin-bottom: 1rem;
     }
 
-    #about-2 h3 {
+    #about-2 h3,
+    #home-whyrhino h3 {
         font-size: 18px;
     }
 
@@ -3412,7 +3405,7 @@ a.user {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li,
+    .footer-bottom ul>li,
     .footer-background {
         font-size: 0.7rem;
     }
@@ -3430,11 +3423,9 @@ a.user {
     }
 
     .footer-background {
-        background-image: linear-gradient(
-                180deg,
+        background-image: linear-gradient(180deg,
                 rgba(0, 0, 0, 0.7) 180px,
-                rgba(0, 0, 0, 0.5) 180px
-            ),
+                rgba(0, 0, 0, 0.5) 180px),
             url("../storage/assets/home/mobilefooter-2.jpg");
         background-position: 70% center;
     }
@@ -3447,7 +3438,7 @@ a.user {
         margin-bottom: 70px;
     }
 
-    .footer-right-content > ul {
+    .footer-right-content>ul {
         padding-left: 0;
     }
 
@@ -3463,7 +3454,7 @@ a.user {
         margin-bottom: 2rem !important;
     }
 
-    .footer-right-content > ul > li {
+    .footer-right-content>ul>li {
         list-style: none;
         padding-bottom: 0.7rem;
     }
