@@ -60,9 +60,7 @@ class OrderDataTable extends DataTable
      */
     public function query(Order $model)
     {
-        return $model->when(Auth::user()->is_merchant, function ($query) {
-            $query->where('user_id', Auth::id());
-        })->newQuery();
+        return $model->newQuery();
     }
 
     /**

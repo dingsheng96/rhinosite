@@ -96,9 +96,10 @@ class SubscriptionController extends Controller
                     break;
             }
 
-            CartFacade::setBuyer($user)->addToCart($item_model);
-
             if (!$trial) {
+
+                CartFacade::setBuyer($user)->addToCart($item_model);
+
                 // store order
                 $order = OrderFacade::setRequest($request)
                     ->setBuyer($user)->createOrder()

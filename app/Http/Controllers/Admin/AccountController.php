@@ -74,7 +74,7 @@ class AccountController extends Controller
         activity()->useLog('admin:account')
             ->causedBy(Auth::user())
             ->performedOn(Auth::user())
-            ->withProperties($request->except(['new_password', 'new_password_confirmation']))
+            ->withProperties($request->except(['password', 'password_confirmation']))
             ->log($message);
 
         return redirect()->route('admin.account.index')->with($status, $message);

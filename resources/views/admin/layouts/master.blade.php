@@ -75,7 +75,9 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script type="text/javascript" src="{{ asset('dropzone-5.7.0/dist/dropzone.js?v=' . time()) }}"></script>
+    <script type="text/javascript" src="{{ asset('js/style.js?v=' . time()) }}"></script>
     <script type="text/javascript" src="{{ asset('js/function.js?v=' . time()) }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dropzone.js?v=' . time()) }}"></script>
     <script type="text/javascript" src="{{ asset('js/dropdown.js?v=' . time()) }}"></script>
     <script type="text/javascript" src="{{ asset('js/datepicker.js?v=' . time()) }}"></script>
     <script type="text/javascript" src="{{ asset('js/slick-img.js?v=' . time()) }}"></script>

@@ -34,7 +34,7 @@ class SubscriptionRequest extends FormRequest
 
         return [
 
-            'merchant'          =>  [Rule::requiredIf(Auth::user()->is_admin), 'nullable', new ExistMerchant()],
+            'merchant'          =>  ['required', new ExistMerchant()],
             'plan'              =>  ['required', new CheckSubscriptionPlanExists(User::find($this->get('merchant')), true)],
             'activated_at'      =>  ['required', 'date_format:Y-m-d'],
             'trans_no'          =>  [Rule::requiredIf((bool) !optional($plan)->trial), 'nullable', Rule::unique(Transaction::class, 'transaction_no')->whereNull('deleted_at')],

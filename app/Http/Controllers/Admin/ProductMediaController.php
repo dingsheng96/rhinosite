@@ -121,7 +121,7 @@ class ProductMediaController extends Controller
             ->withStatus($status)
             ->withMessage($message, true)
             ->withData([
-                'redirect_to' => route('products.edit', ['product' => $product->id])
+                'redirect_to' => route('admin.products.edit', ['product' => $product->id])
             ])
             ->sendJson();
     }

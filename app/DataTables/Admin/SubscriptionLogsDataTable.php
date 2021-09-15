@@ -115,7 +115,7 @@ class SubscriptionLogsDataTable extends DataTable
             Column::make('plan')->title(__('labels.plan')),
             Column::make('status')->title(__('labels.status')),
             Column::make('renewed_at')->title(trans_choice('labels.renewed_at', 1)),
-            Column::make('expired_at')->title(trans_choice('labels.expired_at', 1)),
+            Column::make('expired_at')->title(__('labels.valid_till')),
         ];
 
         return $columns;

@@ -38,7 +38,7 @@ Route::group(['middleware' => ['auth:' . User::TYPE_ADMIN]], function () {
     Route::resource('projects.media', 'ProjectMediaController')->only(['destroy']);
 
     Route::resource('products', 'ProductController');
-    Route::resource('products.media', 'ProductMediaController');
+    // Route::resource('products.media', 'ProductMediaController');
     Route::resource('products.attributes', 'ProductAttributeController')->except(['index']);
 
     Route::resource('packages', 'PackageController');
@@ -64,3 +64,5 @@ Route::group(['middleware' => ['auth:' . User::TYPE_ADMIN]], function () {
     Route::resource('countries.country-states', 'CountryStateController')->except(['index', 'create']);
     Route::resource('countries.country-states.cities', 'CityController')->only(['store', 'destroy']);
 });
+
+require 'general.php';

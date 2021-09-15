@@ -398,7 +398,7 @@
                                                 <div class="form-group">
                                                     <label for="country_state" class="col-form-label">{{ trans_choice('labels.country_state', 1) }} <span class="text-red">*</span></label>
                                                     <select name="country_state" id="country_state" class="form-control select2 @error('country_state') is-invalid @enderror country-state-dropdown city-filter" data-selected="{{ old('country_state', $merchant->address->city->countryState->id ?? 0) }}"
-                                                        data-country-state-route="{{ route('data.countries.country-states', ['__REPLACE__']) }}">
+                                                        data-country-state-route="{{ route('admin.data.countries.country-states', ['__REPLACE__']) }}">
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.country_state', 1))]) }} ---</option>
                                                     </select>
                                                     @error('country_state')
@@ -412,7 +412,7 @@
                                                 <div class="form-group">
                                                     <label for="city" class="col-form-label">{{ trans_choice('labels.city', 1) }} <span class="text-red">*</span></label>
                                                     <select name="city" id="city" class="form-control select2 @error('city') is-invalid @enderror city-dropdown" data-selected="{{ old('city', $merchant->address->city->id ?? 0) }}"
-                                                        data-city-route="{{ route('data.countries.country-states.cities', ['__FIRST_REPLACE__', '__SECOND_REPLACE__']) }}">
+                                                        data-city-route="{{ route('admin.data.countries.country-states.cities', ['__FIRST_REPLACE__', '__SECOND_REPLACE__']) }}">
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.city', 1))]) }} ---</option>
                                                     </select>
                                                     @error('city')
@@ -470,7 +470,7 @@
                                         </div>
 
                                         <div class="form-group row">
-                                            <label for="subscribed_at" class="col-form-label col-sm-3">{{ trans_choice('labels.expired_at', 1) }}</label>
+                                            <label for="subscribed_at" class="col-form-label col-sm-3">{{ __('labels.valid_till') }}</label>
                                             <div class="col-sm-9">
                                                 <span id="subscribed_at" class="form-control-plaintext">{{ $subscription_log->expired_at ?? '-' }}</span>
                                             </div>

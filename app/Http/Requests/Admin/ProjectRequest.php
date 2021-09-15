@@ -38,13 +38,7 @@ class ProjectRequest extends FormRequest
     public function rules()
     {
         return [
-            'title_en'      =>  [
-                'required', 'min:3', 'max:100',
-                Rule::unique(Project::class, 'title')
-                    ->ignore($this->route('project'), 'id')
-                    ->where('user_id', $this->get('merchant'))
-                    ->whereNull('deleted_at')
-            ],
+            'title_en'      =>  ['required', 'min:3', 'max:100', Rule::unique(Project::class, 'title')->ignore($this->route('project'), 'id')->where('user_id', $this->get('merchant'))->whereNull('deleted_at')],
             'title_cn'      =>  ['nullable', 'max:100'],
             'currency'      =>  ['required', 'exists:' . Currency::class . ',id'],
             'unit_price'    =>  ['nullable', 'numeric'],
@@ -59,22 +53,9 @@ class ProjectRequest extends FormRequest
             'address_2'     =>  ['nullable'],
             'country'       =>  ['required', 'exists:' . Country::class . ',id'],
             'postcode'      =>  ['required', 'digits:5'],
-            'country_state' =>  [
-                'required',
-                Rule::exists(CountryState::class, 'id')
-                    ->where('country_id', $this->get('country'))
-            ],
-            'city'          =>  [
-                'required',
-                Rule::exists(City::class, 'id')
-                    ->where('country_state_id', $this->get('country_state'))
-            ],
-            'ads_type'      =>  [
-                'nullable',
-                Rule::exists(Product::class, 'id')
-                    ->where('product_category_id', ProductCategory::select('id')->where('name', ProductCategory::TYPE_ADS)->first()->id)
-                    ->whereNull('deleted_at')
-            ],
+            'country_state' =>  ['required', Rule::exists(CountryState::class, 'id')->where('country_id', $this->get('country'))],
+            'city'          =>  ['required', Rule::exists(City::class, 'id')->where('country_state_id', $this->get('country_state'))],
+            'ads_type'      =>  ['nullable', Rule::exists(Product::class, 'id')->whereNotNull('slot_type')->whereNotNull('total_slots')->whereNull('deleted_at')],
             'date_from'     =>  [Rule::requiredIf(!empty($this->get('ads_type'))), 'nullable', 'date', 'date_format:Y-m-d', 'after:today'],
             'merchant'      =>  ['required', 'nullable', new ExistMerchant()]
         ];

@@ -188,7 +188,7 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="subscribed_at" class="col-form-label col-sm-2">{{ trans_choice('labels.expired_at', 1) }}</label>
+                        <label for="subscribed_at" class="col-form-label col-sm-2">{{ __('labels.valid_till') }}</label>
                         <div class="col-sm-10">
                             <span id="subscribed_at" class="form-control-plaintext">{{ $subscription_log->expired_at ?? '-' }}</span>
                         </div>
