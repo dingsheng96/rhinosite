@@ -33,7 +33,7 @@ class ResetPasswordController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = 'merchant.login';
+    protected $redirectTo = 'login';
 
     /**
      * Reset the given user's password.
@@ -66,7 +66,7 @@ class ResetPasswordController extends Controller
             return new JsonResponse(['message' => trans($response)], 200);
         }
 
-        return redirect($this->redirectPath())->withSuccess(trans($response));
+        return redirect()->route('merchant.login')->withSuccess(trans($response));
     }
 
     /**
@@ -93,5 +93,17 @@ class ResetPasswordController extends Controller
     protected function guard()
     {
         return Auth::guard(User::TYPE_MERCHANT);
+    }
+
+    /**
+     * Set the user's password.
+     *
+     * @param  \Illuminate\Contracts\Auth\CanResetPassword  $user
+     * @param  string  $password
+     * @return void
+     */
+    protected function setUserPassword($user, $password)
+    {
+        $user->password = $password;
     }
 }
