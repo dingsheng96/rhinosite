@@ -224,7 +224,7 @@
                     <div class="card-body">
                         By accessing Rhinosite and/ or using the Services provided by our Contractors, they agree to be bound by our Terms. The actual contract is directly between the Contractor and End-User, hence the Contractors may take legal action against the Defaulting Party.
                         <br>
-                        You may refer to our <a href="tnc.html">Terms & Conditions</a> incorporated herein for better understanding.
+                        You may refer to our <a href="{{ route('app.term') }}">Terms & Conditions</a> incorporated herein for better understanding.
                     </div>
                 </div>
             </div>
@@ -350,7 +350,7 @@
                 <div class="card-header" id="heading11">
                     <h5 class="mb-0">
                         <a class="btn collapsed" data-toggle="collapse" data-target="#collapse12" aria-expanded="false" aria-controls="collapse12">
-                            <span>12. Can a Contractor get their refund upon paying my subscription and Add-Ons? </span>
+                            <span>12. Can a contractor get their refund upon paying (their) subscription and/ (or) Add-Ons? </span>
                             <i class="fa fa-chevron-down" aria-hidden="true"></i>
                         </a>
                     </h5>
@@ -376,7 +376,7 @@
                         Rhinosite allows Contractors to list their services based on their areas of specialties up to <span class="text-danger">XX (to insert CIDB code if got)</span>. Contractors hereby expressly agrees, covenants and undertakes that it shall at all times, use their best endeavours
                         to prepare and complete all relevant building works required by the End users.
                         <br>
-                        You may refer to our <a href="tnc.html">Terms & Conditions</a> on Contractor’s Standard of Services incorporated herein for better understanding.
+                        You may refer to our <a href="{{ route('app.term') }}">Terms & Conditions</a> on Contractor’s Standard of Services incorporated herein for better understanding.
                     </div>
                 </div>
             </div>
@@ -399,7 +399,7 @@
                 <div class="card-header" id="heading14">
                     <h5 class="mb-0">
                         <a class="btn collapsed" data-toggle="collapse" data-target="#collapse15" aria-expanded="false" aria-controls="collapse15">
-                            <span>15. What if a Contractor intend to terminate my account right after they have subscribed to a Subscription plan? </span>
+                            <span>15. What if a Contractor (intends) to terminate (their) account right after they have subscribed to a Subscription plan? </span>
                             <i class="fa fa-chevron-down" aria-hidden="true"></i>
                         </a>
                     </h5>
@@ -409,7 +409,7 @@
                         The Contractors can always write to us if they wish to terminate their account when their subscription is nearing expiry. Upon termination, your content on Rhinosite will be removed from the platform. However the Contractor shall pay to En Vivo the Subscription Fee for the
                         entire Subscription Term (which for the avoidance of doubt, includes the remaining months in the Subscription Term and payable in a lump sum.)
                         <br>
-                        You may refer to our <a href="tnc.html">Terms & Conditions</a> on Termination incorporated herein for better understanding.
+                        You may refer to our <a href="{{ route('app.term') }}">Terms & Conditions</a> on Termination incorporated herein for better understanding.
                     </div>
                 </div>
             </div>
@@ -425,7 +425,7 @@
                 <div id="collapse16" class="collapse" aria-labelledby="heading15" data-parent="#accordion">
                     <div class="card-body">
                         You shall not post, display or disclose any materials which may infringe the Terms and/ or the law. Rhinosite may unilaterally and immediately terminate your use of the platform if you are found in breach of these Terms. For more information on content restriction, kindly
-                        find more on <a href="tnc.html">Section 8 of the Terms of Service</a> for the Contractors.
+                        find more on <a href="{{ route('app.term') }}">Section 8 of the Terms of Service</a> for the Contractors.
                     </div>
                 </div>
             </div>
