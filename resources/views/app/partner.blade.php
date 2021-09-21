@@ -350,7 +350,7 @@
                 <div class="card-header" id="heading11">
                     <h5 class="mb-0">
                         <a class="btn collapsed" data-toggle="collapse" data-target="#collapse12" aria-expanded="false" aria-controls="collapse12">
-                            <span>12. Can a contractor get their refund upon paying (their) subscription and/ (or) Add-Ons? </span>
+                            <span>12. Can a Contractor get their refund upon paying their subscription and/ or Add-Ons?</span>
                             <i class="fa fa-chevron-down" aria-hidden="true"></i>
                         </a>
                     </h5>
@@ -373,8 +373,7 @@
                 </div>
                 <div id="collapse13" class="collapse" aria-labelledby="heading12" data-parent="#accordion">
                     <div class="card-body">
-                        Rhinosite allows Contractors to list their services based on their areas of specialties up to <span class="text-danger">XX (to insert CIDB code if got)</span>. Contractors hereby expressly agrees, covenants and undertakes that it shall at all times, use their best endeavours
-                        to prepare and complete all relevant building works required by the End users.
+                        Rhinosite allows Contractors to list their services based on their areas of specialties. Contractors hereby expressly agree, covenant and undertake that they shall at all times, use their best endeavors to prepare and complete all relevant building works required by the End users.
                         <br>
                         You may refer to our <a href="{{ route('app.term') }}">Terms & Conditions</a> on Contractor’s Standard of Services incorporated herein for better understanding.
                     </div>
@@ -399,7 +398,7 @@
                 <div class="card-header" id="heading14">
                     <h5 class="mb-0">
                         <a class="btn collapsed" data-toggle="collapse" data-target="#collapse15" aria-expanded="false" aria-controls="collapse15">
-                            <span>15. What if a Contractor (intends) to terminate (their) account right after they have subscribed to a Subscription plan? </span>
+                            <span>15. What if a Contractor intends to terminate their account right after they have subscribed to a subscription plan?</span>
                             <i class="fa fa-chevron-down" aria-hidden="true"></i>
                         </a>
                     </h5>
