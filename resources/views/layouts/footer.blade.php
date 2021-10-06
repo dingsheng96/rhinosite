@@ -1,6 +1,6 @@
 <div id="mobilefooter" class="navbar navbar-expand-lg navbar-light">
     <div class="container px-4 py-3">
-        <a class="navbar-brand" href="{{ route('app.home') }}"><img src="{{ asset('storage/logo-footer.png') }}" alt="rhinosite_logo" class="footer-logo"></a>
+        <a class="navbar-brand" href="{{ route('app.home') }}"><img src="{{ asset('assets/logo-footer.png') }}" alt="rhinosite_logo" class="footer-logo"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#footercollapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <i class="fa fa-plus"></i>
         </button>
@@ -14,10 +14,10 @@
                         <p>{{ __('app.social_media') }}</p>
                         <div class="d-flex">
                             <a href="https://www.facebook.com/rhinositemy">
-                                <img src="{{ asset('storage/facebook.png') }}" alt="facebook_icon" class="footer-social">
+                                <img src="{{ asset('assets/facebook.png') }}" alt="facebook_icon" class="footer-social">
                             </a>
                             <a href="https://www.instagram.com/rhinosite_my/">
-                                <img src="{{ asset('storage/instagram.png') }}" alt="instagram_icon" class="footer-social">
+                                <img src="{{ asset('assets/instagram.png') }}" alt="instagram_icon" class="footer-social">
                             </a>
                         </div>
                     </div>
@@ -63,16 +63,16 @@
             <div class="container">
                 <div class="footer-content-container">
                     <div class="footer-left-content">
-                        <img src="{{ asset('storage/logo-footer.png') }}" alt="rhinosite-footer_logo" class="footer-logo mb-5">
+                        <img src="{{ asset('assets/logo-footer.png') }}" alt="rhinosite-footer_logo" class="footer-logo mb-5">
 
                         <p class="mb-5">{{ __('app.home_title_main') }}</p>
                         <p>{{ __('app.social_media') }}</p>
                         <div class="d-flex">
                             <a href="https://www.facebook.com/rhinositemy" target="blank">
-                                <img src="{{ asset('storage/facebook.png') }}" alt="facebook_icon" class="footer-social">
+                                <img src="{{ asset('assets/facebook.png') }}" alt="facebook_icon" class="footer-social">
                             </a>
                             <a href="https://www.instagram.com/rhinosite_my/" target="blank">
-                                <img src="{{ asset('storage/instagram.png') }}" alt="instagram_icon" class="footer-social">
+                                <img src="{{ asset('assets/instagram.png') }}" alt="instagram_icon" class="footer-social">
                             </a>
                         </div>
                     </div>

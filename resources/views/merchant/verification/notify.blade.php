@@ -9,7 +9,7 @@
                 <div class="card card-body shadow">
                     @if ($user->userDetail->status == 'pending')
 
-                    <img src="{{ asset('storage/verification.png') }}" alt="" class="card-img-top img-fluid mx-auto" style="height: auto; width: 100px;">
+                    <img src="{{ asset('assets/verification.png') }}" alt="" class="card-img-top img-fluid mx-auto" style="height: auto; width: 100px;">
                     <div class="row pt-4 pb-3">
                         <div class="col-12 text-center">
                             <h3>{{ __('app.verify_in_progress_title') }}...</h3>
@@ -22,7 +22,7 @@
 
                     @elseif($user->userDetail->status == 'rejected')
 
-                    <img src="{{ asset('storage/error.png') }}" alt="" class="card-img-top img-fluid mx-auto" style="height: auto; width: 100px;">
+                    <img src="{{ asset('assets/error.png') }}" alt="" class="card-img-top img-fluid mx-auto" style="height: auto; width: 100px;">
                     <div class="row pt-4 pb-3">
                         <div class="col-12 text-center">
                             <h3>{{ __('app.verify_rejected_title') }}</h3>

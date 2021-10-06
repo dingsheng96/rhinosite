@@ -7,7 +7,7 @@
         <div class="col-12">
             <div class="card card-body shadow-lg py-5">
 
-                <img src="{{ ($status) ? asset('storage/check.png') : asset('storage/error.png') }}" alt="status" class="card-img-top img-fluid mx-auto" style="height: auto; width: 100px;">
+                <img src="{{ ($status) ? asset('assets/check.png') : asset('assets/error.png') }}" alt="status" class="card-img-top img-fluid mx-auto" style="height: auto; width: 100px;">
 
                 <div class="row my-5">
                     <div class="col-12 text-center">

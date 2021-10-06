@@ -16,7 +16,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-6 px-0 mb-3 mb-lg-0">
-                <img src="{{ asset('storage/assets/joinus/join-1.jpg') }}" alt="join_1_image" class="res-img">
+                <img src="{{ asset('assets/joinus/join-1.jpg') }}" alt="join_1_image" class="res-img">
             </div>
             <div class="col-lg-6 join-1-content">
                 <h2>
@@ -34,15 +34,15 @@
         <h2>Why Join Us?</h2>
         <div class="row">
             <div class="col-md-4">
-                <img src="{{ asset('storage/assets/joinus/join-2.jpg') }}" alt="join_2_image_1" class="res-img mb-md-3 px-3">
+                <img src="{{ asset('assets/joinus/join-2.jpg') }}" alt="join_2_image_1" class="res-img mb-md-3 px-3">
                 <p class="paragraph">1. Increase your exposure and presence online</p>
             </div>
             <div class="col-md-4">
-                <img src="{{ asset('storage/assets/joinus/join-3.jpg') }}" alt="join_2_image_1" class="res-img mb-md-3 px-3">
+                <img src="{{ asset('assets/joinus/join-3.jpg') }}" alt="join_2_image_1" class="res-img mb-md-3 px-3">
                 <p class="paragraph">2. Convenient & Time-Efficient </p>
             </div>
             <div class="col-md-4">
-                <img src="{{ asset('storage/assets/joinus/join-4.jpg') }}" alt="join_2_image_1" class="res-img mb-md-3 px-3">
+                <img src="{{ asset('assets/joinus/join-4.jpg') }}" alt="join_2_image_1" class="res-img mb-md-3 px-3">
                 <p class="paragraph">3. Build a Long-Term Relationship with your Users/ Grow your Business</p>
             </div>
         </div>
@@ -55,11 +55,11 @@
         <h2>What is Required</h2>
         <div class="row">
             <div class="col-md-3">
-                <img src="{{ asset('storage/assets/joinus/join-5.png') }}" alt="join_light_bulb" class="join-icon">
+                <img src="{{ asset('assets/joinus/join-5.png') }}" alt="join_light_bulb" class="join-icon">
 <p class="paragraph">1. Fill in an <a href="{{ route('register', ['role' => 'merchant']) }}">Electronic Application form</a></p>
 </div>
 <div class="col-md-3">
-    <img src="{{ asset('storage/assets/joinus/join-6.png') }}" alt="join_light_bulb" class="join-icon">
+    <img src="{{ asset('assets/joinus/join-6.png') }}" alt="join_light_bulb" class="join-icon">
     <p class="paragraph">
         2. Our team will take approximately 5-7 working days to process your application. (This is
         a Rhinosite due-diligence process to ensure that our contractors are trustable and
@@ -67,14 +67,14 @@
     </p>
 </div>
 <div class="col-md-3">
-    <img src="{{ asset('storage/assets/joinus/join-7.png') }}" alt="join_light_bulb" class="join-icon">
+    <img src="{{ asset('assets/joinus/join-7.png') }}" alt="join_light_bulb" class="join-icon">
     <p class="paragraph">
         3. You’ll be receiving an email on logging into your admin dashboard and complete your
         purchase on the listing packages.
     </p>
 </div>
 <div class="col-md-3">
-    <img src="{{ asset('storage/assets/joinus/join-8.png') }}" alt="join_light_bulb" class="join-icon">
+    <img src="{{ asset('assets/joinus/join-8.png') }}" alt="join_light_bulb" class="join-icon">
     <p class="paragraph">
         4. You are all set! You can start to edit your profile and upload your projects and start
         receiving enquiries from your potential customers.
@@ -119,14 +119,14 @@
 <div class="join-bar"></div>
 <div class="row text-center justify-content-center">
     <div class="col-12 col-lg-6 col-xl">
-        <img src="{{ asset('storage/assets/joinus/step-1.png') }}" class="step-img">
+        <img src="{{ asset('assets/joinus/step-1.png') }}" class="step-img">
         <h3 class="partner-steps">Step 1</h3>
         <p class="paragraph">
             Fill in an <a class="txtorange" href="{{ route('merchant.register', ['role' => 'merchant']) }}">Electronic Application Form</a> and verify your email address.
         </p>
     </div>
     <div class="col-12 col-lg-6 col-xl">
-        <img src="{{ asset('storage/assets/joinus/step-2.png') }}" class="step-img">
+        <img src="{{ asset('assets/joinus/step-2.png') }}" class="step-img">
         <h3 class="partner-steps">Step 2</h3>
         <p class="paragraph">
             Log in to your dashboard, complete your profile by filling in mandatory fields and upload all required documents to avoid any issues/delay in your applications.
@@ -134,14 +134,14 @@
         </p>
     </div>
     <div class="col-12 col-lg-6 col-xl">
-        <img src="{{ asset('storage/assets/joinus/step-3.png') }}" class="step-img">
+        <img src="{{ asset('assets/joinus/step-3.png') }}" class="step-img">
         <h3 class="partner-steps">Step 3</h3>
         <p class="paragraph">
             Our team will take approximately 5-7 working days to process your application and once your application is approved, you can log into your contractor’s dashboard to proceed to subscription payment.
         </p>
     </div>
     <div class="col-12 col-lg-6 col-xl">
-        <img src="{{ asset('storage/assets/joinus/step-4.png') }}" class="step-img">
+        <img src="{{ asset('assets/joinus/step-4.png') }}" class="step-img">
         <h3 class="partner-steps">Step 4</h3>
         <p class="paragraph">
             You are all set! You can now create projects and start receiving enquiries from your potential customers.
@@ -149,7 +149,7 @@
         </p>
     </div>
     <div class="col-12 col-lg-6 col-xl">
-        <img src="{{ asset('storage/assets/joinus/step-5.png') }}" class="step-img">
+        <img src="{{ asset('assets/joinus/step-5.png') }}" class="step-img">
         <h3 class="partner-steps">Step 5</h3>
         <p class="paragraph">
             If in any circumstances that you are still in doubt, we do have a support team to further assist you with your queries. Please drop us an email at <b>info@rhinosite.com.my</b> or call us at <b>016-303 1808</b>.
@@ -373,7 +373,8 @@
                 </div>
                 <div id="collapse13" class="collapse" aria-labelledby="heading12" data-parent="#accordion">
                     <div class="card-body">
-                        Rhinosite allows Contractors to list their services based on their areas of specialties. Contractors hereby expressly agree, covenant and undertake that they shall at all times, use their best endeavors to prepare and complete all relevant building works required by the End users.
+                        Rhinosite allows Contractors to list their services based on their areas of specialties. Contractors hereby expressly agree, covenant and undertake that they shall at all times, use their best endeavors to prepare and complete all relevant building works required by the End
+                        users.
                         <br>
                         You may refer to our <a href="{{ route('app.term') }}">Terms & Conditions</a> on Contractor’s Standard of Services incorporated herein for better understanding.
                     </div>

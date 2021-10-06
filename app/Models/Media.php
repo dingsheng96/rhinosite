@@ -74,6 +74,6 @@ class Media extends Model
 
     public function getDefaultPreviewImageAttribute()
     {
-        return asset('storage/' . self::DEFAULT_IMAGE);
+        return asset('assets/' . self::DEFAULT_IMAGE);
     }
 }

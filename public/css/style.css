@@ -149,10 +149,12 @@ body.enduser h4 {
 }
 
 .footer-background {
-    background: linear-gradient(90deg,
+    background: linear-gradient(
+            90deg,
             rgba(0, 0, 0, 0.7) calc(50vw - 400px),
-            rgba(0, 0, 0, 0.4) calc(50vw - 400px)),
-        url("../storage/assets/home/footer-new.jpg");
+            rgba(0, 0, 0, 0.4) calc(50vw - 400px)
+        ),
+        url("../assets/home/footer-new.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center right;
@@ -214,12 +216,12 @@ body.enduser h4 {
     max-width: auto;
 }
 
-.footer-right-content>ul>li {
+.footer-right-content > ul > li {
     list-style: none;
     padding-bottom: 1rem;
 }
 
-.footer-right-content>ul>li.header {
+.footer-right-content > ul > li.header {
     font-weight: 700;
     text-decoration: underline;
 }
@@ -229,7 +231,7 @@ body.enduser h4 {
     padding: 1rem 0;
 }
 
-.footer-bottom ul>li,
+.footer-bottom ul > li,
 .footer-bottom ul {
     font-size: 14px;
     display: inline-block;
@@ -238,11 +240,11 @@ body.enduser h4 {
     padding-left: 0;
 }
 
-.footer-bottom ul>li:not(:first-child) {
+.footer-bottom ul > li:not(:first-child) {
     margin-left: 10px;
 }
 
-.footer-bottom ul>li>a {
+.footer-bottom ul > li > a {
     color: #000;
 }
 
@@ -285,7 +287,7 @@ body.enduser h4 {
 
 #subpage-header {
     padding: 6rem 0;
-    background-image: url("../storage/assets/feature/header.png");
+    background-image: url("../assets/feature/header.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center 60%;
@@ -328,7 +330,7 @@ body.enduser h4 {
 # Home (Section 1)
 --------------------------------------------------------------*/
 #home-s1 {
-    background-image: url("../storage/assets/home/homebanner.jpg");
+    background-image: url("../assets/home/homebanner.jpg");
     height: 60vh;
     background-position: center center;
     background-repeat: no-repeat;
@@ -445,7 +447,7 @@ input[type="text"].home-s1-searchbar:focus {
 }
 
 .try-rhino-background {
-    background-image: url("../storage/assets/home/aboutus.jpg");
+    background-image: url("../assets/home/aboutus.jpg");
     border-radius: 18px;
     background-repeat: no-repeat;
     background-size: cover;
@@ -457,9 +459,11 @@ input[type="text"].home-s1-searchbar:focus {
     position: relative;
     border-radius: 18px;
     color: #fff;
-    background: linear-gradient(90deg,
-            rgba(0, 0, 0, 0.5) 0%,
-            rgba(0, 0, 0, 0.3) 100%);
+    background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.5) 0%,
+        rgba(0, 0, 0, 0.3) 100%
+    );
     z-index: 1;
 }
 
@@ -621,7 +625,7 @@ input[type="text"].home-s1-searchbar:focus {
 
 /* Home (Section 3) */
 #home-s3 {
-    background-image: url("../storage/assets/home/s3-right.png");
+    background-image: url("../assets/home/s3-right.png");
     background-repeat: no-repeat;
     background-size: cover;
     display: flex;
@@ -679,7 +683,7 @@ input[type="text"].home-s1-searchbar:focus {
 --------------------------------------------------------------*/
 #merchant-header {
     padding: 6rem 0;
-    background-image: url("../storage/assets/merchant/merchantheader.jpg");
+    background-image: url("../assets/merchant/merchantheader.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center 60%;
@@ -1092,7 +1096,7 @@ ul.pagination li {
 --------------------------------------------------------------*/
 #services-header {
     padding: 6rem 0;
-    background-image: url("../storage/assets/service/serviceheader.jpg");
+    background-image: url("../assets/service/serviceheader.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center 60%;
@@ -1119,7 +1123,7 @@ ul.pagination li {
     color: #000;
 }
 
-.breadcrumb-item+.breadcrumb-item::before {
+.breadcrumb-item + .breadcrumb-item::before {
     color: #000000;
     content: ">";
 }
@@ -1248,7 +1252,7 @@ ul.pagination li {
 --------------------------------------------------------------*/
 #profile-header {
     padding: 6rem 0;
-    background-image: url("../storage/assets/merchant/merchantheader.jpg");
+    background-image: url("../assets/merchant/merchantheader.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center 60%;
@@ -1370,12 +1374,12 @@ ul.pagination li {
     width: 100%;
 }
 
-.rate:not(:checked)>input {
+.rate:not(:checked) > input {
     position: absolute;
     top: -9999px;
 }
 
-.rate:not(:checked)>label {
+.rate:not(:checked) > label {
     float: right;
     width: 1em;
     overflow: hidden;
@@ -1385,24 +1389,24 @@ ul.pagination li {
     color: #ccc;
 }
 
-.rate:not(:checked)>label:before {
+.rate:not(:checked) > label:before {
     content: "★ ";
 }
 
-.rate>input:checked~label {
+.rate > input:checked ~ label {
     color: #ffbc05;
 }
 
-.rate:not(:checked)>label:hover,
-.rate:not(:checked)>label:hover~label {
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label {
     color: #ffbc05;
 }
 
-.rate>input:checked+label:hover,
-.rate>input:checked+label:hover~label,
-.rate>input:checked~label:hover,
-.rate>input:checked~label:hover~label,
-.rate>label:hover~input:checked~label {
+.rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
     color: #ffbc05;
 }
 
@@ -1415,7 +1419,7 @@ ul.pagination li {
 --------------------------------------------------------------*/
 #about-header {
     padding: 6rem 0;
-    background-image: url("../storage/assets/about/aboutheader.jpg");
+    background-image: url("../assets/about/aboutheader.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center 60%;
@@ -1495,11 +1499,13 @@ ul.pagination li {
 /* join-2 */
 #join-header {
     padding: 6rem 0;
-    background-image: linear-gradient(90deg,
+    background-image: linear-gradient(
+            90deg,
             rgba(0, 0, 0, 1) 0%,
             30%,
-            rgba(0, 0, 0, 0.3) 100%),
-        url("../storage/assets/joinus/partnerheader.jpg");
+            rgba(0, 0, 0, 0.3) 100%
+        ),
+        url("../assets/joinus/partnerheader.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center 40%;
@@ -1535,7 +1541,9 @@ ul.pagination li {
 }
 
 .join-bar {
-    background: transparent linear-gradient(90deg, #ff8c08 0%, #f9cb7d 31%, #fdca00 100%) 0% 0% no-repeat padding-box;
+    background: transparent
+        linear-gradient(90deg, #ff8c08 0%, #f9cb7d 31%, #fdca00 100%) 0% 0%
+        no-repeat padding-box;
     padding-top: 30px;
     width: 100%;
     margin-left: auto;
@@ -1602,7 +1610,7 @@ ul.pagination li {
 }
 
 .join-partner-background {
-    background-image: url("../storage/assets/home/aboutus.jpg");
+    background-image: url("../assets/home/aboutus.jpg");
     border-radius: 18px;
     background-repeat: no-repeat;
     background-size: cover;
@@ -1614,9 +1622,11 @@ ul.pagination li {
     position: relative;
     border-radius: 18px;
     color: #fff;
-    background: linear-gradient(90deg,
-            rgba(0, 0, 0, 0.5) 0%,
-            rgba(0, 0, 0, 0.3) 100%);
+    background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.5) 0%,
+        rgba(0, 0, 0, 0.3) 100%
+    );
     z-index: 1;
 }
 
@@ -1633,11 +1643,13 @@ ul.pagination li {
 --------------------------------------------------------------*/
 #login-header {
     padding: 6rem 0;
-    background-image: linear-gradient(90deg,
+    background-image: linear-gradient(
+            90deg,
             rgba(0, 0, 0, 1) 0%,
             20%,
-            rgba(0, 0, 0, 0.3) 100%),
-        url("../storage/assets/login/login_banner.jpg");
+            rgba(0, 0, 0, 0.3) 100%
+        ),
+        url("../assets/login/login_banner.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center 25%;
@@ -1786,11 +1798,11 @@ a.user {
     margin-bottom: 3rem;
 }
 
-#privacy-1 ol>li>ol {
+#privacy-1 ol > li > ol {
     margin-top: 1.5rem;
 }
 
-#privacy-1 ol>li>ol>li {
+#privacy-1 ol > li > ol > li {
     margin-bottom: 1.5rem;
 }
 
@@ -1809,11 +1821,11 @@ a.user {
     margin-bottom: 3rem;
 }
 
-#terms-1 ol>li>ol {
+#terms-1 ol > li > ol {
     margin-top: 1.5rem;
 }
 
-#terms-1 ol>li>ol>li {
+#terms-1 ol > li > ol > li {
     margin-bottom: 1.5rem;
 }
 
@@ -1868,7 +1880,7 @@ a.user {
 --------------------------------------------------------------*/
 #plan-header {
     padding: 6rem 0;
-    background-image: url("../storage/assets/planpricing/pricingheader.jpg");
+    background-image: url("../assets/planpricing/pricingheader.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center 60%;
@@ -2080,7 +2092,7 @@ a.user {
 
     .nav-item,
     #footer,
-    .footer-bottom ul>li {
+    .footer-bottom ul > li {
         font-size: 0.8rem;
     }
 
@@ -2218,10 +2230,12 @@ a.user {
     }
 
     .footer-background {
-        background-image: linear-gradient(90deg,
+        background-image: linear-gradient(
+                90deg,
                 rgba(0, 0, 0, 0.7) calc(50vw - 300px),
-                rgba(0, 0, 0, 0.4) calc(50vw - 300px)),
-            url("../storage/assets/home/footer-new.jpg");
+                rgba(0, 0, 0, 0.4) calc(50vw - 300px)
+            ),
+            url("../assets/home/footer-new.jpg");
     }
 
     .services-title {
@@ -2285,10 +2299,12 @@ a.user {
     }
 
     .footer-background {
-        background-image: linear-gradient(90deg,
+        background-image: linear-gradient(
+                90deg,
                 rgba(0, 0, 0, 0.7) calc(50vw - 200px),
-                rgba(0, 0, 0, 0.4) calc(50vw - 200px)),
-            url("../storage/assets/home/footer-new.jpg");
+                rgba(0, 0, 0, 0.4) calc(50vw - 200px)
+            ),
+            url("../assets/home/footer-new.jpg");
     }
 
     .join-1-content {
@@ -2336,7 +2352,7 @@ a.user {
 
     .nav-item,
     #footer,
-    .footer-bottom ul>li {
+    .footer-bottom ul > li {
         font-size: 0.8rem;
     }
 
@@ -2459,7 +2475,6 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (max-width: 1199px) {
-
     #user .sidebar,
     #user {
         background-color: #fff;
@@ -2549,7 +2564,7 @@ a.user {
         display: none;
     }
 
-    #merchant-category ul>li,
+    #merchant-category ul > li,
     #merchant-category span {
         padding-left: 0;
         margin-bottom: 20px;
@@ -2660,7 +2675,7 @@ a.user {
         font-size: 25px;
     }
 
-    .services-3-price>span {
+    .services-3-price > span {
         display: block;
     }
 
@@ -2738,10 +2753,12 @@ a.user {
     }
 
     .footer-background {
-        background-image: linear-gradient(90deg,
+        background-image: linear-gradient(
+                90deg,
                 rgba(0, 0, 0, 0.7) calc(50vw - 150px),
-                rgba(0, 0, 0, 0.4) calc(50vw - 150px)),
-            url("../storage/assets/home/footer-new.jpg");
+                rgba(0, 0, 0, 0.4) calc(50vw - 150px)
+            ),
+            url("../assets/home/footer-new.jpg");
     }
 
     #join-1 .res-img {
@@ -2812,7 +2829,7 @@ a.user {
 
     .nav-item,
     #footer,
-    .footer-bottom ul>li {
+    .footer-bottom ul > li {
         font-size: 0.7rem;
     }
 
@@ -2971,7 +2988,7 @@ a.user {
 
     .nav-item,
     #footer,
-    .footer-bottom ul>li {
+    .footer-bottom ul > li {
         font-size: 0.7rem;
     }
 
@@ -2988,10 +3005,12 @@ a.user {
     }
 
     .footer-background {
-        background-image: linear-gradient(180deg,
+        background-image: linear-gradient(
+                180deg,
                 rgba(0, 0, 0, 0.7) 270px,
-                rgba(0, 0, 0, 0.5) 270px),
-            url("../storage/assets/home/mobilefooter-2.jpg");
+                rgba(0, 0, 0, 0.5) 270px
+            ),
+            url("../assets/home/mobilefooter-2.jpg");
         background-position: center 80%;
     }
 
@@ -3003,7 +3022,7 @@ a.user {
         margin-bottom: 70px;
     }
 
-    .footer-right-content>ul {
+    .footer-right-content > ul {
         padding-left: 0;
     }
 
@@ -3083,7 +3102,7 @@ a.user {
 
     .home-s3-right {
         width: 100%;
-        background-image: url("../storage/assets/home/s3-right.png");
+        background-image: url("../assets/home/s3-right.png");
         background-position: center center;
     }
 
@@ -3405,7 +3424,7 @@ a.user {
 
     .nav-item,
     #footer,
-    .footer-bottom ul>li,
+    .footer-bottom ul > li,
     .footer-background {
         font-size: 0.7rem;
     }
@@ -3423,10 +3442,12 @@ a.user {
     }
 
     .footer-background {
-        background-image: linear-gradient(180deg,
+        background-image: linear-gradient(
+                180deg,
                 rgba(0, 0, 0, 0.7) 180px,
-                rgba(0, 0, 0, 0.5) 180px),
-            url("../storage/assets/home/mobilefooter-2.jpg");
+                rgba(0, 0, 0, 0.5) 180px
+            ),
+            url("../assets/home/mobilefooter-2.jpg");
         background-position: 70% center;
     }
 
@@ -3438,7 +3459,7 @@ a.user {
         margin-bottom: 70px;
     }
 
-    .footer-right-content>ul {
+    .footer-right-content > ul {
         padding-left: 0;
     }
 
@@ -3454,7 +3475,7 @@ a.user {
         margin-bottom: 2rem !important;
     }
 
-    .footer-right-content>ul>li {
+    .footer-right-content > ul > li {
         list-style: none;
         padding-bottom: 0.7rem;
     }
@@ -3539,7 +3560,7 @@ a.user {
 
     .home-s3-right {
         width: 100%;
-        background-image: url("../storage/assets/home/s3-right.png");
+        background-image: url("../assets/home/s3-right.png");
         background-position: center center;
     }
 

@@ -75,7 +75,7 @@
                                             </div>
                                             <div class="merchant-body">
                                                 @if ($project->has_active_highlight)
-                                                <img src="{{ asset('storage/adboost.png') }}" class="highlight-img">
+                                                <img src="{{ asset('assets/adboost.png') }}" class="highlight-img">
                                                 @endif
                                                 <p class="merchant-title">{{ $project->english_title }}</p>
                                                 {{-- <p class="merchant-subtitle">{{ $project->chinese_title }}</p> --}}

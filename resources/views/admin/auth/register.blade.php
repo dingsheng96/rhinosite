@@ -171,7 +171,7 @@
                 </div>
             </div>
             <div class="col-lg-6 d-inline-flex px-0">
-                <img src="{{ asset('storage/register.jpg') }}" alt="register_image" class="res-img">
+                <img src="{{ asset('assets/register.jpg') }}" alt="register_image" class="res-img">
             </div>
         </div>
     </div>

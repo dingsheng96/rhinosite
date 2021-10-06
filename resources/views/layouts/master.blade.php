@@ -14,10 +14,10 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:description" content="No.1 Contractor Platform in Malaysia Compare Price, Project Portfolios and Contractor's Specialization.">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="{{ asset('storage/logo_og.png?v=' . time()) }}">
+    <meta property="og:image" content="{{ asset('assets/logo_og.png?v=' . time()) }}">
 
 
-    <link rel="icon" href="{{ asset('storage/rhino_title.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('assets/rhino_title.png') }}" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap">

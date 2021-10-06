@@ -6,7 +6,7 @@
     <thead class="mail-header">
         <tr>
             <th>
-                <img src="{{ asset('storage/logo.png') }}" alt="logo" class="mail-header-img">
+                <img src="{{ asset('assets/logo.png') }}" alt="logo" class="mail-header-img">
             </th>
         </tr>
     </thead>

@@ -62,7 +62,7 @@
                 </div>
             </div>
             <div class="col-lg-6 d-lg-inline-flex px-0 d-none">
-                <img src="{{ asset('storage/assets/login/login_image.jpg') }}" alt="login_image" class="res-img right-img" loading="lazy">
+                <img src="{{ asset('assets/login/login_image.jpg') }}" alt="login_image" class="res-img right-img" loading="lazy">
             </div>
         </div>
     </div>
