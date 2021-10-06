@@ -252,5 +252,6 @@ return [
     'variation_quantity' => 'Variation Unit',
     'click_here_to_terminate' => 'Click here to terminate',
     'change_new_boosting_date' => 'Change New Boosting Date',
-    'valid_till' => 'Valid Till'
+    'valid_till' => 'Valid Till',
+    'free_tier' => 'Free Tier'
 ];

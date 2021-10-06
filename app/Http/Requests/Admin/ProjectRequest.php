@@ -57,7 +57,7 @@ class ProjectRequest extends FormRequest
             'city'          =>  ['required', Rule::exists(City::class, 'id')->where('country_state_id', $this->get('country_state'))],
             'ads_type'      =>  ['nullable', Rule::exists(Product::class, 'id')->whereNotNull('slot_type')->whereNotNull('total_slots')->whereNull('deleted_at')],
             'date_from'     =>  [Rule::requiredIf(!empty($this->get('ads_type'))), 'nullable', 'date', 'date_format:Y-m-d', 'after:today'],
-            'merchant'      =>  ['required', 'nullable', new ExistMerchant()]
+            'merchant'      =>  ['required', 'nullable', new ExistMerchant()],
         ];
     }
 

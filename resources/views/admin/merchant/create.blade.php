@@ -180,6 +180,15 @@
                                             </div>
                                         </div>
 
+                                        <div class="row">
+                                            <div class="col-12 col-md-6">
+                                                <div class="icheck-primary">
+                                                    <input type="checkbox" name="free_tier" id="free_tier" {{ old('free_tier') ? 'checked' : null }}>
+                                                    <label for="free_tier">{{ __('labels.free_tier') }}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <hr>
 
                                         <div class="row">

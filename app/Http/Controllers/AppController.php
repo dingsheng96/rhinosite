@@ -114,7 +114,10 @@ class AppController extends Controller
                 ]);
             }
         ])->published()->whereHas('user', function ($query) use ($project) {
-            $query->merchant()->active()
+            $query->validMerchant()
+                ->orWhere(function ($query) {
+                    $query->freeTierMerchant();
+                })
                 ->where(app(User::class)->getTable() . '.id', '!=', $project->user_id)
                 ->whereHas('service', function ($query) use ($project) {
                     $query->where(app(Service::class)->getTable() . '.id', $project->user->service->id);

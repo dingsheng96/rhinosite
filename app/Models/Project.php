@@ -175,7 +175,9 @@ class Project extends Model
     public function scopeWithValidMerchant($query)
     {
         return $query->whereHas('user', function ($query) {
-            $query->validMerchant();
+            $query->validMerchant()->orWhere(function ($query) {
+                $query->freeTierMerchant();
+            });
         });
     }
 

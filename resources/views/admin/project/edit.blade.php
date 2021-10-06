@@ -23,7 +23,9 @@
                                     <a class="nav-link" id="details-tab" data-toggle="pill" href="#details" role="tab" aria-controls="details" aria-selected="false">{{ __('labels.details') }}</a>
                                     <a class="nav-link" id="location-tab" data-toggle="pill" href="#location" role="tab" aria-controls="location" aria-selected="false">{{ __('labels.location') }}</a>
                                     <a class="nav-link" id="image-tab" data-toggle="pill" href="#image" role="tab" aria-controls="image" aria-selected="false">{{ trans_choice('labels.image', 2) }}</a>
+                                    @if (!$project->user->free_tier)
                                     <a class="nav-link" id="ads-tab" data-toggle="pill" href="#ads" role="tab" aria-controls="ads" aria-selected="false">{{ __('labels.boost_ads') }}</a>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-7 col-sm-9">
@@ -392,6 +394,7 @@
 
                                     </div>
 
+                                    @if (!$project->user->free_tier)
                                     <div class="tab-pane fade" id="ads" role="tabpanel" aria-labelledby="ads-tab">
 
                                         <p class="card-text">
@@ -447,7 +450,7 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    @endif
                                 </div>
                             </div>
                         </div>

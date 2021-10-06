@@ -34,10 +34,10 @@ class SubscriptionLogsDataTable extends DataTable
                 return $data->name ?? $data->product->name;
             })
             ->addColumn('expired_at', function ($data) {
-                return $data->userSubscriptionLogs->first()->expired_at;
+                return $data->userSubscriptionLogs->first()->expired_at ?? '-';
             })
             ->addColumn('renewed_at', function ($data) {
-                return $data->userSubscriptionLogs->first()->renewed_at;
+                return $data->userSubscriptionLogs->first()->renewed_at ?? '-';
             })
             ->editColumn('status', function ($data) {
                 return $data->status_label;

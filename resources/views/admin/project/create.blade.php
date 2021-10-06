@@ -64,7 +64,7 @@
                                                     <select name="merchant" id="merchant" class="form-control select2 @error('merchant') is-invalid @enderror ads-booster-filter">
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(__('labels.merchant'))]) }} ---</option>
                                                         @foreach ($merchants as $merchant)
-                                                        <option value="{{ $merchant->id }}" {{ old('merchant') == $merchant->id ? 'selected' : null }}>{{ $merchant->name }}</option>
+                                                        <option value="{{ $merchant->id }}" {{ old('merchant') == $merchant->id ? 'selected' : null }} data-free-tier="{{ $merchant->free_tier }}">{{ $merchant->name }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('merchant')
@@ -366,7 +366,6 @@
                                         </div>
 
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -392,3 +391,24 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+    $(function () {
+
+    $('select[name=merchant]').on('change', function () {
+
+        let is_free_tier = $(this).find('option:selected').data('free-tier');
+
+        if(is_free_tier) {
+            $('#ads-tab').addClass('d-none');
+            $('#ads').addClass('d-none');
+        } else {
+            $('#ads-tab').removeClass('d-none');
+            $('#ads').removeClass('d-none');
+        }
+    });
+});
+
+</script>
+@endpush

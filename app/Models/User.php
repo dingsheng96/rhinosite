@@ -223,6 +223,14 @@ class User extends Authenticatable implements MustVerifyEmail
             ->whereHas('service');
     }
 
+    public function scopeFreeTierMerchant($query, bool $value = true)
+    {
+        return $query->merchant()->active()
+            ->where('free_tier', $value)
+            ->whereHas('service')
+            ->withApprovedDetails();
+    }
+
     // Attributes
     public function setPasswordAttribute($value)
     {

@@ -48,6 +48,7 @@ class MerchantService extends BaseService
         $this->model->email     =   $this->request->get('email');
         $this->model->status    =   $this->request->get('status', User::STATUS_ACTIVE);
         $this->model->password  =   $this->request->get('password');
+        $this->model->free_tier =   $this->request->has('free_tier');
         $this->model->type      =   User::TYPE_MERCHANT;
 
         if ($this->model->isDirty()) {
