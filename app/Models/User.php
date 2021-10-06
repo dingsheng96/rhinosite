@@ -398,4 +398,13 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->active_subscription->userSubscriptionLogs->first();
     }
+
+    public function getFreeTierAccountLabelAttribute()
+    {
+        if (!$this->free_tier) {
+            return;
+        }
+
+        return '<span class="badge badge-success badge-pill px-3">' . __('labels.free_tier') . '</span>';
+    }
 }

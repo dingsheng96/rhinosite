@@ -22,6 +22,9 @@ class MerchantDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
+            ->addColumn('free_tier', function ($data) {
+                return $data->free_tier_account_label ?? null;
+            })
             ->addColumn('action', function ($data) {
                 return view('admin.components.btn_action', [
                     'no_action' => $this->no_action ?: null,
@@ -68,7 +71,7 @@ class MerchantDataTable extends DataTable
                         });
                     });
             })
-            ->rawColumns(['action', 'status', 'profile']);
+            ->rawColumns(['action', 'status', 'profile', 'free_tier']);
     }
 
     /**
@@ -117,6 +120,7 @@ class MerchantDataTable extends DataTable
             Column::make('name')->title(__('labels.name')),
             Column::make('email')->title(__('labels.email')),
             Column::make('phone')->title(__('labels.contact_no')),
+            Column::make('free_tier')->title(__('labels.account_type'))->searchable(false),
             Column::make('status')->title(__('labels.status')),
             Column::make('created_at')->title(__('labels.created_at')),
             Column::computed('action', __('labels.action'))

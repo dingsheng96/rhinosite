@@ -253,5 +253,6 @@ return [
     'click_here_to_terminate' => 'Click here to terminate',
     'change_new_boosting_date' => 'Change New Boosting Date',
     'valid_till' => 'Valid Till',
-    'free_tier' => 'Free Tier'
+    'free_tier' => 'Free Tier',
+    'account_type' => 'Account Type'
 ];
