@@ -106,11 +106,19 @@ class UserDetail extends Model
 
     public function getYearsOfExperienceAttribute()
     {
+        if (is_null($this->business_since)) {
+            return;
+        }
+
         return now()->diffInYears($this->business_since);
     }
 
     public function getBusinessSinceAttribute($value)
     {
+        if (is_null($value)) {
+            return;
+        }
+
         return date('Y-m-d', strtotime($value));
     }
 

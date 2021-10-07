@@ -95,7 +95,7 @@
                                         <div class="row">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="reg_no" class="col-form-label">{{ __('labels.reg_no') }} <span class="text-red">*</span></label>
+                                                    <label for="reg_no" class="col-form-label">{{ __('labels.reg_no') }}</label>
                                                     <input type="text" name="reg_no" id="reg_no" value="{{ old('reg_no', $merchant->userDetail->reg_no ?? null) }}" class="form-control @error('reg_no') is-invalid @enderror">
                                                     @error('reg_no')
                                                     <span class="invalid-feedback" role="alert">
@@ -106,7 +106,7 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="business_since" class="col-form-label">{{ __('labels.business_since') }} <span class="text-red">*</span></label>
+                                                    <label for="business_since" class="col-form-label">{{ __('labels.business_since') }}</label>
                                                     <div class="input-group">
                                                         <input type="text" name="business_since" id="business_since" value="{{ old('business_since', $merchant->userDetail->business_since ?? null) }}" class="form-control date-picker @error('business_since') is-invalid @enderror bg-white" readonly>
                                                         <div class="input-group-append">

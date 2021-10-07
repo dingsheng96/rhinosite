@@ -126,7 +126,7 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="business_since" class="col-form-label">{{ __('labels.year_of_experience') }} <span class="text-red">*</span></label>
+                                                    <label for="business_since" class="col-form-label">{{ __('labels.year_of_experience') }}</label>
                                                     <div class="input-group">
                                                         <input type="text" name="business_since" id="business_since" value="{{ old('business_since', $user->userDetail->business_since) }}" class="form-control date-picker @error('business_since') is-invalid @enderror">
                                                         @error('experience')

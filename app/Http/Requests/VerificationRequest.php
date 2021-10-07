@@ -32,13 +32,11 @@ class VerificationRequest extends FormRequest
      */
     public function rules()
     {
-        $user = Auth::user();
-
         return [
             'name'              =>  ['required', 'string', 'max:255'],
             'phone'             =>  ['required', 'string', new PhoneFormat],
-            'email'             =>  ['required', 'email', Rule::unique(User::class, 'email')->ignore($user->id, 'id')->whereNull('deleted_at')],
-            'business_since'    =>  ['required', 'date_format:Y-m-d'],
+            'email'             =>  ['required', 'email', Rule::unique(User::class, 'email')->ignore(Auth::id(), 'id')->whereNull('deleted_at')],
+            'business_since'    =>  ['nullable', 'date_format:Y-m-d'],
             'website'           =>  ['nullable', 'url'],
             'facebook'          =>  ['nullable', 'url'],
             'whatsapp'          =>  ['nullable', new PhoneFormat],
@@ -46,23 +44,15 @@ class VerificationRequest extends FormRequest
             'address_2'         =>  ['nullable'],
             'postcode'          =>  ['required', 'digits:5'],
             'country'           =>  ['required', 'exists:' . Country::class . ',id'],
-            'country_state'     =>  [
-                'required',
-                Rule::exists(CountryState::class, 'id')
-                    ->where('country_id', $this->get('country'))
-            ],
-            'city'          =>  [
-                'required',
-                Rule::exists(City::class, 'id')
-                    ->where('country_state_id', $this->get('country_state'))
-            ],
-            'ssm_cert'  =>  ['required', 'file', 'max:2000', 'mimes:pdf'],
-            'logo'      =>  ['required', 'image', 'mimes:jpg,jpeg,png', 'max:2000'],
-            'reg_no'    =>  ['required'],
-            'pic_name'  =>  ['required'],
-            'pic_phone' =>  ['required', new PhoneFormat],
-            'pic_email' =>  ['required', 'email'],
-            'service'   =>  ['required', Rule::exists(Service::class, 'id')->whereNull('deleted_at')]
+            'country_state'     =>  ['required', Rule::exists(CountryState::class, 'id')->where('country_id', $this->get('country'))],
+            'city'              =>  ['required', Rule::exists(City::class, 'id')->where('country_state_id', $this->get('country_state'))],
+            'ssm_cert'          =>  ['nullable', 'file', 'max:2000', 'mimes:pdf'],
+            'logo'              =>  ['required', 'image', 'mimes:jpg,jpeg,png', 'max:2000'],
+            'reg_no'            =>  ['nullable'],
+            'pic_name'          =>  ['required'],
+            'pic_phone'         =>  ['required', new PhoneFormat],
+            'pic_email'         =>  ['required', 'email'],
+            'service'           =>  ['required', Rule::exists(Service::class, 'id')->whereNull('deleted_at')]
         ];
     }
 
