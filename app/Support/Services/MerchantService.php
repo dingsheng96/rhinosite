@@ -18,6 +18,7 @@ use App\Models\UserSubscription;
 use App\Models\UserAdsQuotaHistory;
 use Illuminate\Support\Facades\Auth;
 use App\Support\Services\BaseService;
+use App\Notifications\FreeTierAccount;
 use App\Notifications\VerifyUserDetail;
 use Illuminate\Database\Eloquent\Builder;
 use App\Notifications\FreeTrialSubscription;
@@ -25,6 +26,8 @@ use App\Support\Services\UserSubscriptionService;
 
 class MerchantService extends BaseService
 {
+    private $old_free_tier_status = false;
+
     public function __construct()
     {
         parent::__construct(User::class);
@@ -37,12 +40,18 @@ class MerchantService extends BaseService
         $this->storeAddress();
         $this->storeImage();
         $this->storeSsmCert();
+        $this->sendFreeTierEmail();
 
         return $this;
     }
 
     public function storeProfile()
     {
+        if ($this->model->exists) {
+
+            $this->old_free_tier_status = $this->model->free_tier;
+        }
+
         $this->model->name      =   $this->request->get('name');
         $this->model->phone     =   $this->request->get('phone');
         $this->model->email     =   $this->request->get('email');
@@ -53,6 +62,16 @@ class MerchantService extends BaseService
 
         if ($this->model->isDirty()) {
             $this->model->save();
+        }
+
+        return $this;
+    }
+
+    public function sendFreeTierEmail()
+    {
+        if ($this->request->has('free_tier') && $this->old_free_tier_status != $this->model->free_tier) {
+            // send email for free tier
+            $this->model->notify(new FreeTierAccount());
         }
 
         return $this;

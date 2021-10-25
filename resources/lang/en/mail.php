@@ -87,6 +87,19 @@ return [
     'account_deactivate' => [
         'subject'   =>  'Your Account Has Been Deactivated',
         'line_1'    =>  "We have not receive your intention to renew. Hence, we are sorry to inform that your account has been permanently removed from Rhinosite.",
-        'line_2'    =>  "If you have require any further assistance, please do not hesitate to get in touch with us or visit www.rhinosite.com.my for more information."
+        'line_2'    =>  "If you have require any further assistance, please do not hesitate to get in touch with us or visit [www.rhinosite.com.my](https://rhinosite.com.my) for more information."
+    ],
+
+    'free_tier' => [
+        'subject'   =>  "Welcome to Rhinosite!",
+        'line_1'    =>  "**Congratulations and Welcome onboard to Rhinosite!**",
+        'line_2'    =>  "On behalf of Rhinosite’s Team, we would like to inform you that your company profile has been successfully uploaded onto our website.",
+        'line_3'    =>  "Rhinosite is designed to help: - ",
+        'line_4'    =>  "1) Increase your exposure and presence online",
+        'line_5'    =>  "2) You liaise with your clients in a more efficient way",
+        'line_6'    =>  "3) Build a long-term relationship with your clients",
+        'line_7'    =>  "Click here to view and get started on our website: [www.rhinosite.com.my](https://rhinosite.com.my)",
+        'line_8'    =>  "Should you have any further enquiries, please do not hesitate to contact our support team via info@rhinosite.com.my or 016-303 1808.",
+        'line_9'    =>  "Thank you!"
     ]
 ];

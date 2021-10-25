@@ -102,7 +102,7 @@ class MerchantDataTable extends DataTable
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(5, 'desc')
+            ->orderBy(count($this->getColumns()) - 2, 'desc')
             ->responsive(true)
             ->autoWidth(true)
             ->processing(false);

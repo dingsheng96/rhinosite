@@ -168,7 +168,7 @@
                                                     <label for="status" class="col-form-label">{{ __('labels.status') }}</label>
                                                     <select name="status" id="status" class="form-control select2 @error('status') is-invalid @enderror">
                                                         @foreach ($statuses as $status => $display)
-                                                        <option value="{{ $status }}" {{ old('status', 'active') == $status }}>{{ $display }}</option>
+                                                        <option value="{{ $status }}" {{ old('status', 'active' )==$status }}>{{ $display }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('status')
@@ -272,7 +272,7 @@
                                         <div class="row">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="logo" class="col-form-label">{{ __('labels.logo') }}</label>
+                                                    <label for="logo" class="col-form-label">{{ __('labels.logo') }} <span class="text-red">*</span></label>
                                                     <div class="row">
                                                         <div class="col-12 col-md-6">
                                                             <input type="file" id="logo" name="logo" class="form-control-file custom-img-input @error('logo') is-invalid @enderror" accept=".jpg,.jpeg,.png">
@@ -333,7 +333,7 @@
                                                     <select name="country" id="country" class="form-control select2 @error('country') is-invalid @enderror country-state-filter">
                                                         <option value="0" selected disabled>--- {{ __('labels.dropdown_placeholder', ['label' => strtolower(trans_choice('labels.country', 1))]) }} ---</option>
                                                         @foreach ($countries as $country)
-                                                        <option value="{{ $country->id }}" {{ old('country') == $country->id || $country->set_default ? 'selected' : null }}>{{ $country->name }}</option>
+                                                        <option value="{{ $country->id }}" {{ old('country')==$country->id || $country->set_default ? 'selected' : null }}>{{ $country->name }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('country')

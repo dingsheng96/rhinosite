@@ -1,5 +1,11 @@
 # Change Log
 
+## 2021-10-25
+
+### What's New
+
+-   Send notification email to free tier merchant
+
 ## 2021-10-07
 
 ### Enhancement
