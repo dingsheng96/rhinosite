@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div id="merchant-header">
+{{-- <div id="merchant-header">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-11">
@@ -19,7 +19,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 @include('app.topservice')
 
@@ -48,8 +48,8 @@
                         <li class="title">{{ __('app.project_sidebar_price_range') }}</li>
                         {{-- <li>
                             <input type="number" class="range" placeholder="{{ __('app.min') }}">
-                        <span> - </span>
-                        <input type="number" class="range" placeholder="{{ __('app.max') }}">
+                            <span> - </span>
+                            <input type="number" class="range" placeholder="{{ __('app.max') }}">
                         </li> --}}
                     </ul>
                     <ul class="radio">
@@ -213,8 +213,8 @@
                     <li class="title">{{ __('app.project_sidebar_price_range') }}</li>
                     {{-- <li>
                         <input type="number" class="range" placeholder="{{ __('app.min') }}">
-                    <span> - </span>
-                    <input type="number" class="range" placeholder="{{ __('app.max') }}">
+                        <span> - </span>
+                        <input type="number" class="range" placeholder="{{ __('app.max') }}">
                     </li> --}}
                 </ul>
                 <ul class="radio">

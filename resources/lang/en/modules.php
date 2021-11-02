@@ -48,6 +48,7 @@ return [
         'home' => 'Home',
         'merchant' => 'Explore Services',
         'about' => 'About Rhinosite',
+        'management' => 'How It Works',
         'partner' => 'Join as Contractor',
         'contact' => 'Contact Us',
         'service' => 'Services',
