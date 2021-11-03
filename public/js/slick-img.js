@@ -168,6 +168,5 @@ $(function () {
         dots: true,
         arrows: false,
         infinite: true,
-        adaptiveHeight: true,
     });
 });
