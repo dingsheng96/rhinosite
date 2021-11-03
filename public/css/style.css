@@ -75,7 +75,7 @@ body.enduser h4 {
 }
 
 .font-semibold {
-    font-weight: 600;
+    font-weight: 600 !important;
 }
 
 .font-bold {
@@ -149,16 +149,14 @@ body.enduser h4 {
 }
 
 .footer-background {
-    background: linear-gradient(
-            90deg,
-            rgba(0, 0, 0, 0.7) calc(50vw - 400px),
-            rgba(0, 0, 0, 0.4) calc(50vw - 400px)
-        ),
+    background: linear-gradient(90deg,
+            rgba(0, 0, 0, 0.7) 0%,
+            rgba(0, 0, 0, 0.7) 100%),
         url("../assets/home/footer-new.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center right;
-    padding: 48px 0;
+    /* padding: 48px 0; */
     float: left;
     width: 100%;
     position: relative;
@@ -189,39 +187,25 @@ body.enduser h4 {
 }
 
 .footer-right {
-    display: inline-flex;
-    flex-direction: row;
-    margin-left: auto;
-    width: 40%;
+    display: flex;
+    justify-content: space-between;
 }
 
 .footer-right a {
     color: #fff;
-    width: 70%;
 }
 
-.footer-right ul {
-    position: relative;
+.footer-content-container ul {
+    padding-left: 0;
 }
 
-.footer-right-content {
-    color: #ffffff;
-    width: 100%;
-    /* flex: 0 0 100%; */
-    max-width: 100%;
-}
-
-.footer-right-content:last-child {
-    width: auto;
-    max-width: auto;
-}
-
-.footer-right-content > ul > li {
+.footer-content-container ul>li {
     list-style: none;
     padding-bottom: 1rem;
+    color: #ffffff;
 }
 
-.footer-right-content > ul > li.header {
+.footer-content-container ul>li.header {
     font-weight: 700;
     text-decoration: underline;
 }
@@ -231,7 +215,7 @@ body.enduser h4 {
     padding: 1rem 0;
 }
 
-.footer-bottom ul > li,
+.footer-bottom ul>li,
 .footer-bottom ul {
     font-size: 14px;
     display: inline-block;
@@ -240,16 +224,20 @@ body.enduser h4 {
     padding-left: 0;
 }
 
-.footer-bottom ul > li:not(:first-child) {
+.footer-bottom ul>li:not(:first-child) {
     margin-left: 10px;
 }
 
-.footer-bottom ul > li > a {
+.footer-bottom ul>li>a {
     color: #000;
 }
 
 #mobilefooter {
     display: none;
+}
+
+.footer-middle {
+    background: linear-gradient(90deg, rgba(255, 147, 23, 0.7) 0%, rgba(255, 147, 23, 0.7) 100%);
 }
 
 /*--------------------------------------------------------------
@@ -341,13 +329,26 @@ body.enduser h4 {
     align-items: center;
 }
 
+#new-home-s1 {
+    background-image: url("../assets/home/new/header.png");
+    height: 70vh;
+    background-position: center left;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    min-height: 580px;
+    max-height: 900px;
+    align-items: center;
+}
+
 #home-s1 h1 {
     margin-bottom: 36px;
 }
 
 .home-s1-subtitle {
-    font-size: 25px;
-    font-weight: 400;
+    font-size: 25px !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
 }
 
 /* searchbar */
@@ -377,6 +378,8 @@ input[type="text"].home-s1-searchbar:focus {
 /* category */
 #home-category {
     margin-top: -80px;
+    background: #f5f5f5;
+    background: linear-gradient(180deg, transparent 50%, #f5f5f5 50%);
 }
 
 .category-title {
@@ -459,17 +462,76 @@ input[type="text"].home-s1-searchbar:focus {
     position: relative;
     border-radius: 18px;
     color: #fff;
-    background: linear-gradient(
-        90deg,
-        rgba(0, 0, 0, 0.5) 0%,
-        rgba(0, 0, 0, 0.3) 100%
-    );
+    background: linear-gradient(90deg,
+            rgba(0, 0, 0, 0.5) 0%,
+            rgba(0, 0, 0, 0.3) 100%);
     z-index: 1;
 }
 
 /* Home (Section 2) */
 #home-s2 {
     padding: 64px 0;
+    /* background-image: url('../assets/home/new/'); */
+}
+
+.home-steps-img {
+    width: 60%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.home-steps-title {
+    font-size: 25px;
+    font-weight: bold;
+    color: #000000;
+}
+
+.slider-steps {
+    padding-top: 50px;
+}
+
+.slider-steps .slick-dots {
+    bottom: 95%;
+}
+
+.slider-steps .slick-dots li.slick-active button:before,
+.slider-steps .slick-dots li.slick-active {
+    width: 50px;
+}
+
+.slider-steps .slick-dots li button:before {
+    width: 20px;
+    height: 10px;
+    background: #ff9317;
+    color: transparent;
+    border-radius: 25px;
+}
+
+#home-scope {
+    padding: 64px 0;
+    background: #f5f5f5;
+}
+
+#home-scope li::marker {
+    color: #ff9317;
+}
+
+#home-job {
+    padding: 64px 0;
+}
+
+.home-job-text {
+    background: linear-gradient(90deg, rgba(255, 147, 23, 0.7) 50%, rgba(0, 0, 0, 0.3) 50%);
+    height: 100%;
+    width: calc(100% - 30px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 15px;
+    padding: 1rem;
 }
 
 /* project/merchant card */
@@ -623,6 +685,14 @@ input[type="text"].home-s1-searchbar:focus {
     background-color: #f68d53;
 }
 
+.btn-round.green {
+    background-color: #42b420;
+}
+
+.btn-round.green:hover {
+    background-color: #50d826;
+}
+
 /* Home (Section 3) */
 #home-s3 {
     background-image: url("../assets/home/s3-right.png");
@@ -636,10 +706,9 @@ input[type="text"].home-s1-searchbar:focus {
 
 .home-s3-left {
     width: 60%;
-    height: auto;
+    height: 450px;
     float: left;
     display: inline;
-    max-height: 500px;
     object-fit: cover;
     object-position: center 30%;
 }
@@ -648,10 +717,12 @@ input[type="text"].home-s1-searchbar:focus {
     width: 40%;
     float: left;
     padding: 2rem 5rem;
-    font-size: 36px;
-    font-weight: 700;
     text-align: center;
     color: #fff;
+}
+
+.home-s3-right h2 {
+    line-height: 1.3 !important;
 }
 
 /* Home (Section 4) */
@@ -667,6 +738,56 @@ input[type="text"].home-s1-searchbar:focus {
     display: block;
     margin: 0 auto;
     object-fit: scale-down;
+}
+
+/* home-recommendations */
+#home-recommendation {
+    padding: 64px 0;
+    background: #f5f5f5;
+}
+
+.recommendation-card {
+    padding: 1.5rem 2rem;
+    box-shadow: 0px 0px 5px #00000029;
+    border-radius: 10px;
+    background: #FFFFFF;
+    min-height: 400px;
+    display: inline-flex;
+    flex-direction: column;
+    height: 100%;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.slider-recommendation .slick-list {
+    display: flex;
+    padding: 50px 20px !important;
+}
+
+.recommendation-profile-icon {
+    border-radius: 50%;
+    background: #ff9317;
+    font-weight: 700;
+    color: #FFFFFF;
+    font-size: 25px;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slider-recommendation .slick-slide:nth-child(odd) .recommendation-profile-icon {
+    background: #000000;
+}
+
+.slick-center {
+    transform: scale(1.1);
+}
+
+.slick-center .recommendation-card {
+    margin-left: 15px;
+    margin-right: 15px;
 }
 
 /*--------------------------------------------------------------
@@ -1123,7 +1244,7 @@ ul.pagination li {
     color: #000;
 }
 
-.breadcrumb-item + .breadcrumb-item::before {
+.breadcrumb-item+.breadcrumb-item::before {
     color: #000000;
     content: ">";
 }
@@ -1145,7 +1266,7 @@ ul.pagination li {
 }
 
 .services-icon {
-    font-size: 25px;
+    font-size: 20px;
 }
 
 .slick-track {
@@ -1196,9 +1317,13 @@ ul.pagination li {
 }
 
 .star {
-    font-size: 30px;
+    font-size: 25px;
     color: #ffbc05;
     padding-left: 0.5rem;
+}
+
+#services-1 .star {
+    font-size: 20px;
 }
 
 .btn-green {
@@ -1220,14 +1345,12 @@ ul.pagination li {
 }
 
 .services-card {
-    border: 1.5px solid #9f9f9f;
-    padding: 1.5rem;
-    color: #000;
-    font-size: 16px;
-    margin-bottom: 30px;
+    box-shadow: 1px 1px 3px #00000029;
+    margin-bottom: 36px;
+    background-color: #fff;
 }
 
-.services-card-title {
+/* .services-card-title {
     color: #ff9317;
     font-size: 20px;
     text-transform: uppercase;
@@ -1240,7 +1363,7 @@ ul.pagination li {
 
 .services-card-footer {
     font-size: 20px;
-}
+} */
 
 /* services-5 */
 #services-5 {
@@ -1374,12 +1497,12 @@ ul.pagination li {
     width: 100%;
 }
 
-.rate:not(:checked) > input {
+.rate:not(:checked)>input {
     position: absolute;
     top: -9999px;
 }
 
-.rate:not(:checked) > label {
+.rate:not(:checked)>label {
     float: right;
     width: 1em;
     overflow: hidden;
@@ -1389,24 +1512,24 @@ ul.pagination li {
     color: #ccc;
 }
 
-.rate:not(:checked) > label:before {
+.rate:not(:checked)>label:before {
     content: "★ ";
 }
 
-.rate > input:checked ~ label {
+.rate>input:checked~label {
     color: #ffbc05;
 }
 
-.rate:not(:checked) > label:hover,
-.rate:not(:checked) > label:hover ~ label {
+.rate:not(:checked)>label:hover,
+.rate:not(:checked)>label:hover~label {
     color: #ffbc05;
 }
 
-.rate > input:checked + label:hover,
-.rate > input:checked + label:hover ~ label,
-.rate > input:checked ~ label:hover,
-.rate > input:checked ~ label:hover ~ label,
-.rate > label:hover ~ input:checked ~ label {
+.rate>input:checked+label:hover,
+.rate>input:checked+label:hover~label,
+.rate>input:checked~label:hover,
+.rate>input:checked~label:hover~label,
+.rate>label:hover~input:checked~label {
     color: #ffbc05;
 }
 
@@ -1499,12 +1622,10 @@ ul.pagination li {
 /* join-2 */
 #join-header {
     padding: 6rem 0;
-    background-image: linear-gradient(
-            90deg,
+    background-image: linear-gradient(90deg,
             rgba(0, 0, 0, 1) 0%,
             30%,
-            rgba(0, 0, 0, 0.3) 100%
-        ),
+            rgba(0, 0, 0, 0.3) 100%),
         url("../assets/joinus/partnerheader.jpg");
     background-repeat: no-repeat;
     background-size: cover;
@@ -1541,9 +1662,7 @@ ul.pagination li {
 }
 
 .join-bar {
-    background: transparent
-        linear-gradient(90deg, #ff8c08 0%, #f9cb7d 31%, #fdca00 100%) 0% 0%
-        no-repeat padding-box;
+    background: transparent linear-gradient(90deg, #ff8c08 0%, #f9cb7d 31%, #fdca00 100%) 0% 0% no-repeat padding-box;
     padding-top: 30px;
     width: 100%;
     margin-left: auto;
@@ -1622,11 +1741,9 @@ ul.pagination li {
     position: relative;
     border-radius: 18px;
     color: #fff;
-    background: linear-gradient(
-        90deg,
-        rgba(0, 0, 0, 0.5) 0%,
-        rgba(0, 0, 0, 0.3) 100%
-    );
+    background: linear-gradient(90deg,
+            rgba(0, 0, 0, 0.5) 0%,
+            rgba(0, 0, 0, 0.3) 100%);
     z-index: 1;
 }
 
@@ -1643,12 +1760,10 @@ ul.pagination li {
 --------------------------------------------------------------*/
 #login-header {
     padding: 6rem 0;
-    background-image: linear-gradient(
-            90deg,
+    background-image: linear-gradient(90deg,
             rgba(0, 0, 0, 1) 0%,
             20%,
-            rgba(0, 0, 0, 0.3) 100%
-        ),
+            rgba(0, 0, 0, 0.3) 100%),
         url("../assets/login/login_banner.jpg");
     background-repeat: no-repeat;
     background-size: cover;
@@ -1798,11 +1913,11 @@ a.user {
     margin-bottom: 3rem;
 }
 
-#privacy-1 ol > li > ol {
+#privacy-1 ol>li>ol {
     margin-top: 1.5rem;
 }
 
-#privacy-1 ol > li > ol > li {
+#privacy-1 ol>li>ol>li {
     margin-bottom: 1.5rem;
 }
 
@@ -1821,11 +1936,11 @@ a.user {
     margin-bottom: 3rem;
 }
 
-#terms-1 ol > li > ol {
+#terms-1 ol>li>ol {
     margin-top: 1.5rem;
 }
 
-#terms-1 ol > li > ol > li {
+#terms-1 ol>li>ol>li {
     margin-bottom: 1.5rem;
 }
 
@@ -2050,18 +2165,148 @@ a.user {
     padding: 64px 0;
 }
 
+/*--------------------------------------------------------------
+# RhinositeProject Management (management-1)
+--------------------------------------------------------------*/
+#management-header {
+    padding: 6rem 0;
+    background-image: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, 50%, rgba(0, 0, 0, 0.3) 100%), url("../assets/management/header.png");
+    background: linear;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center 60%;
+    position: relative;
+}
+
+#management-summary {
+    padding: 64px 0;
+    background: url("../assets/management/summary-bg.png");
+    background-position: center bottom;
+}
+
+.management-summary-content {
+    padding: 30px 50px;
+    position: relative;
+    color: #fff;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%);
+    margin: 1rem;
+}
+
+.manamgement-summary-title {
+    font-size: 25px;
+    color: #FFFFFF;
+    margin-bottom: 0;
+    font-weight: 700;
+    display: inline-block;
+    margin-right: 1rem;
+}
+
+#management-love-rhinosite {
+    background: #ffffff;
+    padding: 64px 0;
+}
+
+#management-love-rhinosite .res-img {
+    object-fit: cover;
+    object-position: center center;
+    min-height: 300px;
+}
+
+.bg-black {
+    background-color: #000000;
+    color: #FFFFFF;
+}
+
+#management-issue {
+    padding: 64px 0;
+}
+
+.issue-number-orange {
+    font-size: 28px;
+    font-weight: 700;
+    color: #ff9317;
+}
+
+.issue-number-black {
+    font-size: 28px;
+    font-weight: 700;
+    color: #000000;
+}
+
+.issue-number-orange.first,
+.issue-number-black.first {
+    opacity: 0.5;
+}
+
+.issue-number-orange.second,
+.issue-number-black.second {
+    opacity: 0.7;
+}
+
+.issue-number-orange.third,
+.issue-number-black.third {
+    opacity: 0.85;
+}
+
+#management-steps {
+    padding: 64px 0;
+    background: #f5f5f5;
+}
+
+.steps-content {
+    padding: 2rem 3rem;
+    position: relative;
+    color: #fff;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.7) 100%);
+    z-index: 1;
+    min-height: 450px;
+}
+
+.steps-content.orange {
+    margin-left: auto;
+    background: linear-gradient(90deg, rgba(255, 147, 23, 0.8) 0%, rgba(255, 147, 23, 0.8) 100%);
+}
+
+.management-steps-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    position: absolute;
+}
+
+.enquiry-content {
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    padding: 1.5rem;
+}
+
+#management-enquiry .res-img {
+    min-height: 250px;
+    object-fit: cover;
+    object-position: center center;
+}
+
 /* ---------------------------------------------------
     MEDIA XL-XXL Screens (1200-1439)
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 1200px) and (max-width: 1439px) {
+    .steps-content {
+        width: 70%;
+    }
+
     .badge-padding {
         padding: 0.5rem 1rem !important;
         font-size: 0.7rem !important;
-    }
-
-    .footer-right {
-        width: 60%;
     }
 
     #about-2 h3,
@@ -2092,7 +2337,7 @@ a.user {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li {
+    .footer-bottom ul>li {
         font-size: 0.8rem;
     }
 
@@ -2229,15 +2474,6 @@ a.user {
         font-size: 22px;
     }
 
-    .footer-background {
-        background-image: linear-gradient(
-                90deg,
-                rgba(0, 0, 0, 0.7) calc(50vw - 300px),
-                rgba(0, 0, 0, 0.4) calc(50vw - 300px)
-            ),
-            url("../assets/home/footer-new.jpg");
-    }
-
     .services-title {
         font-size: 18px;
     }
@@ -2252,10 +2488,6 @@ a.user {
     }
 
     body.enduser h2 {
-        font-size: 28px;
-    }
-
-    .home-s3-right {
         font-size: 28px;
     }
 
@@ -2292,19 +2524,6 @@ a.user {
 
     .highlight-img {
         height: 60%;
-    }
-
-    .footer-right {
-        width: 60%;
-    }
-
-    .footer-background {
-        background-image: linear-gradient(
-                90deg,
-                rgba(0, 0, 0, 0.7) calc(50vw - 200px),
-                rgba(0, 0, 0, 0.4) calc(50vw - 200px)
-            ),
-            url("../assets/home/footer-new.jpg");
     }
 
     .join-1-content {
@@ -2352,8 +2571,8 @@ a.user {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li {
-        font-size: 0.8rem;
+    .footer-bottom ul>li {
+        font-size: 0.7rem;
     }
 
     .footer-social {
@@ -2366,7 +2585,7 @@ a.user {
 
     /* home-s1 */
     .home-s1-subtitle {
-        font-size: 20px;
+        font-size: 20px !important;
     }
 
     #home-category {
@@ -2465,9 +2684,6 @@ a.user {
         padding-left: 0;
     }
 
-    .star {
-        font-size: 25px;
-    }
 }
 
 /* ---------------------------------------------------
@@ -2475,6 +2691,27 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (max-width: 1199px) {
+    .star {
+        font-size: 20px;
+    }
+
+    .manamgement-summary-title {
+        font-size: 22px;
+    }
+
+    .steps-content {
+        width: 70%;
+    }
+
+    .slick-center {
+        transform: none;
+    }
+
+    .recommendation-card {
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+
     #user .sidebar,
     #user {
         background-color: #fff;
@@ -2564,7 +2801,7 @@ a.user {
         display: none;
     }
 
-    #merchant-category ul > li,
+    #merchant-category ul>li,
     #merchant-category span {
         padding-left: 0;
         margin-bottom: 20px;
@@ -2576,17 +2813,12 @@ a.user {
     }
 
     .home-s3-right {
-        font-size: 25px;
         padding-left: 2rem;
         padding-right: 2rem;
     }
 
     .footer-right {
         max-width: 65%;
-    }
-
-    .footer-left-content {
-        max-width: 35%;
     }
 
     .plan-7-icon {
@@ -2615,7 +2847,14 @@ a.user {
     #join-4,
     #join-5,
     #services-1,
-    #services-2 {
+    #services-2,
+    #management-summary,
+    #management-love-rhinosite,
+    #management-issue,
+    #management-steps,
+    #home-scope,
+    #home-job,
+    #home-recommendation {
         padding: 32px 0;
     }
 
@@ -2675,7 +2914,7 @@ a.user {
         font-size: 25px;
     }
 
-    .services-3-price > span {
+    .services-3-price>span {
         display: block;
     }
 
@@ -2735,6 +2974,37 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 767px) and (max-width: 991px) {
+    #new-home-s1 {
+        min-height: 400px;
+        height: 50vh;
+    }
+
+    .home-steps-title {
+        font-size: 22px;
+    }
+
+    .management-subtitle {
+        font-size: 18px !important;
+    }
+
+    .steps-content {
+        min-height: unset;
+        padding: 2rem;
+        width: 100%;
+    }
+
+    .management-steps-img {
+        position: static;
+    }
+
+    .footer-background {
+        background-image: linear-gradient(180deg,
+                rgba(0, 0, 0, 0.7) 0%,
+                rgba(0, 0, 0, 0.7) 100%),
+            url("../assets/home/mobilefooter-2.jpg");
+        background-position: center 80%;
+    }
+
     .badge-padding {
         padding: 0.5rem 1rem !important;
         font-size: 0.7rem !important;
@@ -2746,19 +3016,6 @@ a.user {
 
     .partner-steps {
         font-size: 20px !important;
-    }
-
-    .footer-right {
-        width: 60%;
-    }
-
-    .footer-background {
-        background-image: linear-gradient(
-                90deg,
-                rgba(0, 0, 0, 0.7) calc(50vw - 150px),
-                rgba(0, 0, 0, 0.4) calc(50vw - 150px)
-            ),
-            url("../assets/home/footer-new.jpg");
     }
 
     #join-1 .res-img {
@@ -2778,6 +3035,7 @@ a.user {
 
     #home-category {
         margin-top: -80px;
+        background: linear-gradient(180deg, transparent 40%, #f5f5f5 60%);
     }
 
     .try-rhino-content {
@@ -2803,6 +3061,7 @@ a.user {
 
     #subpage-header,
     #about-header,
+    #management-header,
     #merchant-header,
     #services-header,
     #profile-header {
@@ -2829,7 +3088,7 @@ a.user {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li {
+    .footer-bottom ul>li {
         font-size: 0.7rem;
     }
 
@@ -2843,7 +3102,17 @@ a.user {
 
     /* home-s1 */
     .home-s1-subtitle {
-        font-size: 20px;
+        font-size: 20px !important;
+    }
+
+    .home-s3-left {
+        height: 360px;
+    }
+
+
+    .home-s3-left,
+    .home-s3-right {
+        width: 50%;
     }
 
     /* project/merchant card */
@@ -2906,6 +3175,37 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (min-width: 600px) and (max-width: 766px) {
+    #management-love-rhinosite .res-img {
+        min-height: unset;
+    }
+
+    .home-steps-img {
+        width: 80%;
+    }
+
+    #new-home-s1 {
+        min-height: 400px;
+        height: 50vh;
+    }
+
+    .home-steps-title {
+        font-size: 22px;
+    }
+
+    .management-subtitle {
+        font-size: 18px !important;
+    }
+
+    .steps-content {
+        min-height: unset;
+        padding: 2rem;
+        width: 100%;
+    }
+
+    .management-steps-img {
+        position: static;
+    }
+
     .highlight-img {
         height: 70%;
     }
@@ -2934,6 +3234,7 @@ a.user {
 
     #home-category {
         margin-top: -80px;
+        background: linear-gradient(180deg, transparent 10%, #f5f5f5 100%);
     }
 
     .try-rhino-content {
@@ -2988,7 +3289,7 @@ a.user {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li {
+    .footer-bottom ul>li {
         font-size: 0.7rem;
     }
 
@@ -3001,28 +3302,14 @@ a.user {
     }
 
     .footer-background {
-        padding: 25px 0;
-    }
-
-    .footer-background {
-        background-image: linear-gradient(
-                180deg,
-                rgba(0, 0, 0, 0.7) 270px,
-                rgba(0, 0, 0, 0.5) 270px
-            ),
+        background-image: linear-gradient(180deg,
+                rgba(0, 0, 0, 0.7) 0%,
+                rgba(0, 0, 0, 0.7) 100%),
             url("../assets/home/mobilefooter-2.jpg");
         background-position: center 80%;
     }
 
-    .footer-left-content {
-        padding-top: 10px;
-        flex-shrink: 0;
-        width: 100%;
-        max-width: 100%;
-        margin-bottom: 70px;
-    }
-
-    .footer-right-content > ul {
+    .footer-right-content>ul {
         padding-left: 0;
     }
 
@@ -3031,8 +3318,7 @@ a.user {
     }
 
     .footer-right {
-        max-width: 100%;
-        width: 100%;
+        width: 65%;
     }
 
     .footer-right-content {
@@ -3040,12 +3326,11 @@ a.user {
         flex: 0 0 100%;
         max-width: 33%;
         padding-left: 0;
-        text-align: center;
     }
 
     /* home-s1 */
     .home-s1-subtitle {
-        font-size: 20px;
+        font-size: 20px !important;
     }
 
     .category-title {
@@ -3133,6 +3418,7 @@ a.user {
 
     #subpage-header,
     #about-header,
+    #management-header,
     #merchant-header,
     #services-header,
     #profile-header {
@@ -3280,6 +3566,55 @@ a.user {
 ----------------------------------------------------- */
 
 @media only screen and (max-width: 599px) {
+    .management-summary-content {
+        padding: 30px 30px;
+    }
+
+    #management-love-rhinosite .res-img {
+        min-height: unset;
+    }
+
+    .home-steps-img {
+        width: 90%;
+    }
+
+    #new-home-s1 {
+        min-height: 450px;
+        height: 40vh;
+    }
+
+    .home-steps-title {
+        font-size: 20px;
+    }
+
+    .issue-number-orange,
+    .issue-number-black {
+        font-size: 25px;
+    }
+
+    .management-subtitle {
+        font-size: 18px !important;
+    }
+
+    .steps-content {
+        min-height: unset;
+        padding: 2rem;
+        width: 100%;
+    }
+
+    .management-steps-img {
+        position: static;
+    }
+
+    .recommendation-card {
+        height: auto;
+        margin-bottom: 80px;
+    }
+
+    .slider-recommendation .slick-list {
+        display: block;
+    }
+
     .highlight-img {
         height: 60%;
         max-height: 120px;
@@ -3391,6 +3726,7 @@ a.user {
 
     #subpage-header,
     #about-header,
+    #management-header,
     #merchant-header,
     #services-header,
     #profile-header {
@@ -3424,7 +3760,7 @@ a.user {
 
     .nav-item,
     #footer,
-    .footer-bottom ul > li,
+    .footer-bottom ul>li,
     .footer-background {
         font-size: 0.7rem;
     }
@@ -3438,28 +3774,14 @@ a.user {
     }
 
     .footer-background {
-        padding: 0.75rem;
-    }
-
-    .footer-background {
-        background-image: linear-gradient(
-                180deg,
-                rgba(0, 0, 0, 0.7) 180px,
-                rgba(0, 0, 0, 0.5) 180px
-            ),
+        background-image: linear-gradient(180deg,
+                rgba(0, 0, 0, 0.7) 0%,
+                rgba(0, 0, 0, 0.7) 100%),
             url("../assets/home/mobilefooter-2.jpg");
         background-position: 70% center;
     }
 
-    .footer-left-content {
-        padding-top: 10px;
-        flex-shrink: 0;
-        width: 100%;
-        max-width: 100%;
-        margin-bottom: 70px;
-    }
-
-    .footer-right-content > ul {
+    .footer-right-content>ul {
         padding-left: 0;
     }
 
@@ -3475,7 +3797,7 @@ a.user {
         margin-bottom: 2rem !important;
     }
 
-    .footer-right-content > ul > li {
+    .footer-right-content>ul>li {
         list-style: none;
         padding-bottom: 0.7rem;
     }
@@ -3499,7 +3821,7 @@ a.user {
 
     /* home-s1 */
     .home-s1-subtitle {
-        font-size: 18px;
+        font-size: 18px !important;
     }
 
     .category-title {

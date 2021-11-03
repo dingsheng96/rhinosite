@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div id="profile-header">
+{{-- <div id="profile-header">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-11">
@@ -19,7 +19,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 @include('app.topservice')
 
@@ -82,6 +82,9 @@
             </div>
             <div class="col-lg-4">
                 <div class="d-flex mb-3 align-items-center text-break"><i class="fas fa-envelope profile-icon mail" aria-hidden="true"></i><span class="ml-3">{{ $merchant->email }}</span></div>
+                @if(!empty($merchant->userDetail->website))
+                <a href="{{ $merchant->userDetail->website }}" class="d-flex mb-3 align-items-center text-break text-decoration-none txtgrey"><i class="fas fa-globe profile-icon mail" aria-hidden="true"></i><span class="ml-3">{{ $merchant->userDetail->website }}</span></a>
+                @endif
             </div>
         </div>
     </div>

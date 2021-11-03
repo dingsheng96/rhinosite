@@ -12,6 +12,9 @@
                 <li class="nav-item {{ Nav::hasSegment('project', 1, 'active') }}">
                     <a href="{{ route('app.project.index') }}" class="nav-link">{{ __('modules.app.merchant') }}</a>
                 </li>
+                <li class="nav-item {{ Nav::hasSegment('management', 1, 'active') }}">
+                    <a href="{{ route('app.management') }}" class="nav-link">{{ __('modules.app.management') }}</a>
+                </li>
                 <li class="nav-item {{ Nav::hasSegment('about', 1, 'active') }}">
                     <a href="{{ route('app.about') }}" class="nav-link">{{ __('modules.app.about') }}</a>
                 </li>
