@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div id="profile-header">
+{{-- <div id="profile-header">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-11">
@@ -19,7 +19,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 @include('app.topservice')
 

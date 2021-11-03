@@ -26,6 +26,7 @@ Route::group(['as' => 'app.'], function () {
 
     Route::get('/', 'AppController@home')->name('home');
     Route::get('about', 'AppController@about')->name('about');
+    Route::get('management', 'AppController@management')->name('management');
     Route::get('partner', 'AppController@partner')->name('partner');
     Route::get('contact', 'AppController@contact')->name('contact');
     Route::get('terms', 'AppController@termsPolicies')->name('term');

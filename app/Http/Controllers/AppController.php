@@ -162,4 +162,9 @@ class AppController extends Controller
     {
         return view('app.privacy');
     }
+
+    public function management()
+    {
+        return view('app.management');
+    }
 }
