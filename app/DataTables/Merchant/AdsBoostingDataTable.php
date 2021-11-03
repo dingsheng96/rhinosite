@@ -35,7 +35,10 @@ class AdsBoostingDataTable extends DataTable
             ->editColumn('boosted_at', function ($data) {
                 return $data->min_date . ' ~ ' . $data->max_date;
             })
-            ->rawColumns(['status']);
+            ->rawColumns(['status'])
+            ->order(function ($query) {
+                $query->orderBy('max_date', 'desc');
+            });
     }
 
     /**
@@ -46,13 +49,14 @@ class AdsBoostingDataTable extends DataTable
      */
     public function query(AdsBooster $model)
     {
-        return $model->with(['product', 'boostable'])
+        return $model->newQuery()
+            ->with(['product', 'boostable'])
             ->whereHasMorph('boostable', [Project::class], function (Builder $query) {
-                $query->where('id', $this->project->id)->where('user_id', Auth::id());
+                $query->where('id', $this->project->id)
+                    ->where('user_id', Auth::id());
             })
             ->selectRaw('boost_index, DATE(MIN(boosted_at)) AS min_date, DATE(MAX(boosted_at)) AS max_date, product_id')
-            ->groupBy('boost_index', 'product_id')
-            ->newQuery();
+            ->groupBy('boost_index', 'product_id');
     }
 
     /**

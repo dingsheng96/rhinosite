@@ -55,7 +55,7 @@ class AdsDataTable extends DataTable
                     return '-';
                 }
 
-                return  '<div class="d-flex justify-content-start">
+                return '<div class="d-flex justify-content-start">
                     <div>
                     <img src="' . $data->boostable->thumbnail->full_file_path . '" alt="' . $data->boostable->thumbnail->filename . '" class="table-img-preview">
                     </div>
@@ -93,7 +93,10 @@ class AdsDataTable extends DataTable
                     ->whereDate('min_date', 'like', "%{$keyword}%")
                     ->orWhereDate('max_date', 'like', "%{$keyword}%");
             })
-            ->rawColumns(['action', 'title', 'status']);
+            ->rawColumns(['action', 'title', 'status'])
+            ->order(function ($query) {
+                $query->orderBy('max_date', 'desc');
+            });
     }
 
     /**
@@ -104,10 +107,10 @@ class AdsDataTable extends DataTable
      */
     public function query(AdsBooster $model)
     {
-        return $model->with(['product', 'boostable'])
+        return $model->newQuery()
+            ->with(['product', 'boostable'])
             ->selectRaw('boost_index, DATE(MIN(boosted_at)) AS min_date, DATE(MAX(boosted_at)) AS max_date, product_id, boostable_type, boostable_id')
-            ->groupBy('boost_index', 'product_id', 'boostable_type', 'boostable_id')
-            ->newQuery();
+            ->groupBy('boost_index', 'product_id', 'boostable_type', 'boostable_id');
     }
 
     /**
@@ -122,7 +125,7 @@ class AdsDataTable extends DataTable
             ->addTableClass('table-hover table w-100')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(5, 'desc')
+            // ->orderBy(5, 'desc')
             ->responsive(true)
             ->autoWidth(true)
             ->processing(false)

@@ -47,7 +47,7 @@ class CheckSubscriptionPlanExists implements Rule
                     });
                 })
                 ->when($this->check_trial, function ($query) {
-                    $query->where('trial_mode', $this->check_trial);
+                    $query->orWhere('trial_mode', $this->check_trial);
                 })
                 ->exists();
         }
