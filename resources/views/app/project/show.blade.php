@@ -180,10 +180,17 @@
                                 {{ __('app.project_btn_view_merchant') }}
                             </a>
                             @auth('web')
+                            @if (!$user->favouriteProjects->contains($project->id))
+                            <button type="button" class="btn btn-custom-wishlist d-flex align-items-center text-danger font-weight-bold w-100 justify-content-center mt-4" data-wishlist="{{ route('app.wishlist.store') }}" data-project="{{ $project->id }}">
+                                <i class="far fa-heart services-icon mr-2" aria-hidden="true" title="{{ __('app.project_details_btn_add_wishlist') }}"></i>
+                                <u>{{ __('app.project_details_btn_add_wishlist') }}</u>
+                            </button>
+                            @else
                             <button type="button" class="btn btn-custom-wishlist d-flex align-items-center text-danger font-weight-bold w-100 justify-content-center mt-4" data-wishlist="{{ route('app.wishlist.store') }}" data-project="{{ $project->id }}">
                                 <i class="fas fa-heart services-icon mr-2" aria-hidden="true" title="{{ __('app.project_details_btn_add_wishlist') }}"></i>
                                 <u>{{ __('app.project_details_btn_add_wishlist') }}</u>
                             </button>
+                            @endif
                             @else
                             <a href="{{ route('login') }}" role="button" class="btn btn-custom-wishlist d-flex align-items-center text-danger font-weight-bold w-100 justify-content-center mt-4">
                                 <i class="far fa-heart services-icon mr-3" aria-hidden="true"></i>

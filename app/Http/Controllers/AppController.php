@@ -13,6 +13,7 @@ use App\Models\UserSubscription;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 
 class AppController extends Controller
@@ -138,7 +139,14 @@ class AppController extends Controller
                 });
         })->inRandomOrder()->take(3)->get();
 
-        return view('app.project.show', compact('project', 'similar_projects'));
+        $user = '';
+        if (auth()->check()) {
+            $user = Auth::user()->load([
+                'favouriteProjects'
+            ]);
+        }
+
+        return view('app.project.show', compact('project', 'similar_projects', 'user'));
     }
 
     public function showMerchant(Request $request, User $merchant)

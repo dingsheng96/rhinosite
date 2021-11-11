@@ -104,9 +104,6 @@ $(function () {
                         location.reload();
                     }
                 }
-            },
-            error: xhr => {
-                console.log(xhr);
             }
         });
     });
