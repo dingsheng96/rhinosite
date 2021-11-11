@@ -8,9 +8,12 @@ use App\Models\Service;
 use App\Models\Rateable;
 use App\Models\CountryState;
 use Illuminate\Http\Request;
+use App\Models\ProductAttribute;
+use App\Models\UserSubscription;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Builder;
 
 class AppController extends Controller
 {
@@ -224,6 +227,5 @@ class AppController extends Controller
             Log::error($message);
             return 'Something went wrong';
         }
-        dd($users);
     }
 }

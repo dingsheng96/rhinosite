@@ -24,12 +24,13 @@ class DeactivateExpiredSubscription
             foreach ($expired_subscriptions as $subscription) {
 
                 $subscription = UserSubscriptionFacade::setModel($subscription)->setSubscriptionStatus(UserSubscription::STATUS_INACTIVE)->getModel();
+
                 if (empty($subscription->subscribable->trial_mode) || !$subscription->subscribable->trial_mode) {
                     $subscription->user->notify(new SubscriptionExpired());
-                } else {
-                    $subscription->user->free_tier = 0;
-                    $subscription->save();
                 }
+
+                $subscription->user->free_tier = true;
+                $subscription->save();
             }
 
             activity()->useLog('task_deactivate_expired_subscription')
