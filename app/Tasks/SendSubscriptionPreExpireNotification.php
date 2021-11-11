@@ -24,8 +24,9 @@ class SendSubscriptionPreExpireNotification
         try {
 
             foreach ($pre_expired_subscriptions as $subscription) {
-
-                $subscription->user->notify(new SubscriptionPreExpire());
+                if (empty($subscription->subscribable->trial_mode) || !$subscription->subscribable->trial_mode) {
+                    $subscription->user->notify(new SubscriptionPreExpire());
+                }
             }
 
             activity()->useLog('task_send_subscription_pre_expire_notification')

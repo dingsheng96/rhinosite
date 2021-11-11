@@ -254,5 +254,11 @@ return [
     'change_new_boosting_date' => 'Change New Boosting Date',
     'valid_till' => 'Valid Till',
     'free_tier' => 'Free Tier',
-    'account_type' => 'Account Type'
+    'account_type' => 'Account Type',
+    'about_profile' => 'Other',
+    'about_introduction' => 'Introduction',
+    'about_service' => 'Services',
+    'about_team' => 'Team',
+    'about_other' => 'Others',
+    'instagram' => 'Instagram'
 ];

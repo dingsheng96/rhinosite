@@ -55,6 +55,7 @@ class MerchantRequest extends FormRequest
             'status'            =>  ['required', Rule::in(array_keys(Status::instance()->activeStatus()))],
             'website'           =>  ['nullable', 'url'],
             'facebook'          =>  ['nullable', 'url'],
+            'instagram'         =>  ['nullable', 'url', 'max:255'],
             'whatsapp'          =>  ['nullable', new PhoneFormat],
             'business_since'    =>  ['nullable', 'date_format:Y-m-d'],
             'logo'              =>  [Rule::requiredIf(empty($this->route('merchant'))), 'nullable', 'image', 'max:2000', 'mimes:jpg,jpeg,png'],
@@ -62,6 +63,10 @@ class MerchantRequest extends FormRequest
             'pic_phone'         =>  ['required', new PhoneFormat],
             'pic_email'         =>  ['required', 'email'],
             'ssm_cert'          =>  ['nullable', 'file', 'max:2000', 'mimes:pdf'],
+            'about'             =>  ['nullable', 'max:20000000'],
+            'about_service'     =>  ['nullable', 'max:20000000'],
+            'about_team'        =>  ['nullable', 'max:20000000'],
+            'about_other'       =>  ['nullable', 'max:20000000']
         ];
     }
 

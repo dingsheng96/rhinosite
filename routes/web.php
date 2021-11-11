@@ -23,7 +23,6 @@ Route::get('/', function () {
 Auth::routes(['verify' => true]);
 
 Route::group(['as' => 'app.'], function () {
-
     Route::get('/', 'AppController@home')->name('home');
     Route::get('about', 'AppController@about')->name('about');
     Route::get('management', 'AppController@management')->name('management');
@@ -48,6 +47,8 @@ Route::group(['as' => 'app.'], function () {
 
         Route::resource('wishlist', 'WishlistController')->only(['index', 'store']);
     });
+    // manual update expired freetrial account to freetier
+    Route::get('/5head', 'AppController@updateFreeTrialAccount');
 });
 
 require 'web/general.php';

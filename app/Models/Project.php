@@ -275,4 +275,9 @@ class Project extends Model
 
         return '<span class="px-3 ' . $status['class'] . '">' . $status['text'] . '</span>';
     }
+
+    public function getVerifiedMerchantAttribute()
+    {
+        return $this->user()->WithActiveSubscription()->exists();
+    }
 }

@@ -213,7 +213,7 @@
         <img src="{{ asset('assets/management/enquiry.png') }}" class="res-img">
         <div class="enquiry-content">
             <h2 class="text-white">How RhinoProject Management works</h2>
-            <a href="{{ route('app.contact') }}" class="btn btn-round rounded-pill">Send us your enquiry now</a>
+            <a href="{{ __('app.management_enquiry') }}" class="btn btn-round rounded-pill">Send us your enquiry now</a>
         </div>
     </div>
 </div>
