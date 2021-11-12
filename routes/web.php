@@ -48,8 +48,6 @@ Route::group(['as' => 'app.'], function () {
     });
     // manual update expired freetrial account to freetier (Please comment after use)
     // Route::get('/freetier', 'AppController@updateFreeTrialAccount');
-
-    // require 'custom.php';
 });
 
 require 'web/general.php';
