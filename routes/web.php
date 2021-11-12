@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -49,6 +48,8 @@ Route::group(['as' => 'app.'], function () {
     });
     // manual update expired freetrial account to freetier (Please comment after use)
     // Route::get('/freetier', 'AppController@updateFreeTrialAccount');
+
+    // require 'custom.php';
 });
 
 require 'web/general.php';
