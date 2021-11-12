@@ -34,7 +34,7 @@ $(function () {
         });
     }
 
-    if($('.btn-reset-filter').length > 0) {
+    if ($('.btn-reset-filter').length > 0) {
 
         $('body').on('click', '.btn-reset-filter', function (e) {
 
@@ -45,12 +45,12 @@ $(function () {
         });
     }
 
-    $(".custom-img-input").on("change", function(e) {
+    $(".custom-img-input").on("change", function (e) {
         let file = e.target.files[0];
 
         if (file) {
             let reader = new FileReader();
-            reader.onload = function() {
+            reader.onload = function () {
                 $(".custom-img-preview").attr("src", reader.result);
             };
             reader.readAsDataURL(file);
@@ -80,15 +80,15 @@ $(function () {
                     let data = xhr.data;
                     let icon = $(this).find('i');
 
-                    if(icon.length > 0) {
-                        if(data.liked) {
+                    if (icon.length > 0) {
+                        if (data.liked) {
                             icon.removeClass('far').addClass('fas');
                         } else {
                             icon.removeClass('fas').addClass('far');
                         }
                     } else {
 
-                        if(data.liked) {
+                        if (data.liked) {
 
                             $(this).addClass('bg-danger');
                             $(this).text(new_btn_text);
@@ -100,7 +100,7 @@ $(function () {
                         }
                     }
 
-                    if(data.refresh_page) {
+                    if (data.refresh_page) {
                         location.reload();
                     }
                 }
@@ -111,11 +111,11 @@ $(function () {
     let cookie = $.cookie("rhinosite_compare_collapse");
     let accordion = $(".compare.collapse, .btn-compare.collapse");
 
-    if(cookie == 1) {
+    if (cookie == 1) {
         accordion.collapse('show');
     }
 
-    $(".btn-collapse").on('click', function() {
+    $(".btn-collapse").on('click', function () {
 
         var date = new Date();
         var minutes = 30;
@@ -123,18 +123,20 @@ $(function () {
 
         var status = cookie == 1 ? 0 : 1;
 
-        $.cookie("rhinosite_compare_collapse", status, { expires: date });
+        $.cookie("rhinosite_compare_collapse", status, {
+            expires: date
+        });
         accordion.collapse('toggle');
     });
 
     $('.btn-compare').on('click', function () {
 
-        let route       =   $(this).data('compare-route');
-        let target      =   $(this).data('compare-target');
-        let target_id   =   $(this).data('compare-target-id');
-        let data_text   =   $(this).data('compare-text');
-        let btn_text    =   $(this).text();
-        let refresh     =   $(this).data('refresh');
+        let route = $(this).data('compare-route');
+        let target = $(this).data('compare-target');
+        let target_id = $(this).data('compare-target-id');
+        let data_text = $(this).data('compare-text');
+        let btn_text = $(this).text();
+        let refresh = $(this).data('refresh');
 
         $.ajax({
             headers: {
@@ -156,19 +158,19 @@ $(function () {
                     $(this).text(data_text);
                     $(this).removeClass('bg-danger');
 
-                    if($.inArray(target_id, data.attached) !== -1) {
+                    if ($.inArray(target_id, data.attached) !== -1) {
                         $(this).addClass('bg-danger');
                     }
 
                     $('.compare-count').text(data.selected);
 
-                    if(data.selected > 1) {
+                    if (data.selected > 1) {
                         $('.btn-view-result').removeAttr('disabled');
                     } else {
                         $('.btn-view-result').attr('disabled', true);
                     }
 
-                    if(refresh) {
+                    if (refresh) {
                         location.reload();
                     }
 
@@ -179,7 +181,7 @@ $(function () {
         });
     });
 
-    if($('#ratingform ').length > 0) {
+    if ($('#ratingform ').length > 0) {
 
         let form = $('#ratingform');
 
@@ -206,8 +208,8 @@ $(function () {
 
                         let data = xhr.data;
 
-                        if(data.rated == true) {
-                            $('#rating-stars').replaceWith('<p id="rating-stars">'+data.rating+'</p>');
+                        if (data.rated == true) {
+                            $('#rating-stars').replaceWith('<p id="rating-stars">' + data.rating + '</p>');
                             alert(xhr.message);
                             return;
                         }

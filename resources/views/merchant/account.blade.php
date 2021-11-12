@@ -33,6 +33,10 @@
                             <p class="text-muted">{{ $user->userDetail->facebook ?? '-' }}</p>
                         </li>
                         <li class="list-group-item">
+                            <strong><i class="fab fa-instagram mr-1 text-indigo"></i> {{ __('labels.instagram') }}</strong>
+                            <p class="text-muted">{{ $user->userDetail->instagram ?? '-' }}</p>
+                        </li>
+                        <li class="list-group-item">
                             <strong><i class="fas fa-user mr-1 text-secondary"></i> {{ __('labels.person_in_charge') }}</strong>
                             <p class="text-muted">
                                 {{ $user->userDetail->pic_name }} <br />
@@ -59,6 +63,7 @@
                             <ul class="nav nav-pills">
                                 <li class="nav-item"><a class="nav-link active" href="#profile" data-toggle="tab">{{ __('labels.profile') }}</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#location" data-toggle="tab">{{ __('labels.location') }}</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#about" data-toggle="tab">{{ __('labels.about_profile') }}</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">{{ __('labels.settings') }}</a></li>
                             </ul>
                         </div>
@@ -170,6 +175,17 @@
                                         </div>
 
                                         <div class="row">
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="instagram" class="col-form-label">{{ __('labels.instagram') }}</label>
+                                                    <input type="url" name="instagram" id="instagram" value="{{ old('instagram', $user->userDetail->instagram ?? null) }}" class="form-control @error('instagram') is-invalid @enderror">
+                                                    @error('instagram')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="whatsapp" class="col-form-label">{{ __('labels.whatsapp') }}</label>
@@ -324,6 +340,16 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="tab-pane fade show" id="about">
+                                        <label for="about" class="col-form-label">{{ __('labels.about_introduction') }} </label>
+                                        <textarea name="about" class="summernote-plain" id="aboutsummernote">{{ old('about', $user->userDetail->about) }}</textarea>
+                                        <label for="about_service" class="col-form-label">{{ __('labels.about_service') }} </label>
+                                        <textarea name="about_service" class="summernote-plain" id="aboutsummernote">{{ old('about_service', $user->userDetail->aboutservice) }}</textarea>
+                                        <label for="about_team" class="col-form-label">{{ __('labels.about_team') }} </label>
+                                        <textarea name="about_team" class="summernote-plain" id="aboutsummernote">{{ old('about_team', $user->userDetail->team) }}</textarea>
+                                        <label for="about_other" class="col-form-label">{{ __('labels.about_other') }} </label>
+                                        <textarea name="about_other" class="summernote-plain" id="aboutsummernote">{{ old('about_other', $user->userDetail->other) }}</textarea>
                                     </div>
                                     <div class="tab-pane fade show" id="settings">
                                         <div class="row">

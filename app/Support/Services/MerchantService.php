@@ -90,10 +90,15 @@ class MerchantService extends BaseService
         $details->website           =   $this->request->get('website');
         $details->facebook          =   $this->request->get('facebook');
         $details->whatsapp          =   $this->request->get('whatsapp');
+        $details->instagram         =   $this->request->get('instagram');
         $details->pic_name          =   $this->request->get('pic_name');
         $details->pic_phone         =   $this->request->get('pic_phone');
         $details->pic_email         =   $this->request->get('pic_email');
         $details->status            =   UserDetail::STATUS_PENDING;
+        $details->about             =   $this->request->get('about');
+        $details->aboutservice      =   $this->request->get('about_service');
+        $details->team              =   $this->request->get('about_team');
+        $details->other             =   $this->request->get('about_other');
 
         $this->model->userDetail()->save($details);
 

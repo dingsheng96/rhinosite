@@ -145,6 +145,23 @@
                             <p>{{ $project->user->formatted_phone_number }}</p>
                         </div>
                     </div>
+                    <div class="row my-4">
+                        @if (!empty($project->user->userDetail->website))
+                        <div class="col-4 text-center mb-3">
+                            <a href="{{ $project->user->userDetail->website }}" title="{{ $project->user->userDetail->website }}" class="txtblk" target="_blank"><i class="fas fa-globe-asia" style="font-size: 40px;"></i></a>
+                        </div>
+                        @endif
+                        @if (!empty($project->user->userDetail->facebook))
+                        <div class="col-4 text-center mb-3">
+                            <a href="{{ $project->user->userDetail->facebook }}" title="{{ $project->user->userDetail->facebook }}" class="txtblk" target="_blank"><i class="fab fa-facebook-square" style="font-size: 40px;"></i></a>
+                        </div>
+                        @endif
+                        @if (!empty($project->user->userDetail->instagram))
+                        <div class="col-4 text-center mb-3">
+                            <a href="{{ $project->user->userDetail->instagram }}" title="{{ $project->user->userDetail->instagram }}" class="txtblk" target="_blank"><i class="fab fa-instagram" style="font-size: 40px;"></i></a>
+                        </div>
+                        @endif
+                    </div>
                     <div class="row justify-content-center">
                         <div class="col-10">
                             @if (!empty($project->user->userDetail->whatsapp))
@@ -162,21 +179,23 @@
                             <a href="{{ route('app.merchant.show', ['merchant' => $project->user->id]) }}" class="btn btn-round d-flex align-items-center justify-content-center mt-4">
                                 {{ __('app.project_btn_view_merchant') }}
                             </a>
-                            @auth
+                            @auth('web')
+                            @if (!$user->favouriteProjects->contains($project->id))
                             <button type="button" class="btn btn-custom-wishlist d-flex align-items-center text-danger font-weight-bold w-100 justify-content-center mt-4" data-wishlist="{{ route('app.wishlist.store') }}" data-project="{{ $project->id }}">
-                                @if (Auth::user()->favouriteProjects()->get()->contains($project->id))
-                                <i class="fas fa-heart services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_add_wishlist') }}"></i>
+                                <i class="far fa-heart services-icon mr-2" aria-hidden="true" title="{{ __('app.project_details_btn_add_wishlist') }}"></i>
                                 <u>{{ __('app.project_details_btn_add_wishlist') }}</u>
-                                @else
-                                <i class="far fa-heart services-icon" aria-hidden="true" title="{{ __('app.project_details_btn_add_wishlist') }}"></i>
-                                <u>{{ __('app.project_details_btn_remove_wishlist') }}</u>
-                                @endif
                             </button>
                             @else
-                            <button type="button" class="btn btn-custom-wishlist d-flex align-items-center text-danger font-weight-bold w-100 justify-content-center mt-4" data-wishlist="{{ route('login') }}">
-                                <i class="far fa-heart services-icon mr-3" aria-hidden="true"></i>
+                            <button type="button" class="btn btn-custom-wishlist d-flex align-items-center text-danger font-weight-bold w-100 justify-content-center mt-4" data-wishlist="{{ route('app.wishlist.store') }}" data-project="{{ $project->id }}">
+                                <i class="fas fa-heart services-icon mr-2" aria-hidden="true" title="{{ __('app.project_details_btn_add_wishlist') }}"></i>
                                 <u>{{ __('app.project_details_btn_add_wishlist') }}</u>
                             </button>
+                            @endif
+                            @else
+                            <a href="{{ route('login') }}" role="button" class="btn btn-custom-wishlist d-flex align-items-center text-danger font-weight-bold w-100 justify-content-center mt-4">
+                                <i class="far fa-heart services-icon mr-3" aria-hidden="true"></i>
+                                <u>{{ __('app.project_details_btn_add_wishlist_login') }}</u>
+                            </a>
                             @endauth
                         </div>
                     </div>

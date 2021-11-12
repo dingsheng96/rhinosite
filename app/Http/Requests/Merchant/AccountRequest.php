@@ -41,6 +41,7 @@ class AccountRequest extends FormRequest
             'pic_email'         => ['required', 'email'],
             'website'           => ['nullable', 'url', 'max:255'],
             'facebook'          => ['nullable', 'url', 'max:255'],
+            'instagram'         => ['nullable', 'url', 'max:255'],
             'whatsapp'          => ['nullable', new PhoneFormat],
             'business_since'    => ['nullable', 'date_format:Y-m-d'],
             'address_1'         => ['required', 'min:3', 'max:255'],
@@ -50,7 +51,11 @@ class AccountRequest extends FormRequest
             'country_state'     => ['required', Rule::exists(CountryState::class, 'id')->where('country_id', $this->get('country'))],
             'city'              => ['required', Rule::exists(City::class, 'id')->where('country_state_id', $this->get('country_state'))],
             'logo'              => ['nullable', 'image', 'max:2000', 'mimes:jpg,jpeg,png'],
-            'reg_no'            => ['nullable']
+            'reg_no'            => ['nullable'],
+            'about'             => ['nullable', 'max:20000000'],
+            'about_service'     => ['nullable', 'max:20000000'],
+            'about_team'        => ['nullable', 'max:20000000'],
+            'about_other'       => ['nullable', 'max:20000000']
         ];
     }
 

@@ -42,6 +42,8 @@ class User extends Authenticatable implements MustVerifyEmail
     const TYPE_MERCHANT = 'merchant';
     const TYPE_MEMBER   = 'member';
 
+    const MAX_RATING_SCALE = 5;
+
     protected $table = 'users';
 
     protected $fillable = [
@@ -219,7 +221,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public function scopeValidMerchant($query)
     {
         return $query->merchant()->active()
-            ->withActiveSubscription()->withApprovedDetails()
+            ->withActiveSubscription()
+            ->withApprovedDetails()
             ->whereHas('service');
     }
 
@@ -316,7 +319,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getRatingStarsAttribute()
     {
         $total_stars    =   null;
-        $max_stars      =   5;
+        $max_stars      =   self::MAX_RATING_SCALE;
         $rating         =   floor($this->rating);
 
         for ($i = 0; $i < $rating; $i++) {

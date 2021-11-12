@@ -21,6 +21,7 @@
                                     <a class="nav-link active" id="vert-tabs-general-tab" data-toggle="pill" href="#vert-tabs-general" role="tab" aria-controls="vert-tabs-general" aria-selected="true">{{ __('labels.general') }}</a>
                                     <a class="nav-link" id="vert-tabs-details-tab" data-toggle="pill" href="#vert-tabs-details" role="tab" aria-controls="vert-tabs-details" aria-selected="false">{{ __('labels.details') }}</a>
                                     <a class="nav-link" id="vert-tabs-location-tab" data-toggle="pill" href="#vert-tabs-location" role="tab" aria-controls="vert-tabs-location" aria-selected="false">{{ __('labels.location') }}</a>
+                                    <a class="nav-link" id="vert-tabs-about-tab" data-toggle="pill" href="#vert-tabs-about" role="tab" aria-controls="vert-tabs-about" aria-selected="false">{{ __('labels.about_profile') }}</a>
                                 </div>
                             </div>
                             <div class="col-7 col-md-9">
@@ -147,6 +148,17 @@
                                         </div>
 
                                         <div class="row">
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="instagram" class="col-form-label">{{ __('labels.instagram') }}</label>
+                                                    <input type="url" name="instagram" id="instagram" value="{{ old('instagram', $merchant->userDetail->instagram ?? null) }}" class="form-control @error('instagram') is-invalid @enderror">
+                                                    @error('instagram')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label for="whatsapp" class="col-form-label">{{ __('labels.whatsapp') }}</label>
@@ -303,6 +315,17 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+
+                                    <div class="tab-pane text-left fade show" id="vert-tabs-about" role="tabpanel" aria-labelledby="vert-tabs-about-tab">
+                                        <label for="about" class="col-form-label">{{ __('labels.about_introduction') }} </label>
+                                        <textarea name="about" class="summernote-plain" id="aboutsummernote">{{ old('about') }}</textarea>
+                                        <label for="about_service" class="col-form-label">{{ __('labels.about_service') }} </label>
+                                        <textarea name="about_service" class="summernote-plain" id="aboutsummernote">{{ old('about_service') }}</textarea>
+                                        <label for="about_team" class="col-form-label">{{ __('labels.about_team') }} </label>
+                                        <textarea name="about_team" class="summernote-plain" id="aboutsummernote">{{ old('about_team') }}</textarea>
+                                        <label for="about_other" class="col-form-label">{{ __('labels.about_other') }} </label>
+                                        <textarea name="about_other" class="summernote-plain" id="aboutsummernote">{{ old('about_other') }}</textarea>
                                     </div>
 
                                     <div class="tab-pane text-left fade show" id="vert-tabs-location" role="tabpanel" aria-labelledby="vert-tabs-location-tab">

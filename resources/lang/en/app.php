@@ -63,7 +63,7 @@ return [
     'project_details_subtitle_material' => 'Materials Used',
     'project_details_subtitle_similar_projects' => 'Similar Projects',
     'project_details_btn_add_wishlist' => 'Save to Wishlist',
-    'project_details_btn_remove_wishlist' => 'Remove from Wishlist',
+    'project_details_btn_add_wishlist_login' => 'Login to save to Wishlist',
     'project_details_btn_remove_wishlist' => 'Remove from wishlist',
     'project_details_btn_call' => 'Call Us',
     'project_details_btn_whatsapp' => 'Request A Quote',
@@ -93,6 +93,7 @@ return [
     'management_love_rhinosite_subtitle2' => 'Hassle free & transparent',
     'management_love_rhinosite_subtitle3' => 'Customers Come First ',
     'management_issue_title' => 'Common problems faced by owners pre and post renovation ',
+    'management_enquiry' => 'https://wa.me/60163031808',
 
     'contact_title_main' => 'Contact Us',
     'contact_contact_no_title' => 'Contact No',

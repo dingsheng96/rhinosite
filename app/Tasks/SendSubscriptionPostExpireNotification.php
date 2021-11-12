@@ -4,9 +4,11 @@ namespace App\Tasks;
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\ProductAttribute;
 use App\Models\UserSubscription;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\DeactivateAccount;
+use Illuminate\Database\Eloquent\Builder;
 use App\Notifications\SubscriptionExpiredAfterSixDays;
 use App\Notifications\SubscriptionExpiredAfterThreeDays;
 
@@ -16,14 +18,20 @@ class SendSubscriptionPostExpireNotification
     {
         DB::beginTransaction();
 
-        $expired_subscriptions = UserSubscription::with([
-            'user', 'userSubscriptionLogs' => function ($query) {
-                $query->orderByDesc('created_at');
-            }
-        ])->inactive()->whereHas('userSubscriptionLogs')
+        $expired_subscriptions = UserSubscription::inactive()
+            ->with([
+                'user', 'subscribable', 'userSubscriptionLogs' => function ($query) {
+                    $query->orderByDesc('created_at');
+                }
+            ])
+            ->whereHas('userSubscriptionLogs')
             ->whereHas('user', function ($query) {
                 $query->merchant()->active()->withApprovedDetails();
-            })->orderByDesc('created_at')->get()->filter(function ($value, $key) {
+            })
+            ->whereHasMorph('subscribable', [ProductAttribute::class], function (Builder $query) {
+                $query->trialMode(false);
+            })
+            ->orderByDesc('created_at')->get()->filter(function ($value, $key) {
                 return !in_array($value->user_id, UserSubscription::active()->pluck('user_id')->toArray());
             })->unique('user_id');
 
@@ -38,6 +46,11 @@ class SendSubscriptionPostExpireNotification
                 $expired_date = Carbon::parse($subscription->userSubscriptionLogs->first()->expired_at);
 
                 $user = $subscription->user;
+                $user->free_tier = true;
+
+                if ($user->isDirty('free_tier')) {
+                    $user->save();
+                }
 
                 if ($expired_date->copy()->addDays(3)->toDateString() == $today) {
 
@@ -49,13 +62,13 @@ class SendSubscriptionPostExpireNotification
                     $user->notify(new SubscriptionExpiredAfterSixDays());
                 }
 
-                if ($expired_date->copy()->addDays(7)->toDateString() == $today) {
+                // if ($expired_date->copy()->addDays(7)->toDateString() == $today) {
 
-                    $user->status = User::STATUS_INACTIVE;
-                    $user->save();
+                // $user->status = User::STATUS_INACTIVE;
+                // $user->save();
 
-                    $user->notify(new DeactivateAccount());
-                }
+                // $user->notify(new DeactivateAccount());
+                // }
 
                 $tasks_count++;
             }

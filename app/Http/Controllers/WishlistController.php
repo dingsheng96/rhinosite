@@ -63,9 +63,14 @@ class WishlistController extends Controller
 
         try {
 
-            $project = Project::where('id', $request->get('project'))->published()
-                ->whereHas('user', function ($query) {
-                    $query->validMerchant();
+            $project = Project::where('id', $request->get('project'))
+                ->published()
+                ->where(function ($query) {
+                    $query->whereHas('user', function ($query) {
+                        $query->validMerchant();
+                    })->orWhereHas('user', function ($query) {
+                        $query->freeTierMerchant(true);
+                    });
                 })->select('id', 'user_id')->firstOrFail();
 
             Auth::user()->favouriteProjects()->toggle($project->id);
