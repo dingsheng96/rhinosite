@@ -87,16 +87,8 @@ class AppController extends Controller
             }
         ])->withValidMerchant()->published()->sortByCategoryBump()
             ->searchable($request->get('q'))->filterable($request)
-            ->paginate(12, ['*'], 'page', $request->get('page', 1))
-            // ->sortByDesc('user.free_tier')
-        ;
+            ->paginate(12, ['*'], 'page', $request->get('page', 1));
 
-
-        // dd($projects);
-
-        // foreach ($projects as $project) {
-        //     dd($project->media->first()->full_file_path);
-        // }
         return view('app.project.index', compact('projects', 'areas'));
     }
 
