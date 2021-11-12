@@ -221,7 +221,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public function scopeValidMerchant($query)
     {
         return $query->merchant()->active()
-            ->withActiveSubscription()->withApprovedDetails()
+            ->withActiveSubscription()
+            ->withApprovedDetails()
             ->whereHas('service');
     }
 

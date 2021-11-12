@@ -148,17 +148,17 @@
                     <div class="row my-4">
                         @if (!empty($project->user->userDetail->website))
                         <div class="col-4 text-center mb-3">
-                            <a href="{{ $project->user->userDetail->website }}" title="{{ $project->user->userDetail->website }}" class="txtblk"><i class="fas fa-globe-asia" style="font-size: 40px;"></i></a>
+                            <a href="{{ $project->user->userDetail->website }}" title="{{ $project->user->userDetail->website }}" class="txtblk" target="_blank"><i class="fas fa-globe-asia" style="font-size: 40px;"></i></a>
                         </div>
                         @endif
                         @if (!empty($project->user->userDetail->facebook))
                         <div class="col-4 text-center mb-3">
-                            <a href="{{ $project->user->userDetail->facebook }}" title="{{ $project->user->userDetail->facebook }}" class="txtblk"><i class="fab fa-facebook-square" style="font-size: 40px;"></i></a>
+                            <a href="{{ $project->user->userDetail->facebook }}" title="{{ $project->user->userDetail->facebook }}" class="txtblk" target="_blank"><i class="fab fa-facebook-square" style="font-size: 40px;"></i></a>
                         </div>
                         @endif
                         @if (!empty($project->user->userDetail->instagram))
                         <div class="col-4 text-center mb-3">
-                            <a href="{{ $project->user->userDetail->instagram }}" title="{{ $project->user->userDetail->instagram }}" class="txtblk"><i class="fab fa-instagram" style="font-size: 40px;"></i></a>
+                            <a href="{{ $project->user->userDetail->instagram }}" title="{{ $project->user->userDetail->instagram }}" class="txtblk" target="_blank"><i class="fab fa-instagram" style="font-size: 40px;"></i></a>
                         </div>
                         @endif
                     </div>

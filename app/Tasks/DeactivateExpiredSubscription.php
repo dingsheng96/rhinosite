@@ -13,7 +13,7 @@ class DeactivateExpiredSubscription
     {
         DB::beginTransaction();
 
-        $expired_subscriptions = UserSubscription::with(['userSubscriptionLogs', 'subscribable'])
+        $expired_subscriptions = UserSubscription::with(['userSubscriptionLogs', 'subscribable', 'user'])
             ->active()
             ->whereHas('userSubscriptionLogs', function ($query) {
                 $query->where('expired_at', '<', today()->startOfDay())->orderByDesc('created_at')->limit(1);
@@ -30,7 +30,7 @@ class DeactivateExpiredSubscription
                 }
 
                 $subscription->user->free_tier = true;
-                $subscription->save();
+                $subscription->user->save();
             }
 
             activity()->useLog('task_deactivate_expired_subscription')

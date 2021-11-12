@@ -172,17 +172,17 @@
                     <div class="row border-bottom my-4">
                         @if (!empty($merchant->userDetail->website))
                         <div class="col-4 text-center mb-3">
-                            <a href="{{ $merchant->userDetail->website }}" title="{{ $merchant->userDetail->website }}" class="txtblk"><i class="fas fa-globe-asia" style="font-size: 30px;"></i></a>
+                            <a href="{{ $merchant->userDetail->website }}" title="{{ $merchant->userDetail->website }}" class="txtblk" target="_blank"><i class="fas fa-globe-asia" style="font-size: 30px;"></i></a>
                         </div>
                         @endif
                         @if (!empty($merchant->userDetail->facebook))
                         <div class="col-4 text-center mb-3">
-                            <a href="{{ $merchant->userDetail->facebook }}" title="{{ $merchant->userDetail->facebook }}" class="txtblk"><i class="fab fa-facebook-square" style="font-size: 30px;"></i></a>
+                            <a href="{{ $merchant->userDetail->facebook }}" title="{{ $merchant->userDetail->facebook }}" class="txtblk" target="_blank"><i class="fab fa-facebook-square" style="font-size: 30px;"></i></a>
                         </div>
                         @endif
                         @if (!empty($merchant->userDetail->instagram))
                         <div class="col-4 text-center mb-3">
-                            <a href="{{ $merchant->userDetail->instagram }}" title="{{ $merchant->userDetail->instagram }}" class="txtblk"><i class="fab fa-instagram" style="font-size: 30px;"></i></a>
+                            <a href="{{ $merchant->userDetail->instagram }}" title="{{ $merchant->userDetail->instagram }}" class="txtblk" target="_blank"><i class="fab fa-instagram" style="font-size: 30px;"></i></a>
                         </div>
                         @endif
                     </div>

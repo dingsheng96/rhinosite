@@ -28,10 +28,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(new DeactivateExpiredSubscription)->daily();
-        $schedule->call(new FailOverdueTransaction)->daily();
-        $schedule->call(new SendSubscriptionPreExpireNotification)->daily();
-        $schedule->call(new SendSubscriptionPostExpireNotification)->daily();
+        $schedule->call(new DeactivateExpiredSubscription)->everyMinute();
+        $schedule->call(new FailOverdueTransaction)->everyMinute();
+        $schedule->call(new SendSubscriptionPreExpireNotification)->everyMinute();
+        $schedule->call(new SendSubscriptionPostExpireNotification)->everyMinute();
     }
 
     /**

@@ -63,12 +63,16 @@ class WishlistController extends Controller
 
         try {
 
-            $project = Project::where('id', $request->get('project'))->published()
+            $project = Project::where('id', $request->get('project'))
+                ->published()
                 ->whereHas('user', function ($query) {
                     $query->validMerchant();
                 })->select('id', 'user_id')->first();
+
+            // Please combine this query with the upper query.
             if (empty($project)) {
-                $project = Project::where('id', $request->get('project'))->published()
+                $project = Project::where('id', $request->get('project'))
+                    ->published()
                     ->whereHas('user', function ($query) {
                         $query->freeTierMerchant(true);
                     })->select('id', 'user_id')->firstOrFail();

@@ -48,7 +48,7 @@ Route::group(['as' => 'app.'], function () {
         Route::resource('wishlist', 'WishlistController')->only(['index', 'store']);
     });
     // manual update expired freetrial account to freetier
-    // Route::get('/freetier', 'AppController@updateFreeTrialAccount');
+    Route::get('/freetier', 'AppController@updateFreeTrialAccount');
 });
 
 require 'web/general.php';

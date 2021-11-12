@@ -108,7 +108,7 @@ class VerificationController extends Controller
     public function show(Request $request)
     {
         return $request->user()->hasVerifiedEmail()
-            ? redirect()->route('member.dashboard')
+            ? redirect()->route('app.dashboard')
             : view('auth.verify');
     }
 }

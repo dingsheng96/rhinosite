@@ -173,21 +173,26 @@ class AppController extends Controller
             ->paginate(15, ['*'], 'page', $request->get('page', 1));
 
         $ratings = '';
+
         if (auth()->guard('web')->check()) {
+
             $user = auth()->user();
             $user->load([
                 'ratedBy' => function ($query) use ($merchant) {
                     $query->where('id', $merchant->id);
                 }
             ]);
-            $rate = $user->ratedBy->first()->pivot->scale;
 
-            for ($i = 0; $i < $rate; $i++) {
-                $ratings .= '<i class="fas fa-star star"></i>';
-            }
+            $rate = $user->ratedBy->first()->pivot->scale ?? null;
 
-            for ($y = 0; $y < User::MAX_RATING_SCALE - $rate; $y++) {
-                $ratings .= '<i class="far fa-star star"></i>';
+            if (!is_null($rate)) {
+                for ($i = 0; $i < $rate; $i++) {
+                    $ratings .= '<i class="fas fa-star star"></i>';
+                }
+
+                for ($y = 0; $y < User::MAX_RATING_SCALE - $rate; $y++) {
+                    $ratings .= '<i class="far fa-star star"></i>';
+                }
             }
         }
 
@@ -213,6 +218,7 @@ class AppController extends Controller
     {
         try {
             DB::beginTransaction();
+
             $users = User::with([
                 'userSubscriptions' => function ($query) {
                     $query->orderByDesc('activated_at');
@@ -228,11 +234,14 @@ class AppController extends Controller
                 $user->save();
                 Log::info('id: ' . $user->id . 'name: ' . $user->name . 'Free Tier changed successfully');
             }
+
             DB::commit();
+
             return 'Completed';
         } catch (\Exception $message) {
             DB::rollback();
             Log::error($message);
+
             return 'Something went wrong';
         }
     }
