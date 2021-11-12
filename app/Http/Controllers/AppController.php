@@ -76,6 +76,14 @@ class AppController extends Controller
 
         $projects = Project::with([
             'translations', 'address', 'unit', 'user.ratedBy',
+            'user' => function ($query) {
+                $query->with([
+                    'ratedBy',
+                    'userSubscriptions' => function ($query) {
+                        $query->active()->orderByDesc('created_at');
+                    }
+                ]);
+            },
             'prices' => function ($query) {
                 $query->defaultPrice();
             },

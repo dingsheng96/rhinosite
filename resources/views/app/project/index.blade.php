@@ -142,7 +142,7 @@
                                         <a href="{{ route('app.project.show', ['project' => $project->id]) }}">
                                             <div class="merchant-image-container">
                                                 <img src="{{ $project->media->first()->full_file_path }}" alt="{{ $project->user->name }}" class="merchant-image">
-                                                @if ($project->verified_merchant)
+                                                @if ($project->user->active_subscription)
                                                 <img src="{{ asset('assets/verified.png') }}" alt="verified" class="verified-img">
                                                 @endif
                                             </div>
