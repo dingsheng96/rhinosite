@@ -186,7 +186,6 @@ $(function () {
         if ($('#ratingform ').length > 0) {
 
             let form = $('#ratingform');
-            // form.find("input[type=radio]").on('click', function () {
             let rating = $("input[type=radio][name=rate]:checked").val();
             let review = $("#review").val();
             let action = form.attr('action');
