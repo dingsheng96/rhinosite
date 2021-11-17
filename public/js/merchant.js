@@ -181,16 +181,25 @@ $(function () {
         });
     });
 
-    if ($('#ratingform ').length > 0) {
+    $('.btn-rate').on('click', function () {
 
-        let form = $('#ratingform');
+        if ($('#ratingform ').length > 0) {
 
-        form.find("input[type=radio]").on('click', function () {
-
-            let rating = $(this).val();
+            let form = $('#ratingform');
+            // form.find("input[type=radio]").on('click', function () {
+            let rating = $("input[type=radio][name=rate]:checked").val();
+            let review = $("#review").val();
             let action = form.attr('action');
             let method = form.attr('method');
             let target = form.data('merchant');
+
+            if (review.length > 255) {
+                alert('Make sure comment is less than 255 words!');
+            }
+
+            if (!rating) {
+                alert('Please select a rating!');
+            }
 
             $.ajax({
                 headers: {
@@ -200,7 +209,8 @@ $(function () {
                 type: method,
                 data: {
                     "merchant": target,
-                    "rating": rating
+                    "rating": rating,
+                    "review": review
                 },
                 success: xhr => {
 
@@ -211,11 +221,12 @@ $(function () {
                         if (data.rated == true) {
                             $('#rating-stars').replaceWith('<p id="rating-stars">' + data.rating + '</p>');
                             alert(xhr.message);
+                            location.reload();
                             return;
                         }
                     }
                 }
             });
-        });
-    }
+        }
+    });
 });
