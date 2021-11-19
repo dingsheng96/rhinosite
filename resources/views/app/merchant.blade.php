@@ -102,11 +102,10 @@
                 </div>
             </div>
         </div>
-
         <div class="services-card">
             <ul class="nav nav-tabs border-0 align-items-center d-block d-md-flex px-sm-4 py-sm-3" id="merchantprofile" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link border-0 active mb-4 mb-md-0" id="about-tab" data-toggle="tab" href="#about" role="tab" aria-controls="about" aria-selected="true">About</a>
+                    <a class="nav-link border-0 mb-4 mb-md-0" id="about-tab" data-toggle="tab" href="#about" role="tab" aria-controls="about" aria-selected="true">About</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link border-0 mb-4 mb-md-0" id="gallery-tab" data-toggle="tab" href="#gallery" role="tab" aria-controls="gallery" aria-selected="false">Gallery</a>
@@ -124,7 +123,7 @@
             <div class="col-lg-8">
                 <div class="services-card p-3">
                     <div class="tab-content" id="merchantProfileTab">
-                        <div class="tab-pane fade show active px-3 py-4" id="about" role="tabpanel" aria-labelledby="about-tab">
+                        <div class="tab-pane fade px-3 py-4" id="about" role="tabpanel" aria-labelledby="about-tab">
                             <div class="mb-5">
                                 <h3>About This Contractor</h3>
                                 {!! !empty($merchant->userDetail->about) ? $merchant->userDetail->about : '<p>No content found.</p>' !!}
@@ -142,14 +141,95 @@
                                 {!! !empty($merchant->userDetail->other) ? $merchant->userDetail->other : '<p>No content found.</p>' !!}
                             </div>
                         </div>
-                        <div class="tab-pane fade px-3 py-4" id="gallery" role="tabpanel" aria-labelledby="gallery-tab">
-                            <p>No content.</p>
+                        <div class="tab-pane fade px-3 py-4 {{ request()->input('media') ? 'show active' : '' }}" id="gallery" role="tabpanel" aria-labelledby="gallery-tab">
+                            <h3>Contractor's Gallery</h3>
+                            <div class="row">
+                                @forelse ($medias as $media)
+                                <div class="col-lg-6 mb-4">
+                                    <img src="{{ $media->full_file_path }}" alt="{{ $media->original_filename }}" class="gallery-img">
+                                </div>
+                                @empty
+                                <p>No image found.</p>
+                                @endforelse
+                            </div>
+                            <div class="row">
+                                <div class="col-12 d-flex justify-content-center">
+                                    {!! $medias->fragment('gallery-tab')->links() !!}
+                                </div>
+                            </div>
                         </div>
                         <div class="tab-pane fade px-3 py-4" id="recommendation" role="tabpanel" aria-labelledby="recommendation-tab">
-                            <p>No content.</p>
+                            <h3>Contractor's Recommendations Work</h3>
+                            <div class="row justify-content-start">
+
+                                @forelse ($projects as $project)
+                                <div class="col-12 col-xl-6 d-inline-flex">
+                                    <div class="merchant-card">
+                                        <a href="{{ route('app.project.show', ['project' => $project->id]) }}">
+                                            <div class="merchant-image-container">
+                                                <img src="{{ $project->thumbnail->full_file_path }}" alt="{{ $project->user->name }}" class="merchant-image">
+                                            </div>
+                                            <div class="merchant-body">
+                                                <p class="merchant-title">{{ $project->english_title }}</p>
+                                                {{-- <p class="merchant-title">{{ $project->chinese_title }}</p> --}}
+                                                <p class="merchant-subtitle">{{ $project->user->name }}</p>
+                                                <p class="merchant-subtitle">
+                                                    <span class="badge badge-pill badge-info badge-padding">{{ $project->user->service->name ?? '-' }}</span>
+                                                </p>
+                                            </div>
+                                            <div class="merchant-footer">
+                                                {{-- <span class="merchant-footer-left">{{ __('app.price_from') . ' ' . $project->price_without_unit }}</span> --}}
+                                                <span class="merchant-footer-right"><i class="fas fa-map-marker-alt text-danger mr-1"></i> {{ $project->location }}</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                @empty
+                                <div class="col-12 d-inline-flex">{{ __('messages.no_records') }}</div>
+                                @endforelse
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 d-flex justify-content-center">
+                                    {!! $projects->fragment('recommendation-tab')->links() !!}
+                                </div>
+                            </div>
                         </div>
                         <div class="tab-pane fade px-3 py-4" id="rating" role="tabpanel" aria-labelledby="rating-tab">
-                            <p>No content.</p>
+                            <h3>Contractor's Reviews & Ratings</h3>
+                            @forelse ($merchantratings as $rating)
+                            <div class="d-md-flex reviews mb-4 text-center text-md-left">
+                                <div class="review-profile-icon mb-4 w-100 mx-auto">
+                                    {{ $rating->initials }}
+                                </div>
+                                <div class="w-100">
+                                    <div class="ml-md-3 d-md-flex">
+                                        <div>
+                                            <h3 class="rating-header mb-3">{{ $rating->name }}</h3>
+                                            <div class="mb-2">
+                                                {!! $rating->pivot->ratingStars !!}
+                                            </div>
+                                        </div>
+                                        <div class="ml-auto">
+                                            <p class="paragraph txtgrey">{{ $rating->locationWithCityState }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="ml-md-3">
+                                        <p class="paragraph txtgrey mb-0">
+                                            {{ !empty($rating->pivot->review) ? $rating->pivot->review : '-' }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            @empty
+                            <p>No reviews found.</p>
+                            @endforelse
+                            <div class="row">
+                                <div class="col-12 d-flex justify-content-center">
+                                    {!! $merchantratings->fragment('rating-tab')->links() !!}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -207,25 +287,41 @@
                             @auth('web')
                             @member
                             @if(empty($ratings))
-                            <button type="button" class="btn btn-round black d-flex align-items-center justify-content-center mt-4 w-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button type="button" class="btn btn-round black d-flex align-items-center justify-content-center mt-4 w-100" data-toggle="modal" data-target="#exampleModal">
                                 <i class="fas fa-star services-icon text-white mr-2"></i> {{ __('app.merchant_btn_rate_merchant') }}
                             </button>
-                            <div class="dropdown-menu merchant-rate dropdown-menu-left w-100 text-center">
-                                <form action="{{ route('app.ratings.store') }}" method="POST" role="form" enctype="multipart/form-data" id="ratingform" data-merchant="{{ $merchant->id }}">
-                                    <p class="mb-0">{{ __('app.merchant_rate_dropdown_title') }}</p>
-                                    <div class="rate">
-                                        <input type="radio" id="star5" name="rate" value="5" />
-                                        <label for="star5"></label>
-                                        <input type="radio" id="star4" name="rate" value="4" />
-                                        <label for="star4"></label>
-                                        <input type="radio" id="star3" name="rate" value="3" />
-                                        <label for="star3"></label>
-                                        <input type="radio" id="star2" name="rate" value="2" />
-                                        <label for="star2"></label>
-                                        <input type="radio" id="star1" name="rate" value="1" />
-                                        <label for="star1"></label>
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <p class="mb-0">{{ __('app.merchant_rate_dropdown_title') }}</p>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form action="{{ route('app.ratings.store') }}" method="POST" role="form" enctype="multipart/form-data" id="ratingform" data-merchant="{{ $merchant->id }}">
+                                            <div class="modal-body">
+                                                <div class="rate">
+                                                    <input type="radio" id="star5" name="rate" value="5" />
+                                                    <label for="star5"></label>
+                                                    <input type="radio" id="star4" name="rate" value="4" />
+                                                    <label for="star4"></label>
+                                                    <input type="radio" id="star3" name="rate" value="3" />
+                                                    <label for="star3"></label>
+                                                    <input type="radio" id="star2" name="rate" value="2" />
+                                                    <label for="star2"></label>
+                                                    <input type="radio" id="star1" name="rate" value="1" />
+                                                    <label for="star1"></label>
+                                                </div>
+                                                <textarea class="form-control" name="review" id="review" cols="30" rows="5" maxlength="255"></textarea>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-black" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-orange btn-rate">Submit</button>
+                                            </div>
+                                        </form>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                             @else
                             <div class="my-3 text-center">
@@ -312,3 +408,22 @@
 </div> --}}
 
 @endsection
+@push('scripts')
+<script>
+    var arr = [];
+    var hash = window.location.hash;
+
+    $('#merchantprofile>li>a').each(function(){
+        arr.push('#'+$(this).attr('id'));
+    });
+
+    if (hash != "" && $.inArray(hash, arr)) {
+        $(hash).trigger('click');
+        $('html, body').animate({
+            scrollTop: $(hash).offset().top
+        }, 399);
+    }else{
+        $("#about-tab").trigger('click');
+    }
+</script>
+@endpush

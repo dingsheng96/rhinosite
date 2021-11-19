@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Media;
 use App\Models\Project;
 use App\Models\Service;
 use App\Models\Rateable;
@@ -165,12 +166,12 @@ class AppController extends Controller
             'prices' => function ($query) {
                 $query->defaultPrice();
             },
-            'media' => function ($query) {
+            'media' => function ($query) use ($request) {
                 $query->thumbnail();
             }
         ])->published()
             ->where('user_id', $merchant->id)
-            ->paginate(15, ['*'], 'page', $request->get('page', 1));
+            ->paginate(4, ['*'], 'project', $request->get('project', 1));
 
         $ratings = '';
 
@@ -196,7 +197,17 @@ class AppController extends Controller
             }
         }
 
-        return view('app.merchant', compact('merchant', 'projects', 'ratings'));
+        $project_id = Project::published()
+            ->where('user_id', $merchant->id)->pluck('id')->toArray();
+
+        $medias = Media::where('sourceable_type', Project::class)
+            ->whereIn('sourceable_id', $project_id)
+            ->paginate(6, ['*'], 'media', $request->get('media', 1));
+
+        $merchantratings = $merchant->ratings()
+            ->paginate(5, ['*'], 'rating', $request->get('rating', 1));
+
+        return view('app.merchant', compact('merchant', 'projects', 'ratings', 'medias', 'merchantratings'));
     }
 
     public function termsPolicies()
