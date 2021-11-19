@@ -15,6 +15,7 @@ use App\Models\Rateable;
 use App\Models\Comparable;
 use App\Models\Favourable;
 use App\Models\UserDetail;
+use Illuminate\Support\Str;
 use App\Models\UserAdsQuota;
 use App\Observers\UserObserver;
 use App\Models\UserSubscription;
@@ -131,7 +132,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function ratings()
     {
-        return $this->morphToMany(self::class, 'rateable', Rateable::class)->withPivot('scale')->withTimestamps();
+        return $this->morphToMany(self::class, 'rateable', Rateable::class)->withPivot('scale', 'review')->withTimestamps();
     }
 
     public function ratedBy()
@@ -409,5 +410,22 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return '<span class="badge badge-success badge-pill px-3">' . __('labels.free_tier') . '</span>';
+    }
+
+    public function getInitialsAttribute()
+    {
+        $initial    =   null;
+        $initials   =   explode(" ", $this->name);
+        if (count($initials) > 1) {
+            foreach (array_slice($initials, 0, 2) as $first) {
+                $initial .= substr($first, 0, 1);
+            }
+        } else {
+            foreach (array_slice($initials, 0, 2) as $first) {
+                $initial .= substr($first, 0, 2);
+            }
+        }
+
+        return Str::upper($initial);
     }
 }

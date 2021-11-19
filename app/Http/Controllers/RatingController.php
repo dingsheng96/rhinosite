@@ -42,7 +42,8 @@ class RatingController extends Controller
     {
         $request->validate([
             'merchant' => ['required', 'exists:' . User::class . ',id'],
-            'rating' => ['required', 'in:1,2,3,4,5']
+            'rating' => ['required', 'in:1,2,3,4,5'],
+            'review' => ['nullable', 'max:255']
         ]);
 
         $action     =   Permission::ACTION_CREATE;
@@ -55,7 +56,7 @@ class RatingController extends Controller
         try {
 
             Auth::user()->ratedBy()->attach([
-                $request->get('merchant') => ['scale' => $request->get('rating'), 'created_at' => now()]
+                $request->get('merchant') => ['scale' => $request->get('rating'), 'review' => $request->get('review'), 'created_at' => now()]
             ]);
 
             DB::commit();

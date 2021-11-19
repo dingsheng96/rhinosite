@@ -1,4 +1,4 @@
-@extends('layouts.master', ['guest_view' => true, 'body' => 'enduser', 'title' => __('modules.app.howitworks')])
+@extends('layouts.master', ['guest_view' => true, 'body' => 'enduser', 'title' => __('modules.app.management')])
 
 @section('content')
 
